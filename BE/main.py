@@ -1,64 +1,56 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
-
+from database import engine, SessionLocal,get_db
 import models
 import schemas
-from database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
+app = FastAPI(title="ShopTheThao API")
 
-app = FastAPI()
+# seed 3 sân / 12 ca
+@app.on_event("startup")
+def seed_data():
+    db = SessionLocal()
+    try:
+        count = db.query(models.Court).count()
+        if count == 0:
+            print("Đang tạo dữ liệu mẫu: 3 sân và 12 ca...")
+            courts = [
+                models.Court(name="Sân Cầu Lông 1", description="Sân tiêu chuẩn"),
+                models.Court(name="Sân Cầu Lông 2", description="Sân thảm chống trượt"),
+                models.Court(name="Sân Cầu Lông 3", description="Sân VIP")
+            ]
+            db.add_all(courts)
+            db.commit()
+            all_courts = db.query(models.Court).all()
+            slots_time = [
+                "06:00 - 07:30", "07:30 - 09:00", "09:00 - 10:30", "10:30 - 12:00",
+                "12:00 - 13:30", "13:30 - 15:00", "15:00 - 16:30", "16:30 - 18:00",
+                "18:00 - 19:30", "19:30 - 21:00", "21:00 - 22:30", "22:30 - 00:00"
+                ]
+            for court in all_courts:
+                for time_str in slots_time:
+                    slot = models.CourtSlot(
+                        court_id=court.id,
+                        slot_name=time_str,
+                        price=150000.0)
+                    db.add(slot)
+            db.commit()
+            print("Đã seed dữ liệu thành công!")
+    except Exception as e:
+        print(f"Lỗi seed dữ liệu: {e}")
+    finally:
+        db.close()
 
+# api cơ bản
+@app.get("/")
+def read_root():
+    return {"message": "ShopTheThao API đang chạy!"}
 
-@app.post("/products/", response_model=schemas.ProductResponse, status_code=status.HTTP_201_CREATED)
-def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)):
-    db_product = models.ProductModel(
-        name=product.name,
-        description=product.description,
-        price=product.price,
-        quantity=product.quantity
-    )
-    db.add(db_product)
-    db.commit()
-    db.refresh(db_product)
-    return db_product
+@app.get("/courts/")
+def get_courts(db: Session = Depends(get_db)):
+    return db.query(models.Court).all()
 
-@app.get("/products/", response_model=List[schemas.ProductResponse])
-def get_products(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    products = db.query(models.ProductModel).offset(skip).limit(limit).all()
-    return products
-
-@app.get("/products/{product_id}", response_model=schemas.ProductResponse)
-def get_product(product_id: int, db: Session = Depends(get_db)):
-    product = db.query(models.ProductModel).filter(models.ProductModel.id == product_id).first()
-    if not product:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
-    return product
-
-
-@app.put("/products/{product_id}", response_model=schemas.ProductResponse)
-def update_product(product_id: int, product_update: schemas.ProductUpdate, db: Session = Depends(get_db)):
-    db_product = db.query(models.ProductModel).filter(models.ProductModel.id == product_id).first()
-    if not db_product:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
-    
-    
-    update_data = product_update.dict(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(db_product, key, value)
-        
-    db.commit()
-    db.refresh(db_product)
-    return db_product
-
-
-@app.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_product(product_id: int, db: Session = Depends(get_db)):
-    db_product = db.query(models.ProductModel).filter(models.ProductModel.id == product_id).first()
-    if not db_product:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
-    
-    db.delete(db_product)
-    db.commit()
-    return None
+@app.get("/slots/")
+def get_slots(db: Session, db_session: Session = Depends(get_db)):
+    return db_session.query(models.CourtSlot).all()
