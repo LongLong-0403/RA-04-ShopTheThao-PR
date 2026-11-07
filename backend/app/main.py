@@ -12,9 +12,10 @@ from sqlalchemy.exc import OperationalError
 
 from app import models  # noqa: F401 - import để SQLAlchemy biết các bảng
 from app.core.config import settings
+from app.crud.user import seed_users
 from app.db.session import Base, SessionLocal, engine
 from app.models.item import Item
-from app.routers import health, items
+from app.routers import health, items, users
 
 
 def init_database() -> None:
@@ -47,6 +48,9 @@ def init_database() -> None:
             )
             db.commit()
 
+        # 4. Seed 1 Admin + 5 Khách hàng cho bảng users nếu chưa có
+        seed_users(db)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -74,6 +78,7 @@ app.add_middleware(
 # Mọi API đều bắt đầu bằng /api. Thêm router mới thì include ở đây.
 app.include_router(health.router, prefix="/api")
 app.include_router(items.router, prefix="/api")
+app.include_router(users.router, prefix="/api")
 
 
 @app.get("/")
