@@ -3,7 +3,7 @@ from datetime import datetime
 from enum import Enum
 
 from sqlalchemy import BigInteger, DateTime, Enum as SqlEnum, String, Text, func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 
@@ -46,3 +46,8 @@ class User(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, server_default=func.now(), onupdate=func.now()
     )
+
+
+# ket noi user
+cart = relationship("Cart", back_populates="user", uselist=False)
+orders = relationship("Order", back_populates="user")
