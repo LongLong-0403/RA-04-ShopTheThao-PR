@@ -1,0 +1,15 @@
+name: Main branch policy
+on:
+  pull_request:
+    branches: [main]
+permissions: {}
+jobs:
+  source:
+    name: Only develop into main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify source repository and branch
+        env:
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: test "$HEAD_REPO" = "$GITHUB_REPOSITORY" && test "$HEAD_BRANCH" = develop
