@@ -1,6 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date
-from typing import Optional, List
+from typing import Optional
 
 class CourtBase(BaseModel):
     name: str
@@ -12,8 +12,7 @@ class CourtCreate(CourtBase):
 class CourtResponse(CourtBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class CourtSlotBase(BaseModel):
     court_id: int
@@ -26,8 +25,7 @@ class CourtSlotCreate(CourtSlotBase):
 class CourtSlotResponse(CourtSlotBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class CourtBookingBase(BaseModel):
     customer_name: str
@@ -43,8 +41,7 @@ class CourtBookingCreate(CourtBookingBase):
 class CourtBookingResponse(CourtBookingBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class MatchPostBase(BaseModel):
     sport: str
@@ -60,8 +57,7 @@ class MatchPostCreate(MatchPostBase):
 class MatchPostResponse(MatchPostBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class BuybackRequestBase(BaseModel):
     brand_model: str
@@ -77,5 +73,4 @@ class BuybackRequestCreate(BuybackRequestBase):
 class BuybackRequestResponse(BuybackRequestBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
