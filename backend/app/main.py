@@ -15,7 +15,7 @@ from app.core.config import settings
 from app.crud.user import seed_users
 from app.db.session import Base, SessionLocal, engine
 from app.models.item import Item
-from app.routers import health, items, users
+from app.routers import health, items, users,bookings
 
 
 def init_database() -> None:
@@ -79,7 +79,7 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api")
 app.include_router(items.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
-
+app.include_router(bookings.router, prefix="/api")
 
 @app.get("/")
 def root():
