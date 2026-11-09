@@ -47,7 +47,8 @@ class User(Base):
         DateTime, nullable=False, server_default=func.now(), onupdate=func.now()
     )
 
-
-# ket noi user
-cart = relationship("Cart", back_populates="user", uselist=False)
-orders = relationship("Order", back_populates="user")
+    cart = relationship("Cart", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    orders = relationship("Order", back_populates="user")
+    court_bookings = relationship("CourtBooking", back_populates="user")
+    match_posts = relationship("MatchPost", back_populates="user")
+    buyback_requests = relationship("BuybackRequest", back_populates="user")
