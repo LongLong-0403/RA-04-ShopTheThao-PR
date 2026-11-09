@@ -52,5 +52,5 @@ def get_courts(db: Session = Depends(get_db)):
     return db.query(models.Court).all()
 
 @app.get("/slots/")
-def get_slots(db: Session, db_session: Session = Depends(get_db)):
+def get_slots(db_session: Session = Depends(get_db)):
     return db_session.query(models.CourtSlot).all()
