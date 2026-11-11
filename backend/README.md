@@ -15,3 +15,9 @@ python -m uvicorn app.main:app --reload
 ```
 
 Mở http://127.0.0.1:8000/docs. Danh sách sân và ca sân ở `/api/courts/` và `/api/slots/`. Các URL cũ `/courts/` và `/slots/` vẫn hoạt động.
+
+## Module danh mục
+
+API môn, danh mục cha/con, thương hiệu và menu được mô tả trong
+[docs/catalog-api.md](docs/catalog-api.md). Database cũ cần cập nhật ràng buộc
+theo hướng dẫn trước khi sử dụng API ghi.

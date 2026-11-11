@@ -16,7 +16,7 @@ from app.crud.court import seed_courts
 from app.crud.user import seed_users
 from app.db.session import Base, SessionLocal, engine
 from app.models.item import Item
-from app.routers import courts, health, items, users
+from app.routers import catalog, courts, health, items, users
 
 
 def init_database() -> None:
@@ -83,6 +83,7 @@ app.include_router(courts.router, include_in_schema=False)
 app.include_router(health.router, prefix="/api")
 app.include_router(items.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
+app.include_router(catalog.router, prefix="/api")
 
 
 @app.get("/")

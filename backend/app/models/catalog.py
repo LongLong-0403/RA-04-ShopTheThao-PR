@@ -73,12 +73,12 @@ class Category(Base):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True, comment="Định danh danh mục")
     parent_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("categories.id", ondelete="SET NULL", onupdate="CASCADE"),
+        ForeignKey("categories.id", ondelete="RESTRICT", onupdate="CASCADE"),
         nullable=True,
         index=True,
         comment="ID danh mục cha (NULL nếu là danh mục gốc)",
     )
-    name: Mapped[str] = mapped_column(String(150), nullable=False, comment="Tên danh mục")
+    name: Mapped[str] = mapped_column(String(150), unique=True, nullable=False, comment="Tên danh mục")
     slug: Mapped[str] = mapped_column(String(150), unique=True, nullable=False, comment="Đường dẫn tĩnh duy nhất")
     status: Mapped[CommonStatusEnum] = mapped_column(
         Enum(CommonStatusEnum), nullable=False, default=CommonStatusEnum.ACTIVE, comment="Trạng thái hiển thị"
