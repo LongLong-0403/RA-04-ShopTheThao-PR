@@ -1,5 +1,8 @@
 # Backend FastAPI + MySQL
 
+Hướng dẫn nhóm gắn xác thực, quyền Admin và quyền sở hữu vào API:
+[AUTH_INTEGRATION.md](AUTH_INTEGRATION.md).
+
 Từ thư mục gốc, chạy trong PowerShell sau khi bật MySQL:
 
 ```powershell
