@@ -5,18 +5,18 @@ Tài liệu API tự sinh: http://127.0.0.1:8000/docs
 """
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, func, select, text
-from sqlalchemy.exc import OperationalError
+from fastapi.responses import JSONResponse
+from sqlalchemy import create_engine, text
+from sqlalchemy.exc import IntegrityError, OperationalError
 
 from app import models  # noqa: F401 - import để SQLAlchemy biết các bảng
 from app.core.config import settings
-from app.crud.court import seed_courts
-from app.crud.user import seed_users
 from app.db.session import Base, SessionLocal, engine
-from app.models.item import Item
-from app.routers import courts, health, items, users
+from app.routers import auth, courts, health, items, users, commerce, catalog, activities
+from app.services import court_service, item_service, user_service
+from app.services.exceptions import ServiceError
 
 
 def init_database() -> None:
@@ -37,21 +37,11 @@ def init_database() -> None:
     # 2. Tự tạo các bảng còn thiếu theo model
     Base.metadata.create_all(bind=engine)
 
-    # 3. Thêm dữ liệu mẫu nếu bảng items đang trống
+    # 3. Seed dữ liệu mẫu (mỗi hàm tự bỏ qua nếu đã có dữ liệu)
     with SessionLocal() as db:
-        count = db.scalar(select(func.count()).select_from(Item))
-        if count == 0:
-            db.add_all(
-                [
-                    Item(name="Cơm rang dưa bò", description="Món mẫu để kiểm tra API", price=45000),
-                    Item(name="Trà đá", description="Dữ liệu mẫu số 2", price=5000),
-                ]
-            )
-            db.commit()
-
-        # 4. Seed 1 Admin + 5 Khách hàng cho bảng users nếu chưa có
-        seed_users(db)
-        seed_courts(db)
+        item_service.seed_items(db)
+        user_service.seed_users(db)  # 1 Admin + 5 Khách hàng
+        court_service.seed_courts(db)
 
 
 @asynccontextmanager
@@ -77,9 +67,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# Lỗi nghiệp vụ từ tầng service -> JSON {"detail": "..."} với mã HTTP tương ứng
+@app.exception_handler(ServiceError)
+async def service_error_handler(request: Request, exc: ServiceError):
+    headers = {"WWW-Authenticate": "Bearer"} if exc.status_code == 401 else None
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail}, headers=headers)
+
+
+# Lưới an toàn: vi phạm ràng buộc DB (trùng khoá, khoá ngoại...) -> 409 thay vì 500
+@app.exception_handler(IntegrityError)
+async def integrity_error_handler(request: Request, exc: IntegrityError):
+    return JSONResponse(
+        status_code=409,
+        content={"detail": "Dữ liệu vi phạm ràng buộc của hệ thống (trùng lặp hoặc đang được sử dụng)"},
+    )
+
+
 # Mọi API đều bắt đầu bằng /api. Thêm router mới thì include ở đây.
+app.include_router(auth.router, prefix="/api")
+app.include_router(commerce.router, prefix="/api")
+app.include_router(catalog.router, prefix="/api")
+app.include_router(activities.router, prefix="/api")
 app.include_router(courts.router, prefix="/api")
-app.include_router(courts.router, include_in_schema=False)
+app.include_router(courts.router, include_in_schema=False)  # giữ URL cũ /courts/, /slots/
 app.include_router(health.router, prefix="/api")
 app.include_router(items.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
