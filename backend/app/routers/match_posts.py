@@ -6,25 +6,8 @@ from pydantic import BaseModel
 
 from app.db.session import get_db
 from app import models
-
+from app.schemas.match_posts import MatchPostCreate,MatchPostUpdate
 router = APIRouter(prefix="/match-posts", tags=["Matchmaking (Tìm bạn chơi)"])
-
-# Schema nhận dữ liệu tạo bài đăng
-class MatchPostCreate(BaseModel):
-    sport_id: int
-    match_time: datetime
-    location: str
-    skill_level: str
-    contact_info: str
-
-# Schema nhận dữ liệu cập nhật bài đăng
-class MatchPostUpdate(BaseModel):
-    sport_id: Optional[int] = None
-    match_time: Optional[datetime] = None
-    location: Optional[str] = None
-    skill_level: Optional[str] = None
-    contact_info: Optional[str] = None
-    status: Optional[str] = None  # 'OPEN', 'CLOSED', 'CANCELLED'
 
 # 1. API Đăng bài tìm bạn chơi (Customer)
 @router.post("/", status_code=status.HTTP_201_CREATED)
