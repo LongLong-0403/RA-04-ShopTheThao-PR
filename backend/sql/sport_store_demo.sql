@@ -1,24 +1,27 @@
 -- =============================================================================
 -- HỆ THỐNG BÁN ĐỒ THỂ THAO (SPORTS EQUIPMENT E-COMMERCE & COURT BOOKING SYSTEM)
--- FILE: database.sql (FILE DUY NHẤT - ALL IN ONE)
+-- FILE: sport_store_demo.sql (MySQL 8.0.16+)
 -- MỤC ĐÍCH: Tự động khởi tạo Database, toàn bộ 16 bảng DDL, Trigger và nạp DML Seed Data
--- CÁCH CHẠY: mysql -u root -p < database.sql
+-- CÁCH CHẠY: mở file bằng MySQL Workbench và Execute toàn bộ.
 -- =============================================================================
 
-CREATE DATABASE `sport_store_db`
+SET NAMES utf8mb4;
+
+CREATE DATABASE IF NOT EXISTS `sport_store_db`
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
 USE `sport_store_db`;
 
--- Chỉ khởi tạo trên database mới.
+-- Khởi tạo trên database mới; chạy lại không ghi đè dữ liệu.
+-- Không thay thế migration cho database đã có schema cũ. Xem README_SRS.md.
 
 -- -----------------------------------------------------------------------------
 -- PHẦN II: TẠO 16 BẢNG DỮ LIỆU CHUẨN SRS (DDL)
 -- -----------------------------------------------------------------------------
 
 -- 1. Bảng users (Người dùng)
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh duy nhất người dùng',
     `email` VARCHAR(255) NOT NULL COMMENT 'Email đăng nhập duy nhất',
     `password_hash` VARCHAR(255) NOT NULL COMMENT 'Mật khẩu đã mã hoá bcrypt',
@@ -36,7 +39,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Bảng quản lý tài khoản người dùng và phân quyền';
 
 -- 2. Bảng sports (Môn thể thao)
-CREATE TABLE `sports` (
+CREATE TABLE IF NOT EXISTS `sports` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh môn thể thao',
     `name` VARCHAR(100) NOT NULL COMMENT 'Tên môn thể thao (Cầu lông, Bóng đá...)',
     `slug` VARCHAR(120) NOT NULL COMMENT 'Đường dẫn tĩnh thân thiện duy nhất',
@@ -48,7 +51,7 @@ CREATE TABLE `sports` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Danh mục môn thể thao';
 
 -- 3. Bảng categories (Danh mục sản phẩm cha/con)
-CREATE TABLE `categories` (
+CREATE TABLE IF NOT EXISTS `categories` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh danh mục',
     `parent_id` BIGINT NULL COMMENT 'ID danh mục cha (NULL nếu là danh mục gốc)',
     `name` VARCHAR(150) NOT NULL COMMENT 'Tên danh mục (Vợt, Giày, Quả cầu...)',
@@ -63,7 +66,7 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Danh mục sản phẩm hỗ trợ đa cấp cha - con';
 
 -- 4. Bảng brands (Thương hiệu)
-CREATE TABLE `brands` (
+CREATE TABLE IF NOT EXISTS `brands` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh thương hiệu',
     `name` VARCHAR(150) NOT NULL COMMENT 'Tên thương hiệu (Yonex, Nike, Adidas...)',
     `slug` VARCHAR(150) NOT NULL COMMENT 'Đường dẫn tĩnh duy nhất',
@@ -75,7 +78,7 @@ CREATE TABLE `brands` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Danh mục thương hiệu thể thao';
 
 -- 5. Bảng products (Sản phẩm: Hàng Mới & Hàng Cũ)
-CREATE TABLE `products` (
+CREATE TABLE IF NOT EXISTS `products` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh sản phẩm',
     `sport_id` BIGINT NOT NULL COMMENT 'Thuộc môn thể thao',
     `category_id` BIGINT NOT NULL COMMENT 'Thuộc danh mục sản phẩm',
@@ -88,6 +91,7 @@ CREATE TABLE `products` (
     `status` ENUM('ACTIVE', 'INACTIVE', 'OUT_OF_STOCK') NOT NULL DEFAULT 'ACTIVE' COMMENT 'Trạng thái kinh doanh sản phẩm',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Thời điểm tạo',
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Thời điểm cập nhật',
+    CONSTRAINT `chk_products_wear` CHECK (`condition_type` <> 'CU' OR (`wear_description` IS NOT NULL AND CHAR_LENGTH(TRIM(`wear_description`)) > 0)),
     PRIMARY KEY (`id`),
     INDEX `idx_products_sport` (`sport_id`),
     INDEX `idx_products_category` (`category_id`),
@@ -107,7 +111,7 @@ CREATE TABLE `products` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Thông tin sản phẩm chung (Hàng Mới & Hàng Cũ)';
 
 -- 6. Bảng product_skus (Biến thể sản phẩm SKU)
-CREATE TABLE `product_skus` (
+CREATE TABLE IF NOT EXISTS `product_skus` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh SKU',
     `product_id` BIGINT NOT NULL COMMENT 'Thuộc sản phẩm nào',
     `sku_code` VARCHAR(100) NOT NULL COMMENT 'Mã quản lý kho duy nhất (SKU code)',
@@ -118,6 +122,9 @@ CREATE TABLE `product_skus` (
     `unit` ENUM('CHIEC', 'LO') NOT NULL DEFAULT 'CHIEC' COMMENT 'Đơn vị bán: CHIEC (Chiếc) hoặc LO (Lô/Ống/Hộp)',
     `quantity_per_lot` INT NOT NULL DEFAULT 1 COMMENT 'Số sản phẩm/lô (VD: 12 quả/ống, mặc định 1 nếu là CHIEC)',
     PRIMARY KEY (`id`),
+    `size_key` VARCHAR(50) GENERATED ALWAYS AS (LOWER(TRIM(COALESCE(`size`, '')))) STORED,
+    `color_key` VARCHAR(50) GENERATED ALWAYS AS (LOWER(TRIM(COALESCE(`color`, '')))) STORED,
+    UNIQUE KEY `uk_sku_variant` (`product_id`, `size_key`, `color_key`, `unit`, `quantity_per_lot`),
     UNIQUE KEY `uk_product_skus_code` (`sku_code`),
     INDEX `idx_product_skus_product_id` (`product_id`),
     INDEX `idx_product_skus_price` (`price`),
@@ -126,25 +133,29 @@ CREATE TABLE `product_skus` (
         ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `chk_product_skus_price` CHECK (`price` >= 0),
     CONSTRAINT `chk_product_skus_stock` CHECK (`stock` >= 0),
-    CONSTRAINT `chk_product_skus_qty_lot` CHECK (`quantity_per_lot` >= 1)
+    CONSTRAINT `chk_product_skus_qty_lot` CHECK ((`unit` = 'CHIEC' AND `quantity_per_lot` = 1) OR (`unit` = 'LO' AND `quantity_per_lot` > 1))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Biến thể SKU chi tiết (size, màu, giá, tồn kho, đơn vị tính)';
 
 -- 7. Bảng product_images (Hình ảnh sản phẩm)
-CREATE TABLE `product_images` (
+CREATE TABLE IF NOT EXISTS `product_images` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh hình ảnh',
     `product_id` BIGINT NOT NULL COMMENT 'Thuộc sản phẩm',
     `image_url` VARCHAR(500) NOT NULL COMMENT 'Đường dẫn ảnh sản phẩm',
     `is_primary` BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'Ảnh đại diện chính của sản phẩm',
     `sort_order` INT NOT NULL DEFAULT 0 COMMENT 'Thứ tự ưu tiên hiển thị',
     PRIMARY KEY (`id`),
+    `primary_marker` TINYINT GENERATED ALWAYS AS (CASE WHEN `is_primary` = 1 THEN 1 ELSE NULL END) STORED,
+    UNIQUE KEY `uk_primary_product_image` (`product_id`, `primary_marker`),
+    CONSTRAINT `chk_image_sort` CHECK (`sort_order` >= 0),
+    CONSTRAINT `chk_image_primary` CHECK (`is_primary` IN (0, 1)),
     INDEX `idx_product_images_product_id` (`product_id`),
     CONSTRAINT `fk_product_images_product`
         FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE
+        ON DELETE CASCADE ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Danh sách hình ảnh sản phẩm';
 
 -- 8. Bảng courts (Sân thể thao)
-CREATE TABLE `courts` (
+CREATE TABLE IF NOT EXISTS `courts` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh sân thể thao',
     `sport_id` BIGINT NOT NULL COMMENT 'Môn thể thao của sân',
     `name` VARCHAR(150) NOT NULL COMMENT 'Tên sân (VD: Sân Cầu Lông Đền Lừ)',
@@ -160,7 +171,7 @@ CREATE TABLE `courts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Danh sách sân thể thao phục vụ đặt lịch';
 
 -- 9. Bảng court_slots (Ca giờ cố định)
-CREATE TABLE `court_slots` (
+CREATE TABLE IF NOT EXISTS `court_slots` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh ca giờ',
     `court_id` BIGINT NOT NULL COMMENT 'Thuộc sân thể thao nào',
     `slot_name` VARCHAR(100) NOT NULL COMMENT 'Tên ca (VD: Ca 1: 06:00 - 08:00)',
@@ -169,6 +180,8 @@ CREATE TABLE `court_slots` (
     `price` DECIMAL(12,2) NOT NULL COMMENT 'Đơn giá thuê ca giờ này',
     `status` ENUM('ACTIVE', 'INACTIVE') NOT NULL DEFAULT 'ACTIVE' COMMENT 'Trạng thái ca giờ',
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_slot_court` (`id`, `court_id`),
+    CONSTRAINT `chk_slot_time` CHECK (`start_time` >= '00:00:00' AND `start_time` < `end_time` AND `end_time` < '24:00:00'),
     INDEX `idx_court_slots_court_id` (`court_id`),
     CONSTRAINT `fk_court_slots_court`
         FOREIGN KEY (`court_id`) REFERENCES `courts` (`id`)
@@ -177,7 +190,7 @@ CREATE TABLE `court_slots` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Các khung ca giờ cố định và giá thuê của từng sân';
 
 -- 10. Bảng court_bookings (Đặt lịch sân)
-CREATE TABLE `court_bookings` (
+CREATE TABLE IF NOT EXISTS `court_bookings` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh phiếu đặt sân',
     `user_id` BIGINT NOT NULL COMMENT 'Khách hàng đặt sân',
     `court_id` BIGINT NOT NULL COMMENT 'Sân được đặt',
@@ -188,6 +201,9 @@ CREATE TABLE `court_bookings` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Thời gian tạo yêu cầu',
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Thời gian cập nhật',
     PRIMARY KEY (`id`),
+    `held_marker` TINYINT GENERATED ALWAYS AS (CASE WHEN `status` IN ('CHO_XAC_NHAN', 'XAC_NHAN') THEN 1 ELSE NULL END) STORED,
+    UNIQUE KEY `uk_held_booking` (`court_slot_id`, `booking_date`, `held_marker`),
+    INDEX `idx_booking_slot_date_status` (`court_slot_id`, `booking_date`, `status`),
     INDEX `idx_court_bookings_user_id` (`user_id`),
     INDEX `idx_court_bookings_court_id` (`court_id`),
     INDEX `idx_court_bookings_slot_id` (`court_slot_id`),
@@ -199,13 +215,13 @@ CREATE TABLE `court_bookings` (
         FOREIGN KEY (`court_id`) REFERENCES `courts` (`id`)
         ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT `fk_court_bookings_slot`
-        FOREIGN KEY (`court_slot_id`) REFERENCES `court_slots` (`id`)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
+        FOREIGN KEY (`court_slot_id`, `court_id`) REFERENCES `court_slots` (`id`, `court_id`)
+        ON DELETE RESTRICT ON UPDATE RESTRICT,
     CONSTRAINT `chk_court_bookings_price` CHECK (`price_at_booking` >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Lịch sử và phiếu đặt lịch sân thể thao';
 
 -- 11. Bảng match_posts (Bài đăng ghép kèo / tìm đối)
-CREATE TABLE `match_posts` (
+CREATE TABLE IF NOT EXISTS `match_posts` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh bài đăng',
     `user_id` BIGINT NOT NULL COMMENT 'Người đăng tin',
     `sport_id` BIGINT NOT NULL COMMENT 'Môn thể thao cần ghép kèo',
@@ -217,7 +233,7 @@ CREATE TABLE `match_posts` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Thời điểm đăng',
     PRIMARY KEY (`id`),
     INDEX `idx_match_posts_user_id` (`user_id`),
-    INDEX `idx_match_posts_sport_time` (`sport_id`, `match_time`),
+    INDEX `idx_match_posts_sport_time` (`sport_id`, `status`, `match_time`),
     INDEX `idx_match_posts_status` (`status`),
     CONSTRAINT `fk_match_posts_user`
         FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
@@ -228,7 +244,7 @@ CREATE TABLE `match_posts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Cộng đồng đăng tin tìm đối thủ và ghép kèo thể thao';
 
 -- 12. Bảng buyback_requests (Yêu cầu thu mua đồ cũ)
-CREATE TABLE `buyback_requests` (
+CREATE TABLE IF NOT EXISTS `buyback_requests` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh yêu cầu thu mua',
     `user_id` BIGINT NOT NULL COMMENT 'Khách hàng gửi yêu cầu',
     `sport_id` BIGINT NULL COMMENT 'Môn thể thao liên quan',
@@ -241,7 +257,9 @@ CREATE TABLE `buyback_requests` (
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Thời điểm gửi yêu cầu',
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Thời điểm cập nhật',
     PRIMARY KEY (`id`),
-    INDEX `idx_buyback_user_id` (`user_id`),
+    CONSTRAINT `chk_buyback_images` CHECK (JSON_TYPE(`images`) = 'ARRAY' AND JSON_LENGTH(`images`) BETWEEN 1 AND 5),
+    CONSTRAINT `chk_buyback_offer_required` CHECK (`status` NOT IN ('OFFERED', 'ACCEPTED', 'COMPLETED') OR `offered_price` IS NOT NULL),
+    INDEX `idx_buyback_user_id` (`user_id`, `status`),
     INDEX `idx_buyback_sport_id` (`sport_id`),
     INDEX `idx_buyback_status` (`status`),
     CONSTRAINT `fk_buyback_user`
@@ -255,7 +273,7 @@ CREATE TABLE `buyback_requests` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Phiếu yêu cầu thu mua ký gửi đồ thể thao cũ (Buyback)';
 
 -- 13. Bảng carts (Giỏ hàng)
-CREATE TABLE `carts` (
+CREATE TABLE IF NOT EXISTS `carts` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh giỏ hàng',
     `user_id` BIGINT NOT NULL COMMENT 'Mỗi khách hàng sở hữu duy nhất 1 giỏ hàng',
     `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Thời điểm tạo giỏ',
@@ -268,7 +286,7 @@ CREATE TABLE `carts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Giỏ hàng của người dùng (1-1 với users)';
 
 -- 14. Bảng cart_items (Chi tiết giỏ hàng theo SKU)
-CREATE TABLE `cart_items` (
+CREATE TABLE IF NOT EXISTS `cart_items` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh dòng giỏ hàng',
     `cart_id` BIGINT NOT NULL COMMENT 'Thuộc giỏ hàng nào',
     `product_sku_id` BIGINT NOT NULL COMMENT 'Tham chiếu trực tiếp đến biến thể SKU',
@@ -288,7 +306,7 @@ CREATE TABLE `cart_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Chi tiết các mặt hàng trong giỏ';
 
 -- 15. Bảng orders (Đơn hàng)
-CREATE TABLE `orders` (
+CREATE TABLE IF NOT EXISTS `orders` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh đơn hàng',
     `order_code` VARCHAR(50) NOT NULL COMMENT 'Mã đơn hàng hiển thị duy nhất (VD: ORD-20261106-001)',
     `user_id` BIGINT NOT NULL COMMENT 'Khách hàng đặt mua',
@@ -303,18 +321,18 @@ CREATE TABLE `orders` (
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Thời điểm cập nhật',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_orders_order_code` (`order_code`),
-    INDEX `idx_orders_user_id` (`user_id`),
-    INDEX `idx_orders_status` (`status`),
+    INDEX `idx_orders_user_id` (`user_id`, `created_at`),
+    INDEX `idx_orders_status` (`status`, `created_at`),
     INDEX `idx_orders_created_at` (`created_at`),
     CONSTRAINT `fk_orders_user`
         FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
         ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT `chk_orders_shipping_fee` CHECK (`shipping_fee` >= 0),
+    CONSTRAINT `chk_orders_shipping_fee` CHECK (`shipping_fee` = 0),
     CONSTRAINT `chk_orders_total_amount` CHECK (`total_amount` >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Đơn hàng thương mại điện tử';
 
 -- 16. Bảng order_items (Chi tiết sản phẩm trong đơn hàng)
-CREATE TABLE `order_items` (
+CREATE TABLE IF NOT EXISTS `order_items` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT 'Định danh chi tiết đơn hàng',
     `order_id` BIGINT NOT NULL COMMENT 'Thuộc đơn hàng nào',
     `product_sku_id` BIGINT NOT NULL COMMENT 'SKU được đặt mua',
@@ -322,11 +340,12 @@ CREATE TABLE `order_items` (
     `price_at_order` DECIMAL(12,2) NOT NULL COMMENT 'Giá SKU lưu cố định tại thời điểm đặt',
     `condition_at_order` ENUM('MOI', 'CU') NOT NULL COMMENT 'Tình trạng sản phẩm (MOI/CU) lúc đặt hàng',
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_order_sku` (`order_id`, `product_sku_id`),
     INDEX `idx_order_items_order_id` (`order_id`),
     INDEX `idx_order_items_sku_id` (`product_sku_id`),
     CONSTRAINT `fk_order_items_order`
         FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
-        ON DELETE CASCADE ON UPDATE CASCADE,
+        ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT `fk_order_items_sku`
         FOREIGN KEY (`product_sku_id`) REFERENCES `product_skus` (`id`)
         ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -337,52 +356,9 @@ CREATE TABLE `order_items` (
 -- -----------------------------------------------------------------------------
 -- PHẦN III: CÁC TRIGGER THỰC THI QUY TẮC NGHIỆP VỤ (BUSINESS RULES)
 -- -----------------------------------------------------------------------------
-DELIMITER $$
+-- Chống đặt trùng bằng uk_held_booking, kể cả hai giao dịch đồng thời.
+-- HUY/TU_CHOI tạo khóa NULL nên vẫn đặt lại được.
 
-CREATE TRIGGER `trg_prevent_court_booking_overlap_insert`
-BEFORE INSERT ON `court_bookings`
-FOR EACH ROW
-BEGIN
-    DECLARE overlap_count INT DEFAULT 0;
-
-    IF NEW.status IN ('CHO_XAC_NHAN', 'XAC_NHAN') THEN
-        SELECT COUNT(*) INTO overlap_count
-        FROM `court_bookings`
-        WHERE `court_id` = NEW.court_id
-          AND `court_slot_id` = NEW.court_slot_id
-          AND `booking_date` = NEW.booking_date
-          AND `status` IN ('CHO_XAC_NHAN', 'XAC_NHAN');
-
-        IF overlap_count > 0 THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Lỗi nghiệp vụ: Ca giờ và sân này đã có người đặt trong ngày (đang chờ duyệt hoặc đã xác nhận)!';
-        END IF;
-    END IF;
-END$$
-
-CREATE TRIGGER `trg_prevent_court_booking_overlap_update`
-BEFORE UPDATE ON `court_bookings`
-FOR EACH ROW
-BEGIN
-    DECLARE overlap_count INT DEFAULT 0;
-
-    IF NEW.status IN ('CHO_XAC_NHAN', 'XAC_NHAN') THEN
-        SELECT COUNT(*) INTO overlap_count
-        FROM `court_bookings`
-        WHERE `court_id` = NEW.court_id
-          AND `court_slot_id` = NEW.court_slot_id
-          AND `booking_date` = NEW.booking_date
-          AND `status` IN ('CHO_XAC_NHAN', 'XAC_NHAN')
-          AND `id` <> NEW.id;
-
-        IF overlap_count > 0 THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Lỗi nghiệp vụ: Ca giờ và sân này đã có người đặt trong ngày (đang chờ duyệt hoặc đã xác nhận)!';
-        END IF;
-    END IF;
-END$$
-
-DELIMITER ;
 
 -- -----------------------------------------------------------------------------
 -- PHẦN IV: NẠP DỮ LIỆU MẪU (SEED DATA CHUẨN SRS)
@@ -390,15 +366,47 @@ DELIMITER ;
 
 
 
+-- Seed trong một transaction. Database có dữ liệu sẽ được giữ nguyên.
+-- Không dùng INSERT IGNORE và không tắt FOREIGN_KEY_CHECKS.
+DELIMITER $$
+DROP PROCEDURE IF EXISTS `seed_sport_store_demo`$$
+CREATE PROCEDURE `seed_sport_store_demo`()
+seed: BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+    START TRANSACTION;
+    IF EXISTS (SELECT 1 FROM `users` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `sports` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `categories` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `brands` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `products` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `product_skus` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `product_images` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `courts` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `court_slots` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `court_bookings` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `match_posts` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `buyback_requests` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `carts` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `cart_items` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `orders` LIMIT 1) OR
+        EXISTS (SELECT 1 FROM `order_items` LIMIT 1) THEN
+        COMMIT;
+        SELECT 'SKIPPED: database already contains data; no seed rows changed' AS seed_result;
+        LEAVE seed;
+    END IF;
 -- 1. Users
 INSERT INTO `users` (`id`, `email`, `password_hash`, `full_name`, `phone`, `address`, `role`, `status`) VALUES
-(1, 'admin@sportstore.vn', '$2a$10$7EqJtq98hPqEX7fNZaFWoO.8/k0a1a0I4h5lS1t3qZ8z6e7c8v9W.', 'Quản Trị Viên Hệ Thống', '0901234567', 'Tòa nhà TechCenter, Cầu Giấy, Hà Nội', 'ADMIN', 'ACTIVE'),
-(2, 'nguyen.vana@gmail.com', '$2a$10$e9c3kZ9oO4.eP1s2T3u4v.7q8w9e0r1t2y3u4i5o6p7a8s9d0f1g.', 'Nguyễn Văn An', '0912345678', 'Số 15 Lê Duẩn, Hoàn Kiếm, Hà Nội', 'CUSTOMER', 'ACTIVE'),
-(3, 'tran.thib@gmail.com', '$2a$10$e9c3kZ9oO4.eP1s2T3u4v.7q8w9e0r1t2y3u4i5o6p7a8s9d0f1g.', 'Trần Thị Bích', '0923456789', 'Phòng 802, Chung cư Skylight, Minh Khai, Hai Bà Trưng, Hà Nội', 'CUSTOMER', 'ACTIVE'),
-(4, 'le.quangc@gmail.com', '$2a$10$e9c3kZ9oO4.eP1s2T3u4v.7q8w9e0r1t2y3u4i5o6p7a8s9d0f1g.', 'Lê Quang Cường', '0934567890', 'Tòa Landmark 81, Phường 22, Bình Thạnh, TP.HCM', 'CUSTOMER', 'ACTIVE'),
-(5, 'pham.thid@gmail.com', '$2a$10$e9c3kZ9oO4.eP1s2T3u4v.7q8w9e0r1t2y3u4i5o6p7a8s9d0f1g.', 'Phạm Thị Dung', '0945678901', 'Số 48 Ngô Quyền, Sơn Trà, Đà Nẵng', 'CUSTOMER', 'ACTIVE'),
-(6, 'hoang.vane@gmail.com', '$2a$10$e9c3kZ9oO4.eP1s2T3u4v.7q8w9e0r1t2y3u4i5o6p7a8s9d0f1g.', 'Hoàng Văn Em', '0956789012', 'Số 120 Cầu Giấy, Quan Hoa, Cầu Giấy, Hà Nội', 'CUSTOMER', 'ACTIVE'),
-(7, 'do.minhf@gmail.com', '$2a$10$e9c3kZ9oO4.eP1s2T3u4v.7q8w9e0r1t2y3u4i5o6p7a8s9d0f1g.', 'Đỗ Minh Phúc', '0967890123', 'Số 88 Nguyễn Thị Minh Khai, Quận 3, TP.HCM', 'CUSTOMER', 'ACTIVE');
+(1, 'admin@sportstore.vn', '$2b$12$VZA7sMkK5qfWikCtW/PG3OytQGmnotqdH3/4v04NsL4dKJ5LbdfXS', 'Quản Trị Viên Hệ Thống', '0901234567', 'Tòa nhà TechCenter, Cầu Giấy, Hà Nội', 'ADMIN', 'ACTIVE'),
+(2, 'nguyen.vana@gmail.com', '$2b$12$enuOosUqHQnbP2o9wpalqOVjVXMZe0NiF.OcrXIdX5nz5LmbwcItS', 'Nguyễn Văn An', '0912345678', 'Số 15 Lê Duẩn, Hoàn Kiếm, Hà Nội', 'CUSTOMER', 'ACTIVE'),
+(3, 'tran.thib@gmail.com', '$2b$12$0Uanc812n6C4HQcjz.OvF.xkUjIp5scMEx3FxdAH1446zHwDbAC5i', 'Trần Thị Bích', '0923456789', 'Phòng 802, Chung cư Skylight, Minh Khai, Hai Bà Trưng, Hà Nội', 'CUSTOMER', 'ACTIVE'),
+(4, 'le.quangc@gmail.com', '$2b$12$Jql/veJx9i/zj8rUXsZLGuyLr4.AmMMXnbYJ7F6tFrcTcmMZxjp.a', 'Lê Quang Cường', '0934567890', 'Tòa Landmark 81, Phường 22, Bình Thạnh, TP.HCM', 'CUSTOMER', 'ACTIVE'),
+(5, 'pham.thid@gmail.com', '$2b$12$DQe0bOjqxlPutjXoxLQKkeJx7bi5EYCNav5z622b398tbI5Zi1s3y', 'Phạm Thị Dung', '0945678901', 'Số 48 Ngô Quyền, Sơn Trà, Đà Nẵng', 'CUSTOMER', 'ACTIVE'),
+(6, 'hoang.vane@gmail.com', '$2b$12$M63xUTrdBCr7Dp/f41tjPuzenoJIcAO0FiwmQ5B3eCLZvgFZvIEAW', 'Hoàng Văn Em', '0956789012', 'Số 120 Cầu Giấy, Quan Hoa, Cầu Giấy, Hà Nội', 'CUSTOMER', 'ACTIVE'),
+(7, 'do.minhf@gmail.com', '$2b$12$L8uzKI6PNoqjq6NZKnuhfeY4n.mnqs8TwRjCnUbL1Mcth4QA5oyhK', 'Đỗ Minh Phúc', '0967890123', 'Số 88 Nguyễn Thị Minh Khai, Quận 3, TP.HCM', 'CUSTOMER', 'ACTIVE');
 
 -- 2. Sports
 INSERT INTO `sports` (`id`, `name`, `slug`, `description`, `status`) VALUES
@@ -625,7 +633,7 @@ INSERT INTO `court_slots` (`id`, `court_id`, `slot_name`, `start_time`, `end_tim
 INSERT INTO `court_bookings` (`id`, `user_id`, `court_id`, `court_slot_id`, `booking_date`, `price_at_booking`, `status`) VALUES
 (1, 2, 1, 4, '2026-11-10', 250000.00, 'XAC_NHAN'),
 (2, 3, 1, 5, '2026-11-10', 220000.00, 'CHO_XAC_NHAN'),
-(3, 4, 4, 13, '2026-11-11', 300000.00, 'XAC_NHAN'),
+(3, 4, 3, 13, '2026-11-11', 300000.00, 'XAC_NHAN'),
 (4, 5, 2, 8, '2026-11-11', 280000.00, 'TU_CHOI'),
 (5, 6, 4, 16, '2026-11-12', 450000.00, 'HUY'),
 (6, 2, 3, 12, '2026-11-12', 240000.00, 'CHO_XAC_NHAN');
@@ -679,8 +687,15 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_sku_id`, `quantity`, `pric
 (5, 4, 59, 1, 2850000.00, 'CU'),
 (6, 5, 25, 1, 850000.00, 'MOI');
 
-SET FOREIGN_KEY_CHECKS = 1;
+
 
 -- =============================================================================
 -- HOÀN TẤT TOÀN BỘ KHỞI TẠO VÀ SEED DATABASE
 -- =============================================================================
+
+    COMMIT;
+    SELECT 'SEEDED: 16 tables populated' AS seed_result;
+END$$
+CALL `seed_sport_store_demo`()$$
+DROP PROCEDURE `seed_sport_store_demo`$$
+DELIMITER ;

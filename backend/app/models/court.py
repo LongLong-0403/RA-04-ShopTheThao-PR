@@ -15,9 +15,12 @@ from sqlalchemy import (
     DateTime,
     Numeric,
     CheckConstraint,
+    Computed,
     Index,
+    UniqueConstraint,
     func,
 )
+from sqlalchemy.dialects.mysql import TINYINT
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.session import Base
 
@@ -114,6 +117,10 @@ class CourtSlot(Base):
 
     __table_args__ = (
         CheckConstraint("price >= 0", name="chk_court_slots_price"),
+        CheckConstraint(
+            "start_time >= '00:00:00' AND start_time < end_time AND end_time < '24:00:00'",
+            name="chk_slot_time",
+        ),
         {"comment": "Các khung ca giờ cố định và giá thuê của từng sân"},
     )
 
@@ -151,6 +158,15 @@ class CourtBooking(Base):
         default=BookingStatusEnum.CHO_XAC_NHAN,
         comment="Trạng thái đặt sân",
     )
+    # Cột sinh tự động: = 1 khi booking đang giữ ca (CHO_XAC_NHAN/XAC_NHAN), NULL khi HUY/TU_CHOI.
+    # Kết hợp unique (ca, ngày, held_marker): MySQL chặn 2 booking cùng giữ 1 ca/ngày, kể cả khi
+    # ghi đồng thời, nhưng vẫn cho đặt lại sau khi booking cũ bị huỷ/từ chối (NULL không tính trùng).
+    held_marker: Mapped[Optional[int]] = mapped_column(
+        TINYINT,
+        Computed("CASE WHEN `status` IN ('CHO_XAC_NHAN', 'XAC_NHAN') THEN 1 ELSE NULL END", persisted=True),
+        nullable=True,
+        comment="1 nếu booking đang giữ ca, NULL nếu đã huỷ/từ chối",
+    )
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP, nullable=False, server_default=func.current_timestamp(), comment="Thời gian tạo yêu cầu"
     )
@@ -169,6 +185,7 @@ class CourtBooking(Base):
 
     __table_args__ = (
         Index("idx_court_bookings_schedule", "court_id", "court_slot_id", "booking_date", "status"),
+        UniqueConstraint("court_slot_id", "booking_date", "held_marker", name="uk_held_booking"),
         CheckConstraint("price_at_booking >= 0", name="chk_court_bookings_price"),
         {"comment": "Lịch sử và phiếu đặt lịch sân thể thao"},
     )

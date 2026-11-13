@@ -2,13 +2,16 @@
 
 Muốn thêm cấu hình mới: thêm 1 dòng vào class Settings + thêm vào .env.example.
 """
+import secrets
 from urllib.parse import quote_plus
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    # env_ignore_empty: dòng "SECRET_KEY=" để trống trong .env -> dùng giá trị mặc định
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", env_ignore_empty=True)
 
     APP_NAME: str = "KS25 Base API"
 
@@ -20,6 +23,10 @@ class Settings(BaseSettings):
 
     # Chuỗi các origin cách nhau bằng dấu phẩy, hoặc "*"
     CORS_ORIGINS: str = "*"
+
+    # Khoá ký JWT. Không đặt trong .env -> sinh ngẫu nhiên mỗi lần chạy (token cũ mất hiệu lực khi restart).
+    SECRET_KEY: str = Field(default_factory=lambda: secrets.token_urlsafe(32))
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24
 
     @property
     def server_url(self) -> str:

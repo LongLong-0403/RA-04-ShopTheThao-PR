@@ -6,43 +6,36 @@
     PUT    /api/items/{id}     sửa
     DELETE /api/items/{id}     xoá
 """
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app.crud import item as item_crud
 from app.db.session import get_db
 from app.schemas.item import ItemCreate, ItemOut, ItemUpdate
+from app.services import item_service
 
 router = APIRouter(prefix="/items", tags=["Items"])
 
 
-def get_item_or_404(item_id: int, db: Session = Depends(get_db)):
-    item = item_crud.get_item(db, item_id)
-    if item is None:
-        raise HTTPException(status_code=404, detail=f"Không tìm thấy item id={item_id}")
-    return item
-
-
 @router.get("", response_model=list[ItemOut])
 def list_items(q: str | None = None, db: Session = Depends(get_db)):
-    return item_crud.get_items(db, keyword=q)
+    return item_service.list_items(db, keyword=q)
 
 
 @router.get("/{item_id}", response_model=ItemOut)
-def get_item(item=Depends(get_item_or_404)):
-    return item
+def get_item(item_id: int, db: Session = Depends(get_db)):
+    return item_service.get_item(db, item_id)
 
 
 @router.post("", response_model=ItemOut, status_code=status.HTTP_201_CREATED)
 def create_item(data: ItemCreate, db: Session = Depends(get_db)):
-    return item_crud.create_item(db, data)
+    return item_service.create_item(db, data)
 
 
 @router.put("/{item_id}", response_model=ItemOut)
-def update_item(data: ItemUpdate, item=Depends(get_item_or_404), db: Session = Depends(get_db)):
-    return item_crud.update_item(db, item, data)
+def update_item(item_id: int, data: ItemUpdate, db: Session = Depends(get_db)):
+    return item_service.update_item(db, item_id, data)
 
 
 @router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_item(item=Depends(get_item_or_404), db: Session = Depends(get_db)):
-    item_crud.delete_item(db, item)
+def delete_item(item_id: int, db: Session = Depends(get_db)):
+    item_service.delete_item(db, item_id)

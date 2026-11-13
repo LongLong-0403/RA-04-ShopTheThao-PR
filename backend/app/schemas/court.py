@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
-from datetime import date
+from datetime import date, time, datetime
+from decimal import Decimal
 from typing import Optional
 
 class CourtBase(BaseModel):
@@ -11,6 +12,9 @@ class CourtCreate(CourtBase):
 
 class CourtResponse(CourtBase):
     id: int
+    sport_id: int
+    address: str
+    status: str
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -24,53 +28,59 @@ class CourtSlotCreate(CourtSlotBase):
 
 class CourtSlotResponse(CourtSlotBase):
     id: int
+    start_time: time
+    end_time: time
+    status: str
 
     model_config = ConfigDict(from_attributes=True)
 
 class CourtBookingBase(BaseModel):
-    customer_name: str
     court_id: int
-    slot_id: int
+    court_slot_id: int
     booking_date: date
-    price_at_booking: float
-    status: Optional[str] = "CHỜ XÁC NHẬN"  
 
 class CourtBookingCreate(CourtBookingBase):
     pass
 
 class CourtBookingResponse(CourtBookingBase):
     id: int
+    user_id: int
+    price_at_booking: Decimal
+    status: str
 
     model_config = ConfigDict(from_attributes=True)
 
 class MatchPostBase(BaseModel):
-    sport: str
-    time: str
+    sport_id: int
+    match_time: datetime
     location: str
-    level: Optional[str] = None
-    contact: str
-    status: Optional[str] = "Đang tìm"
+    skill_level: str
+    contact_info: str
 
 class MatchPostCreate(MatchPostBase):
     pass
 
 class MatchPostResponse(MatchPostBase):
     id: int
+    user_id: int
+    status: str
 
     model_config = ConfigDict(from_attributes=True)
 
 class BuybackRequestBase(BaseModel):
     brand_model: str
-    condition: str
-    desired_price: float
-    image: Optional[str] = None
-    offered_price: Optional[float] = None
-    status: Optional[str] = "Chờ duyệt"
+    sport_id: int | None = None
+    condition_detail: str
+    expected_price: Decimal
+    images: list[str]
 
 class BuybackRequestCreate(BuybackRequestBase):
     pass
 
 class BuybackRequestResponse(BuybackRequestBase):
     id: int
+    user_id: int
+    offered_price: Decimal | None = None
+    status: str
 
     model_config = ConfigDict(from_attributes=True)

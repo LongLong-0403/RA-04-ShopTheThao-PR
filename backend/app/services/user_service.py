@@ -1,10 +1,13 @@
-"""CRUD & Seed dữ liệu cho bảng `users` (1 Admin, 5 Khách hàng)."""
-from sqlalchemy import or_, select
+"""Service cho bảng `users`: CRUD, đăng nhập và seed dữ liệu (1 Admin, 5 Khách hàng)."""
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
-from app.core.security import hash_password
+from app.core.security import hash_password, verify_password
+from app.models.court import BuybackRequest, CourtBooking, MatchPost
+from app.models.order import Order
 from app.models.user import User, UserRole, UserStatus
 from app.schemas.user import UserCreate, UserUpdate
+from app.services.exceptions import BadRequestError, ConflictError, NotFoundError
 
 SEED_USERS_DATA: list[dict] = [
     {
@@ -63,8 +66,16 @@ SEED_USERS_DATA: list[dict] = [
     },
 ]
 
+# Các bảng tham chiếu users với ON DELETE RESTRICT -> phải kiểm tra trước khi xoá
+_RESTRICTING_TABLES = (
+    (Order, "đơn hàng"),
+    (CourtBooking, "lượt đặt sân"),
+    (MatchPost, "bài ghép kèo"),
+    (BuybackRequest, "yêu cầu thu mua"),
+)
 
-def get_users(
+
+def list_users(
     db: Session,
     keyword: str | None = None,
     role: UserRole | None = None,
@@ -86,29 +97,47 @@ def get_users(
     return list(db.scalars(query))
 
 
-def get_user(db: Session, user_id: int) -> User | None:
-    return db.get(User, user_id)
+def get_user(db: Session, user_id: int) -> User:
+    user = db.get(User, user_id)
+    if user is None:
+        raise NotFoundError(f"Không tìm thấy người dùng id={user_id}")
+    return user
 
 
 def get_user_by_email(db: Session, email: str) -> User | None:
-    query = select(User).where(User.email == email)
-    return db.scalar(query)
+    return db.scalar(select(User).where(User.email == email.strip().lower()))
 
 
 def create_user(db: Session, data: UserCreate) -> User:
-    payload = data.model_dump(exclude={"password"})
+    if get_user_by_email(db, data.email) is not None:
+        raise ConflictError(f"Email '{data.email}' đã tồn tại trong hệ thống")
     user = User(
-        **payload,
+        **data.model_dump(exclude={"password"}),
         password_hash=hash_password(data.password),
     )
     db.add(user)
+    db.flush()
+    if user.role == UserRole.CUSTOMER:
+        from app.models.order import Cart
+        db.add(Cart(user_id=user.id))
     db.commit()
     db.refresh(user)
     return user
 
 
-def update_user(db: Session, user: User, data: UserUpdate) -> User:
+def update_user(db: Session, user_id: int, data: UserUpdate, acting_user: User | None = None) -> User:
+    user = get_user(db, user_id)
     updates = data.model_dump(exclude_unset=True)
+
+    new_email = updates.get("email")
+    if new_email and new_email != user.email and get_user_by_email(db, new_email) is not None:
+        raise BadRequestError(f"Email '{new_email}' đã được sử dụng bởi tài khoản khác")
+
+    # Không cho admin tự hạ quyền / tự khoá chính mình (tránh mất quyền quản trị)
+    if acting_user is not None and acting_user.id == user.id:
+        if updates.get("role") not in (None, UserRole.ADMIN) or updates.get("status") not in (None, UserStatus.ACTIVE):
+            raise BadRequestError("Không thể tự hạ quyền hoặc tự khoá tài khoản của chính mình")
+
     raw_password = updates.pop("password", None)
     if raw_password is not None:
         user.password_hash = hash_password(raw_password)
@@ -119,26 +148,42 @@ def update_user(db: Session, user: User, data: UserUpdate) -> User:
     return user
 
 
-def delete_user(db: Session, user: User) -> None:
+def delete_user(db: Session, user_id: int, acting_user: User | None = None) -> None:
+    user = get_user(db, user_id)
+    if acting_user is not None and acting_user.id == user.id:
+        raise BadRequestError("Không thể tự xoá tài khoản của chính mình")
+
+    used_in = [
+        label
+        for model, label in _RESTRICTING_TABLES
+        if db.scalar(select(func.count()).select_from(model).where(model.user_id == user.id))
+    ]
+    if used_in:
+        raise ConflictError(
+            f"Không thể xoá người dùng id={user_id} vì đã có {', '.join(used_in)}. "
+            "Hãy chuyển trạng thái sang INACTIVE hoặc LOCKED thay vì xoá."
+        )
     db.delete(user)
     db.commit()
+
+
+def authenticate(db: Session, email: str, password: str) -> User | None:
+    """Trả về user nếu email + mật khẩu đúng, ngược lại None."""
+    user = get_user_by_email(db, email)
+    if user is None or not verify_password(password, user.password_hash):
+        return None
+    return user
 
 
 def seed_users(db: Session) -> list[User]:
     """Khởi tạo dữ liệu mẫu: 01 Admin và 05 Khách hàng (mật khẩu mã hoá bcrypt)."""
     created_users: list[User] = []
     for entry in SEED_USERS_DATA:
-        existing = get_user_by_email(db, entry["email"])
-        if existing is not None:
+        if get_user_by_email(db, entry["email"]) is not None:
             continue
         user = User(
-            email=entry["email"],
+            **{k: v for k, v in entry.items() if k != "password"},
             password_hash=hash_password(entry["password"]),
-            full_name=entry["full_name"],
-            phone=entry["phone"],
-            address=entry["address"],
-            role=entry["role"],
-            status=entry["status"],
         )
         db.add(user)
         created_users.append(user)
