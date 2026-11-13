@@ -9,6 +9,7 @@
 const MENU = [
   { href: "index.html", label: "Trang chủ" },
   { href: "pages/items.html", label: "Items (CRUD mẫu)" },
+  { href: "pages/products.html", label: "Quản trị sản phẩm" },
 ];
 
 function renderLayout() {

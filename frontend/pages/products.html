@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị sản phẩm</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-root="../">
+<header id="app-header"></header>
+<main class="container">
+  <section class="card">
+    <h1>Quản trị sản phẩm</h1>
+    <form id="login-form">
+      <label>Email Admin <input name="email" type="email" required autocomplete="username"></label>
+      <label>Mật khẩu <input name="password" type="password" required autocomplete="current-password"></label>
+      <button class="btn" type="submit">Đăng nhập</button>
+    </form>
+    <p id="account-state" role="status"></p>
+    <button id="logout" type="button" class="btn">Đăng xuất</button>
+  </section>
+  <div id="admin-content" hidden>
+    <section class="card">
+      <h2>Danh sách (gồm cả sản phẩm ẩn)</h2>
+      <input id="search" type="search" placeholder="Tìm theo tên">
+      <button id="new-product" class="btn" type="button">Thêm sản phẩm</button>
+      <div class="table-wrap"><table>
+        <thead><tr><th>ID</th><th>Tên</th><th>Tình trạng</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+        <tbody id="products"></tbody>
+      </table></div>
+    </section>
+    <section class="card">
+      <h2 id="editor-title">Thêm sản phẩm</h2>
+      <p>Tạo bản nháp INACTIVE, thêm SKU và ảnh chính rồi chuyển sang ACTIVE. Thao tác ẩn không xóa lịch sử đơn hàng.</p>
+      <form id="product-form">
+        <label>Tên <input name="name" required maxlength="255"></label>
+        <label>Môn thể thao <select name="sport_id" required></select></label>
+        <label>Danh mục <select name="category_id" required></select></label>
+        <label>Thương hiệu <select name="brand_id" required></select></label>
+        <label>Mô tả <textarea name="description"></textarea></label>
+        <label>Tình trạng <select name="condition_type"><option value="MOI">Mới</option><option value="CU">Cũ</option></select></label>
+        <label>Hao mòn (bắt buộc với hàng cũ) <textarea name="wear_description"></textarea></label>
+        <label>Thông số kỹ thuật (JSON) <textarea name="specifications" placeholder='{"trong_luong": "85g"}'></textarea></label>
+        <label>Trạng thái <select name="status"><option>INACTIVE</option><option>ACTIVE</option><option>OUT_OF_STOCK</option></select></label>
+        <button class="btn btn-primary" type="submit">Lưu sản phẩm</button>
+      </form>
+    </section>
+    <div id="children" hidden>
+      <section class="card">
+        <h2>SKU — size, màu, giá, tồn kho</h2>
+        <p>Giá và tồn tính theo đơn vị bán. LO có ít nhất 2 đơn vị vật lý. Vợt cũ: tổng tồn tối đa 1; cầu/bóng cũ: bán theo lô.</p>
+        <div id="sku-list"></div>
+        <form id="sku-form">
+          <label>Mã SKU <input name="sku_code" required maxlength="100"></label>
+          <label>Size <input name="size" maxlength="50"></label>
+          <label>Màu <input name="color" maxlength="50"></label>
+          <label>Giá <input name="price" type="number" min="0" step="0.01" required></label>
+          <label>Tồn <input name="stock" type="number" min="0" step="1" required></label>
+          <label>Đơn vị <select name="unit"><option>CHIEC</option><option>LO</option></select></label>
+          <label>Số lượng mỗi lô <input name="quantity_per_lot" type="number" min="1" step="1" value="1" required></label>
+          <button type="submit" class="btn btn-primary">Lưu SKU</button>
+          <button id="reset-sku" type="button" class="btn">SKU mới</button>
+        </form>
+      </section>
+      <section class="card">
+        <h2>Ảnh sản phẩm</h2>
+        <div id="image-list"></div>
+        <form id="image-form">
+          <label>URL ảnh <input name="image_url" type="url" required maxlength="500"></label>
+          <label><input name="is_primary" type="checkbox"> Ảnh chính</label>
+          <label>Thứ tự <input name="sort_order" type="number" min="0" value="0" required></label>
+          <button class="btn" type="submit">Thêm URL</button>
+        </form>
+        <form id="upload-form">
+          <label>Upload PNG/JPEG/WebP, tối đa 5 MB <input name="file" type="file" accept="image/png,image/jpeg,image/webp" required></label>
+          <button class="btn" type="submit">Tải ảnh lên</button>
+        </form>
+      </section>
+    </div>
+  </div>
+</main>
+<footer id="app-footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/pages/products.js"></script>
+</body>
+</html>

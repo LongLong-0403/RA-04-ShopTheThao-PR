@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError, OperationalError
 
@@ -58,6 +59,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
+catalog.UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+app.mount('/uploads/products', StaticFiles(directory=str(catalog.UPLOAD_DIR)), name='product-images')
 
 # CORS: cho phép trang FE (khác cổng/khác domain) gọi được API này
 app.add_middleware(

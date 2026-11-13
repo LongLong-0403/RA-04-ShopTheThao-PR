@@ -1,13 +1,18 @@
 """Catalog maintenance and public product search."""
 import math
+from pathlib import Path
+from uuid import uuid4
 from decimal import Decimal
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import select, func, or_
 from sqlalchemy.orm import Session
 from app.core.deps import require_admin
 from app.db.session import get_db
 from app.models.catalog import Sport, Category, Brand, Product, ProductSku, ProductImage, ConditionEnum, ProductStatusEnum, UnitEnum
+from app.services.product_rules import validate_used, sync_stock
+
+UPLOAD_DIR = Path(__file__).resolve().parents[2] / 'uploads' / 'products'
 
 router = APIRouter()
 
@@ -85,6 +90,7 @@ catalog_routes('categories', Category, CategoryInput)
 catalog_routes('brands', Brand, BrandInput)
 
 class SkuInput(BaseModel):
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
     sku_code: str = Field(min_length=1, max_length=100)
     size: str | None = Field(default=None, max_length=50)
     color: str | None = Field(default=None, max_length=50)
@@ -100,11 +106,13 @@ class SkuInput(BaseModel):
         return self
 
 class ImageInput(BaseModel):
-    image_url: str = Field(min_length=1, max_length=500, pattern=r'^https?://')
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
+    image_url: str = Field(min_length=1, max_length=500, pattern=r'^(https?://[^\s/]+[^\s]*|/uploads/products/[a-f0-9]{32}\.(png|jpg|webp))$')
     is_primary: bool = False
     sort_order: int = Field(default=0, ge=0)
 
 class ProductInput(BaseModel):
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
     sport_id: int
     category_id: int
     brand_id: int
@@ -131,7 +139,8 @@ def validate_product(db, data, row=None):
     for model, key in [(Sport, 'sport_id'), (Category, 'category_id'), (Brand, 'brand_id')]:
         if db.get(model, getattr(data, key)) is None:
             raise HTTPException(404, f'Không tìm thấy {key}')
-    if data.status == ProductStatusEnum.ACTIVE and (row is None or not row.skus or sum(i.is_primary for i in row.images) != 1):
+    validate_used(data.condition_type, db.get(Category, data.category_id), row.skus if row else [])
+    if data.status != ProductStatusEnum.INACTIVE and (row is None or not row.skus or sum(i.is_primary for i in row.images) != 1):
         raise HTTPException(409, 'Thêm SKU và một ảnh chính trước khi kích hoạt')
 
 @router.post('/products', tags=['catalog-products'], dependencies=[Depends(require_admin)], status_code=201)
@@ -149,7 +158,9 @@ def update_product(product_id: int, data: ProductInput, db: Session = Depends(ge
     validate_product(db, data, row)
     for key, value in data.model_dump().items():
         setattr(row, key, value)
+    sync_stock(row)
     db.commit()
+    db.refresh(row)
     return row
 
 @router.delete('/products/{product_id}', tags=['catalog-products'], dependencies=[Depends(require_admin)])
@@ -162,12 +173,14 @@ def hide_product(product_id: int, db: Session = Depends(get_db)):
 @router.post('/products/{product_id}/skus', tags=['catalog-skus'], dependencies=[Depends(require_admin)], status_code=201)
 def add_sku(product_id: int, data: SkuInput, db: Session = Depends(get_db)):
     p = product_or_404(db, product_id)
+    validate_used(p.condition_type, p.category, [*p.skus, data])
     normalized = lambda value: (value or '').strip().lower()
     if any((normalized(s.size), normalized(s.color), s.unit, s.quantity_per_lot) ==
            (normalized(data.size), normalized(data.color), data.unit, data.quantity_per_lot) for s in p.skus):
         raise HTTPException(409, 'Trùng bộ thuộc tính SKU')
-    row = ProductSku(product_id=p.id, **data.model_dump())
+    row = ProductSku(product=p, **data.model_dump())
     db.add(row)
+    sync_stock(p)
     db.commit()
     db.refresh(row)
     return row
@@ -175,11 +188,14 @@ def add_sku(product_id: int, data: SkuInput, db: Session = Depends(get_db)):
 @router.post('/products/{product_id}/images', tags=['catalog-images'], dependencies=[Depends(require_admin)], status_code=201)
 def add_image(product_id: int, data: ImageInput, db: Session = Depends(get_db)):
     p = product_or_404(db, product_id)
-    if data.is_primary:
+    if data.is_primary or not p.images:
         for image in p.images:
             image.is_primary = False
         db.flush()
-    row = ProductImage(product_id=p.id, **data.model_dump())
+    values = data.model_dump()
+    if not p.images:
+        values['is_primary'] = True
+    row = ProductImage(product=p, **values)
     db.add(row)
     db.commit()
     db.refresh(row)
@@ -190,12 +206,17 @@ def edit_sku(product_id: int, sku_id: int, data: SkuInput, db: Session = Depends
     p = product_or_404(db, product_id)
     row = db.scalar(select(ProductSku).where(ProductSku.id == sku_id, ProductSku.product_id == p.id).with_for_update())
     if row is None: raise HTTPException(404, 'Không tìm thấy SKU')
+    validate_used(p.condition_type, p.category, [s for s in p.skus if s.id != sku_id] + [data])
+    if row.order_items and (row.unit != data.unit or row.quantity_per_lot != data.quantity_per_lot):
+        raise HTTPException(409, 'SKU đã có đơn: không được đổi đơn vị hoặc quy cách lô')
     normalize = lambda value: (value or '').strip().lower()
     for s in p.skus:
         if s.id != sku_id and (normalize(s.size), normalize(s.color), s.unit, s.quantity_per_lot) == (normalize(data.size), normalize(data.color), data.unit, data.quantity_per_lot):
             raise HTTPException(409, 'Trùng biến thể')
     for key, value in data.model_dump().items(): setattr(row, key, value)
+    sync_stock(p)
     db.commit()
+    db.refresh(row)
     return row
 
 @router.delete('/products/{product_id}/skus/{sku_id}', tags=['catalog-skus'], dependencies=[Depends(require_admin)])
@@ -204,11 +225,91 @@ def remove_sku(product_id: int, sku_id: int, db: Session = Depends(get_db)):
     p = product_or_404(db, product_id)
     row = db.get(ProductSku, sku_id)
     if row is None or row.product_id != p.id: raise HTTPException(404, 'Không tìm thấy SKU')
-    if db.scalar(select(OrderItem.id).where(OrderItem.product_sku_id == sku_id).limit(1)) or (p.status == ProductStatusEnum.ACTIVE and len(p.skus) <= 1):
+    if db.scalar(select(OrderItem.id).where(OrderItem.product_sku_id == sku_id).limit(1)) or (p.status != ProductStatusEnum.INACTIVE and len(p.skus) <= 1):
         raise HTTPException(409, 'SKU đã được dùng hoặc là SKU cuối của sản phẩm đang bán')
-    db.delete(row)
+    if row.cart_items:
+        raise HTTPException(409, 'SKU đang nằm trong giỏ hàng; hãy ẩn sản phẩm thay vì xóa')
+    p.skus.remove(row)
+    sync_stock(p)
     db.commit()
     return {'deleted': sku_id}
+
+
+@router.get('/admin/products', tags=['catalog-admin'], dependencies=[Depends(require_admin)])
+def admin_products(q: str | None = None, db: Session = Depends(get_db)):
+    query = select(Product).order_by(Product.id.desc())
+    if q:
+        query = query.where(Product.name.contains(q))
+    return list(db.scalars(query))
+
+
+@router.get('/admin/products/{product_id}', tags=['catalog-admin'], dependencies=[Depends(require_admin)])
+def admin_product_detail(product_id: int, db: Session = Depends(get_db)):
+    p = product_or_404(db, product_id)
+    return {'product': p, 'skus': p.skus, 'images': sorted(p.images, key=lambda i: (i.sort_order, i.id))}
+
+
+@router.put('/products/{product_id}/images/{image_id}', tags=['catalog-images'], dependencies=[Depends(require_admin)])
+def edit_image(product_id: int, image_id: int, data: ImageInput, db: Session = Depends(get_db)):
+    p = product_or_404(db, product_id)
+    image = next((i for i in p.images if i.id == image_id), None)
+    if image is None:
+        raise HTTPException(404, 'Không tìm thấy ảnh')
+    if image.is_primary and not data.is_primary and p.status != ProductStatusEnum.INACTIVE:
+        raise HTTPException(409, 'Hãy chọn ảnh khác làm ảnh chính trước')
+    if data.is_primary:
+        for i in p.images:
+            i.is_primary = False
+        db.flush()
+    for key, value in data.model_dump().items():
+        setattr(image, key, value)
+    db.commit()
+    db.refresh(image)
+    return image
+
+
+@router.delete('/products/{product_id}/images/{image_id}', tags=['catalog-images'], dependencies=[Depends(require_admin)])
+def remove_image(product_id: int, image_id: int, db: Session = Depends(get_db)):
+    p = product_or_404(db, product_id)
+    image = next((i for i in p.images if i.id == image_id), None)
+    if image is None:
+        raise HTTPException(404, 'Không tìm thấy ảnh')
+    if image.is_primary and p.status != ProductStatusEnum.INACTIVE:
+        raise HTTPException(409, 'Không thể xóa ảnh chính khi đang hiển thị')
+    db.delete(image)
+    db.commit()
+    return {'deleted': image_id}
+
+
+@router.post('/products/{product_id}/images/upload', tags=['catalog-images'], dependencies=[Depends(require_admin)], status_code=201)
+async def upload_image(product_id: int, request: Request, db: Session = Depends(get_db)):
+    """Raw image body (not multipart); bounded stream, server-generated filename."""
+    product_or_404(db, product_id)
+    content = bytearray()
+    async for chunk in request.stream():
+        content.extend(chunk)
+        if len(content) > 5 * 1024 * 1024:
+            raise HTTPException(413, 'Ảnh tối đa 5 MB')
+    mime = request.headers.get('content-type', '').split(';')[0]
+    extension = None
+    if mime == 'image/png' and content.startswith(b'\x89PNG\r\n\x1a\n') and b'IEND' in content[-16:]:
+        extension = 'png'
+    elif mime == 'image/jpeg' and content.startswith(b'\xff\xd8\xff') and content.endswith(b'\xff\xd9'):
+        extension = 'jpg'
+    elif mime == 'image/webp' and content[:4] == b'RIFF' and content[8:12] == b'WEBP':
+        extension = 'webp'
+    if extension is None:
+        raise HTTPException(422, 'Chỉ chấp nhận ảnh PNG, JPEG, WebP có chữ ký hợp lệ')
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+    name = f'{uuid4().hex}.{extension}'
+    path = UPLOAD_DIR / name
+    path.write_bytes(content)
+    try:
+        return add_image(product_id, ImageInput(image_url=f'/uploads/products/{name}'), db)
+    except Exception:
+        db.rollback()
+        path.unlink(missing_ok=True)
+        raise
 
 @router.get('/products', tags=['catalog-products'])
 @router.get('/search/products', tags=['catalog-products'], include_in_schema=False)
