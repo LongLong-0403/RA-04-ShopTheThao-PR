@@ -112,6 +112,11 @@ class Order(Base):
         index=True,
         comment="Khách hàng đặt mua",
     )
+    idempotency_key: Mapped[Optional[str]] = mapped_column(
+    String(64),
+    nullable=True,
+    comment="Khóa chống gửi checkout lặp",
+    )
     receiver_name: Mapped[str] = mapped_column(String(150), nullable=False, comment="Họ tên người nhận hàng")
     receiver_phone: Mapped[str] = mapped_column(String(20), nullable=False, comment="Số điện thoại người nhận")
     shipping_address: Mapped[str] = mapped_column(Text, nullable=False, comment="Địa chỉ giao hàng chi tiết")
@@ -153,6 +158,7 @@ class Order(Base):
     __table_args__ = (
         CheckConstraint("shipping_fee >= 0", name="chk_orders_shipping_fee"),
         CheckConstraint("total_amount >= 0", name="chk_orders_total_amount"),
+        UniqueConstraint("user_id","idempotency_key",name="uk_orders_user_idempotency",),
         {"comment": "Đơn hàng thương mại điện tử"},
     )
 
