@@ -33,3 +33,4 @@ from app.models.order import (
     PaymentMethodEnum,
     OrderStatusEnum,
 )
+from .match_posts import MatchPost

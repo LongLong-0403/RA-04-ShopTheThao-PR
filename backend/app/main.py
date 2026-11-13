@@ -14,10 +14,11 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from app import models  # noqa: F401 - import để SQLAlchemy biết các bảng
 from app.core.config import settings
 from app.db.session import Base, SessionLocal, engine
+from app.models.item import Item
+from app.routers import courts, health, items, users,match_posts
 from app.routers import auth, courts, health, items, users, commerce, catalog, activities
 from app.services import court_service, item_service, user_service
 from app.services.exceptions import ServiceError
-
 
 def init_database() -> None:
     """Tự tạo database, bảng và dữ liệu mẫu nếu chưa tồn tại."""
@@ -94,7 +95,7 @@ app.include_router(courts.router, include_in_schema=False)  # giữ URL cũ /cou
 app.include_router(health.router, prefix="/api")
 app.include_router(items.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
-
+app.include_router(match_posts.router, prefix="/api")
 
 @app.get("/")
 def root():
