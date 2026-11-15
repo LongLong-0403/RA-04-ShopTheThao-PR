@@ -248,7 +248,34 @@ def detail(product_id: int, db: Session = Depends(get_db)):
     p = db.get(Product, product_id)
     if p is None or p.status != ProductStatusEnum.ACTIVE or any(x.status.value != 'ACTIVE' for x in (p.sport, p.category, p.brand)):
         raise HTTPException(404, 'Không tìm thấy sản phẩm')
-    return {'product': p, 'skus': p.skus, 'images': p.images}
+    available_skus = [sku for sku in p.skus if sku.stock > 0]
+    if not available_skus or not p.images:
+        raise HTTPException(404, 'Không tìm thấy sản phẩm đang bán')
+
+    related = db.scalars(
+        select(Product)
+        .join(Sport)
+        .join(Category)
+        .join(Brand)
+        .where(
+            Product.id != p.id,
+            Product.status == ProductStatusEnum.ACTIVE,
+            Sport.status == 'ACTIVE',
+            Category.status == 'ACTIVE',
+            Brand.status == 'ACTIVE',
+            Product.category_id == p.category_id,
+            Product.images.any(ProductImage.is_primary == True),
+            Product.skus.any(ProductSku.stock > 0),
+        )
+        .order_by(Product.created_at.desc(), Product.id.desc())
+        .limit(8)
+    ).all()
+    return {
+        'product': p,
+        'skus': available_skus,
+        'images': sorted(p.images, key=lambda image: (not image.is_primary, image.sort_order, image.id)),
+        'related_products': related,
+    }
 
 @router.get('/menu', tags=['catalog-menu'])
 def menu(db: Session = Depends(get_db)):
