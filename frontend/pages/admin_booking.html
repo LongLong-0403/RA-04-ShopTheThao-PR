@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tsport - Quan tri dat san</title>
+    <link rel="icon" href="../assets/images/logo.svg">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-root="../">
+    <header id="app-header"></header>
+
+    <main class="container">
+        <!-- Phần 1: Quản lý Sân & Ca giờ (Giong A07) -->
+        <section class="card" style="margin-bottom: 24px;">
+            <h2>Quan ly San & Ca gio</h2>
+            <form id="court-form" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; align-items: flex-end;">
+                <div>
+                    <label for="court-name">Ten san moi</label>
+                    <input id="court-name" name="court_name" type="text" required placeholder="VD: Cau long so 1">
+                </div>
+                <div>
+                    <label for="time-slot">Khung gio ca</label>
+                    <input id="time-slot" name="time_slot" type="text" required placeholder="VD: 16:00 - 18:00">
+                </div>
+                <div>
+                    <label for="price">Gia ca (VND)</label>
+                    <input id="price" name="price" type="number" min="0" required placeholder="VD: 180000">
+                </div>
+                <div style="grid-column: span 3; text-align: right;">
+                    <button type="submit" class="btn btn-primary">Them ca gia san</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Phần 2: Duyệt lịch đặt sân của khách (Giong A08) -->
+        <section class="card">
+            <div class="list-header">
+                <h2>Duyet lich dat san</h2>
+                <input id="admin-search" type="search" placeholder="Tim theo ten khach hang / san...">
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Khach hang</th>
+                            <th>San / Ngay</th>
+                            <th>Ca / Gia da dat</th>
+                            <th class="text-right">Trang thai</th>
+                            <th>Hanh dong duyet</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-booking-table-body">
+                        <!-- Du lieu render tu JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer id="app-footer"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/pages/admin_booking.js"></script>
+</body>
+</html>
