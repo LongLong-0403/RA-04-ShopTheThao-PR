@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tsport - Dat san the thao</title>
+    <link rel="icon" href="../assets/images/logo.svg">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-root="../">
+    <header id="app-header"></header>
+
+    <main class="container layout-2col">
+        <!-- Cot trai: Form gui yeu cau dat san (Giong D14 / D15) -->
+        <section class="card">
+            <h2>Dat san the thao</h2>
+            <form id="booking-form">
+                <label for="sport">Mon the thao</label>
+                <input id="sport" name="sport" type="text" required placeholder="VD: Cau long, Bong da">
+
+                <label for="court_name">Ten san</label>
+                <input id="court_name" name="court_name" type="text" required placeholder="VD: San cau long so 1">
+
+                <label for="booking_date">Ngay su dung</label>
+                <input id="booking_date" name="booking_date" type="date" required>
+
+                <label for="time_slot">Ca (Khung gio)</label>
+                <input id="time_slot" name="time_slot" type="text" required placeholder="VD: 16:00 - 18:00">
+
+                <div class="form-actions" style="margin-top: 16px;">
+                    <button id="btn-submit" type="submit" class="btn btn-primary">Gui yeu cau dat san</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Cot phai: Lịch đặt sân của tôi (Giong D16) -->
+        <section class="card">
+            <div class="list-header">
+                <h2>Lich dat san cua toi</h2>
+                <input id="search-input" type="search" placeholder="Tim theo ten san...">
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>San / Ngay</th>
+                            <th>Ca gio / Gia</th>
+                            <th class="text-right">Trang thai</th>
+                            <th>Thao tac</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booking-table-body">
+                        <!-- Du lieu render tu JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer id="app-footer"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.7.9/dist/axios.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/pages/booking.js"></script>
+</body>
+</html>

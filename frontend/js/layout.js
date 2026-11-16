@@ -7,8 +7,10 @@
 
 // Thêm trang mới vào menu: thêm 1 dòng vào mảng này (đường dẫn tính từ thư mục frontend/)
 const MENU = [
-  { href: "index.html", label: "Trang chủ" },
-  { href: "pages/items.html", label: "Items (CRUD mẫu)" },
+    { href: "index.html", label: "Trang chủ" },
+    { href: "pages/items.html", label: "Items (CRUD mẫu)" },
+    { href: "pages/booking.html", label: "Đặt sân" },
+    { href: "pages/admin_booking.html", label: "Quản trị sân" },
 ];
 
 function renderLayout() {
@@ -16,16 +18,16 @@ function renderLayout() {
   const currentPath = window.location.pathname;
 
   const links = MENU.map((item) => {
-    const isActive = currentPath.endsWith("/" + item.href) ||
-      (item.href === "index.html" && currentPath.endsWith("/"));
-    return `<a href="${root}${item.href}" class="${isActive ? "active" : ""}">${item.label}</a>`;
+    const targetHref = root + item.href;
+    const isActive = currentPath.includes(item.href);
+    return `<a href="${targetHref}" class="${isActive ? "active" : ""}">${item.label}</a>`;
   }).join("");
 
   document.getElementById("app-header").innerHTML = `
     <div class="container header-inner">
       <a href="${root}index.html" class="brand">
         <img src="${root}assets/images/logo.svg" alt="logo" width="28" height="28">
-        <span>${CONFIG.APP_NAME}</span>
+        <span>${typeof CONFIG !== 'undefined' ? CONFIG.APP_NAME : 'KS25 Base'}</span>
       </a>
       <nav class="nav">${links}</nav>
     </div>`;
