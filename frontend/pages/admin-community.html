@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản Trị Bài Viết & Kèo Giao Lưu | Tsport Store Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <div class="tsport-admin-wrapper">
+    <!-- BACKDROP MOBILE -->
+    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
+    <!-- SIDEBAR DÙNG CHUNG CHO CẢ NHÓM -->
+    <aside class="tsport-admin-sidebar" id="adminSidebar">
+      <div class="tsport-admin-sidebar-header">
+        <a href="../index.html" class="tsport-admin-brand">
+          <span class="tsport-admin-brand-logo">Tsport</span>
+          <span class="tsport-admin-brand-badge">ADMIN</span>
+        </a>
+        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
+      </div>
+
+      <nav class="tsport-admin-nav">
+        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
+        <a href="admin-dashboard.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📊</span>
+          <span>Bảng điều khiển (Chart.js)</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
+        <a href="products.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📦</span>
+          <span>Sản phẩm &amp; Bảng SKU</span>
+        </a>
+        <a href="categories.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📁</span>
+          <span>Môn / Danh mục / Thương hiệu</span>
+        </a>
+        <a href="admin-orders.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📑</span>
+          <span>Đơn hàng &amp; In hóa đơn</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
+        <a href="admin-buyback.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">♻️</span>
+          <span>Thu mua đồ cũ (Tạo SKU)</span>
+        </a>
+        <a href="admin-courts.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏸</span>
+          <span>Quản lý Đặt sân &amp; Ca</span>
+        </a>
+        <a href="admin-community.html" class="tsport-admin-nav-item is-active">
+          <span class="tsport-admin-nav-icon">👥</span>
+          <span>Quản lý Kèo giao lưu</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
+        <a href="admin-guide.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📖</span>
+          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
+        </a>
+        <a href="../index.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏠</span>
+          <span>Về trang chủ Storefront</span>
+        </a>
+      </nav>
+
+      <div class="tsport-admin-sidebar-footer">
+        <div class="tsport-admin-user-info">
+          <div class="tsport-admin-avatar">AD</div>
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
+            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH (MAIN) -->
+    <div class="tsport-admin-main">
+      <header class="tsport-admin-topbar">
+        <div class="tsport-admin-topbar-left">
+          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div>
+            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">👥 Quản Trị &amp; Kiểm Duyệt Kèo Giao Lưu Thể Thao</h1>
+            <div style="font-size:12px; color:#64748B;">Kiểm duyệt bài viết tìm bạn, ẩn bài vi phạm quy chuẩn cộng đồng</div>
+          </div>
+        </div>
+
+        <div class="tsport-actions" style="display:flex; align-items:center; gap:8px;">
+          <a href="community.html" class="btn btn-secondary btn-sm" target="_blank">
+            👁️ Xem Trang Cộng Đồng
+          </a>
+          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Cửa Hàng</a>
+        </div>
+      </header>
+
+      <div class="tsport-admin-body">
+        
+        <!-- CARD BẢNG KIỂM DUYỆT BÀI ĐĂNG -->
+        <div class="tsport-card" style="margin:0;">
+          <div class="tsport-filter-bar">
+            <div class="tsport-filter-search">
+              <span class="tsport-filter-search-icon">🔍</span>
+              <input type="text" id="filterMatchLocation" placeholder="Tìm theo địa điểm, sân, quận huyện..." />
+            </div>
+
+            <select id="filterMatchSport" class="tsport-filter-select">
+              <option value="ALL">Tất cả môn thể thao</option>
+            </select>
+
+            <input type="date" id="filterMatchDate" class="tsport-filter-select" />
+
+            <div class="tsport-filter-count" id="matchCountBadge">0 bài đăng</div>
+          </div>
+
+          <div style="display:none;">
+            <!-- Dummy toggle for community.js admin mode sync -->
+            <input type="checkbox" id="toggleAdminCommunityMode" checked />
+          </div>
+
+          <!-- LƯỚI / BẢNG BÀI ĐĂNG GIAO LƯU -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:18px; padding:20px;" id="matchesGrid">
+            <!-- Nạp động qua community.js -->
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL THÊM / SỬA BÀI ĐĂNG (NẾU ADMIN MUỐN SỬA) -->
+  <div class="modal-backdrop" id="modalMatchForm">
+    <div class="modal" style="max-width:560px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="matchModalTitle">Chỉnh sửa bài đăng</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+      <form id="formMatchPost">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="matchTitle">Tiêu đề bài viết <span class="required">*</span></label>
+            <input type="text" id="matchTitle" class="form-control" required />
+          </div>
+          <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="matchSportId">Môn thể thao <span class="required">*</span></label>
+              <select id="matchSportId" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="matchLevel">Trình độ</label>
+              <input type="text" id="matchLevel" class="form-control" value="Giao lưu phong trào" />
+            </div>
+          </div>
+          <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="matchDate">Ngày chơi <span class="required">*</span></label>
+              <input type="date" id="matchDate" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="matchTime">Khung giờ <span class="required">*</span></label>
+              <input type="text" id="matchTime" class="form-control" required placeholder="18:00 - 20:00" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="matchLocation">Địa điểm / Tên sân <span class="required">*</span></label>
+            <input type="text" id="matchLocation" class="form-control" required />
+          </div>
+          <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="matchSlots">Số người cần tìm <span class="required">*</span></label>
+              <input type="number" id="matchSlots" class="form-control" min="1" value="2" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="matchPriceShare">Chi phí</label>
+              <input type="text" id="matchPriceShare" class="form-control" value="Chia đều tiền sân" />
+            </div>
+          </div>
+          <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+            <div class="form-group">
+              <label class="form-label" for="matchContactName">Người liên hệ <span class="required">*</span></label>
+              <input type="text" id="matchContactName" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="matchContactPhone">Số điện thoại <span class="required">*</span></label>
+              <input type="tel" id="matchContactPhone" class="form-control" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="matchDesc">Ghi chú thêm</label>
+            <textarea id="matchDesc" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu bài viết</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/mock-data.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/admin-nav.js"></script>
+  <script src="../js/modules/community.js"></script>
+</body>
+</html>

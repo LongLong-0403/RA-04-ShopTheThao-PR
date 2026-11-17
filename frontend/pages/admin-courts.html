@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản Lý Đặt Sân & Cấu Hình Ca | Tsport Store Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <div class="tsport-admin-wrapper">
+    <!-- BACKDROP MOBILE -->
+    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
+    <!-- SIDEBAR DÙNG CHUNG CHO CẢ NHÓM -->
+    <aside class="tsport-admin-sidebar" id="adminSidebar">
+      <div class="tsport-admin-sidebar-header">
+        <a href="../index.html" class="tsport-admin-brand">
+          <span class="tsport-admin-brand-logo">Tsport</span>
+          <span class="tsport-admin-brand-badge">ADMIN</span>
+        </a>
+        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
+      </div>
+
+      <nav class="tsport-admin-nav">
+        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
+        <a href="admin-dashboard.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📊</span>
+          <span>Bảng điều khiển (Chart.js)</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
+        <a href="products.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📦</span>
+          <span>Sản phẩm &amp; Bảng SKU</span>
+        </a>
+        <a href="categories.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📁</span>
+          <span>Môn / Danh mục / Thương hiệu</span>
+        </a>
+        <a href="admin-orders.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📑</span>
+          <span>Đơn hàng &amp; In hóa đơn</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
+        <a href="admin-buyback.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">♻️</span>
+          <span>Thu mua đồ cũ (Tạo SKU)</span>
+        </a>
+        <a href="admin-courts.html" class="tsport-admin-nav-item is-active">
+          <span class="tsport-admin-nav-icon">🏸</span>
+          <span>Quản lý Đặt sân &amp; Ca</span>
+        </a>
+        <a href="admin-community.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">👥</span>
+          <span>Quản lý Kèo giao lưu</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
+        <a href="admin-guide.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📖</span>
+          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
+        </a>
+        <a href="../index.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏠</span>
+          <span>Về trang chủ Storefront</span>
+        </a>
+      </nav>
+
+      <div class="tsport-admin-sidebar-footer">
+        <div class="tsport-admin-user-info">
+          <div class="tsport-admin-avatar">AD</div>
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
+            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH (MAIN) -->
+    <div class="tsport-admin-main">
+      <header class="tsport-admin-topbar">
+        <div class="tsport-admin-topbar-left">
+          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div>
+            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">🏸 Quản Lý Đặt Sân &amp; Cấu Hình Ca Giờ Cố Định</h1>
+            <div style="font-size:12px; color:#64748B;">Kiểm soát chống xung đột lịch, 2 admin duyệt đồng thời, giải phóng ca và giá niêm yết</div>
+          </div>
+        </div>
+
+        <div class="tsport-actions" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenAdminAddCourt">
+            ➕ Tạo Sân Mới
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenAdminAddSlot">
+            ⏰ Cấu Hình Ca &amp; Giá
+          </button>
+          <a href="courts.html" class="btn btn-secondary btn-sm" target="_blank">
+            👁️ Trang Khách Đặt Sân
+          </a>
+          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Cửa Hàng</a>
+        </div>
+      </header>
+
+      <div class="tsport-admin-body">
+        
+        <!-- CARD 1: DANH SÁCH YÊU CẦU ĐẶT SÂN TOÀN HỆ THỐNG -->
+        <div class="tsport-card" style="margin-bottom:24px;">
+          <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="font-size:16px; font-weight:800; margin:0; display:flex; align-items:center; gap:8px;">
+              <span>📋</span>
+              <span>Danh Sách Yêu Cầu Đặt Sân (Admin Duyệt &amp; Khóa Ca)</span>
+            </h2>
+            <div style="font-size:12px; color:#64748B;">
+              Hỗ trợ kiểm tra xung đột version (Dual-admin collision) &amp; Chống trùng ca
+            </div>
+          </div>
+
+          <div class="tsport-table-responsive">
+            <table class="tsport-table">
+              <thead>
+                <tr>
+                  <th>Mã Booking</th>
+                  <th>Khách hàng &amp; SĐT</th>
+                  <th>Sân &amp; Ngày chơi</th>
+                  <th>Khung giờ (Ca)</th>
+                  <th>Giá cố định</th>
+                  <th>Trạng thái</th>
+                  <th style="text-align:center; min-width:150px;">Thao tác Quản trị</th>
+                </tr>
+              </thead>
+              <tbody id="adminBookingRequestsTbody">
+                <tr><td colspan="7" style="text-align:center; padding:20px;">Đang tải danh sách yêu cầu...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CARD 2 & 3: DANH SÁCH SÂN VÀ CA GIỜ -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+          
+          <div class="tsport-card" style="margin:0;">
+            <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <h2 style="font-size:15px; font-weight:800; margin:0;">🏟️ Danh Sách Sân Con Theo Môn</h2>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="openModal('modalAdminCourtForm')">+ Thêm sân</button>
+            </div>
+            <div class="tsport-table-responsive" style="max-height:300px; overflow-y:auto;">
+              <table class="tsport-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Tên sân</th>
+                    <th>Môn</th>
+                    <th>Mặt sân</th>
+                    <th>Địa chỉ</th>
+                  </tr>
+                </thead>
+                <tbody id="adminCourtsListTbody">
+                  <tr><td colspan="5" style="text-align:center; padding:16px;">Đang tải danh sách sân...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tsport-card" style="margin:0;">
+            <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <h2 style="font-size:15px; font-weight:800; margin:0;">⏰ Ca Giờ &amp; Giá Cố Định</h2>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="openModal('modalAdminSlotForm')">+ Thêm ca</button>
+            </div>
+            <div class="tsport-table-responsive" style="max-height:300px; overflow-y:auto;">
+              <table class="tsport-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Thuộc sân</th>
+                    <th>Khung giờ ca</th>
+                    <th>Giá niêm yết</th>
+                  </tr>
+                </thead>
+                <tbody id="adminSlotsListTbody">
+                  <tr><td colspan="4" style="text-align:center; padding:16px;">Đang tải ca giờ...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN TẠO SÂN MỚI -->
+  <div class="modal-backdrop" id="modalAdminCourtForm">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">➕ Tạo Sân Thể Thao Mới</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+      <form id="formAdminCreateCourt">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="adminCourtSport">Môn thể thao <span class="required">*</span></label>
+            <select id="adminCourtSport" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="adminCourtName">Tên sân (Ví dụ: Sân Cầu Lông Số 1 - VIP) <span class="required">*</span></label>
+            <input type="text" id="adminCourtName" class="form-control" required placeholder="Nhập tên sân..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="adminCourtSurface">Mặt sân / Chất liệu</label>
+            <input type="text" id="adminCourtSurface" class="form-control" value="Thảm cao su chống trượt PVC" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="adminCourtAddress">Địa chỉ / Cụm sân</label>
+            <input type="text" id="adminCourtAddress" class="form-control" value="Khu liên hợp thể thao Tsport, Q. Cầu Giấy, Hà Nội" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Xác nhận tạo sân</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN CẤU HÌNH CA & GIÁ CỐ ĐỊNH -->
+  <div class="modal-backdrop" id="modalAdminSlotForm">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-header">
+        <h3 class="modal-title">⏰ Cấu Hình Ca Giờ &amp; Giá Cố Định</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+      <form id="formAdminCreateSlot">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="adminSlotCourt">Chọn sân áp dụng <span class="required">*</span></label>
+            <select id="adminSlotCourt" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="adminSlotTime">Khung giờ ca (Ví dụ: 17:30 - 19:00) <span class="required">*</span></label>
+            <input type="text" id="adminSlotTime" class="form-control" required placeholder="HH:MM - HH:MM" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="adminSlotPrice">Giá niêm yết cố định (VNĐ) <span class="required">*</span></label>
+            <input type="number" id="adminSlotPrice" class="form-control" required min="10000" step="10000" value="180000" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu ca giờ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/mock-data.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/admin-nav.js"></script>
+  <script src="../js/modules/courts.js"></script>
+</body>
+</html>

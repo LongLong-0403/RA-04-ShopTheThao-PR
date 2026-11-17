@@ -9,126 +9,162 @@
 </head>
 <body data-root="../">
 
-  <!-- TOP BAR -->
-  <header class="tsport-header">
-    <div class="tsport-topbar">
-      <div class="container">
-        <div class="tsport-topbar-left">
-          <span class="tsport-topbar-badge">ADMIN DASHBOARD</span>
-          <span>QUẢN LÝ SẢN PHẨM & BẢNG BIẾN THỂ SKU (CAM – TRẮNG)</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <a href="admin-dashboard.html" style="color:#FF6B35; font-weight:700;">📊 Dashboard</a>
-          <a href="categories.html" style="color:#F8FAFC;">📁 Danh mục</a>
-          <a href="admin-orders.html" style="color:#F8FAFC;">📑 Đơn hàng</a>
-          <a href="admin-buyback.html" style="color:#F8FAFC;">♻️ Thu mua</a>
-          <a href="admin-guide.html" style="color:#F8FAFC;">📖 Hướng dẫn</a>
-          <a href="../index.html" style="color:#F8FAFC;">🏠 Cửa Hàng</a>
-        </div>
-      </div>
-    </div>
+  <div class="tsport-admin-wrapper">
+    <!-- BACKDROP MOBILE -->
+    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
 
-    <div class="tsport-main-bar">
-      <div class="container">
-        <a href="../index.html" class="tsport-logo">
-          <span class="tsport-logo-text">Tsport</span>
-          <span class="tsport-logo-tag">PRODUCTS ADMIN</span>
+    <!-- SIDEBAR DÙNG CHUNG CHO CẢ NHÓM -->
+    <aside class="tsport-admin-sidebar" id="adminSidebar">
+      <div class="tsport-admin-sidebar-header">
+        <a href="../index.html" class="tsport-admin-brand">
+          <span class="tsport-admin-brand-logo">Tsport</span>
+          <span class="tsport-admin-brand-badge">ADMIN</span>
+        </a>
+        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
+      </div>
+
+      <nav class="tsport-admin-nav">
+        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
+        <a href="admin-dashboard.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📊</span>
+          <span>Bảng điều khiển (Chart.js)</span>
         </a>
 
-        <div class="tsport-actions">
+        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
+        <a href="products.html" class="tsport-admin-nav-item is-active">
+          <span class="tsport-admin-nav-icon">📦</span>
+          <span>Sản phẩm &amp; Bảng SKU</span>
+        </a>
+        <a href="categories.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📁</span>
+          <span>Môn / Danh mục / Thương hiệu</span>
+        </a>
+        <a href="admin-orders.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📑</span>
+          <span>Đơn hàng &amp; In hóa đơn</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
+        <a href="admin-buyback.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">♻️</span>
+          <span>Thu mua đồ cũ (Tạo SKU)</span>
+        </a>
+        <a href="admin-courts.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏸</span>
+          <span>Quản lý Đặt sân &amp; Ca</span>
+        </a>
+        <a href="admin-community.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">👥</span>
+          <span>Quản lý Kèo giao lưu</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
+        <a href="admin-guide.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📖</span>
+          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
+        </a>
+        <a href="../index.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏠</span>
+          <span>Về trang chủ Storefront</span>
+        </a>
+      </nav>
+
+      <div class="tsport-admin-sidebar-footer">
+        <div class="tsport-admin-user-info">
+          <div class="tsport-admin-avatar">AD</div>
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
+            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH (MAIN) -->
+    <div class="tsport-admin-main">
+      <header class="tsport-admin-topbar">
+        <div class="tsport-admin-topbar-left">
+          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div>
+            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">📦 Quản Lý Sản Phẩm &amp; Bảng Biến Thể SKU</h1>
+            <div style="font-size:12px; color:#64748B;">Kho hàng, bảng SKU theo Size/Màu, quản lý hàng cũ và nhập CSV hàng loạt</div>
+          </div>
+        </div>
+
+        <div class="tsport-actions" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <button type="button" class="btn btn-secondary btn-sm" id="btnOpenCsvImportModal" style="background:#FFF7ED; border-color:#FDBA74; color:#C2410C; font-weight:700;">
             📥 Nhập CSV Sản phẩm &amp; SKU
           </button>
-          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedNewProd">🧪 Test SP mới (2 SKU)</button>
-          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedUsedProd">🧪 Test SP cũ (Mô tả hao mòn)</button>
-          <button type="button" class="btn btn-primary" id="btnAddNewProduct">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedNewProd">🧪 Test SP mới</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedUsedProd">🧪 Test SP cũ</button>
+          <button type="button" class="btn btn-primary btn-sm" id="btnAddNewProduct">
             <span>+</span>
-            <span>Thêm sản phẩm mới</span>
+            <span>Thêm sản phẩm</span>
           </button>
+          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Cửa Hàng</a>
         </div>
-      </div>
-    </div>
-  </header>
+      </header>
 
-  <!-- NỘI DUNG CHÍNH -->
-  <main class="tsport-admin-page">
-    <div class="container">
-      
-      <div class="tsport-page-header">
-        <div class="tsport-page-title-wrap">
-          <h1>
-            <span>📦</span>
-            <span>Danh sách Sản phẩm</span>
-          </h1>
-          <div class="tsport-page-subtitle">
-            Quản lý kho hàng, thông số kỹ thuật, bộ sưu tập ảnh và bảng biến thể SKU chi tiết.
-          </div>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <a href="categories.html" class="btn btn-secondary">
-            <span>📁</span>
-            <span>Quản trị Môn / Cây Danh mục / Hãng</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- CARD BẢNG SẢN PHẨM & BỘ LỌC -->
-      <div class="tsport-card">
+      <div class="tsport-admin-body">
         
-        <!-- BỘ LỌC VÀ TÌM KIẾM -->
-        <div class="tsport-filter-bar">
-          <div class="tsport-filter-search">
-            <span class="tsport-filter-search-icon">🔍</span>
-            <input type="text" id="productSearchInput" placeholder="Tìm theo tên sản phẩm, mã, SKU, màu sắc..." />
+        <!-- CARD BẢNG SẢN PHẨM & BỘ LỌC -->
+        <div class="tsport-card" style="margin:0;">
+          
+          <!-- BỘ LỌC VÀ TÌM KIẾM -->
+          <div class="tsport-filter-bar">
+            <div class="tsport-filter-search">
+              <span class="tsport-filter-search-icon">🔍</span>
+              <input type="text" id="productSearchInput" placeholder="Tìm theo tên sản phẩm, mã, SKU, màu sắc..." />
+            </div>
+
+            <select id="filterSport" class="tsport-filter-select">
+              <option value="ALL">Tất cả môn thể thao</option>
+            </select>
+
+            <select id="filterCategory" class="tsport-filter-select">
+              <option value="ALL">Tất cả loại hàng</option>
+            </select>
+
+            <select id="filterBrand" class="tsport-filter-select">
+              <option value="ALL">Tất cả thương hiệu</option>
+            </select>
+
+            <select id="filterCondition" class="tsport-filter-select">
+              <option value="ALL">Tất cả tình trạng</option>
+              <option value="MOI">Chỉ hàng Mới (100%)</option>
+              <option value="CU">Chỉ hàng Cũ (Đã qua sử dụng)</option>
+            </select>
+
+            <div class="tsport-filter-count" id="productsCountBadge">0 sản phẩm</div>
           </div>
 
-          <select id="filterSport" class="tsport-filter-select">
-            <option value="ALL">Tất cả môn thể thao</option>
-          </select>
+          <!-- BẢNG DỮ LIỆU SẢN PHẨM -->
+          <div class="tsport-table-responsive">
+            <table class="tsport-table">
+              <thead>
+                <tr>
+                  <th style="min-width: 260px;">Sản phẩm</th>
+                  <th>Môn thể thao</th>
+                  <th>Loại hàng</th>
+                  <th>Thương hiệu</th>
+                  <th>Tình trạng</th>
+                  <th>Khoảng giá / Biến thể</th>
+                  <th>Tổng tồn kho</th>
+                  <th>Trạng thái</th>
+                  <th style="text-align: right;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody">
+                <!-- Render động từ js/modules/products.js -->
+              </tbody>
+            </table>
+          </div>
 
-          <select id="filterCategory" class="tsport-filter-select">
-            <option value="ALL">Tất cả loại hàng</option>
-          </select>
-
-          <select id="filterBrand" class="tsport-filter-select">
-            <option value="ALL">Tất cả thương hiệu</option>
-          </select>
-
-          <select id="filterCondition" class="tsport-filter-select">
-            <option value="ALL">Tất cả tình trạng</option>
-            <option value="MOI">Chỉ hàng Mới (100%)</option>
-            <option value="CU">Chỉ hàng Cũ (Đã qua sử dụng)</option>
-          </select>
-
-          <div class="tsport-filter-count" id="productsCountBadge">0 sản phẩm</div>
-        </div>
-
-        <!-- BẢNG DỮ LIỆU SẢN PHẨM -->
-        <div class="tsport-table-responsive">
-          <table class="tsport-table">
-            <thead>
-              <tr>
-                <th style="min-width: 260px;">Sản phẩm</th>
-                <th>Môn thể thao</th>
-                <th>Loại hàng</th>
-                <th>Thương hiệu</th>
-                <th>Tình trạng</th>
-                <th>Khoảng giá / Biến thể</th>
-                <th>Tổng tồn kho</th>
-                <th>Trạng thái</th>
-                <th style="text-align: right;">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody id="productsTableBody">
-              <!-- Render động từ js/modules/products.js -->
-            </tbody>
-          </table>
         </div>
 
       </div>
-
     </div>
-  </main>
+  </div>
 
   <!-- ========================================================================
        MODAL FORM SẢN PHẨM (THÊM / SỬA KÈM BẢNG SKU & HÀNG CŨ)
@@ -385,6 +421,7 @@
   <script src="../js/api.js"></script>
   <script src="../js/utils.js"></script>
   <script src="../js/data/store.js"></script>
+  <script src="../js/modules/admin-nav.js"></script>
   <script src="../js/modules/header.js"></script>
   <script src="../js/modules/products.js"></script>
   <script src="../js/modules/csv-import.js"></script>

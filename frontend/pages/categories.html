@@ -9,34 +9,89 @@
 </head>
 <body data-root="../">
 
-  <!-- TOP BAR & HEADER -->
-  <header class="tsport-header">
-    <div class="tsport-topbar">
-      <div class="container">
-        <div class="tsport-topbar-left">
-          <span class="tsport-topbar-badge">ADMIN DASHBOARD</span>
-          <span>QUẢN TRỊ 3 TAB: MÔN THỂ THAO • CÂY DANH MỤC CHA-CON • THƯƠNG HIỆU</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <a href="admin-dashboard.html" style="color:#FF6B35; font-weight:700;">📊 Dashboard</a>
-          <a href="products.html" style="color:#F8FAFC;">📦 Sản phẩm</a>
-          <a href="admin-orders.html" style="color:#F8FAFC;">📑 Đơn hàng</a>
-          <a href="admin-buyback.html" style="color:#F8FAFC;">♻️ Thu mua</a>
-          <a href="admin-guide.html" style="color:#F8FAFC;">📖 Hướng dẫn</a>
-          <a href="../index.html" style="color:#F8FAFC;">🏠 Cửa Hàng</a>
-        </div>
-      </div>
-    </div>
+  <div class="tsport-admin-wrapper">
+    <!-- BACKDROP MOBILE -->
+    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
 
-    <div class="tsport-main-bar">
-      <div class="container">
-        <a href="../index.html" class="tsport-logo">
-          <span class="tsport-logo-text">Tsport</span>
-          <span class="tsport-logo-tag">CATALOG ADMIN</span>
+    <!-- SIDEBAR DÙNG CHUNG CHO CẢ NHÓM -->
+    <aside class="tsport-admin-sidebar" id="adminSidebar">
+      <div class="tsport-admin-sidebar-header">
+        <a href="../index.html" class="tsport-admin-brand">
+          <span class="tsport-admin-brand-logo">Tsport</span>
+          <span class="tsport-admin-brand-badge">ADMIN</span>
+        </a>
+        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
+      </div>
+
+      <nav class="tsport-admin-nav">
+        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
+        <a href="admin-dashboard.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📊</span>
+          <span>Bảng điều khiển (Chart.js)</span>
         </a>
 
-        <!-- NÚT TEST VÀ THÊM MỚI -->
-        <div class="tsport-actions">
+        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
+        <a href="products.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📦</span>
+          <span>Sản phẩm &amp; Bảng SKU</span>
+        </a>
+        <a href="categories.html" class="tsport-admin-nav-item is-active">
+          <span class="tsport-admin-nav-icon">📁</span>
+          <span>Môn / Danh mục / Thương hiệu</span>
+        </a>
+        <a href="admin-orders.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📑</span>
+          <span>Đơn hàng &amp; In hóa đơn</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
+        <a href="admin-buyback.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">♻️</span>
+          <span>Thu mua đồ cũ (Tạo SKU)</span>
+        </a>
+        <a href="admin-courts.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏸</span>
+          <span>Quản lý Đặt sân &amp; Ca</span>
+        </a>
+        <a href="admin-community.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">👥</span>
+          <span>Quản lý Kèo giao lưu</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
+        <a href="admin-guide.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📖</span>
+          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
+        </a>
+        <a href="../index.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏠</span>
+          <span>Về trang chủ Storefront</span>
+        </a>
+      </nav>
+
+      <div class="tsport-admin-sidebar-footer">
+        <div class="tsport-admin-user-info">
+          <div class="tsport-admin-avatar">AD</div>
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
+            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH (MAIN) -->
+    <div class="tsport-admin-main">
+      <header class="tsport-admin-topbar">
+        <div class="tsport-admin-topbar-left">
+          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div>
+            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">📁 Quản Trị Cấu Trúc Hàng Hóa (3 Tab)</h1>
+            <div style="font-size:12px; color:#64748B;">Môn thể thao • Cây danh mục cha-con • Thương hiệu (Chặn xóa khi còn sản phẩm)</div>
+          </div>
+        </div>
+
+        <div class="tsport-actions" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <button type="button" class="btn btn-secondary btn-sm" id="btnTestDeleteHasProducts" title="Thử xóa danh mục đang có sản phẩm để kiểm tra cảnh báo đỏ">
             🧪 Test Xóa khi có SP (Chặn lỗi)
           </button>
@@ -44,58 +99,36 @@
             🧪 Test Xóa khi có DM con
           </button>
           <button type="button" class="btn btn-secondary btn-sm" id="btnTestCreateEmptyCat" title="Tạo danh mục rỗng chưa có sản phẩm để test xóa thành công">
-            ➕ Tạo DM rỗng (Test xóa OK)
+            ➕ Tạo DM rỗng (Xóa OK)
           </button>
-          <button type="button" class="btn btn-primary" id="btnAddNewCatalogItem">
+          <button type="button" class="btn btn-primary btn-sm" id="btnAddNewCatalogItem">
             <span>+</span>
             <span id="btnAddNewText">Thêm Môn thể thao</span>
           </button>
+          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Cửa Hàng</a>
         </div>
-      </div>
-    </div>
-  </header>
+      </header>
 
-  <!-- NỘI DUNG CHÍNH -->
-  <main class="tsport-admin-page">
-    <div class="container">
-      
-      <!-- PAGE HEADER -->
-      <div class="tsport-page-header">
-        <div class="tsport-page-title-wrap">
-          <h1>
-            <span>📁</span>
-            <span>Quản trị Phân loại & Cấu trúc Hàng hóa</span>
-          </h1>
-          <div class="tsport-page-subtitle">
-            Hệ thống 3 tab quản lý danh mục phân cấp theo chuẩn SRS: Môn thể thao, Cây danh mục cha-con và Thương hiệu chính hãng.
-          </div>
+      <div class="tsport-admin-body">
+        
+        <!-- THANH ĐIỀU HƯỚNG 3 TAB CHÍNH -->
+        <div class="tsport-catalog-tabs" style="margin-bottom:16px;">
+          <button type="button" class="tsport-catalog-tab-btn is-active" data-tab="sports">
+            <span>⚽</span>
+            <span>1. Môn Thể Thao</span>
+          </button>
+          <button type="button" class="tsport-catalog-tab-btn" data-tab="categories">
+            <span>🌳</span>
+            <span>2. Cây Danh Mục (Cha - Con)</span>
+          </button>
+          <button type="button" class="tsport-catalog-tab-btn" data-tab="brands">
+            <span>🏷️</span>
+            <span>3. Thương Hiệu</span>
+          </button>
         </div>
-        <div style="display:flex; gap:8px;">
-          <a href="products.html" class="btn btn-secondary">
-            <span>📦</span>
-            <span>Sang Quản lý Sản phẩm & SKU</span>
-          </a>
-        </div>
-      </div>
 
-      <!-- THANH ĐIỀU HƯỚNG 3 TAB CHÍNH -->
-      <div class="tsport-catalog-tabs">
-        <button type="button" class="tsport-catalog-tab-btn is-active" data-tab="sports">
-          <span>⚽</span>
-          <span>1. Môn Thể Thao</span>
-        </button>
-        <button type="button" class="tsport-catalog-tab-btn" data-tab="categories">
-          <span>🌳</span>
-          <span>2. Cây Danh Mục (Cha - Con)</span>
-        </button>
-        <button type="button" class="tsport-catalog-tab-btn" data-tab="brands">
-          <span>🏷️</span>
-          <span>3. Thương Hiệu</span>
-        </button>
-      </div>
-
-      <!-- CARD CHỨA BẢNG DỮ LIỆU CỦA CÁC TAB -->
-      <div class="tsport-card">
+        <!-- CARD CHỨA BẢNG DỮ LIỆU CỦA CÁC TAB -->
+        <div class="tsport-card" style="margin:0;">
         
         <!-- PANE 1: MÔN THỂ THAO -->
         <div id="pane-sports" class="tsport-tab-pane is-active">
@@ -183,10 +216,11 @@
           </div>
         </div>
 
-      </div>
+        </div>
 
+      </div>
     </div>
-  </main>
+  </div>
 
   <!-- ==========================================
        MODAL THÊM / SỬA (MÔN / DANH MỤC / THƯƠNG HIỆU)
@@ -265,6 +299,7 @@
   <script src="../js/api.js"></script>
   <script src="../js/utils.js"></script>
   <script src="../js/data/store.js"></script>
+  <script src="../js/modules/admin-nav.js"></script>
   <script src="../js/modules/header.js"></script>
   <script src="../js/modules/categories.js"></script>
 
