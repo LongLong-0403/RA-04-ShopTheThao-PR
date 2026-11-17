@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đơn hàng của tôi | Tsport Store</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="tsport-header">
+    <div class="tsport-topbar">
+      <div class="container">
+        <div class="tsport-topbar-left">
+          <span class="tsport-topbar-badge">QUẢN LÝ ĐƠN HÀNG</span>
+          <span>THEO DÕI TRẠNG THÁI • HỦY ĐƠN KHI CHỜ DUYỆT • HOÀN TỒN ĐÚNG 1 LẦN</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="shop.html" style="color:#F8FAFC;">🛍️ Cửa Hàng</a>
+          <a href="cart.html" style="color:#FF6B35; font-weight:700;">🛒 Giỏ hàng (<span class="js-cart-count">0</span>)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-main-bar">
+      <div class="container">
+        <a href="shop.html" class="tsport-logo">
+          <span class="tsport-logo-text">Tsport</span>
+          <span class="tsport-logo-tag">MY ORDERS</span>
+        </a>
+
+        <div class="tsport-actions">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedOrder" title="Tạo ngay một đơn hàng mới ở trạng thái Chờ xác nhận để kiểm tra tính năng Hủy & Hoàn tồn">
+            🧪 Test Tạo đơn Chờ duyệt (Hủy &amp; Hoàn tồn)
+          </button>
+          <a href="shop.html" class="btn btn-primary btn-sm">🛍️ Mua thêm sản phẩm</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH (ĐƠN HÀNG CỦA TÔI) -->
+  <main class="container tsport-orders-container">
+
+    <div class="tsport-page-header">
+      <div class="tsport-page-title-wrap">
+        <h1>
+          <span>📦</span>
+          <span>Lịch Sử Đơn Hàng Của Bạn</span>
+        </h1>
+        <div class="tsport-page-subtitle">
+          Theo dõi tiến độ đơn hàng và quản lý hủy đơn an toàn theo chuẩn SRS (Hoàn tồn kho đúng một lần duy nhất).
+        </div>
+      </div>
+    </div>
+
+    <!-- DANH SÁCH ĐƠN HÀNG -->
+    <div id="ordersListWrap">
+      <!-- Được render tự động qua orders.js -->
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL XEM CHI TIẾT ĐƠN HÀNG
+       ========================================== -->
+  <div class="modal-backdrop" id="modalOrderDetail">
+    <div class="modal" style="max-width:620px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display:flex; align-items:center; gap:8px;">
+          <span>📦</span>
+          <span>Chi tiết đơn hàng: #<span id="detailModalOrderCode">ORD-XXXX</span></span>
+        </h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; background:#F8FAFC; padding:12px 16px; border-radius:6px; margin-bottom:16px; font-size:13px;">
+          <div>Trạng thái: <strong id="detailModalStatus" style="color:#D94C26;">-</strong></div>
+          <div>Ngày đặt: <strong id="detailModalDate">-</strong></div>
+          <div>Người nhận: <strong id="detailModalCustomer">-</strong></div>
+          <div>Số điện thoại: <strong id="detailModalPhone">-</strong></div>
+          <div style="grid-column:1/-1;">Địa chỉ: <strong id="detailModalAddress">-</strong></div>
+          <div style="grid-column:1/-1;">Ghi chú: <span id="detailModalNote" style="color:#64748B;">-</span></div>
+        </div>
+
+        <table class="tsport-table">
+          <thead>
+            <tr>
+              <th>SẢN PHẨM & SKU</th>
+              <th>ĐƠN GIÁ</th>
+              <th>SL</th>
+              <th>THÀNH TIỀN</th>
+            </tr>
+          </thead>
+          <tbody id="detailModalItemsTbody">
+            <!-- Nạp tự động -->
+          </tbody>
+        </table>
+
+        <div style="text-align:right; margin-top:16px; font-size:16px; font-weight:800;">
+          Tổng tiền: <span id="detailModalTotal" style="color:#D94C26;">0 ₫</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng cửa sổ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/orders.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giỏ hàng thể thao của bạn | Tsport Store</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="tsport-header">
+    <div class="tsport-topbar">
+      <div class="container">
+        <div class="tsport-topbar-left">
+          <span class="tsport-topbar-badge">GIỎ HÀNG</span>
+          <span>SỬA / XÓA DÒNG • KIỂM TRA TỒN KHO • TỔNG TIỀN THANH TOÁN VNĐ</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="shop.html" style="color:#F8FAFC;">🛍️ Cửa Hàng</a>
+          <a href="orders.html" style="color:#F8FAFC;">📦 Đơn hàng của tôi</a>
+          <a href="checkout.html" style="color:#FF6B35; font-weight:700;">💳 Thanh toán ngay →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-main-bar">
+      <div class="container">
+        <a href="shop.html" class="tsport-logo">
+          <span class="tsport-logo-text">Tsport</span>
+          <span class="tsport-logo-tag">SHOPPING CART</span>
+        </a>
+
+        <div class="tsport-actions">
+          <a href="shop.html" class="btn btn-secondary btn-sm">← Tiếp tục mua sắm</a>
+          <a href="checkout.html" class="btn btn-primary btn-sm">
+            <span>Tiến hành đặt hàng</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH (GIỎ HÀNG) -->
+  <main class="container" style="padding-bottom:60px;">
+
+    <div class="tsport-page-header">
+      <div class="tsport-page-title-wrap">
+        <h1>
+          <span>🛒</span>
+          <span>Giỏ Hàng Của Bạn (<span id="cartTotalCount">0 sản phẩm</span>)</span>
+        </h1>
+        <div class="tsport-page-subtitle">
+          Kiểm tra các sản phẩm, cập nhật số lượng và chuẩn bị thanh toán an toàn.
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-cart-layout">
+
+      <!-- BẢNG DANH SÁCH SẢN PHẨM TRONG GIỎ -->
+      <div class="tsport-cart-card">
+        <div class="tsport-cart-header">
+          <h2 class="tsport-cart-title">
+            <span>📦</span>
+            <span>Danh sách sản phẩm đã chọn</span>
+          </h2>
+          <a href="shop.html" style="font-size:12px; color:#D94C26; font-weight:700;">+ Thêm món khác</a>
+        </div>
+
+        <div id="cartItemsList">
+          <!-- Được render tự động qua cart.js -->
+        </div>
+      </div>
+
+      <!-- TỔNG TIỀN & NÚT THANH TOÁN (SUMMARY CARD) -->
+      <div class="tsport-summary-card" id="cartSummaryWrap">
+        <h2 class="tsport-summary-title">Tóm tắt đơn hàng</h2>
+
+        <div class="tsport-summary-row">
+          <span>Tạm tính tiền hàng:</span>
+          <span id="cartSubtotal" style="font-weight:700; color:#1E293B;">0 ₫</span>
+        </div>
+
+        <div class="tsport-summary-row">
+          <span>Phí giao hàng toàn quốc:</span>
+          <span style="color:#10B981; font-weight:700;">MIỄN PHÍ (0 ₫)</span>
+        </div>
+
+        <div class="tsport-summary-row total">
+          <span>Tổng thanh toán:</span>
+          <span class="price" id="cartGrandTotal">0 ₫</span>
+        </div>
+
+        <a href="checkout.html" class="btn-checkout" style="text-decoration:none;">
+          <span>Tiến hành Thanh toán (COD)</span>
+          <span>→</span>
+        </a>
+
+        <div style="font-size:11px; color:#64748B; text-align:center; margin-top:14px; line-height:1.4;">
+          🛡️ Hỗ trợ đổi trả trong vòng 7 ngày nếu lỗi nhà sản xuất.<br/>
+          Thanh toán tiền mặt khi nhận hàng (COD).
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/cart.js"></script>
+</body>
+</html>

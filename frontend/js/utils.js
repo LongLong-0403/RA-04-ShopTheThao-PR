@@ -62,3 +62,30 @@ function closeModal(modalId) {
     document.body.style.overflow = "";
   }
 }
+
+// Đồng bộ điều kiện lọc với URL Query Params
+function getUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const result = {};
+  for (const [key, val] of params.entries()) {
+    result[key] = val;
+  }
+  return result;
+}
+
+function updateUrlParams(newParams, replace = false) {
+  const current = new URLSearchParams(window.location.search);
+  for (const [key, val] of Object.entries(newParams)) {
+    if (val === null || val === undefined || val === "" || val === "ALL") {
+      current.delete(key);
+    } else {
+      current.set(key, val);
+    }
+  }
+  const newUrl = `${window.location.pathname}${current.toString() ? '?' + current.toString() : ''}`;
+  if (replace) {
+    window.history.replaceState({}, '', newUrl);
+  } else {
+    window.history.pushState({}, '', newUrl);
+  }
+}

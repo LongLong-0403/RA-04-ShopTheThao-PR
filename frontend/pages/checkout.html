@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thanh toán Đơn hàng (COD) | Tsport Store</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="tsport-header">
+    <div class="tsport-topbar">
+      <div class="container">
+        <div class="tsport-topbar-left">
+          <span class="tsport-topbar-badge">THANH TOÁN AN TOÀN</span>
+          <span>THÔNG TIN GIAO HÀNG • THANH TOÁN COD • CHẶN BẤM LẶP • KIỂM TRA TỒN KHO</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="cart.html" style="color:#F8FAFC;">← Quay lại Giỏ hàng</a>
+          <a href="orders.html" style="color:#FF6B35; font-weight:700;">📦 Đơn hàng của tôi</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-main-bar">
+      <div class="container">
+        <a href="shop.html" class="tsport-logo">
+          <span class="tsport-logo-text">Tsport</span>
+          <span class="tsport-logo-tag">CHECKOUT</span>
+        </a>
+
+        <div class="tsport-actions">
+          <a href="cart.html" class="btn btn-secondary btn-sm">🛒 Giỏ hàng (<span class="js-cart-count">0</span>)</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH (CHECKOUT) -->
+  <main class="container" style="padding-bottom:60px;">
+
+    <div class="tsport-page-header">
+      <div class="tsport-page-title-wrap">
+        <h1>
+          <span>💳</span>
+          <span>Xác Nhận &amp; Thanh Toán Đơn Hàng</span>
+        </h1>
+        <div class="tsport-page-subtitle">
+          Vui lòng kiểm tra địa chỉ giao nhận và chọn phương thức thanh toán tiền mặt khi nhận hàng (COD).
+        </div>
+      </div>
+    </div>
+
+    <!-- KHUNG BÁO LỖI TỒN KHO (HIỆN NẾU SKU KHÔNG ĐỦ SỐ LƯỢNG) -->
+    <div class="tsport-checkout-error-banner" id="checkoutErrorBanner">
+      <div class="tsport-checkout-error-icon">⚠️</div>
+      <div>
+        <div style="font-weight:800; font-size:14px; color:#991B1B; margin-bottom:2px;">KHÔNG THỂ HOÀN TẤT ĐẶT HÀNG:</div>
+        <div class="tsport-checkout-error-text" id="checkoutErrorText">Lỗi kiểm tra tồn kho...</div>
+      </div>
+    </div>
+
+    <form id="formCheckout">
+      <div class="tsport-checkout-grid">
+
+        <!-- CỘT 1: THÔNG TIN GIAO HÀNG & PHƯƠNG THỨC THANH TOÁN -->
+        <div class="tsport-auth-card">
+          <div class="tsport-auth-card-header">
+            <h2 class="tsport-auth-card-title">1. Thông tin người nhận hàng</h2>
+            <div class="tsport-auth-card-sub">Chúng tôi sẽ liên hệ số điện thoại này trước khi giao hàng.</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div class="form-group">
+              <label class="form-label">Họ và tên người nhận <span class="req">*</span></label>
+              <input type="text" id="checkoutName" class="form-control" placeholder="Ví dụ: Nguyễn Văn An" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Số điện thoại liên hệ <span class="req">*</span></label>
+              <input type="tel" id="checkoutPhone" class="form-control" placeholder="Ví dụ: 0912345678" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Địa chỉ nhận hàng chi tiết <span class="req">*</span></label>
+            <textarea id="checkoutAddress" class="form-control" rows="2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ghi chú giao hàng (Tùy chọn)</label>
+            <input type="text" id="checkoutNote" class="form-control" placeholder="Ví dụ: Giao trong giờ hành chính, gọi trước 15 phút..." />
+          </div>
+
+          <!-- PHƯƠNG THỨC THANH TOÁN (COD) -->
+          <div style="margin-top:24px; padding-top:18px; border-top:1px solid #E2E8F0;">
+            <h3 style="font-size:15px; font-weight:800; color:#0F172A; margin-bottom:4px;">2. Phương thức thanh toán</h3>
+            <div style="font-size:12px; color:#64748B; margin-bottom:12px;">Đảm bảo tính an toàn và tiện lợi tối đa cho khách hàng.</div>
+
+            <div class="tsport-payment-methods">
+              <label class="tsport-payment-option is-selected">
+                <input type="radio" name="paymentMethod" value="COD" checked />
+                <div>
+                  <div style="font-weight:800; color:#0F172A;">💵 Thanh toán khi nhận hàng (COD)</div>
+                  <div style="font-size:12px; color:#64748B;">Khách hàng kiểm tra hàng đúng mẫu trước khi thanh toán tiền mặt cho shipper.</div>
+                </div>
+              </label>
+
+              <label class="tsport-payment-option" style="opacity:0.6; cursor:not-allowed;" title="Đang nâng cấp cổng thanh toán trực tuyến">
+                <input type="radio" name="paymentMethod" value="BANK" disabled />
+                <div>
+                  <div style="font-weight:700; color:#475569;">💳 Chuyển khoản ngân hàng (QR Code)</div>
+                  <div style="font-size:11px; color:#94A3B8;">Hệ thống đang tích hợp cổng VietQR tự động.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- CỘT 2: TÓM TẮT ĐƠN HÀNG & NÚT SUBMIT CHỐNG BẤM LẶP -->
+        <div class="tsport-summary-card">
+          <h2 class="tsport-summary-title">Đơn hàng của bạn</h2>
+
+          <div id="checkoutSummaryItems" style="max-height:260px; overflow-y:auto; margin-bottom:16px;">
+            <!-- Danh sách sản phẩm được nạp tự động -->
+          </div>
+
+          <div class="tsport-summary-row">
+            <span>Phí vận chuyển:</span>
+            <span style="color:#10B981; font-weight:700;">MIỄN PHÍ</span>
+          </div>
+
+          <div class="tsport-summary-row total">
+            <span>Tổng thanh toán:</span>
+            <span class="price" id="checkoutGrandTotal">0 ₫</span>
+          </div>
+
+          <!-- NÚT ĐẶT HÀNG CÓ CƠ CHẾ CHẶN BẤM LẶP (DEBOUNCE / DISABLE) -->
+          <button type="submit" class="btn-checkout" id="btnPlaceOrder">
+            <span>✓</span>
+            <span>Xác nhận Đặt hàng (COD)</span>
+          </button>
+
+          <div style="font-size:11px; color:#64748B; text-align:center; margin-top:12px; line-height:1.4;">
+            Bằng việc đặt hàng, bạn đồng ý với Điều khoản mua sắm và Chính sách bảo hành của Tsport.
+          </div>
+        </div>
+
+      </div>
+    </form>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL THÔNG BÁO ĐẶT HÀNG THÀNH CÔNG
+       ========================================== -->
+  <div class="modal-backdrop" id="modalOrderSuccess">
+    <div class="modal" style="max-width:500px;">
+      <div class="modal-body">
+        <div class="tsport-success-card">
+          <div class="tsport-success-icon">✓</div>
+          <h2 style="font-size:22px; font-weight:900; color:#0F172A; margin-bottom:6px;">ĐẶT HÀNG THÀNH CÔNG!</h2>
+          <p style="font-size:13px; color:#475569; margin-bottom:12px;">
+            Cảm ơn bạn đã mua sắm tại Tsport. Đơn hàng của bạn đang ở trạng thái <strong>Chờ xác nhận</strong> và sẽ được chuẩn bị đóng gói.
+          </p>
+
+          <div>
+            <div style="font-size:12px; color:#64748B;">MÃ ĐƠN HÀNG:</div>
+            <div class="tsport-success-code" id="successOrderCode">ORD-202611-XXXX</div>
+          </div>
+
+          <div style="font-size:14px; color:#334155; margin-bottom:24px;">
+            Tổng tiền thanh toán COD: <strong id="successOrderTotal" style="color:#D94C26; font-size:18px;">0 ₫</strong>
+          </div>
+
+          <div style="display:flex; gap:10px; justify-content:center;">
+            <a href="orders.html" class="btn btn-primary" style="text-decoration:none;">
+              📦 Xem đơn hàng của tôi
+            </a>
+            <a href="shop.html" class="btn btn-secondary" style="text-decoration:none;">
+              🛍️ Tiếp tục mua sắm
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/cart.js"></script>
+</body>
+</html>

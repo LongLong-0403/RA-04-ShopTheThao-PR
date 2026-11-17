@@ -275,6 +275,150 @@
           { id: 18, sku_code: "USED-CZ3-WH-41", size: "41", color: "Trắng Đen", price: 1650000, stock: 1, unit: "CHIEC", quantity_per_lot: 1 }
         ]
       }
+    ],
+    cart: [],
+    orders: [
+      {
+        id: 1001,
+        order_code: "ORD-202611-1001",
+        customer_name: "Nguyễn Văn An",
+        phone: "0912345601",
+        address: "Số 15 Xuân Thủy, Quận Cầu Giấy, Hà Nội",
+        payment_method: "COD",
+        status: "PENDING",
+        restocked: false,
+        created_at: "2026-11-17 14:30:00",
+        total_amount: 4250000,
+        note: "Giao giờ hành chính, gọi trước khi giao",
+        items: [
+          {
+            product_id: 1,
+            sku_id: 1,
+            product_name: "Vợt cầu lông Yonex Astrox 88D Pro 2024",
+            sku_code: "AX88DP-4U-BK",
+            size: "4U",
+            color: "Đen Đỏ",
+            unit: "CHIEC",
+            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
+            price: 4250000,
+            quantity: 1
+          }
+        ]
+      },
+      {
+        id: 1002,
+        order_code: "ORD-202611-1002",
+        customer_name: "Nguyễn Văn An",
+        phone: "0912345601",
+        address: "Số 15 Xuân Thủy, Quận Cầu Giấy, Hà Nội",
+        payment_method: "COD",
+        status: "CONFIRMED",
+        restocked: false,
+        created_at: "2026-11-16 10:15:00",
+        total_amount: 2750000,
+        note: "Đóng gói cẩn thận",
+        items: [
+          {
+            product_id: 3,
+            sku_id: 4,
+            product_name: "Giày cầu lông Yonex Comfort Z3 Men",
+            sku_code: "SHB-CZ3-41-WH",
+            size: "41",
+            color: "Trắng Đen",
+            unit: "CHIEC",
+            image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
+            price: 2750000,
+            quantity: 1
+          }
+        ]
+      }
+    ],
+    matches: [
+      {
+        id: 1,
+        sport_id: 1,
+        sport_name: "Cầu lông",
+        title: "Tìm 2 bạn đánh đôi nam/nữ tối thứ 4 sân Kỳ Hòa",
+        match_date: "2026-11-19",
+        match_time: "18:00 - 20:00",
+        location: "Sân Kỳ Hòa, Quận 10, TP.HCM",
+        level: "Trung bình - Khá",
+        slots_needed: 2,
+        price_share: "45.000đ / người",
+        contact_name: "Nguyễn Văn An",
+        contact_phone: "0912345601",
+        author_id: 1,
+        status: "OPEN",
+        description: "Nhóm đánh vui vẻ, giao lưu thể thao lành mạnh, cầu lông Hải Yến đỏ."
+      },
+      {
+        id: 2,
+        sport_id: 2,
+        sport_name: "Bóng đá",
+        title: "Kèo sân 7 cỏ nhân tạo tối thứ 6 thiếu 3 chân",
+        match_date: "2026-11-21",
+        match_time: "19:30 - 21:00",
+        location: "Sân Chuyên Việt, Cầu Giấy, Hà Nội",
+        level: "Giao lưu vui vẻ",
+        slots_needed: 3,
+        price_share: "50.000đ / người",
+        contact_name: "Trần Minh Đức",
+        contact_phone: "0988776655",
+        author_id: 2,
+        status: "OPEN",
+        description: "Đá dưỡng sinh cọ xát, không cay cú ăn thua, có sẵn nước giải khát."
+      },
+      {
+        id: 3,
+        sport_id: 4,
+        sport_name: "Pickleball",
+        title: "Cần tìm người chơi Pickleball sáng Chủ Nhật",
+        match_date: "2026-11-23",
+        match_time: "07:00 - 09:00",
+        location: "CLB Pickleball D-Sports, Tây Hồ, Hà Nội",
+        level: "Mới tập chơi / Phong trào",
+        slots_needed: 2,
+        price_share: "60.000đ / người",
+        contact_name: "Lê Hoàng Yến",
+        contact_phone: "0903112233",
+        author_id: 3,
+        status: "OPEN",
+        description: "Có sẵn bóng Franklin X-40, chỉ cần mang vợt."
+      }
+    ],
+    courts: [
+      { id: 1, sport_id: 1, sport_name: "Cầu lông", name: "Sân Cầu Lông Kỳ Hòa - Sân 1", address: "Sư Vạn Hạnh, Quận 10, TP.HCM", surface: "Thảm PVC chuẩn thi đấu" },
+      { id: 2, sport_id: 1, sport_name: "Cầu lông", name: "Sân Cầu Lông Kỳ Hòa - Sân 2", address: "Sư Vạn Hạnh, Quận 10, TP.HCM", surface: "Thảm PVC chuẩn thi đấu" },
+      { id: 3, sport_id: 2, sport_name: "Bóng đá", name: "Sân Mini 7 người Chuyên Việt", address: "Dịch Vọng Hậu, Cầu Giấy, Hà Nội", surface: "Cỏ nhân tạo sợi đệm cao su" },
+      { id: 4, sport_id: 3, sport_name: "Tennis", name: "Sân Quần Vợt Hồ Xuân Hương", address: "Hồ Xuân Hương, Quận 3, TP.HCM", surface: "Sân cứng Acrylic 9 lớp" },
+      { id: 5, sport_id: 4, sport_name: "Pickleball", name: "Sân Pickleball D-Sports Pro", address: "Lạc Long Quân, Tây Hồ, Hà Nội", surface: "Sân ngoài trời chống trơn trượt" }
+    ],
+    court_slots: [
+      { id: 1, court_id: 1, time_slot: "06:00 - 08:00 (Sáng sớm)", fixed_price: 120000 },
+      { id: 2, court_id: 1, time_slot: "17:30 - 19:30 (Khung vàng)", fixed_price: 220000 },
+      { id: 3, court_id: 1, time_slot: "19:30 - 21:30 (Tối)", fixed_price: 200000 },
+      { id: 4, court_id: 2, time_slot: "17:30 - 19:30 (Khung vàng)", fixed_price: 220000 },
+      { id: 5, court_id: 3, time_slot: "19:00 - 20:30 (Buổi tối)", fixed_price: 650000 },
+      { id: 6, court_id: 4, time_slot: "18:00 - 20:00 (Buổi tối)", fixed_price: 350000 },
+      { id: 7, court_id: 5, time_slot: "07:00 - 09:00 (Sáng)", fixed_price: 180000 }
+    ],
+    bookings: [
+      {
+        id: 1,
+        booking_code: "BKG-202611-001",
+        court_id: 1,
+        slot_id: 2,
+        court_name: "Sân Cầu Lông Kỳ Hòa - Sân 1",
+        sport_name: "Cầu lông",
+        time_slot: "17:30 - 19:30 (Khung vàng)",
+        fixed_price: 220000,
+        booking_date: "2026-11-20",
+        customer_name: "Nguyễn Văn An",
+        phone: "0912345601",
+        status: "PENDING",
+        created_at: "2026-11-17 11:00:00",
+        note: "Thuê thêm 1 hộp cầu nếu có"
+      }
     ]
   };
 
@@ -286,7 +430,19 @@
     load() {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return {
+            ...initialData,
+            ...parsed,
+            cart: parsed.cart || [],
+            orders: parsed.orders || initialData.orders,
+            matches: parsed.matches || initialData.matches,
+            courts: parsed.courts || initialData.courts,
+            court_slots: parsed.court_slots || initialData.court_slots,
+            bookings: parsed.bookings || initialData.bookings
+          };
+        }
       } catch (e) {
         console.warn("Lỗi đọc localStorage:", e);
       }
@@ -518,6 +674,435 @@
         return p.status;
       }
       return null;
+    }
+
+    // ==========================================
+    // GIỎ HÀNG (CART MODULE)
+    // ==========================================
+    getCart() {
+      if (!this.data.cart) this.data.cart = [];
+      return this.data.cart;
+    }
+
+    addToCart(productId, skuId, quantity = 1) {
+      const prod = this.getProductById(productId);
+      if (!prod) throw new Error("Không tìm thấy sản phẩm!");
+      const sku = prod.skus.find((s) => s.id === Number(skuId));
+      if (!sku) throw new Error("Không tìm thấy biến thể SKU này!");
+
+      if (sku.stock <= 0) {
+        throw new Error(`Sản phẩm "${prod.name} (${sku.size || ''} - ${sku.color || ''})" hiện đã hết hàng trong kho!`);
+      }
+
+      if (!this.data.cart) this.data.cart = [];
+      const existing = this.data.cart.find((item) => item.sku_id === Number(skuId));
+      const currentQty = existing ? existing.quantity : 0;
+      const targetQty = currentQty + Number(quantity);
+
+      if (targetQty > sku.stock) {
+        throw new Error(`Kho chỉ còn ${sku.stock} sản phẩm. Bạn đã có ${currentQty} trong giỏ và không thể thêm ${quantity} nữa!`);
+      }
+
+      const primaryImg = (prod.images && prod.images.find((i) => i.is_primary)) || (prod.images && prod.images[0]) || { image_url: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300' };
+
+      if (existing) {
+        existing.quantity = targetQty;
+      } else {
+        this.data.cart.push({
+          product_id: prod.id,
+          sku_id: sku.id,
+          product_name: prod.name,
+          sku_code: sku.sku_code,
+          size: sku.size || "-",
+          color: sku.color || "-",
+          unit: sku.unit || "CHIEC",
+          quantity_per_lot: sku.quantity_per_lot || 1,
+          condition_type: prod.condition_type || "MOI",
+          price: sku.price,
+          stock: sku.stock,
+          image_url: primaryImg.image_url,
+          quantity: Number(quantity)
+        });
+      }
+      this.save();
+      return this.getCartTotals();
+    }
+
+    updateCartItem(skuId, quantity) {
+      if (!this.data.cart) this.data.cart = [];
+      const idx = this.data.cart.findIndex((i) => i.sku_id === Number(skuId));
+      if (idx === -1) return;
+
+      const numQty = Number(quantity);
+      if (numQty <= 0) {
+        this.data.cart.splice(idx, 1);
+        this.save();
+        return;
+      }
+
+      // Kiểm tra tồn kho mới nhất của SKU
+      let foundSku = null;
+      for (const p of this.data.products) {
+        const s = p.skus.find((sku) => sku.id === Number(skuId));
+        if (s) { foundSku = s; break; }
+      }
+
+      if (foundSku && numQty > foundSku.stock) {
+        throw new Error(`Số lượng yêu cầu (${numQty}) vượt quá tồn kho thực tế (${foundSku.stock} sản phẩm)!`);
+      }
+
+      this.data.cart[idx].quantity = numQty;
+      this.save();
+    }
+
+    removeFromCart(skuId) {
+      if (!this.data.cart) this.data.cart = [];
+      this.data.cart = this.data.cart.filter((i) => i.sku_id !== Number(skuId));
+      this.save();
+    }
+
+    clearCart() {
+      this.data.cart = [];
+      this.save();
+    }
+
+    getCartTotals() {
+      const items = this.getCart();
+      const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+      const shipping = 0; // Miễn phí vận chuyển
+      const grandTotal = subtotal + shipping;
+      return {
+        items,
+        totalItems,
+        subtotal,
+        shipping,
+        grandTotal
+      };
+    }
+
+    // ==========================================
+    // ĐƠN HÀNG & QUY TẮC HOÀN TỒN ĐÚNG 1 LẦN (ORDERS)
+    // ==========================================
+    getOrders(userId = null) {
+      if (!this.data.orders) this.data.orders = [];
+      return this.data.orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+
+    getOrderById(id) {
+      if (!this.data.orders) this.data.orders = [];
+      return this.data.orders.find((o) => o.id === Number(id) || o.order_code === String(id));
+    }
+
+    createOrder({ customer_name, phone, address, payment_method = "COD", note = "", items = null }) {
+      if (!customer_name || !customer_name.trim()) throw new Error("Vui lòng nhập họ và tên người nhận!");
+      if (!phone || !phone.trim() || phone.length < 9) throw new Error("Vui lòng nhập số điện thoại hợp lệ!");
+      if (!address || !address.trim()) throw new Error("Vui lòng nhập địa chỉ nhận hàng chi tiết!");
+
+      const orderItems = items || this.getCart();
+      if (!orderItems || orderItems.length === 0) {
+        throw new Error("Giỏ hàng của bạn đang trống, không thể thanh toán!");
+      }
+
+      // BƯỚC 1: KIỂM TRA TỒN KHO CHO TOÀN BỘ SẢN PHẨM TRONG ĐƠN (CHỐNG LỖI TỒN KHO)
+      for (const item of orderItems) {
+        let currentSku = null;
+        let productObj = null;
+        for (const p of this.data.products) {
+          const s = p.skus.find((sku) => sku.id === Number(item.sku_id));
+          if (s) { currentSku = s; productObj = p; break; }
+        }
+        if (!currentSku) {
+          throw new Error(`Sản phẩm "${item.product_name}" không còn tồn tại!`);
+        }
+        if (currentSku.stock < item.quantity) {
+          throw new Error(`LỖI TỒN KHO: Sản phẩm "${productObj.name} (${currentSku.size || ''} - ${currentSku.color || ''})" chỉ còn ${currentSku.stock} sản phẩm trong kho (Bạn yêu cầu ${item.quantity})! Vui lòng giảm số lượng.`);
+        }
+      }
+
+      // BƯỚC 2: TRỪ TỒN KHO
+      for (const item of orderItems) {
+        for (const p of this.data.products) {
+          const s = p.skus.find((sku) => sku.id === Number(item.sku_id));
+          if (s) {
+            s.stock -= Number(item.quantity);
+            break;
+          }
+        }
+      }
+
+      // BƯỚC 3: TẠO ĐƠN HÀNG
+      const now = new Date();
+      const codeSuffix = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(Math.floor(1000 + Math.random() * 9000));
+      const newOrder = {
+        id: this.data.orders.length ? Math.max(...this.data.orders.map((o) => o.id)) + 1 : 1001,
+        order_code: `ORD-${codeSuffix}`,
+        customer_name: customer_name.trim(),
+        phone: phone.trim(),
+        address: address.trim(),
+        payment_method: payment_method || "COD",
+        note: note.trim(),
+        status: "PENDING", // Mặc định Chờ xác nhận
+        restocked: false,  // Đánh dấu cờ hoàn tồn
+        created_at: now.toISOString().replace("T", " ").substring(0, 19),
+        total_amount: orderItems.reduce((sum, i) => sum + (i.price * i.quantity), 0),
+        items: JSON.parse(JSON.stringify(orderItems))
+      };
+
+      this.data.orders.unshift(newOrder);
+      this.clearCart();
+      this.save();
+      return newOrder;
+    }
+
+    /**
+     * HỦY ĐƠN HÀNG: Chỉ được hủy khi đơn ở trạng thái "PENDING" (Chờ xác nhận).
+     * QUY TẮC HOÀN TỒN ĐÚNG 1 LẦN: Khi hủy, hoàn lại stock cho từng SKU. Nếu hủy lặp lại, chặn tuyệt đối và không tăng tồn lần 2.
+     */
+    cancelOrder(orderId, reason = "Khách hàng yêu cầu hủy đơn") {
+      const order = this.getOrderById(orderId);
+      if (!order) throw new Error("Không tìm thấy đơn hàng!");
+
+      // 1. Chỉ được hủy khi đang ở trạng thái Chờ xác nhận
+      if (order.status !== "PENDING") {
+        throw new Error(`Đơn hàng #${order.order_code} đang ở trạng thái "${order.status}". Bạn chỉ có thể hủy đơn khi đơn ở trạng thái 'Chờ xác nhận'!`);
+      }
+
+      // 2. Chặn hoàn tồn lặp lại (Idempotency)
+      if (order.restocked) {
+        throw new Error(`Đơn hàng #${order.order_code} đã được hoàn tồn kho trước đó! Hệ thống chặn hoàn tồn lần 2.`);
+      }
+
+      // 3. Hoàn lại số lượng tồn kho cho các SKU
+      if (order.items && order.items.length > 0) {
+        order.items.forEach((item) => {
+          for (const p of this.data.products) {
+            const s = p.skus.find((sku) => sku.id === Number(item.sku_id));
+            if (s) {
+              s.stock += Number(item.quantity);
+              break;
+            }
+          }
+        });
+      }
+
+      // 4. Cập nhật trạng thái và bật cờ restocked
+      order.status = "CANCELLED";
+      order.restocked = true;
+      order.cancel_reason = reason;
+      order.cancelled_at = new Date().toISOString().replace("T", " ").substring(0, 19);
+
+      this.save();
+      return order;
+    }
+
+    // ==========================================
+    // KẾT NỐI NGƯỜI CHƠI / BÀI ĐĂNG GIAO LƯU (MATCHES)
+    // ==========================================
+    getMatches(filters = {}) {
+      if (!this.data.matches) this.data.matches = [];
+      let list = [...this.data.matches];
+
+      if (filters.sport_id && filters.sport_id !== "ALL") {
+        list = list.filter((m) => m.sport_id === Number(filters.sport_id));
+      }
+      if (filters.date) {
+        list = list.filter((m) => m.match_date === filters.date);
+      }
+      if (filters.location && filters.location.trim()) {
+        const loc = filters.location.toLowerCase().trim();
+        list = list.filter((m) => m.location.toLowerCase().includes(loc) || (m.title && m.title.toLowerCase().includes(loc)));
+      }
+      // Không hiển thị bài HIDDEN cho người dùng thông thường trừ khi yêu cầu
+      if (!filters.showHidden) {
+        list = list.filter((m) => m.status !== "HIDDEN");
+      }
+      return list.sort((a, b) => b.id - a.id);
+    }
+
+    getMatchById(id) {
+      if (!this.data.matches) this.data.matches = [];
+      return this.data.matches.find((m) => m.id === Number(id));
+    }
+
+    saveMatch(matchData) {
+      if (!matchData.title || !matchData.title.trim()) throw new Error("Vui lòng nhập tiêu đề bài đăng!");
+      if (!matchData.sport_id) throw new Error("Vui lòng chọn môn thể thao!");
+      if (!matchData.match_date) throw new Error("Vui lòng chọn ngày thi đấu/giao lưu!");
+      if (!matchData.location || !matchData.location.trim()) throw new Error("Vui lòng nhập địa điểm thi đấu!");
+      if (!matchData.contact_phone || !matchData.contact_phone.trim()) throw new Error("Vui lòng nhập số điện thoại liên hệ!");
+
+      const sport = this.getSportById(matchData.sport_id);
+
+      if (matchData.id) {
+        const idx = this.data.matches.findIndex((m) => m.id === Number(matchData.id));
+        if (idx !== -1) {
+          this.data.matches[idx] = {
+            ...this.data.matches[idx],
+            ...matchData,
+            sport_name: sport ? sport.name : this.data.matches[idx].sport_name
+          };
+        }
+      } else {
+        const newId = this.data.matches.length ? Math.max(...this.data.matches.map((m) => m.id)) + 1 : 1;
+        this.data.matches.unshift({
+          ...matchData,
+          id: newId,
+          sport_name: sport ? sport.name : "Thể thao",
+          status: "OPEN",
+          created_at: new Date().toISOString().replace("T", " ").substring(0, 19)
+        });
+      }
+      this.save();
+    }
+
+    closeMatch(id) {
+      const match = this.getMatchById(id);
+      if (match) {
+        match.status = "CLOSED";
+        this.save();
+        return match;
+      }
+    }
+
+    deleteMatch(id) {
+      this.data.matches = (this.data.matches || []).filter((m) => m.id !== Number(id));
+      this.save();
+    }
+
+    hideMatch(id) {
+      const match = this.getMatchById(id);
+      if (match) {
+        match.status = match.status === "HIDDEN" ? "OPEN" : "HIDDEN";
+        this.save();
+        return match.status;
+      }
+    }
+
+    // ==========================================
+    // ĐẶT SÂN THỂ THAO & QUẢN LÝ CA SÂN (COURTS)
+    // ==========================================
+    getCourts(sport_id = null) {
+      if (!this.data.courts) this.data.courts = [];
+      if (sport_id && sport_id !== "ALL") {
+        return this.data.courts.filter((c) => c.sport_id === Number(sport_id));
+      }
+      return this.data.courts;
+    }
+
+    getCourtById(id) {
+      if (!this.data.courts) this.data.courts = [];
+      return this.data.courts.find((c) => c.id === Number(id));
+    }
+
+    saveCourt(courtData) {
+      if (!courtData.name || !courtData.name.trim()) throw new Error("Vui lòng nhập tên sân!");
+      if (!courtData.sport_id) throw new Error("Vui lòng chọn môn thể thao!");
+      const sport = this.getSportById(courtData.sport_id);
+
+      if (courtData.id) {
+        const idx = this.data.courts.findIndex((c) => c.id === Number(courtData.id));
+        if (idx !== -1) {
+          this.data.courts[idx] = {
+            ...this.data.courts[idx],
+            ...courtData,
+            sport_name: sport ? sport.name : this.data.courts[idx].sport_name
+          };
+        }
+      } else {
+        const newId = this.data.courts.length ? Math.max(...this.data.courts.map((c) => c.id)) + 1 : 1;
+        this.data.courts.push({
+          ...courtData,
+          id: newId,
+          sport_name: sport ? sport.name : "Thể thao"
+        });
+      }
+      this.save();
+    }
+
+    getSlots(court_id = null) {
+      if (!this.data.court_slots) this.data.court_slots = [];
+      if (court_id) {
+        return this.data.court_slots.filter((s) => s.court_id === Number(court_id));
+      }
+      return this.data.court_slots;
+    }
+
+    saveSlot(slotData) {
+      if (!slotData.court_id) throw new Error("Vui lòng chọn sân trực thuộc!");
+      if (!slotData.time_slot || !slotData.time_slot.trim()) throw new Error("Vui lòng nhập khung giờ ca chơi!");
+      if (!slotData.fixed_price || Number(slotData.fixed_price) <= 0) throw new Error("Vui lòng nhập bảng giá cố định!");
+
+      if (slotData.id) {
+        const idx = this.data.court_slots.findIndex((s) => s.id === Number(slotData.id));
+        if (idx !== -1) {
+          this.data.court_slots[idx] = { ...this.data.court_slots[idx], ...slotData };
+        }
+      } else {
+        const newId = this.data.court_slots.length ? Math.max(...this.data.court_slots.map((s) => s.id)) + 1 : 1;
+        this.data.court_slots.push({ ...slotData, id: newId, fixed_price: Number(slotData.fixed_price) });
+      }
+      this.save();
+    }
+
+    getBookings(userId = null) {
+      if (!this.data.bookings) this.data.bookings = [];
+      return this.data.bookings.sort((a, b) => b.id - a.id);
+    }
+
+    createBooking({ court_id, slot_id, booking_date, customer_name, phone, note = "" }) {
+      if (!court_id) throw new Error("Vui lòng chọn sân thể thao!");
+      if (!slot_id) throw new Error("Vui lòng chọn ca giờ chơi!");
+      if (!booking_date) throw new Error("Vui lòng chọn ngày đặt sân!");
+      if (!customer_name || !customer_name.trim()) throw new Error("Vui lòng nhập họ tên người đặt!");
+      if (!phone || !phone.trim()) throw new Error("Vui lòng nhập số điện thoại người đặt!");
+
+      const court = this.getCourtById(court_id);
+      const slot = this.getSlots().find((s) => s.id === Number(slot_id));
+
+      const now = new Date();
+      const code = `BKG-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}-${String(Math.floor(100+Math.random()*900))}`;
+
+      const newBooking = {
+        id: this.data.bookings.length ? Math.max(...this.data.bookings.map((b) => b.id)) + 1 : 1,
+        booking_code: code,
+        court_id: Number(court_id),
+        slot_id: Number(slot_id),
+        court_name: court ? court.name : `Sân #${court_id}`,
+        sport_name: court ? court.sport_name : "Thể thao",
+        time_slot: slot ? slot.time_slot : "Ca chơi",
+        fixed_price: slot ? slot.fixed_price : 0,
+        booking_date,
+        customer_name: customer_name.trim(),
+        phone: phone.trim(),
+        note: note.trim(),
+        status: "PENDING", // Mặc định Chờ xác nhận
+        created_at: now.toISOString().replace("T", " ").substring(0, 19)
+      };
+
+      this.data.bookings.unshift(newBooking);
+      this.save();
+      return newBooking;
+    }
+
+    cancelBooking(bookingId) {
+      const b = (this.data.bookings || []).find((item) => item.id === Number(bookingId));
+      if (!b) throw new Error("Không tìm thấy yêu cầu đặt sân!");
+      if (b.status !== "PENDING") {
+        throw new Error(`Chỉ có thể hủy yêu cầu khi đang ở trạng thái 'Chờ xác nhận'! Trạng thái hiện tại: ${b.status}`);
+      }
+      b.status = "CANCELLED";
+      this.save();
+      return b;
+    }
+
+    updateBookingStatus(bookingId, newStatus, reason = "") {
+      const b = (this.data.bookings || []).find((item) => item.id === Number(bookingId));
+      if (!b) throw new Error("Không tìm thấy yêu cầu đặt sân!");
+      b.status = newStatus;
+      if (reason) b.admin_note = reason;
+      this.save();
+      return b;
     }
   }
 

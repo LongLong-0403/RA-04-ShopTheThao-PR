@@ -1,0 +1,149 @@
+/* ==========================================================================
+   TSPORT — CUSTOMER ORDERS MANAGEMENT (QUẢN LÝ ĐƠN HÀNG & HOÀN TỒN ĐÚNG 1 LẦN)
+   ========================================================================== */
+
+.tsport-orders-container {
+  max-width: 960px;
+  margin: 20px auto 40px;
+}
+
+.tsport-order-card {
+  background: #fff;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius-lg);
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: var(--tsport-shadow-sm);
+  transition: all 0.2s ease;
+}
+.tsport-order-card:hover {
+  border-color: #FED7AA;
+}
+
+.tsport-order-header {
+  background: #FAFBFD;
+  border-bottom: 1px solid var(--tsport-border);
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.tsport-order-code {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--tsport-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tsport-order-date {
+  font-size: 12px;
+  color: var(--tsport-text-muted);
+}
+
+.tsport-order-body {
+  padding: 18px 20px;
+}
+
+.tsport-order-item-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid #F8FAFC;
+}
+.tsport-order-item-row:last-child {
+  border-bottom: none;
+}
+.tsport-order-item-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--tsport-border);
+}
+.tsport-order-item-details {
+  flex: 1;
+}
+.tsport-order-item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tsport-text);
+}
+.tsport-order-item-sub {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 2px;
+}
+.tsport-order-item-price {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--tsport-orange);
+}
+
+.tsport-order-footer {
+  border-top: 1px solid var(--tsport-border);
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #FFFBF8;
+}
+.tsport-order-total {
+  font-size: 15px;
+  color: #475569;
+}
+.tsport-order-total strong {
+  font-size: 18px;
+  color: var(--tsport-orange);
+  font-weight: 900;
+}
+
+/* TRẠNG THÁI ĐƠN HÀNG BADGES */
+.tsport-badge-order-status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.tsport-badge-order-status.pending {
+  background: #FEF3C7;
+  color: #B45309;
+}
+.tsport-badge-order-status.confirmed {
+  background: #DBEAFE;
+  color: #1D4ED8;
+}
+.tsport-badge-order-status.shipping {
+  background: #E0E7FF;
+  color: #4338CA;
+}
+.tsport-badge-order-status.completed {
+  background: #DCFCE7;
+  color: #15803D;
+}
+.tsport-badge-order-status.cancelled {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+/* THÔNG BÁO HOÀN TỒN AN TOÀN */
+.tsport-restock-alert {
+  font-size: 12px;
+  color: #15803D;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}

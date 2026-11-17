@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kết nối người chơi &amp; Kèo giao lưu thể thao | Tsport Community</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="tsport-header">
+    <div class="tsport-topbar">
+      <div class="container">
+        <div class="tsport-topbar-left">
+          <span class="tsport-topbar-badge">CỘNG ĐỒNG THỂ THAO</span>
+          <span>KẾT NỐI NGƯỜI CHƠI • TÌM BẠN ĐÁNH CẦU / ĐÁ BÓNG • ADMIN QUẢN TRỊ ẨN BÀI</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="shop.html" style="color:#F8FAFC;">🛍️ Cửa Hàng</a>
+          <a href="courts.html" style="color:#FF6B35; font-weight:700;">🏟️ Đặt sân thể thao →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-main-bar">
+      <div class="container">
+        <a href="shop.html" class="tsport-logo">
+          <span class="tsport-logo-text">Tsport</span>
+          <span class="tsport-logo-tag">COMMUNITY</span>
+        </a>
+
+        <div class="tsport-actions">
+          <button type="button" class="btn btn-primary" id="btnOpenCreateMatch">
+            <span>+</span>
+            <span>Đăng bài tìm bạn chơi</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH (COMMUNITY) -->
+  <main class="container" style="padding-bottom:60px;">
+
+    <div class="tsport-page-header">
+      <div class="tsport-page-title-wrap">
+        <h1>
+          <span>🏸⚽🎾</span>
+          <span>Kèo Giao Lưu &amp; Tìm Người Chơi Thể Thao</span>
+        </h1>
+        <div class="tsport-page-subtitle">
+          Tìm kiếm đồng đội, ghép cặp thi đấu phong trào, đăng bài tuyển thành viên và quản lý bài đăng giao lưu.
+        </div>
+      </div>
+
+      <!-- SWITCH CHẾ ĐỘ QUYỀN ADMIN -->
+      <label style="display:flex; align-items:center; gap:8px; background:#EFF6FF; border:1px solid #BFDBFE; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; color:#1D4ED8; cursor:pointer;">
+        <input type="checkbox" id="toggleAdminCommunityMode" />
+        <span>Bật quyền Quản trị viên (Admin Ẩn bài vi phạm)</span>
+      </label>
+    </div>
+
+    <!-- THANH BỘ LỌC BÀI ĐĂNG (MÔN / NGÀY / ĐỊA ĐIỂM) -->
+    <div class="tsport-shop-toolbar">
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; flex:1;">
+        
+        <select id="filterMatchSport" class="tsport-filter-select" style="min-width:180px;">
+          <!-- Nạp động -->
+        </select>
+
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:12px; color:#64748B; font-weight:600;">Ngày:</span>
+          <input type="date" id="filterMatchDate" class="form-control" style="padding:6px 10px; font-size:13px;" />
+        </div>
+
+        <div style="flex:1; min-width:200px;">
+          <input type="text" id="filterMatchLocation" class="form-control" placeholder="Tìm theo địa điểm, tên sân, khu vực..." style="padding:7px 12px; font-size:13px;" />
+        </div>
+      </div>
+
+      <div class="tsport-filter-count" id="matchCountBadge">0 bài đăng</div>
+    </div>
+
+    <!-- DANH SÁCH CÁC BÀI ĐĂNG (GRID) -->
+    <div class="tsport-matches-grid" id="matchesGrid">
+      <!-- Được render tự động qua community.js -->
+    </div>
+
+  </main>
+
+  <!-- ==========================================
+       MODAL ĐĂNG / SỬA BÀI VIẾT TÌM BẠN CHƠI
+       ========================================== -->
+  <div class="modal-backdrop" id="modalMatchForm">
+    <div class="modal" style="max-width:580px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="matchModalTitle">Đăng bài tìm bạn chơi thể thao</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+
+      <form id="formMatch">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Tiêu đề bài đăng <span class="req">*</span></label>
+            <input type="text" id="matchTitle" class="form-control" placeholder="Ví dụ: Tìm 2 bạn đánh đôi nam nữ tối thứ 4..." required />
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="form-group">
+              <label class="form-label">Môn thể thao <span class="req">*</span></label>
+              <select id="matchSportId" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Trình độ <span class="req">*</span></label>
+              <select id="matchLevel" class="form-control">
+                <option value="Giao lưu vui vẻ">Giao lưu vui vẻ</option>
+                <option value="Mới tập chơi">Mới tập chơi</option>
+                <option value="Trung bình">Trung bình</option>
+                <option value="Khá / Tốt">Khá / Tốt</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="form-group">
+              <label class="form-label">Ngày giao lưu <span class="req">*</span></label>
+              <input type="date" id="matchDate" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Khung giờ <span class="req">*</span></label>
+              <input type="text" id="matchTime" class="form-control" placeholder="Ví dụ: 18:00 - 20:00" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Địa điểm sân thi đấu <span class="req">*</span></label>
+            <input type="text" id="matchLocation" class="form-control" placeholder="Ví dụ: Sân Cầu Lông Kỳ Hòa, Quận 10..." required />
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="form-group">
+              <label class="form-label">Số người cần tìm</label>
+              <input type="number" id="matchSlots" class="form-control" value="2" min="1" max="20" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Chi phí dự kiến</label>
+              <input type="text" id="matchPriceShare" class="form-control" placeholder="Ví dụ: 50.000đ / người hoặc Chia đều" />
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="form-group">
+              <label class="form-label">Họ tên liên hệ <span class="req">*</span></label>
+              <input type="text" id="matchContactName" class="form-control" placeholder="Nguyễn Văn An" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Số điện thoại liên hệ <span class="req">*</span></label>
+              <input type="tel" id="matchContactPhone" class="form-control" placeholder="0912345601" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ghi chú thêm</label>
+            <textarea id="matchDesc" class="form-control" rows="2" placeholder="Mang vợt cá nhân, cầu tự túc, tinh thần văn minh..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+          <button type="submit" class="btn btn-primary">Lưu &amp; Đăng bài</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/community.js"></script>
+</body>
+</html>

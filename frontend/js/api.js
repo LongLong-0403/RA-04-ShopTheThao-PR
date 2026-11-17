@@ -65,5 +65,6 @@ const api = {
   get: (path, params) => http.get(path, { params }).then((res) => res.data),
   post: (path, body) => http.post(path, body).then((res) => res.data),
   put: (path, body) => http.put(path, body).then((res) => res.data),
+  patch: (path, body) => http.patch(path, body).then((res) => res.data),
   delete: (path) => http.delete(path).then((res) => res.data),
 };

@@ -68,6 +68,19 @@
     if (userLabel && user) {
       userLabel.textContent = user.full_name || user.email;
     }
+
+    // Cập nhật số lượng giỏ hàng trên Header
+    function updateCartBadge() {
+      const cartBadges = document.querySelectorAll(".js-cart-count, .tsport-cart-badge");
+      if (window.tsportStore) {
+        const count = window.tsportStore.getCartTotals().totalItems;
+        cartBadges.forEach((b) => {
+          b.textContent = count;
+        });
+      }
+    }
+    updateCartBadge();
+    window.updateHeaderCartBadge = updateCartBadge;
   }
 
   document.addEventListener("DOMContentLoaded", initHeader);

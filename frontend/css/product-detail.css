@@ -1,0 +1,327 @@
+/* ==========================================================================
+   TSPORT — PRODUCT DETAIL PAGE (PDP) & SKU VARIANT SELECTOR STYLES
+   ========================================================================== */
+
+.tsport-pdp-grid {
+  display: grid;
+  grid-template-columns: 500px 1fr;
+  gap: 36px;
+  background: #fff;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius-lg);
+  padding: 30px;
+  margin-top: 20px;
+  box-shadow: var(--tsport-shadow-sm);
+}
+
+/* ==========================================
+   GALLERY: ẢNH LỚN + THUMBNAILS ẢNH NHỎ
+   ========================================== */
+.tsport-pdp-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tsport-pdp-main-img-wrap {
+  width: 100%;
+  padding-top: 100%; /* Vuông 1:1 */
+  position: relative;
+  background: #F8FAFC;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius-lg);
+  overflow: hidden;
+}
+.tsport-pdp-main-img-wrap img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.2s ease, transform 0.3s ease;
+}
+.tsport-pdp-main-img-wrap:hover img {
+  transform: scale(1.05);
+}
+
+.tsport-pdp-thumbs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.tsport-pdp-thumb-item {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--tsport-radius);
+  border: 2px solid var(--tsport-border);
+  overflow: hidden;
+  cursor: pointer;
+  background: #F8FAFC;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+.tsport-pdp-thumb-item:hover {
+  border-color: #FED7AA;
+}
+.tsport-pdp-thumb-item.is-active {
+  border-color: var(--tsport-orange);
+  box-shadow: 0 0 0 1px var(--tsport-orange);
+}
+.tsport-pdp-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================
+   CHI TIẾT SẢN PHẨM & BIẾN THỂ SKU
+   ========================================== */
+.tsport-pdp-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.tsport-pdp-header {
+  border-bottom: 1px solid var(--tsport-border);
+  padding-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+.tsport-pdp-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.tsport-pdp-brand-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--tsport-orange);
+  text-transform: uppercase;
+}
+
+.tsport-pdp-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--tsport-text);
+  line-height: 1.35;
+  margin-bottom: 12px;
+}
+
+.tsport-pdp-price-box {
+  background: #FFF7ED;
+  border: 1px solid #FFEDD5;
+  border-radius: var(--tsport-radius);
+  padding: 14px 18px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.tsport-pdp-price {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--tsport-orange);
+}
+.tsport-pdp-stock-status {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.tsport-pdp-stock-status.in-stock {
+  background: #DCFCE7;
+  color: #15803D;
+}
+.tsport-pdp-stock-status.out-stock {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+/* Khối Hàng Cũ (Used goods transparency box) */
+.tsport-used-card {
+  background: #FEF3C7;
+  border: 1px solid #FDE68A;
+  border-radius: var(--tsport-radius);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.tsport-used-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #92400E;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.tsport-used-desc {
+  font-size: 13px;
+  color: #78350F;
+  line-height: 1.5;
+}
+.tsport-lot-info {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #B45309;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* BIẾN THỂ SKU: CHỌN SIZE & CHỌN MÀU */
+.tsport-variant-section {
+  margin-bottom: 18px;
+}
+.tsport-variant-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tsport-text);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tsport-variant-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.tsport-variant-pill {
+  padding: 8px 16px;
+  border: 1.5px solid var(--tsport-border);
+  background: #fff;
+  border-radius: var(--tsport-radius);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tsport-text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.tsport-variant-pill:hover:not(.is-disabled) {
+  border-color: var(--tsport-orange);
+  color: var(--tsport-orange);
+}
+.tsport-variant-pill.is-active {
+  border-color: var(--tsport-orange);
+  background: #FFF7ED;
+  color: var(--tsport-orange);
+  box-shadow: 0 0 0 1px var(--tsport-orange);
+}
+.tsport-variant-pill.is-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* SỐ LƯỢNG & NÚT THÊM GIỎ HÀNG */
+.tsport-pdp-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--tsport-border);
+}
+
+.tsport-qty-picker {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--tsport-border);
+  border-radius: var(--tsport-radius);
+  background: #fff;
+  overflow: hidden;
+}
+.tsport-qty-btn {
+  width: 38px;
+  height: 38px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tsport-text);
+  cursor: pointer;
+}
+.tsport-qty-btn:hover {
+  background: #F1F5F9;
+}
+.tsport-qty-input {
+  width: 44px;
+  height: 38px;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tsport-text);
+}
+
+.btn-pdp-add-cart {
+  flex: 1;
+  padding: 12px 24px;
+  background: var(--tsport-orange);
+  color: #fff;
+  border: none;
+  border-radius: var(--tsport-radius);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+.btn-pdp-add-cart:hover:not(:disabled) {
+  background: var(--tsport-orange-hover);
+  box-shadow: 0 4px 12px rgba(217, 76, 38, 0.3);
+}
+.btn-pdp-add-cart:disabled {
+  background: #CBD5E1;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* BẢNG THÔNG SỐ KỸ THUẬT (SPECS TABLE) */
+.tsport-specs-card {
+  margin-top: 24px;
+  border-top: 1px solid var(--tsport-border);
+  padding-top: 20px;
+}
+.tsport-specs-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--tsport-text);
+  margin-bottom: 12px;
+}
+.tsport-specs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tsport-specs-table td {
+  padding: 8px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.tsport-specs-table td:first-child {
+  width: 35%;
+  font-weight: 600;
+  color: var(--tsport-text-muted);
+}
+.tsport-specs-table td:last-child {
+  font-weight: 700;
+  color: var(--tsport-text);
+}
+
+/* RESPONSIVE PDP */
+@media (max-width: 900px) {
+  .tsport-pdp-grid {
+    grid-template-columns: 1fr;
+    padding: 18px;
+    gap: 20px;
+  }
+}

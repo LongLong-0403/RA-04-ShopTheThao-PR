@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết sản phẩm | Tsport Store</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="tsport-header">
+    <div class="tsport-topbar">
+      <div class="container">
+        <div class="tsport-topbar-left">
+          <span class="tsport-topbar-badge">CHI TIẾT SẢN PHẨM</span>
+          <span>BIẾN THỂ SKU • ĐỔI GIÁ &amp; TỒN KHO THEO SIZE/MÀU • THÊM GIỎ HÀNG</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="shop.html" style="color:#F8FAFC;">🛍️ Xem Cửa Hàng</a>
+          <a href="cart.html" style="color:#FF6B35; font-weight:700;">🛒 Giỏ hàng (<span class="js-cart-count">0</span>)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-main-bar">
+      <div class="container">
+        <a href="shop.html" class="tsport-logo">
+          <span class="tsport-logo-text">Tsport</span>
+          <span class="tsport-logo-tag">PRODUCT DETAIL</span>
+        </a>
+
+        <div class="tsport-actions">
+          <a href="shop.html" class="btn btn-secondary btn-sm">← Quay lại danh sách</a>
+          <a href="cart.html" class="btn btn-primary btn-sm">
+            <span>🛒</span>
+            <span>Xem Giỏ hàng</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH (PDP) -->
+  <main class="container" style="padding-bottom:60px;">
+    
+    <div style="margin-top:16px; font-size:13px; color:#64748B;">
+      <a href="shop.html" style="color:#64748B;">Cửa hàng</a> &nbsp;/&nbsp; 
+      <span id="pdpBrandName" style="color:#D94C26; font-weight:700;">Thương hiệu</span> &nbsp;/&nbsp;
+      <span style="color:#0F172A;">Chi tiết sản phẩm</span>
+    </div>
+
+    <div class="tsport-pdp-grid">
+
+      <!-- ==========================================
+           CỘT TRÁI: GALLERY ẢNH (LỚN + THUMBNAILS)
+           ========================================== -->
+      <div class="tsport-pdp-gallery">
+        <div class="tsport-pdp-main-img-wrap">
+          <img id="pdpMainImage" src="" alt="Ảnh sản phẩm lớn" />
+        </div>
+        <div class="tsport-pdp-thumbs" id="pdpThumbsWrap">
+          <!-- Thumbnails được sinh tự động -->
+        </div>
+      </div>
+
+      <!-- ==========================================
+           CỘT PHẢI: THÔNG TIN, SKU VÀ THÊM GIỎ
+           ========================================== -->
+      <div class="tsport-pdp-info">
+        
+        <div class="tsport-pdp-header">
+          <div id="pdpConditionBadgeWrap" style="margin-bottom:8px;"></div>
+          <h1 class="tsport-pdp-title" id="pdpTitle">Đang tải tên sản phẩm...</h1>
+          <p id="pdpDesc" style="font-size:13px; color:#475569; line-height:1.6; margin:0;"></p>
+        </div>
+
+        <!-- KHỐI HÀNG CŨ MINH BẠCH (CHỈ HIỆN KHI LÀ HÀNG CŨ) -->
+        <div class="tsport-used-card" id="pdpUsedGoodsBox" style="display:none;"></div>
+
+        <!-- HỘP GIÁ & TỒN KHO THEO SKU -->
+        <div class="tsport-pdp-price-box">
+          <div class="tsport-pdp-price" id="pdpPrice">0 ₫</div>
+          <div class="tsport-pdp-stock-status in-stock" id="pdpStockStatus">Đang kiểm tra...</div>
+        </div>
+
+        <!-- CHỌN BIẾN THỂ 1: KÍCH THƯỚC (SIZE) -->
+        <div class="tsport-variant-section" id="pdpSizeSection">
+          <div class="tsport-variant-label">
+            <span>Kích cỡ / Trọng lượng (Size):</span>
+            <span style="color:#D94C26;">*</span>
+          </div>
+          <div class="tsport-variant-options" id="pdpSizeOptions"></div>
+        </div>
+
+        <!-- CHỌN BIẾN THỂ 2: MÀU SẮC (COLOR) -->
+        <div class="tsport-variant-section" id="pdpColorSection">
+          <div class="tsport-variant-label">
+            <span>Màu sắc:</span>
+            <span style="color:#D94C26;">*</span>
+          </div>
+          <div class="tsport-variant-options" id="pdpColorOptions"></div>
+        </div>
+
+        <!-- NHẮC NHỞ CHỌN ĐỦ BIẾN THỂ -->
+        <div id="pdpVariantHint" style="display:none; font-size:12px; font-weight:700; color:#D94C26; margin-bottom:12px;"></div>
+
+        <!-- SỐ LƯỢNG & NÚT THÊM VÀO GIỎ -->
+        <div class="tsport-pdp-actions">
+          <div class="tsport-qty-picker">
+            <button type="button" class="tsport-qty-btn" id="btnQtyMinus">−</button>
+            <input type="number" class="tsport-qty-input" id="pdpQuantity" value="1" min="1" readonly />
+            <button type="button" class="tsport-qty-btn" id="btnQtyPlus">+</button>
+          </div>
+
+          <button type="button" class="btn-pdp-add-cart" id="btnAddToCart" disabled>
+            <span>🛒</span>
+            <span>Thêm vào giỏ hàng</span>
+          </button>
+        </div>
+
+        <!-- BẢNG THÔNG SỐ KỸ THUẬT (SPECS) -->
+        <div class="tsport-specs-card">
+          <h2 class="tsport-specs-title">📊 Thông số kỹ thuật sản phẩm</h2>
+          <table class="tsport-specs-table">
+            <tbody id="pdpSpecsTbody">
+              <!-- Render thông số kỹ thuật -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/product-detail.js"></script>
+</body>
+</html>
