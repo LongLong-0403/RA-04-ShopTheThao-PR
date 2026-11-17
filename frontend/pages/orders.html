@@ -56,6 +56,16 @@
       </div>
     </div>
 
+    <!-- TABS LỌC TRẠNG THÁI ĐƠN HÀNG -->
+    <div style="display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;">
+      <button type="button" class="btn btn-secondary btn-sm js-order-status-tab is-active" data-status="ALL">Tất cả đơn</button>
+      <button type="button" class="btn btn-secondary btn-sm js-order-status-tab" data-status="PENDING">⏳ Chờ xác nhận</button>
+      <button type="button" class="btn btn-secondary btn-sm js-order-status-tab" data-status="CONFIRMED">✓ Đã xác nhận</button>
+      <button type="button" class="btn btn-secondary btn-sm js-order-status-tab" data-status="SHIPPING">🚚 Đang giao hàng</button>
+      <button type="button" class="btn btn-secondary btn-sm js-order-status-tab" data-status="COMPLETED">★ Đã hoàn thành</button>
+      <button type="button" class="btn btn-secondary btn-sm js-order-status-tab" data-status="CANCELLED">✕ Đã hủy</button>
+    </div>
+
     <!-- DANH SÁCH ĐƠN HÀNG -->
     <div id="ordersListWrap">
       <!-- Được render tự động qua orders.js -->
@@ -84,6 +94,14 @@
           <div>Số điện thoại: <strong id="detailModalPhone">-</strong></div>
           <div style="grid-column:1/-1;">Địa chỉ: <strong id="detailModalAddress">-</strong></div>
           <div style="grid-column:1/-1;">Ghi chú: <span id="detailModalNote" style="color:#64748B;">-</span></div>
+        </div>
+
+        <!-- DÒNG THỜI GIAN TIẾN ĐỘ ĐƠN HÀNG (TIMELINE) -->
+        <div style="margin-bottom:20px; padding:14px; background:#FFF; border:1px solid #E2E8F0; border-radius:8px;">
+          <div style="font-weight:700; font-size:12px; color:#475569; margin-bottom:12px; text-transform:uppercase;">
+            Tiến độ đơn hàng:
+          </div>
+          <div id="detailModalTimeline"></div>
         </div>
 
         <table class="tsport-table">

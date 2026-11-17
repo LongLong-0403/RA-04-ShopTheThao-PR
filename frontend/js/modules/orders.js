@@ -9,10 +9,35 @@
 
 (function () {
   let currentDetailOrder = null;
+  let activeStatusFilter = "ALL";
 
   function initOrdersModule() {
     renderOrdersList();
     bindEvents();
+  }
+
+  function renderTimelineHtml(order) {
+    const store = window.tsportStore;
+    const timeline = store && typeof store.getOrderTimeline === "function"
+      ? store.getOrderTimeline(order)
+      : [];
+
+    return `
+      <div style="display:flex; justify-content:space-between; align-items:center; position:relative; margin:14px 0 10px;">
+        <div style="position:absolute; top:14px; left:20px; right:20px; height:2px; background:#E2E8F0; z-index:1;"></div>
+        ${timeline.map((step) => `
+          <div style="position:relative; z-index:2; text-align:center; flex:1;">
+            <div style="width:28px; height:28px; border-radius:50%; margin:0 auto 4px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; ${step.completed ? 'background:#16A34A; color:#fff;' : step.current ? 'background:#D94C26; color:#fff; box-shadow:0 0 0 4px rgba(217,76,38,0.2);' : 'background:#F1F5F9; color:#94A3B8; border:1px solid #CBD5E1;'}">
+              ${step.completed ? '✓' : step.step}
+            </div>
+            <div style="font-size:11px; font-weight:700; color:${step.completed ? '#16A34A' : step.current ? '#D94C26' : '#94A3B8'};">
+              ${escapeHtml(step.title)}
+            </div>
+            ${step.time ? `<div style="font-size:9px; color:#64748B;">${escapeHtml(step.time)}</div>` : ''}
+          </div>
+        `).join("")}
+      </div>
+    `;
   }
 
   function renderOrdersList() {
@@ -22,14 +47,18 @@
     const store = window.tsportStore;
     if (!store) return;
 
-    const orders = store.getOrders();
+    let orders = store.getOrders();
+
+    if (activeStatusFilter !== "ALL") {
+      orders = orders.filter(o => o.status === activeStatusFilter);
+    }
 
     if (orders.length === 0) {
       listWrap.innerHTML = `
         <div class="tsport-card" style="text-align:center; padding:50px 20px;">
           <div style="font-size:48px; margin-bottom:12px;">📦</div>
-          <h3 style="font-size:18px; font-weight:800; color:#1E293B;">Bạn chưa có đơn hàng nào</h3>
-          <p style="font-size:13px; color:#64748B; margin-bottom:18px;">Hãy đặt mua các sản phẩm thể thao yêu thích ngay hôm nay!</p>
+          <h3 style="font-size:18px; font-weight:800; color:#1E293B;">Không tìm thấy đơn hàng nào khớp bộ lọc</h3>
+          <p style="font-size:13px; color:#64748B; margin-bottom:18px;">Hãy chọn tab trạng thái khác hoặc mua sắm sản phẩm mới!</p>
           <a href="shop.html" class="btn btn-primary">🛍️ Đến cửa hàng mua sắm</a>
         </div>
       `;
@@ -47,6 +76,7 @@
     listWrap.innerHTML = orders.map((o) => {
       const st = statusMap[o.status] || { label: o.status, cls: "pending" };
       const canCancel = o.status === "PENDING";
+      const isCompleted = o.status === "COMPLETED";
 
       return `
         <div class="tsport-order-card" data-order-id="${o.id}">
@@ -67,9 +97,14 @@
             </div>
           </div>
 
+          <!-- DÒNG THỜI GIAN TIẾN ĐỘ -->
+          <div style="padding:0 16px; background:#FAFAFA; border-bottom:1px solid #F1F5F9;">
+            ${renderTimelineHtml(o)}
+          </div>
+
           <div class="tsport-order-body">
             ${(o.items || []).map((item) => `
-              <div class="tsport-order-item-row">
+              <div class="tsport-order-item-row" style="align-items:center;">
                 <img src="${escapeHtml(item.image_url)}" class="tsport-order-item-thumb" alt="${escapeHtml(item.product_name)}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
                 <div class="tsport-order-item-details">
                   <div class="tsport-order-item-title">${escapeHtml(item.product_name)}</div>
@@ -77,7 +112,14 @@
                     Phân loại: Size ${escapeHtml(item.size)} • Màu ${escapeHtml(item.color)} | Số lượng: x${item.quantity}
                   </div>
                 </div>
-                <div class="tsport-order-item-price">${formatMoney(item.price * item.quantity)}</div>
+                <div style="text-align:right;">
+                  <div class="tsport-order-item-price">${formatMoney(item.price * item.quantity)}</div>
+                  ${isCompleted ? `
+                    <a href="product-detail.html?id=${item.product_id}#sectionProductReviews" class="btn btn-secondary btn-sm" style="font-size:11px; margin-top:6px; display:inline-block; color:#D94C26; border-color:#FFD9CC;">
+                      ⭐ Đánh giá & Nhận xét
+                    </a>
+                  ` : ''}
+                </div>
               </div>
             `).join("")}
           </div>
@@ -130,6 +172,11 @@
     document.getElementById("detailModalNote").textContent = o.note || "Không có ghi chú";
     document.getElementById("detailModalTotal").textContent = formatMoney(o.total_amount);
 
+    const timelineWrap = document.getElementById("detailModalTimeline");
+    if (timelineWrap) {
+      timelineWrap.innerHTML = renderTimelineHtml(o);
+    }
+
     const itemsWrap = document.getElementById("detailModalItemsTbody");
     if (itemsWrap) {
       itemsWrap.innerHTML = (o.items || []).map((i) => `
@@ -176,6 +223,16 @@
   }
 
   function bindEvents() {
+    // Tabs lọc trạng thái đơn hàng
+    document.querySelectorAll(".js-order-status-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".js-order-status-tab").forEach(t => t.classList.remove("is-active"));
+        tab.classList.add("is-active");
+        activeStatusFilter = tab.dataset.status;
+        renderOrdersList();
+      });
+    });
+
     document.addEventListener("click", (e) => {
       // Xem chi tiết
       const viewBtn = e.target.closest(".js-view-order-detail");

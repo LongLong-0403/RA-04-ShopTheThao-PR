@@ -73,6 +73,16 @@
         <div class="tsport-pdp-header">
           <div id="pdpConditionBadgeWrap" style="margin-bottom:8px;"></div>
           <h1 class="tsport-pdp-title" id="pdpTitle">Đang tải tên sản phẩm...</h1>
+          
+          <div style="display:flex; align-items:center; gap:10px; margin:8px 0 12px; font-size:13px;" id="pdpRatingOverviewRow">
+            <div style="display:flex; align-items:center; gap:4px; color:#F59E0B; font-weight:800; font-size:15px;">
+              <span>★</span>
+              <span id="pdpRatingScore">5.0</span>
+            </div>
+            <span style="color:#CBD5E1;">•</span>
+            <a href="#sectionProductReviews" style="color:#2563EB; font-weight:600; text-decoration:none;" id="pdpReviewCountLink">0 đánh giá từ khách mua hàng</a>
+          </div>
+
           <p id="pdpDesc" style="font-size:13px; color:#475569; line-height:1.6; margin:0;"></p>
         </div>
 
@@ -133,6 +143,68 @@
       </div>
 
     </div>
+
+    <!-- KHU VỰC ĐÁNH GIÁ & NHẬN XÉT SẢN PHẨM (CHỈ DÀNH CHO KHÁCH CÓ ĐƠN HOÀN THÀNH) -->
+    <section class="tsport-card" id="sectionProductReviews" style="margin-top:36px;">
+      <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-size:18px; font-weight:800; margin:0; display:flex; align-items:center; gap:8px;">
+          <span>⭐</span>
+          <span>Đánh Giá &amp; Nhận Xét Của Khách Hàng</span>
+        </h2>
+        <span class="badge" id="pdpReviewCountBadge" style="background:#FEF3C7; color:#B45309; font-weight:700;">0 đánh giá</span>
+      </div>
+
+      <div class="tsport-card-body">
+        
+        <div style="display:grid; grid-template-columns:280px 1fr; gap:28px; margin-bottom:28px; align-items:center;" id="pdpReviewHeaderSummary">
+          <!-- ĐIỂM TRUNG BÌNH -->
+          <div style="text-align:center; padding:20px; background:#F8FAFC; border-radius:8px; border:1px solid #E2E8F0;">
+            <div style="font-size:48px; font-weight:900; color:#D94C26; line-height:1;" id="pdpReviewBigScore">5.0</div>
+            <div style="color:#F59E0B; font-size:20px; margin:6px 0;" id="pdpReviewBigStars">★★★★★</div>
+            <div style="font-size:12px; color:#64748B;" id="pdpReviewBigSub">Dựa trên 0 nhận xét thực tế</div>
+          </div>
+
+          <!-- THÔNG BÁO QUYỀN ĐÁNH GIÁ (SRS) -->
+          <div id="pdpReviewPermissionBox" style="background:#FFF7ED; padding:16px; border-radius:8px; border:1px solid #FED7AA;">
+            <strong style="color:#C2410C; font-size:13px; display:block; margin-bottom:4px;">🛡️ QUY ĐỊNH ĐÁNH GIÁ SẢN PHẨM:</strong>
+            <p style="font-size:12px; color:#7C2D12; margin:0; line-height:1.5;">
+              Chỉ những khách hàng đã đặt mua và có đơn hàng ở trạng thái <strong>"Đã hoàn thành" (COMPLETED)</strong> chứa sản phẩm này mới được phép gửi đánh giá sao và nhận xét thực tế.
+            </p>
+          </div>
+        </div>
+
+        <!-- FORM GỬI ĐÁNH GIÁ (NẾU HỢP LỆ) -->
+        <div id="pdpReviewFormWrap" style="display:none; background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:20px; margin-bottom:28px;">
+          <h3 style="font-size:15px; font-weight:800; margin:0 0 12px; color:#0F172A;">✍️ Viết nhận xét của bạn</h3>
+          <form id="formSubmitReview">
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+              <span style="font-size:13px; font-weight:700;">Chấm điểm sao:</span>
+              <div id="starPickerGroup" style="font-size:24px; cursor:pointer; color:#CBD5E1;">
+                <span class="js-star" data-val="1">★</span>
+                <span class="js-star" data-val="2">★</span>
+                <span class="js-star" data-val="3">★</span>
+                <span class="js-star" data-val="4">★</span>
+                <span class="js-star" data-val="5">★</span>
+              </div>
+              <input type="hidden" id="reviewStarValue" value="5" />
+              <strong id="reviewStarLabel" style="font-size:13px; color:#D94C26;">5 / 5 sao (Rất hài lòng)</strong>
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <textarea id="reviewCommentText" class="form-control" rows="3" required placeholder="Chia sẻ cảm nhận về chất lượng sản phẩm, độ đầm tay, cảm giác sử dụng thực tế..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-sm">Gửi đánh giá xác thực</button>
+          </form>
+        </div>
+
+        <!-- DANH SÁCH NHẬN XÉT CỦA KHÁCH -->
+        <div id="pdpReviewsListWrap" style="display:flex; flex-direction:column; gap:16px;">
+          <!-- Nạp động qua js -->
+        </div>
+
+      </div>
+    </section>
 
   </main>
 

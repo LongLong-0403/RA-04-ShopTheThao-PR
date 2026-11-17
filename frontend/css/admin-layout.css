@@ -1,0 +1,277 @@
+/* ==========================================================================
+   TSPORT — SHARED ADMIN LAYOUT (SIDEBAR CHO CẢ NHÓM)
+   Responsive kiểm tra tại 390px / 768px / 1366px
+   Hỗ trợ in hóa đơn @media print bằng window.print()
+   ========================================================================== */
+
+.tsport-admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #F8FAFC;
+}
+
+/* ==========================================
+   SIDEBAR QUẢN TRỊ (260PX TRÊN DESKTOP 1366PX)
+   ========================================== */
+.tsport-admin-sidebar {
+  width: 260px;
+  background: #0F172A;
+  color: #F8FAFC;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.tsport-admin-sidebar-header {
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1E293B;
+}
+
+.tsport-admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+}
+.tsport-admin-brand-logo {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--tsport-orange);
+  letter-spacing: -0.5px;
+}
+.tsport-admin-brand-badge {
+  background: #D94C26;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.tsport-admin-sidebar-close {
+  display: none;
+  background: none;
+  border: none;
+  color: #94A3B8;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* MENU ĐIỀU HƯỚNG QUẢN TRỊ */
+.tsport-admin-nav {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.tsport-admin-nav-group-title {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #64748B;
+  letter-spacing: 0.5px;
+  padding: 10px 12px 4px;
+}
+
+.tsport-admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #94A3B8;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+.tsport-admin-nav-item:hover {
+  background: #1E293B;
+  color: #F8FAFC;
+}
+.tsport-admin-nav-item.is-active {
+  background: #D94C26;
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(217, 76, 38, 0.4);
+}
+.tsport-admin-nav-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
+
+.tsport-admin-sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid #1E293B;
+  background: #0B1120;
+}
+.tsport-admin-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tsport-admin-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #D94C26;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ==========================================
+   KHUNG NỘI DUNG CHÍNH (MAIN CONTENT)
+   ========================================== */
+.tsport-admin-main {
+  flex: 1;
+  margin-left: 260px; /* Bằng độ rộng sidebar trên 1366px */
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.tsport-admin-topbar {
+  background: #fff;
+  border-bottom: 1px solid var(--tsport-border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--tsport-shadow-sm);
+}
+
+.tsport-admin-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.tsport-hamburger-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--tsport-border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--tsport-text);
+}
+
+.tsport-admin-body {
+  padding: 24px;
+  flex: 1;
+}
+
+/* BACKDROP CHO MOBILE */
+.tsport-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+}
+
+/* ==========================================
+   BREAKPOINTS: KIỂM TRA TẠI 1366PX / 768PX / 390PX
+   ========================================== */
+
+/* LAPTOP / DESKTOP (1366px) */
+@media (min-width: 1025px) {
+  .tsport-admin-main {
+    margin-left: 260px;
+  }
+}
+
+/* TABLET (768px - 1024px) */
+@media (max-width: 1024px) {
+  .tsport-hamburger-btn {
+    display: inline-flex;
+  }
+  .tsport-admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .tsport-admin-sidebar.is-open {
+    transform: translateX(0);
+  }
+  .tsport-admin-sidebar-close {
+    display: block;
+  }
+  .tsport-admin-main {
+    margin-left: 0;
+  }
+  .tsport-sidebar-backdrop.is-open {
+    display: block;
+  }
+}
+
+/* MOBILE (390px) */
+@media (max-width: 767px) {
+  .tsport-admin-body {
+    padding: 14px;
+  }
+  .tsport-admin-topbar {
+    padding: 10px 14px;
+  }
+  .tsport-admin-sidebar {
+    width: 280px;
+  }
+}
+
+/* ==========================================
+   CHẾ ĐỘ IN ẤN @MEDIA PRINT (IN ĐƠN HÀNG / HÓA ĐƠN)
+   ========================================== */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 12pt;
+  }
+  .tsport-admin-sidebar,
+  .tsport-admin-topbar,
+  .tsport-sidebar-backdrop,
+  .btn,
+  .tsport-actions,
+  .no-print {
+    display: none !important;
+  }
+  .tsport-admin-main {
+    margin-left: 0 !important;
+  }
+  .tsport-admin-body {
+    padding: 0 !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .invoice-box {
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+    padding: 20px !important;
+  }
+}
+.print-only {
+  display: none;
+}

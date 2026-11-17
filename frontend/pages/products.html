@@ -18,8 +18,12 @@
           <span>QUẢN LÝ SẢN PHẨM & BẢNG BIẾN THỂ SKU (CAM – TRẮNG)</span>
         </div>
         <div style="display:flex; align-items:center; gap:16px;">
-          <a href="../index.html" style="color:#F8FAFC;">🏠 Về Cửa Hàng</a>
-          <a href="categories.html" style="color:#FF6B35; font-weight:700;">📁 Quản trị Danh mục (3 Tab) →</a>
+          <a href="admin-dashboard.html" style="color:#FF6B35; font-weight:700;">📊 Dashboard</a>
+          <a href="categories.html" style="color:#F8FAFC;">📁 Danh mục</a>
+          <a href="admin-orders.html" style="color:#F8FAFC;">📑 Đơn hàng</a>
+          <a href="admin-buyback.html" style="color:#F8FAFC;">♻️ Thu mua</a>
+          <a href="admin-guide.html" style="color:#F8FAFC;">📖 Hướng dẫn</a>
+          <a href="../index.html" style="color:#F8FAFC;">🏠 Cửa Hàng</a>
         </div>
       </div>
     </div>
@@ -32,6 +36,9 @@
         </a>
 
         <div class="tsport-actions">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenCsvImportModal" style="background:#FFF7ED; border-color:#FDBA74; color:#C2410C; font-weight:700;">
+            📥 Nhập CSV Sản phẩm &amp; SKU
+          </button>
           <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedNewProd">🧪 Test SP mới (2 SKU)</button>
           <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedUsedProd">🧪 Test SP cũ (Mô tả hao mòn)</button>
           <button type="button" class="btn btn-primary" id="btnAddNewProduct">
@@ -311,6 +318,65 @@
     </div>
   </div>
 
+  <!-- MODAL NHẬP CSV SẢN PHẨM & SKU -->
+  <div class="modal-backdrop" id="modalCsvImport">
+    <div class="modal-box" style="max-width:850px; width:95%;">
+      <div class="modal-header">
+        <div class="modal-title">📥 Nhập CSV Sản Phẩm &amp; Biến Thể SKU Hàng Loạt</div>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modalCsvImport')">✕</button>
+      </div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#0F172A;">Kiểm tra chi tiết từng dòng (Line-by-line validation)</div>
+            <div style="font-size:12px; color:#64748B;">Kiểm tra bắt buộc tên, môn, danh mục, hãng, hàng cũ (mô tả hao mòn), biến thể SKU, giá &gt; 0, tồn &ge; 0.</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn btn-secondary btn-sm" id="btnDownloadCsvTemplate">⬇️ Tải file CSV mẫu</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnLoadSampleValidCsv">🧪 Dán mẫu HỢP LỆ</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnLoadSampleInvalidCsv">🧪 Dán mẫu CÓ LỖI</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="csvFileInput">Chọn file CSV từ máy tính:</label>
+          <input type="file" id="csvFileInput" accept=".csv,text/csv" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="csvRawText">Hoặc dán nội dung CSV vào đây:</label>
+          <textarea id="csvRawText" class="form-control" rows="6" placeholder="name,sport_id,category_id,brand_id,condition_type,wear_description,sku_code,size,color,price,stock,unit,quantity_per_lot..." style="font-family:monospace; font-size:12px;"></textarea>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn btn-primary" id="btnParseCsvText">🔍 Phân tích &amp; Kiểm tra dữ liệu CSV</button>
+        </div>
+
+        <!-- BẢNG BÁO CÁO KẾT QUẢ KIỂM TRA -->
+        <div id="csvValidationReport" style="display:none; margin-top:8px;">
+          <div id="csvValidationSummary" style="padding:10px; background:#F1F5F9; border-radius:6px; margin-bottom:10px;"></div>
+          <div class="tsport-table-responsive" style="max-height:220px; overflow-y:auto;">
+            <table class="tsport-table">
+              <thead>
+                <tr>
+                  <th style="width:70px;">Dòng</th>
+                  <th style="width:130px;">Trường</th>
+                  <th>Giá trị nhận được</th>
+                  <th>Chi tiết lỗi vi phạm</th>
+                </tr>
+              </thead>
+              <tbody id="csvErrorsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modalCsvImport')">Đóng</button>
+        <button type="button" class="btn btn-primary" id="btnCommitCsvImport" disabled>Nhập vào Kho Sản Phẩm</button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div class="tsport-toast" id="tsportToast"></div>
 
@@ -321,6 +387,7 @@
   <script src="../js/data/store.js"></script>
   <script src="../js/modules/header.js"></script>
   <script src="../js/modules/products.js"></script>
+  <script src="../js/modules/csv-import.js"></script>
 </body>
 </html>
 

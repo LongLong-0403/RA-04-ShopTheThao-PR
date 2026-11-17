@@ -37,7 +37,115 @@
     renderGallery(currentProduct);
     renderSkuVariants(currentProduct);
     renderSpecifications(currentProduct);
+    trackRecentView(currentProduct.id);
+    renderRatingAndReviews(currentProduct.id);
     bindEvents();
+  }
+
+  // THEO DÕI SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)
+  function trackRecentView(productId) {
+    try {
+      let recent = JSON.parse(localStorage.getItem("tsport_recent_views") || "[]");
+      if (!Array.isArray(recent)) recent = [];
+      recent = recent.filter(id => id !== productId);
+      recent.unshift(productId);
+      if (recent.length > 8) recent = recent.slice(0, 8);
+      localStorage.setItem("tsport_recent_views", JSON.stringify(recent));
+    } catch (_) {}
+  }
+
+  // RENDER ĐÁNH GIÁ & NHẬN XÉT (SRS)
+  function renderRatingAndReviews(productId) {
+    const store = window.tsportStore;
+    if (!store) return;
+
+    const ratingInfo = store.getProductRating(productId);
+    const reviews = store.getReviews(productId);
+
+    // Cập nhật điểm trên thanh tiêu đề
+    const scoreEl = document.getElementById("pdpRatingScore");
+    const countLink = document.getElementById("pdpReviewCountLink");
+    if (scoreEl) scoreEl.textContent = ratingInfo.avgRating;
+    if (countLink) countLink.textContent = `${ratingInfo.count} đánh giá từ khách mua hàng`;
+
+    // Cập nhật tóm tắt lớn
+    const bigScore = document.getElementById("pdpReviewBigScore");
+    const bigStars = document.getElementById("pdpReviewBigStars");
+    const bigSub = document.getElementById("pdpReviewBigSub");
+    const countBadge = document.getElementById("pdpReviewCountBadge");
+
+    if (bigScore) bigScore.textContent = ratingInfo.avgRating;
+    if (bigStars) {
+      const fullStars = Math.round(Number(ratingInfo.avgRating) || 5);
+      bigStars.innerHTML = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
+    }
+    if (bigSub) bigSub.textContent = `Dựa trên ${ratingInfo.count} nhận xét thực tế`;
+    if (countBadge) countBadge.textContent = `${ratingInfo.count} đánh giá`;
+
+    // Kiểm tra quyền gửi đánh giá (chỉ khách có đơn hàng COMPLETED)
+    const currentUser = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || { id: 2, full_name: "Nguyễn Văn An" };
+    const canReview = store.canUserReviewProduct(productId, currentUser.id);
+
+    const formWrap = document.getElementById("pdpReviewFormWrap");
+    const permBox = document.getElementById("pdpReviewPermissionBox");
+
+    if (canReview) {
+      if (formWrap) formWrap.style.display = "block";
+      if (permBox) {
+        permBox.innerHTML = `
+          <div style="color:#16A34A; font-weight:700; font-size:13px; margin-bottom:4px;">
+            ✓ BẠN ĐỦ ĐIỀU KIỆN ĐÁNH GIÁ:
+          </div>
+          <div style="font-size:12px; color:#14532D;">
+            Hệ thống xác nhận bạn đã hoàn tất đơn hàng chứa sản phẩm này. Hãy để lại đánh giá để chia sẻ với cộng đồng!
+          </div>
+        `;
+        permBox.style.background = "#F0FDF4";
+        permBox.style.borderColor = "#BBF7D0";
+      }
+    } else {
+      if (formWrap) formWrap.style.display = "none";
+      if (permBox) {
+        permBox.innerHTML = `
+          <strong style="color:#C2410C; font-size:13px; display:block; margin-bottom:4px;">🛡️ QUY ĐỊNH ĐÁNH GIÁ SẢN PHẨM:</strong>
+          <p style="font-size:12px; color:#7C2D12; margin:0; line-height:1.5;">
+            Chỉ những khách hàng đã mua và có đơn hàng ở trạng thái <strong>"Đã hoàn thành" (COMPLETED)</strong> mới được gửi đánh giá sao và nhận xét thực tế.
+          </p>
+        `;
+        permBox.style.background = "#FFF7ED";
+        permBox.style.borderColor = "#FED7AA";
+      }
+    }
+
+    // Danh sách nhận xét
+    const listWrap = document.getElementById("pdpReviewsListWrap");
+    if (listWrap) {
+      if (reviews.length === 0) {
+        listWrap.innerHTML = `
+          <div style="text-align:center; padding:30px; color:#94A3B8; background:#F8FAFC; border-radius:6px;">
+            Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên trải nghiệm và chia sẻ!
+          </div>
+        `;
+      } else {
+        listWrap.innerHTML = reviews.map((r) => `
+          <div style="border-bottom:1px solid #E2E8F0; padding-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <strong style="font-size:14px; color:#0F172A;">${escapeHtml(r.user_name)}</strong>
+                <span class="badge" style="background:#DCFCE7; color:#15803D; font-size:10px;">✓ Đã mua hàng</span>
+              </div>
+              <span style="font-size:11px; color:#94A3B8;">${escapeHtml(r.created_at)}</span>
+            </div>
+            <div style="color:#F59E0B; font-size:14px; margin-bottom:6px;">
+              ${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}
+            </div>
+            <p style="margin:0; font-size:13px; color:#334155; line-height:1.5;">
+              ${escapeHtml(r.comment)}
+            </p>
+          </div>
+        `).join("");
+      }
+    }
   }
 
   // 1. RENDER THÔNG TIN TỔNG QUAN & HÀNG CŨ
@@ -339,6 +447,70 @@
         if (typeof window.updateHeaderCartBadge === "function") {
           window.updateHeaderCartBadge();
         }
+      } catch (err) {
+        alert("⚠️ " + err.message);
+      }
+    });
+
+    // CHỌN SỐ SAO ĐÁNH GIÁ (1 - 5 SAO)
+    const starPicker = document.getElementById("starPickerGroup");
+    const starValueInput = document.getElementById("reviewStarValue");
+    const starLabel = document.getElementById("reviewStarLabel");
+    const starLabelsMap = {
+      1: "1 / 5 sao (Rất tệ)",
+      2: "2 / 5 sao (Chưa hài lòng)",
+      3: "3 / 5 sao (Bình thường)",
+      4: "4 / 5 sao (Tốt)",
+      5: "5 / 5 sao (Rất hài lòng)"
+    };
+
+    function highlightStars(val) {
+      if (!starPicker) return;
+      starPicker.querySelectorAll(".js-star").forEach(s => {
+        const starVal = Number(s.dataset.val);
+        s.style.color = starVal <= val ? "#F59E0B" : "#CBD5E1";
+      });
+      if (starLabel) starLabel.textContent = starLabelsMap[val] || `${val} sao`;
+    }
+
+    // Khởi tạo 5 sao
+    highlightStars(5);
+
+    starPicker?.addEventListener("click", (e) => {
+      const star = e.target.closest(".js-star");
+      if (!star) return;
+      const val = Number(star.dataset.val);
+      if (starValueInput) starValueInput.value = val;
+      highlightStars(val);
+    });
+
+    // GỬI ĐÁNH GIÁ SẢN PHẨM
+    document.getElementById("formSubmitReview")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const store = window.tsportStore;
+      if (!store || !currentProduct) return;
+
+      const rating = Number(document.getElementById("reviewStarValue")?.value) || 5;
+      const comment = document.getElementById("reviewCommentText")?.value.trim();
+      const currentUser = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || { id: 2, full_name: "Nguyễn Văn An" };
+
+      if (!comment) {
+        alert("⚠️ Vui lòng nhập nội dung nhận xét!");
+        return;
+      }
+
+      try {
+        store.addReview({
+          product_id: currentProduct.id,
+          user_id: currentUser.id,
+          user_name: currentUser.full_name || "Khách hàng Tsport",
+          rating,
+          comment
+        });
+
+        document.getElementById("reviewCommentText").value = "";
+        renderRatingAndReviews(currentProduct.id);
+        showToast("Cảm ơn bạn! Đánh giá đã được ghi nhận thành công.", "success");
       } catch (err) {
         alert("⚠️ " + err.message);
       }

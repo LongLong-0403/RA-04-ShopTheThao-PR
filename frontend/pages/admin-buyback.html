@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản Lý Thu Mua Đồ Cũ & Tạo SKU | Tsport Store Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <div class="tsport-admin-wrapper">
+    <!-- BACKDROP MOBILE -->
+    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
+    <!-- SIDEBAR DÙNG CHUNG -->
+    <aside class="tsport-admin-sidebar" id="adminSidebar">
+      <div class="tsport-admin-sidebar-header">
+        <a href="../index.html" class="tsport-admin-brand">
+          <span class="tsport-admin-brand-logo">Tsport</span>
+          <span class="tsport-admin-brand-badge">ADMIN</span>
+        </a>
+        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
+      </div>
+
+      <nav class="tsport-admin-nav">
+        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
+        <a href="admin-dashboard.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📊</span>
+          <span>Bảng điều khiển (Chart.js)</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
+        <a href="products.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📦</span>
+          <span>Sản phẩm &amp; Bảng SKU</span>
+        </a>
+        <a href="categories.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📁</span>
+          <span>Môn / Danh mục / Thương hiệu</span>
+        </a>
+        <a href="admin-orders.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📑</span>
+          <span>Đơn hàng &amp; In hóa đơn</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
+        <a href="admin-buyback.html" class="tsport-admin-nav-item is-active">
+          <span class="tsport-admin-nav-icon">♻️</span>
+          <span>Thu mua đồ cũ (Tạo SKU)</span>
+        </a>
+        <a href="courts.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏸</span>
+          <span>Quản lý Đặt sân &amp; Ca</span>
+        </a>
+        <a href="community.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">👥</span>
+          <span>Bài viết Tìm bạn giao lưu</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
+        <a href="admin-guide.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📖</span>
+          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
+        </a>
+        <a href="../index.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏠</span>
+          <span>Về trang chủ Storefront</span>
+        </a>
+      </nav>
+
+      <div class="tsport-admin-sidebar-footer">
+        <div class="tsport-admin-user-info">
+          <div class="tsport-admin-avatar">AD</div>
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
+            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="tsport-admin-main">
+      <header class="tsport-admin-topbar">
+        <div class="tsport-admin-topbar-left">
+          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div>
+            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">♻️ Quản Lý Yêu Cầu Thu Mua Đồ Cũ</h1>
+            <div style="font-size:12px; color:#64748B;">Duyệt thu mua và tự động sinh mã SKU hàng cũ vào Module Sản Phẩm</div>
+          </div>
+        </div>
+        <div>
+          <a href="products.html" class="btn btn-secondary btn-sm">📦 Xem Kho Sản Phẩm</a>
+        </div>
+      </header>
+
+      <div class="tsport-admin-body">
+        
+        <div class="tsport-card">
+          <div class="tsport-filter-bar">
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-secondary btn-sm js-filter-buyback-status is-active" data-status="ALL">Tất cả</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-buyback-status" data-status="CHO_DUYET">⏳ Chờ duyệt</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-buyback-status" data-status="DA_THU_MUA">✓ Đã thu mua</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-buyback-status" data-status="TU_CHOI">✕ Từ chối</button>
+            </div>
+
+            <div class="tsport-filter-count" id="adminBuybackCountBadge">0 yêu cầu</div>
+          </div>
+
+          <div class="tsport-table-responsive">
+            <table class="tsport-table">
+              <thead>
+                <tr>
+                  <th style="width:50px;">ID</th>
+                  <th>Sản phẩm &amp; Độ mới</th>
+                  <th>Người gửi / SĐT</th>
+                  <th>Mô tả chi tiết hao mòn</th>
+                  <th>Giá đề xuất</th>
+                  <th>Trạng thái</th>
+                  <th style="min-width:140px; text-align:center;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="adminBuybackTbody">
+                <tr><td colspan="7" style="text-align:center; padding:20px;">Đang tải danh sách thu mua...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TẠO SKU HÀNG CŨ VÀO KHO SẢN PHẨM -->
+  <div class="modal" id="modalCreateUsedSku">
+    <div class="modal-backdrop js-modal-close"></div>
+    <div class="modal-dialog" style="max-width:540px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">➕ Tạo SKU Hàng Cũ vào Kho Sản Phẩm</h3>
+          <button type="button" class="modal-close js-modal-close">✕</button>
+        </div>
+        <form id="formCreateUsedSku">
+          <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
+            <div style="background:#FFF7ED; padding:12px; border-radius:6px; border:1px solid #FFEDD5;">
+              <div style="font-size:11px; font-weight:800; color:#D94C26; text-transform:uppercase;">Yêu cầu thu mua:</div>
+              <div style="font-size:15px; font-weight:800; color:#0F172A;" id="modalBuybackTitle">Tên sản phẩm</div>
+              <div style="font-size:11px; color:#64748B; margin-top:4px;">
+                Mã SKU sẽ được tự động sinh tiền tố <code>USED-BBX-XXXX</code> và lưu vào danh mục Đồ Cũ.
+              </div>
+            </div>
+
+            <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label class="form-label" for="usedSkuPrice">Giá bán niêm yết (VNĐ) <span class="required">*</span></label>
+                <input type="number" id="usedSkuPrice" class="form-control" required min="1000" step="1000" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="usedSkuStock">Số lượng tồn kho <span class="required">*</span></label>
+                <input type="number" id="usedSkuStock" class="form-control" value="1" required min="1" />
+              </div>
+            </div>
+
+            <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+              <div class="form-group">
+                <label class="form-label" for="usedSkuSize">Kích cỡ / Size</label>
+                <input type="text" id="usedSkuSize" class="form-control" value="Tiêu chuẩn" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="usedSkuColor">Màu sắc</label>
+                <input type="text" id="usedSkuColor" class="form-control" value="Nguyên bản" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="usedSkuWearDesc">Mô tả độ hao mòn thực tế (Bắt buộc cho hàng cũ) <span class="required">*</span></label>
+              <textarea id="usedSkuWearDesc" class="form-control" rows="3" required placeholder="Ví dụ: Vợt còn 88%, viền có 2 vết trầy nhẹ ở góc 11h, khung cacbon nguyên vẹn..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary js-modal-close">Đóng</button>
+            <button type="submit" class="btn btn-primary">Xác nhận tạo SKU &amp; Nạp vào Kho</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/data/mock-data.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/modules/admin-nav.js"></script>
+  <script src="../js/modules/admin-buyback.js"></script>
+</body>
+</html>

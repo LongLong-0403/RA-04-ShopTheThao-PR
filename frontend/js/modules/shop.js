@@ -278,6 +278,11 @@
       // Nhãn Mới / Cũ
       const isUsed = p.condition_type === "CU";
 
+      // Điểm đánh giá trung bình
+      const ratingInfo = store && typeof store.getProductRating === "function"
+        ? store.getProductRating(p.id)
+        : { avgRating: 5.0, count: 0 };
+
       html += `
         <a href="product-detail.html?id=${p.id}" class="tsport-product-card">
           <div class="tsport-product-thumb">
@@ -294,6 +299,11 @@
             <div class="tsport-product-brand">${escapeHtml(brand ? brand.name : 'Tsport')}</div>
             <h3 class="tsport-product-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
             
+            <div style="display:flex; align-items:center; gap:6px; font-size:12px; margin:4px 0;">
+              <span style="color:#F59E0B; font-weight:800;">★ ${ratingInfo.avgRating}</span>
+              <span style="color:#64748B; font-size:11px;">(${ratingInfo.count} đánh giá)</span>
+            </div>
+
             <div class="tsport-product-meta">
               <span>${p.skus ? p.skus.length : 0} biến thể</span>
               <span>•</span>

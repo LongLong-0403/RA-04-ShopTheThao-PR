@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản Lý Đơn Hàng & In Hóa Đơn | Tsport Store Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- KHU VỰC IN HÓA ĐƠN @MEDIA PRINT -->
+  <div id="invoicePrintArea" class="print-only"></div>
+
+  <div class="tsport-admin-wrapper no-print">
+    <!-- BACKDROP MOBILE -->
+    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
+    <!-- SIDEBAR DÙNG CHUNG -->
+    <aside class="tsport-admin-sidebar" id="adminSidebar">
+      <div class="tsport-admin-sidebar-header">
+        <a href="../index.html" class="tsport-admin-brand">
+          <span class="tsport-admin-brand-logo">Tsport</span>
+          <span class="tsport-admin-brand-badge">ADMIN</span>
+        </a>
+        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
+      </div>
+
+      <nav class="tsport-admin-nav">
+        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
+        <a href="admin-dashboard.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📊</span>
+          <span>Bảng điều khiển (Chart.js)</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
+        <a href="products.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📦</span>
+          <span>Sản phẩm &amp; Bảng SKU</span>
+        </a>
+        <a href="categories.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📁</span>
+          <span>Môn / Danh mục / Thương hiệu</span>
+        </a>
+        <a href="admin-orders.html" class="tsport-admin-nav-item is-active">
+          <span class="tsport-admin-nav-icon">📑</span>
+          <span>Đơn hàng &amp; In hóa đơn</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
+        <a href="admin-buyback.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">♻️</span>
+          <span>Thu mua đồ cũ (Tạo SKU)</span>
+        </a>
+        <a href="courts.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏸</span>
+          <span>Quản lý Đặt sân &amp; Ca</span>
+        </a>
+        <a href="community.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">👥</span>
+          <span>Bài viết Tìm bạn giao lưu</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
+        <a href="admin-guide.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📖</span>
+          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
+        </a>
+        <a href="../index.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏠</span>
+          <span>Về trang chủ Storefront</span>
+        </a>
+      </nav>
+
+      <div class="tsport-admin-sidebar-footer">
+        <div class="tsport-admin-user-info">
+          <div class="tsport-admin-avatar">AD</div>
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
+            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN BODY -->
+    <div class="tsport-admin-main">
+      <header class="tsport-admin-topbar">
+        <div class="tsport-admin-topbar-left">
+          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div>
+            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">📑 Quản Lý Đơn Hàng &amp; In Phiếu Xuất Kho</h1>
+            <div style="font-size:12px; color:#64748B;">Chuyển trạng thái theo luồng, kiểm soát hoàn tồn kho tự động</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <a href="orders.html" class="btn btn-secondary btn-sm" target="_blank">👁️ Xem trang Khách</a>
+          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Về Cửa Hàng</a>
+        </div>
+      </header>
+
+      <div class="tsport-admin-body">
+        
+        <!-- CARD DANH SÁCH ĐƠN HÀNG -->
+        <div class="tsport-card">
+          <div class="tsport-filter-bar">
+            <div class="tsport-filter-search">
+              <span class="tsport-filter-search-icon">🔍</span>
+              <input type="text" id="adminOrderSearch" placeholder="Tìm theo mã đơn (ORD-...), tên khách, SĐT..." />
+            </div>
+
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-secondary btn-sm js-filter-order-status is-active" data-status="ALL">Tất cả</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-order-status" data-status="PENDING">⏳ Chờ duyệt</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-order-status" data-status="CONFIRMED">✓ Đã xác nhận</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-order-status" data-status="SHIPPING">🚚 Đang giao</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-order-status" data-status="COMPLETED">★ Hoàn tất</button>
+              <button type="button" class="btn btn-secondary btn-sm js-filter-order-status" data-status="CANCELLED">✕ Đã hủy</button>
+            </div>
+
+            <div class="tsport-filter-count" id="adminOrdersCountBadge">0 đơn hàng</div>
+          </div>
+
+          <div class="tsport-table-responsive">
+            <table class="tsport-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn / Ngày</th>
+                  <th>Khách hàng &amp; Địa chỉ</th>
+                  <th>Chi tiết</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
+                  <th style="min-width:160px;">Chuyển trạng thái</th>
+                  <th style="width:90px; text-align:center;">In phiếu</th>
+                </tr>
+              </thead>
+              <tbody id="adminOrdersTbody">
+                <tr><td colspan="7" style="text-align:center; padding:20px;">Đang tải danh sách đơn hàng...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/data/mock-data.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/modules/admin-nav.js"></script>
+  <script src="../js/modules/admin-orders.js"></script>
+</body>
+</html>

@@ -57,11 +57,12 @@
     }
   }
 
-  // 3. RENDER CÁC CA CHƠI & BẢNG GIÁ CỐ ĐỊNH
+  // 3. RENDER CÁC CA CHƠI & BẢNG GIÁ CỐ ĐỊNH (KIỂM TRA CA BỊ CHIẾM)
   function renderBookingSlots() {
     const store = window.tsportStore;
     const courtId = document.getElementById("bookingCourtSelect")?.value;
     const slotWrap = document.getElementById("bookingSlotSelector");
+    const bookingDate = document.getElementById("bookingDate")?.value || new Date().toISOString().split("T")[0];
     if (!store || !slotWrap) return;
 
     if (!courtId) {
@@ -76,14 +77,28 @@
       return;
     }
 
-    slotWrap.innerHTML = slots.map((s, idx) => `
-      <div class="tsport-slot-btn js-slot-btn ${idx === 0 ? 'is-active' : ''}" data-slot-id="${s.id}">
-        <div class="tsport-slot-time">⏰ ${escapeHtml(s.time_slot)}</div>
-        <div class="tsport-slot-price">${formatMoney(s.fixed_price)}</div>
-      </div>
-    `).join("");
+    let firstAvailableSet = false;
 
-    selectedSlotId = slots[0]?.id || null;
+    slotWrap.innerHTML = slots.map((s, idx) => {
+      const isOccupied = store.isSlotOccupied(courtId, bookingDate, s.time_slot);
+      const isSelectable = !isOccupied;
+      const isFirstAvailable = isSelectable && !firstAvailableSet;
+      if (isFirstAvailable) firstAvailableSet = true;
+
+      return `
+        <div class="tsport-slot-btn js-slot-btn ${isFirstAvailable ? 'is-active' : ''} ${isOccupied ? 'is-occupied' : ''}" 
+             data-slot-id="${s.id}" 
+             data-occupied="${isOccupied ? 'true' : 'false'}"
+             style="${isOccupied ? 'opacity:0.5; background:#F1F5F9; border-color:#CBD5E1; cursor:not-allowed;' : ''}">
+          <div class="tsport-slot-time">⏰ ${escapeHtml(s.time_slot)}</div>
+          <div class="tsport-slot-price">${formatMoney(s.fixed_price)}</div>
+          ${isOccupied ? '<div style="font-size:10px; color:#DC2626; font-weight:800; margin-top:4px;">🔒 ĐÃ KÍN CA</div>' : '<div style="font-size:10px; color:#16A34A; font-weight:700; margin-top:4px;">✓ Sẵn sàng</div>'}
+        </div>
+      `;
+    }).join("");
+
+    const firstActive = slotWrap.querySelector(".js-slot-btn.is-active");
+    selectedSlotId = firstActive ? Number(firstActive.dataset.slotId) : null;
   }
 
   // 4. KHÁCH XEM DANH SÁCH YÊU CẦU ĐẶT SÂN CỦA MÌNH
@@ -167,13 +182,17 @@
         <td style="text-align:center;">
           ${b.status === 'PENDING' ? `
             <div style="display:flex; gap:4px; justify-content:center;">
-              <button type="button" class="btn btn-primary btn-sm js-admin-confirm-booking" data-id="${b.id}" title="Duyệt yêu cầu">
+              <button type="button" class="btn btn-primary btn-sm js-admin-confirm-booking" data-id="${b.id}" data-version="${b.version || 1}" title="Duyệt yêu cầu và khóa ca sân">
                 ✓ Duyệt
               </button>
               <button type="button" class="btn btn-danger btn-sm js-admin-reject-booking" data-id="${b.id}" title="Từ chối yêu cầu">
                 ✕ Từ chối
               </button>
             </div>
+          ` : b.status === 'CONFIRMED' ? `
+            <button type="button" class="btn btn-secondary btn-sm js-admin-release-booking" data-id="${b.id}" style="color:#DC2626; border-color:#FCA5A5; font-size:11px;" title="Giải phóng ca sân về trạng thái sẵn sàng">
+              🔓 Hủy / Giải phóng ca
+            </button>
           ` : `
             <span style="font-size:12px; color:#64748B;">Đã xử lý</span>
           `}
@@ -230,6 +249,11 @@
 
     // Thay đổi sân -> cập nhật ca
     document.getElementById("bookingCourtSelect")?.addEventListener("change", () => {
+      renderBookingSlots();
+    });
+
+    // Thay đổi ngày -> cập nhật tình trạng ca trống / ca bị chiếm
+    document.getElementById("bookingDate")?.addEventListener("change", () => {
       renderBookingSlots();
     });
 
@@ -297,13 +321,52 @@
         }
       }
 
-      // Admin Duyệt yêu cầu
+      // Chọn ca giờ chơi
+      const slotBtn = e.target.closest(".js-slot-btn");
+      if (slotBtn) {
+        if (slotBtn.dataset.occupied === "true") {
+          alert("⚠️ Ca này đã có người đặt trước và được xác nhận! Vui lòng chọn ca khác hoặc ngày khác.");
+          return;
+        }
+        document.querySelectorAll(".js-slot-btn").forEach(b => b.classList.remove("is-active"));
+        slotBtn.classList.add("is-active");
+        selectedSlotId = Number(slotBtn.dataset.slotId);
+      }
+
+      // Admin Duyệt yêu cầu (Kiểm tra xung đột 2 Admin đồng thời & Ca bị chiếm)
       const confirmBtn = e.target.closest(".js-admin-confirm-booking");
       if (confirmBtn) {
-        store.updateBookingStatus(confirmBtn.dataset.id, "CONFIRMED");
-        renderMyBookings();
-        renderAdminBookingRequests();
-        showToast("Đã duyệt yêu cầu đặt sân thành công!", "success");
+        const bookingId = Number(confirmBtn.dataset.id);
+        const expectedVersion = Number(confirmBtn.dataset.version) || 1;
+        try {
+          store.adminConfirmBooking(bookingId, 1, expectedVersion);
+          renderMyBookings();
+          renderAdminBookingRequests();
+          renderBookingSlots();
+          showToast("✓ Đã duyệt yêu cầu đặt sân thành công (Khóa ca tránh trùng lịch)!", "success");
+        } catch (err) {
+          alert("⚠️ " + err.message);
+          renderMyBookings();
+          renderAdminBookingRequests();
+          renderBookingSlots();
+        }
+      }
+
+      // Admin Hủy / Giải phóng ca sân
+      const releaseBtn = e.target.closest(".js-admin-release-booking");
+      if (releaseBtn) {
+        const bookingId = Number(releaseBtn.dataset.id);
+        if (confirm("Bạn có chắc chắn muốn HỦY / GIẢI PHÓNG ca sân này về trạng thái sẵn sàng cho khách khác đặt không?")) {
+          try {
+            store.adminReleaseSlot(bookingId, "Admin giải phóng ca sân");
+            renderMyBookings();
+            renderAdminBookingRequests();
+            renderBookingSlots();
+            showToast("✓ Đã giải phóng ca sân thành công!", "success");
+          } catch (err) {
+            alert("⚠️ Lỗi: " + err.message);
+          }
+        }
       }
 
       // Admin Từ chối yêu cầu

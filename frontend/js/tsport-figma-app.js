@@ -802,23 +802,191 @@ document.addEventListener("DOMContentLoaded", () => {
     const featured = state.products.filter((p) => p.isHomeFeatured).slice(0, 5);
     container.innerHTML = featured
       .map(
-        (p) => `
-        <article class="tsport-product-card" data-add-cart="${p.id}">
-          <div class="tsport-product-thumb">
-            <span class="tsport-product-status">${p.condition}</span>
-            <span class="tsport-product-brand-pill">${p.brand}</span>
-            ${renderWireframeRacketSVG()}
-            <span class="tsport-product-caption">HÌNH SẢN PHẨM</span>
-          </div>
-          <h3 class="tsport-product-title">${p.name}</h3>
-          <p class="tsport-product-meta">${p.variantMeta || "Màu / Size / Đơn vị"}</p>
-          <div class="tsport-product-price-row">
-            <span class="tsport-product-price">${formatVND(p.price)}</span>
-          </div>
-        </article>
-      `
+        (p) => {
+          const store = window.tsportStore;
+          const ratingInfo = store && typeof store.getProductRating === "function"
+            ? store.getProductRating(p.id)
+            : { avgRating: 5.0, count: 2 };
+
+          return `
+          <article class="tsport-product-card" data-add-cart="${p.id}" style="cursor:pointer;" onclick="window.location.href='pages/product-detail.html?id=${p.id}'">
+            <div class="tsport-product-thumb">
+              <span class="tsport-product-status">${p.condition}</span>
+              <span class="tsport-product-brand-pill">${p.brand}</span>
+              ${renderWireframeRacketSVG()}
+              <span class="tsport-product-caption">HÌNH SẢN PHẨM</span>
+            </div>
+            <h3 class="tsport-product-title">${p.name}</h3>
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; margin:4px 0;">
+              <span style="color:#F59E0B; font-weight:800;">★ ${ratingInfo.avgRating}</span>
+              <span style="color:#64748B;">(${ratingInfo.count} đánh giá)</span>
+            </div>
+            <p class="tsport-product-meta">${p.variantMeta || "Màu / Size / Đơn vị"}</p>
+            <div class="tsport-product-price-row">
+              <span class="tsport-product-price">${formatVND(p.price)}</span>
+              <span style="font-size:11px; color:#D94C26; font-weight:700;">Chi tiết →</span>
+            </div>
+          </article>
+        `;
+        }
       )
       .join("");
+  }
+
+  // KHU HÀNG ĐÃ QUA SỬ DỤNG MINH BẠCH
+  function renderHomeUsedGoods() {
+    const container = document.getElementById("d01UsedGoodsGrid");
+    if (!container) return;
+
+    const store = window.tsportStore;
+    let usedProducts = [];
+    if (store && typeof store.getProducts === "function") {
+      usedProducts = store.getProducts({ condition_type: "CU" });
+    }
+
+    if (usedProducts.length === 0) {
+      usedProducts = state.products.filter(p => p.condition === "Cũ" || (p.name && p.name.includes("Cũ")));
+    }
+
+    container.innerHTML = usedProducts.slice(0, 4).map((p) => {
+      const price = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.price)) : (p.price || 1500000);
+      const wear = p.wear_description || "Đã qua sử dụng, khung nguyên bản 85%, trầy xước nhẹ viền";
+      const lotUnit = p.skus && p.skus[0] && p.skus[0].unit === "LO" ? `📦 Hộp ${p.skus[0].quantity_per_lot || 12} quả` : "Chiếc";
+
+      return `
+        <article class="tsport-product-card" style="border:1px solid #FFEDD5; background:#FFF; border-radius:8px; padding:12px; cursor:pointer;" onclick="window.location.href='pages/product-detail.html?id=${p.id}'">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span class="badge" style="background:#FEF3C7; color:#B45309; font-weight:800; font-size:10px;">♻️ ĐỒ CŨ MINH BẠCH</span>
+            <span style="font-size:11px; color:#64748B;">${lotUnit}</span>
+          </div>
+          <h3 style="font-size:13px; font-weight:800; margin:0 0 6px; color:#0F172A; min-height:36px; line-height:1.3;">${p.name}</h3>
+          <div style="font-size:11px; color:#64748B; background:#F8FAFC; padding:6px 8px; border-radius:4px; margin-bottom:8px; line-height:1.4;">
+            <strong>Mô tả hao mòn:</strong> ${wear}
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:900; color:#D94C26; font-size:15px;">${formatVND(price)}</div>
+            <span class="btn btn-secondary btn-sm" style="font-size:10px; padding:3px 8px;">Xem SP</span>
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  // SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)
+  function renderHomeRecentViews() {
+    const container = document.getElementById("d01RecentViewsGrid");
+    if (!container) return;
+
+    let recentIds = [];
+    try {
+      recentIds = JSON.parse(localStorage.getItem("tsport_recent_views") || "[]");
+    } catch (_) {}
+
+    const store = window.tsportStore;
+    let products = [];
+    if (Array.isArray(recentIds) && recentIds.length > 0 && store) {
+      products = recentIds.map(id => store.getProductById(id)).filter(Boolean);
+    }
+
+    if (products.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column:1/-1; text-align:center; padding:24px; color:#94A3B8; background:#F8FAFC; border-radius:8px; border:1px dashed #CBD5E1;">
+          Bạn chưa xem sản phẩm nào gần đây. Hãy duyệt qua cửa hàng để xem các ưu đãi thể thao hấp dẫn!
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = products.slice(0, 4).map((p) => {
+      const price = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.price)) : 2000000;
+      const img = (p.images && p.images[0]?.image_url) || "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300";
+
+      return `
+        <article class="tsport-product-card" style="border:1px solid #E2E8F0; background:#FFF; border-radius:8px; padding:12px; cursor:pointer;" onclick="window.location.href='pages/product-detail.html?id=${p.id}'">
+          <img src="${img}" style="width:100%; height:120px; object-fit:cover; border-radius:6px; margin-bottom:8px;" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
+          <h3 style="font-size:12px; font-weight:800; margin:0 0 4px; color:#0F172A; line-height:1.3; height:32px; overflow:hidden;">${p.name}</h3>
+          <div style="font-weight:900; color:#D94C26; font-size:14px;">${formatVND(price)}</div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  // TÌM KIẾM TỰ ĐỘNG GỢI Ý (DEBOUNCE 300MS)
+  let searchDebounceTimer = null;
+  function initSearchAutocomplete() {
+    const input = document.getElementById("desktopSearchInput");
+    const suggestionsWrap = document.getElementById("desktopSearchSuggestions");
+    if (!input || !suggestionsWrap) return;
+
+    input.addEventListener("input", (e) => {
+      clearTimeout(searchDebounceTimer);
+      const query = e.target.value.trim().toLowerCase();
+
+      if (!query || query.length < 2) {
+        suggestionsWrap.style.display = "none";
+        suggestionsWrap.innerHTML = "";
+        return;
+      }
+
+      searchDebounceTimer = setTimeout(() => {
+        const store = window.tsportStore;
+        let matches = [];
+
+        if (store && typeof store.getProducts === "function") {
+          matches = store.getProducts().filter(p =>
+            p.name.toLowerCase().includes(query) ||
+            (p.skus && p.skus.some(s => s.sku_code.toLowerCase().includes(query)))
+          );
+        } else {
+          matches = state.products.filter(p =>
+            p.name.toLowerCase().includes(query) ||
+            p.brand.toLowerCase().includes(query)
+          );
+        }
+
+        if (matches.length === 0) {
+          suggestionsWrap.innerHTML = `
+            <div style="padding:16px; text-align:center; color:#94A3B8; font-size:12px;">
+              Không tìm thấy sản phẩm khớp với "${escapeHtml(query)}"
+            </div>
+          `;
+          suggestionsWrap.style.display = "block";
+          return;
+        }
+
+        suggestionsWrap.innerHTML = `
+          <div style="padding:8px 12px; background:#F8FAFC; border-bottom:1px solid #E2E8F0; font-size:11px; font-weight:700; color:#64748B;">
+            GỢI Ý SẢN PHẨM PHÙ HỢP (${matches.length})
+          </div>
+          ${matches.slice(0, 5).map((m) => {
+            const price = m.skus && m.skus.length ? Math.min(...m.skus.map(s => s.price)) : (m.price || 0);
+            const img = (m.images && m.images[0]?.image_url) || "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=100";
+            return `
+              <a href="pages/product-detail.html?id=${m.id}" style="display:flex; align-items:center; gap:10px; padding:10px 14px; text-decoration:none; border-bottom:1px solid #F1F5F9; color:#0F172A; transition:background 0.15s;" onmouseover="this.style.background='#FFF7ED';" onmouseout="this.style.background='transparent';">
+                <img src="${img}" style="width:36px; height:36px; border-radius:4px; object-fit:cover; border:1px solid #E2E8F0;" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=100'" />
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:13px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${m.name}</div>
+                  <div style="font-size:11px; color:#D94C26; font-weight:800;">${formatVND(price)}</div>
+                </div>
+                <span style="font-size:10px; background:#F1F5F9; padding:2px 6px; border-radius:4px; color:#64748B;">Xem</span>
+              </a>
+            `;
+          }).join("")}
+          <div style="padding:8px; text-align:center; background:#F8FAFC;">
+            <a href="pages/shop.html?q=${encodeURIComponent(query)}" style="font-size:12px; color:#D94C26; font-weight:700; text-decoration:none;">
+              Xem tất cả kết quả cho "${escapeHtml(query)}" →
+            </a>
+          </div>
+        `;
+        suggestionsWrap.style.display = "block";
+      }, 300);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".tsport-search-container")) {
+        suggestionsWrap.style.display = "none";
+      }
+    });
   }
 
   function getFilteredProducts() {
@@ -1419,6 +1587,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     });
+
+    // Nút xóa lịch sử đã xem gần đây
+    document.getElementById("btnClearRecentViews")?.addEventListener("click", () => {
+      localStorage.removeItem("tsport_recent_views");
+      renderHomeRecentViews();
+      showToast("Đã xóa toàn bộ lịch sử sản phẩm đã xem!");
+    });
+
+    initSearchAutocomplete();
   }
 
   function applyResponsiveArtboardScale() {
@@ -1436,6 +1613,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderAll() {
     renderDesktopMegaMenu();
     renderHomeFeaturedProducts();
+    renderHomeUsedGoods();
+    renderHomeRecentViews();
     renderFilteredSection();
     renderMobileAccordionAndList();
     updateCartBadges();

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bảng Điều Khiển & Thống Kê (Dashboard) | Tsport Store Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-root="../">
+
+  <div class="tsport-admin-wrapper">
+    <!-- BACKDROP MOBILE -->
+    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
+    <!-- SIDEBAR DÙNG CHUNG -->
+    <aside class="tsport-admin-sidebar" id="adminSidebar">
+      <div class="tsport-admin-sidebar-header">
+        <a href="../index.html" class="tsport-admin-brand">
+          <span class="tsport-admin-brand-logo">Tsport</span>
+          <span class="tsport-admin-brand-badge">ADMIN</span>
+        </a>
+        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
+      </div>
+
+      <nav class="tsport-admin-nav">
+        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
+        <a href="admin-dashboard.html" class="tsport-admin-nav-item is-active">
+          <span class="tsport-admin-nav-icon">📊</span>
+          <span>Bảng điều khiển (Chart.js)</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
+        <a href="products.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📦</span>
+          <span>Sản phẩm &amp; Bảng SKU</span>
+        </a>
+        <a href="categories.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📁</span>
+          <span>Môn / Danh mục / Thương hiệu</span>
+        </a>
+        <a href="admin-orders.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📑</span>
+          <span>Đơn hàng &amp; In hóa đơn</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
+        <a href="admin-buyback.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">♻️</span>
+          <span>Thu mua đồ cũ (Tạo SKU)</span>
+        </a>
+        <a href="courts.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏸</span>
+          <span>Quản lý Đặt sân &amp; Ca</span>
+        </a>
+        <a href="community.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">👥</span>
+          <span>Bài viết Tìm bạn giao lưu</span>
+        </a>
+
+        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
+        <a href="admin-guide.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">📖</span>
+          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
+        </a>
+        <a href="../index.html" class="tsport-admin-nav-item">
+          <span class="tsport-admin-nav-icon">🏠</span>
+          <span>Về trang chủ Storefront</span>
+        </a>
+      </nav>
+
+      <div class="tsport-admin-sidebar-footer">
+        <div class="tsport-admin-user-info">
+          <div class="tsport-admin-avatar">AD</div>
+          <div>
+            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
+            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <div class="tsport-admin-main">
+      <header class="tsport-admin-topbar">
+        <div class="tsport-admin-topbar-left">
+          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div>
+            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">📊 Bảng Điều Khiển &amp; Thống Kê Doanh Thu</h1>
+            <div style="font-size:12px; color:#64748B;">Hệ thống báo cáo tự động theo thời gian thực</div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <label for="analyticsPeriodSelect" style="font-size:13px; font-weight:700; color:#475569;">Khoảng thời gian:</label>
+            <select id="analyticsPeriodSelect" class="form-control" style="width:auto; padding:6px 12px; font-weight:600;">
+              <option value="today">Hôm nay</option>
+              <option value="7days" selected>7 ngày vừa qua</option>
+              <option value="30days">30 ngày vừa qua</option>
+            </select>
+          </div>
+          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Cửa hàng</a>
+        </div>
+      </header>
+
+      <div class="tsport-admin-body">
+        
+        <!-- THẺ KPI TỔNG QUAN -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:16px; margin-bottom:24px;">
+          <div class="tsport-card" style="margin:0; padding:18px; border-left:4px solid #D94C26;">
+            <div style="font-size:12px; font-weight:800; color:#64748B; text-transform:uppercase;">Tổng Doanh Thu</div>
+            <div style="font-size:24px; font-weight:900; color:#D94C26; margin:8px 0;" id="kpiTotalRevenue">0 ₫</div>
+            <div style="font-size:11px; color:#16A34A;">✓ Tính từ các đơn hàng hoàn tất &amp; đặt cọc</div>
+          </div>
+
+          <div class="tsport-card" style="margin:0; padding:18px; border-left:4px solid #2563EB;">
+            <div style="font-size:12px; font-weight:800; color:#64748B; text-transform:uppercase;">Tổng Đơn Hàng</div>
+            <div style="font-size:24px; font-weight:900; color:#2563EB; margin:8px 0;" id="kpiTotalOrders">0 đơn</div>
+            <div style="font-size:11px; color:#64748B;">Đã hoàn thành: <strong id="kpiCompletedOrders" style="color:#10B981;">0</strong> đơn</div>
+          </div>
+
+          <div class="tsport-card" style="margin:0; padding:18px; border-left:4px solid #10B981;">
+            <div style="font-size:12px; font-weight:800; color:#64748B; text-transform:uppercase;">Lượt Booking Sân</div>
+            <div style="font-size:24px; font-weight:900; color:#10B981; margin:8px 0;" id="kpiTotalBookings">0 lượt</div>
+            <div style="font-size:11px; color:#64748B;">Ca đã xác nhận qua hệ thống</div>
+          </div>
+
+          <div class="tsport-card" style="margin:0; padding:18px; border-left:4px solid #F59E0B;">
+            <div style="font-size:12px; font-weight:800; color:#64748B; text-transform:uppercase;">Trạng Thái Đơn Hàng</div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px;">
+              <span>Chờ duyệt: <strong id="countPending" style="color:#F59E0B;">0</strong></span>
+              <span>Đang giao: <strong id="countShipping" style="color:#6366F1;">0</strong></span>
+              <span>Đã hủy: <strong id="countCancelled" style="color:#EF4444;">0</strong></span>
+            </div>
+            <div style="font-size:11px; color:#64748B; margin-top:6px;">Xác nhận: <strong id="countConfirmed" style="color:#3B82F6;">0</strong> | Hoàn thành: <strong id="countCompleted" style="color:#10B981;">0</strong></div>
+          </div>
+        </div>
+
+        <!-- KHU VỰC BIỂU ĐỒ CHART.JS -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(420px, 1fr)); gap:20px; margin-bottom:24px;">
+          
+          <!-- BIỂU ĐỒ 1: DOANH THU THEO NGÀY -->
+          <div class="tsport-card" style="margin:0;">
+            <div class="tsport-card-header">
+              <h2 style="font-size:16px; font-weight:800; margin:0; display:flex; align-items:center; gap:8px;">
+                <span>📈</span>
+                <span>Doanh thu theo ngày (VNĐ)</span>
+              </h2>
+            </div>
+            <div class="tsport-card-body" style="height:280px; position:relative;">
+              <canvas id="chartRevenue"></canvas>
+            </div>
+          </div>
+
+          <!-- BIỂU ĐỒ 2: SỐ BOOKING SÂN THEO NGÀY -->
+          <div class="tsport-card" style="margin:0;">
+            <div class="tsport-card-header">
+              <h2 style="font-size:16px; font-weight:800; margin:0; display:flex; align-items:center; gap:8px;">
+                <span>🏸</span>
+                <span>Số lượt booking sân theo ngày</span>
+              </h2>
+            </div>
+            <div class="tsport-card-body" style="height:280px; position:relative;">
+              <canvas id="chartBookings"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- BIỂU ĐỒ TRẠNG THÁI & BẢNG TOP SẢN PHẨM BÁN CHẠY -->
+        <div style="display:grid; grid-template-columns:360px 1fr; gap:20px;">
+          
+          <!-- DOUGHNUT CHART -->
+          <div class="tsport-card" style="margin:0;">
+            <div class="tsport-card-header">
+              <h2 style="font-size:16px; font-weight:800; margin:0;">🍩 Phân bổ Đơn Hàng</h2>
+            </div>
+            <div class="tsport-card-body" style="height:320px; position:relative;">
+              <canvas id="chartOrderStatus"></canvas>
+            </div>
+          </div>
+
+          <!-- TOP SẢN PHẨM BÁN CHẠY -->
+          <div class="tsport-card" style="margin:0;">
+            <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
+              <h2 style="font-size:16px; font-weight:800; margin:0; display:flex; align-items:center; gap:8px;">
+                <span>🔥</span>
+                <span>Top Sản Phẩm Bán Chạy Nhất</span>
+              </h2>
+              <a href="products.html" class="btn btn-secondary btn-sm">Xem tất cả kho</a>
+            </div>
+            <div class="tsport-table-responsive">
+              <table class="tsport-table">
+                <thead>
+                  <tr>
+                    <th style="width:50px;">Hạng</th>
+                    <th>Sản phẩm &amp; SKU</th>
+                    <th>Đã bán</th>
+                    <th>Doanh thu</th>
+                    <th style="width:90px;">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="topProductsTbody">
+                  <tr><td colspan="5" style="text-align:center; padding:20px;">Đang tải dữ liệu...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/data/mock-data.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/modules/admin-nav.js"></script>
+  <script src="../js/modules/admin-dashboard.js"></script>
+</body>
+</html>
