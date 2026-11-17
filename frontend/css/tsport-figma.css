@@ -1,0 +1,2064 @@
+/**
+ * TSPORT — HỆ THỐNG DESIGN TOKENS & WIREFRAME STYLES (CAM – TRẮNG)
+ * Chuẩn Figma Wireframe: https://www.figma.com/proto/ry8U0x57Bt8FemRHzUjaVa (node-id=4-169)
+ * B02 / Bộ thành phần & Lưới:
+ * - Action / Primary Orange: #D94C26
+ * - Tint Orange: #FFF1EB
+ * - Pure White: #FFFFFF
+ * - Surface: #F5F6F8
+ * - Border: #D9DDE2
+ * - Ink / Text: #22262B
+ * - Muted: #70767D
+ * - Sidebar Dark: #20252A
+ * - Desktop 1440px • Container 1248px (lề 96px) • 12 cột • Gutter 24px
+ * - Mobile 390px • Container 350px (lề 20px) • 4 cột • Gutter 16px
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --tsport-color-action: #D94C26;
+  --tsport-color-action-hover: #BF3F1C;
+  --tsport-color-tint: #FFF1EB;
+  --tsport-color-tint-border: #F5C4B2;
+  --tsport-color-white: #FFFFFF;
+  --tsport-color-surface: #F5F6F8;
+  --tsport-color-placeholder: #ECEEF1;
+  --tsport-color-border: #D9DDE2;
+  --tsport-color-ink: #22262B;
+  --tsport-color-muted: #70767D;
+  --tsport-color-sidebar: #20252A;
+
+  --tsport-radius-5: 5px;
+  --tsport-radius-6: 6px;
+  --tsport-radius-8: 8px;
+  --tsport-radius-12: 12px;
+
+  --tsport-shadow-mega: 0 20px 44px rgba(34, 38, 43, 0.14), 0 4px 12px rgba(217, 76, 38, 0.08);
+  --tsport-shadow-card: 0 8px 24px rgba(217, 76, 38, 0.10);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #E8EAEE;
+  color: var(--tsport-color-ink);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input, select {
+  font-family: inherit;
+}
+
+/* ============================================================================
+   THANH ĐIỀU KHIỂN FIGMA CANVAS & CHUYỂN CHẾ ĐỘ XEM (TOP STUDIO BAR)
+   ============================================================================ */
+.figma-workspace-bar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: #1B1F24;
+  color: #FFFFFF;
+  border-bottom: 2px solid var(--tsport-color-action);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.figma-workspace-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.figma-badge-orange {
+  background: var(--tsport-color-action);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.figma-workspace-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.figma-workspace-sub {
+  font-size: 11px;
+  color: #A0A8B2;
+}
+
+.figma-mode-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #2A3038;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.figma-mode-btn {
+  background: transparent;
+  color: #D0D5DD;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  white-space: nowrap;
+}
+
+.figma-mode-btn:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.figma-mode-btn.is-active {
+  background: var(--tsport-color-action);
+  color: #FFFFFF;
+}
+
+.figma-api-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(217, 76, 38, 0.16);
+  border: 1px solid rgba(217, 76, 38, 0.45);
+  color: #FFD7C9;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.figma-api-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22C55E;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+}
+
+/* ============================================================================
+   BỐ CỤC CANVAS FIGMA (HIỂN THỊ CÁC ARTBOARD / FRAME CHUẨN)
+   ============================================================================ */
+.figma-canvas-stage {
+  padding: 28px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  overflow-x: hidden;
+}
+
+.figma-artboard-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transform-origin: top center;
+}
+
+.figma-artboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #495057;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.figma-artboard-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.figma-node-tag {
+  background: var(--tsport-color-tint);
+  color: var(--tsport-color-action);
+  border: 1px solid var(--tsport-color-tint-border);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Artboard 1440px chuẩn Desktop Wireframe D01 & D02 */
+.tsport-desktop-frame {
+  width: 1440px;
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-border);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: visible;
+}
+
+/* ============================================================================
+   1. HEADER DESKTOP CHUẨN WIREFRAME (node-id=3:53 / 1440px)
+      + TÌM KIẾM, TÀI KHOẢN, GIỎ HÀNG
+      + MENU SẢN PHẨM NHIỀU CỘT (TIÊU ĐỀ LOẠI HÀNG, THƯƠNG HIỆU, XEM THÊM)
+   ============================================================================ */
+.tsport-header {
+  width: 1440px;
+  background: var(--tsport-color-white);
+  position: relative;
+  z-index: 50;
+}
+
+/* 1.1 Utility Bar (height: 30px, px: 96px) */
+.tsport-utility-bar {
+  height: 30px;
+  background: var(--tsport-color-surface);
+  padding: 0 96px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  line-height: 17px;
+  color: var(--tsport-color-muted);
+  border-bottom: 1px solid #EAECEF;
+}
+
+.tsport-utility-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.tsport-utility-api-badge {
+  color: var(--tsport-color-action);
+  font-weight: 700;
+}
+
+/* 1.2 Brand & Search Bar (height: 74px, px: 96px, gap: 24px) */
+.tsport-brand-search-bar {
+  height: 74px;
+  padding: 0 96px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: var(--tsport-color-white);
+}
+
+.tsport-logo {
+  width: 232px;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 48px;
+  color: var(--tsport-color-action);
+  text-decoration: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.tsport-logo-badge {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--tsport-color-tint);
+  color: var(--tsport-color-action);
+  border: 1px solid var(--tsport-color-tint-border);
+}
+
+/* Search Box (width: 532px, height: 44px, radius: 5px) */
+.tsport-search-container {
+  width: 532px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.tsport-search-box {
+  width: 532px;
+  height: 44px;
+  background: var(--tsport-color-surface);
+  border: 1.5px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-5);
+  display: flex;
+  align-items: center;
+  padding-left: 18px;
+  padding-right: 6px;
+  transition: all 0.16s ease;
+}
+
+.tsport-search-box:focus-within {
+  background: var(--tsport-color-white);
+  border-color: var(--tsport-color-action);
+  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.12);
+}
+
+.tsport-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--tsport-color-ink);
+  outline: none;
+}
+
+.tsport-search-input::placeholder {
+  color: var(--tsport-color-muted);
+}
+
+.tsport-search-submit {
+  height: 32px;
+  padding: 0 14px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s ease;
+}
+
+.tsport-search-submit:hover {
+  background: var(--tsport-color-action-hover);
+}
+
+/* Quick Actions (width: 436px, height: 44px): Tra cứu đơn hàng, Tài khoản, Giỏ hàng (2) */
+.tsport-quick-actions {
+  width: 436px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.tsport-action-item {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: var(--tsport-radius-5);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--tsport-color-ink);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tsport-action-item:hover {
+  background: var(--tsport-color-tint);
+  border-color: var(--tsport-color-tint-border);
+  color: var(--tsport-color-action);
+}
+
+.tsport-action-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--tsport-color-surface);
+  color: var(--tsport-color-action);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.tsport-action-item:hover .tsport-action-icon {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+.tsport-action-cart {
+  background: var(--tsport-color-tint);
+  border: 1px solid var(--tsport-color-tint-border);
+  color: var(--tsport-color-action);
+  font-weight: 700;
+  padding: 0 14px;
+}
+
+.tsport-action-cart .tsport-action-icon {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+.tsport-cart-badge {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+
+/* 1.3 Navigation Bar (height: 50px, px: 96px, gap: 32px) */
+.tsport-nav-bar {
+  height: 50px;
+  padding: 0 96px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  background: var(--tsport-color-white);
+  border-top: 1px solid var(--tsport-color-border);
+  border-bottom: 2px solid var(--tsport-color-action);
+  position: relative;
+}
+
+/* Nút Danh mục 240px x 48px chuẩn node 3:66 */
+.tsport-cat-trigger {
+  width: 240px;
+  height: 48px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.tsport-cat-trigger:hover {
+  background: var(--tsport-color-action-hover);
+}
+
+/* Thanh Links (width: 976px, gap: 32px) */
+.tsport-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 48px;
+  flex: 1;
+}
+
+.tsport-nav-link {
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 500;
+  color: var(--tsport-color-ink);
+  cursor: pointer;
+  padding: 0 4px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.tsport-nav-link:hover,
+.tsport-nav-link.is-active {
+  color: var(--tsport-color-action);
+  font-weight: 700;
+  border-bottom-color: var(--tsport-color-action);
+}
+
+.tsport-nav-link-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--tsport-color-tint);
+  color: var(--tsport-color-action);
+}
+
+/* ============================================================================
+   2. MEGA MENU SẢN PHẨM NHIỀU CỘT (CAM – TRẮNG, DỮ LIỆU TỪ API DANH MỤC)
+      - Tiêu đề cột: Loại hàng (bấm mở danh sách lọc theo loại hàng)
+      - Bên dưới: Thương hiệu (bấm mở danh sách lọc theo Loại hàng + Thương hiệu)
+      - Cuối cột: Xem thêm → (bấm mở danh sách lọc theo loại hàng)
+   ============================================================================ */
+.tsport-mega-menu {
+  position: absolute;
+  top: 50px;
+  left: 96px;
+  width: 1248px;
+  background: var(--tsport-color-white);
+  border: 1.5px solid var(--tsport-color-action);
+  border-top: 3px solid var(--tsport-color-action);
+  border-radius: 0 0 var(--tsport-radius-8) var(--tsport-radius-8);
+  box-shadow: var(--tsport-shadow-mega);
+  z-index: 120;
+  display: none;
+  overflow: hidden;
+}
+
+.tsport-mega-menu.is-open {
+  display: block;
+  animation: megaSlideDown 0.18s ease-out;
+}
+
+@keyframes megaSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tsport-mega-topbar {
+  background: var(--tsport-color-tint);
+  border-bottom: 1px solid var(--tsport-color-tint-border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.tsport-mega-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tsport-color-action);
+}
+
+.tsport-mega-api-tag {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.tsport-mega-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--tsport-color-muted);
+}
+
+.tsport-mega-close-btn {
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-tint-border);
+  color: var(--tsport-color-action);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tsport-mega-close-btn:hover {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+/* Lưới 6 cột Loại hàng chuẩn Container 1248px */
+.tsport-mega-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  background: var(--tsport-color-white);
+}
+
+.tsport-mega-col {
+  padding: 20px 18px 18px;
+  border-right: 1px solid var(--tsport-color-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: background 0.15s ease;
+}
+
+.tsport-mega-col:last-child {
+  border-right: none;
+}
+
+.tsport-mega-col:hover {
+  background: #FFFDFB;
+}
+
+/* Tiêu đề cột = Loại hàng */
+.tsport-mega-cat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--tsport-color-action);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  text-align: left;
+  cursor: pointer;
+  color: var(--tsport-color-ink);
+  transition: color 0.15s ease;
+}
+
+.tsport-mega-cat-header:hover {
+  color: var(--tsport-color-action);
+}
+
+.tsport-mega-cat-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: inherit;
+}
+
+.tsport-mega-cat-count {
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--tsport-color-tint);
+  color: var(--tsport-color-action);
+  padding: 2px 7px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* Danh sách Thương hiệu bên dưới Loại hàng */
+.tsport-mega-brand-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.tsport-mega-brand-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--tsport-radius-5);
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--tsport-color-ink);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.14s ease;
+}
+
+.tsport-mega-brand-btn:hover {
+  background: var(--tsport-color-tint);
+  border-color: var(--tsport-color-tint-border);
+  color: var(--tsport-color-action);
+  font-weight: 600;
+  transform: translateX(2px);
+}
+
+.tsport-mega-brand-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tsport-mega-brand-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--tsport-color-action);
+  opacity: 0.65;
+}
+
+.tsport-mega-brand-meta {
+  font-size: 11px;
+  color: var(--tsport-color-muted);
+}
+
+.tsport-mega-brand-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+/* Nút "Xem thêm" dưới cùng mỗi cột Loại hàng */
+.tsport-mega-more-btn {
+  width: 100%;
+  height: 34px;
+  background: var(--tsport-color-tint);
+  border: 1px solid var(--tsport-color-tint-border);
+  border-radius: var(--tsport-radius-5);
+  color: var(--tsport-color-action);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tsport-mega-more-btn:hover {
+  background: var(--tsport-color-action);
+  border-color: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+/* ============================================================================
+   3. NỘI DUNG CHÍNH TRANG CHỦ D01 (CHUẨN WIREFRAME node-id=4:192)
+   ============================================================================ */
+.tsport-main-d01 {
+  width: 1440px;
+  padding: 23px 96px 48px;
+  background: var(--tsport-color-white);
+}
+
+/* Hàng 1: Category Tree (240x340) + Hero Banner (984x340), gap 24px */
+.tsport-hero-row {
+  display: flex;
+  gap: 24px;
+  height: 340px;
+  margin-bottom: 24px;
+}
+
+.tsport-category-tree {
+  width: 240px;
+  height: 340px;
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-6);
+  padding: 12px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.tsport-tree-item {
+  height: 48px;
+  padding: 0 20px;
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--tsport-color-ink);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.14s ease;
+}
+
+.tsport-tree-item:hover {
+  background: var(--tsport-color-tint);
+  border-left-color: var(--tsport-color-action);
+  color: var(--tsport-color-action);
+  font-weight: 600;
+}
+
+.tsport-hero-banner {
+  width: 984px;
+  height: 340px;
+  background: linear-gradient(135deg, #FFF5F0 0%, #ECEEF1 55%, #FFE6DA 100%);
+  border: 1px solid var(--tsport-color-tint-border);
+  border-radius: var(--tsport-radius-6);
+  padding: 34px 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.tsport-hero-copy {
+  max-width: 480px;
+  z-index: 2;
+}
+
+.tsport-hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--tsport-color-action);
+  letter-spacing: 0.04em;
+  margin-bottom: 16px;
+}
+
+.tsport-hero-heading {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 52px;
+  color: var(--tsport-color-ink);
+  margin-bottom: 16px;
+}
+
+.tsport-hero-sub {
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--tsport-color-muted);
+  margin-bottom: 28px;
+}
+
+.tsport-btn-primary {
+  height: 44px;
+  padding: 0 24px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  border: none;
+  border-radius: var(--tsport-radius-5);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s ease;
+}
+
+.tsport-btn-primary:hover {
+  background: var(--tsport-color-action-hover);
+}
+
+.tsport-btn-neutral {
+  height: 44px;
+  padding: 0 24px;
+  background: var(--tsport-color-white);
+  color: var(--tsport-color-ink);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-5);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 21px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.tsport-btn-neutral:hover {
+  border-color: var(--tsport-color-action);
+  color: var(--tsport-color-action);
+  background: var(--tsport-color-tint);
+}
+
+.tsport-hero-illustration {
+  width: 240px;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Hàng 2: 4 Ô Cam kết Dịch vụ (294x76 x 4, gap 24px) */
+.tsport-service-panels {
+  display: grid;
+  grid-template-columns: repeat(4, 294px);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.tsport-service-panel {
+  width: 294px;
+  height: 76px;
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-border);
+  border-left: 4px solid var(--tsport-color-action);
+  border-radius: var(--tsport-radius-5);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.tsport-service-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  color: var(--tsport-color-ink);
+}
+
+.tsport-service-desc {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--tsport-color-muted);
+}
+
+/* Tiêu đề từng Section chuẩn Wireframe (01 / MUA SẮM, 02 / TÁI SỬ DỤNG, 03 / RA SÂN) */
+.tsport-section-block {
+  margin-bottom: 40px;
+}
+
+.tsport-section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--tsport-color-action);
+  margin-bottom: 6px;
+}
+
+.tsport-section-head-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.tsport-section-title {
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 38px;
+  color: var(--tsport-color-ink);
+}
+
+.tsport-section-link {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tsport-color-action);
+  cursor: pointer;
+}
+
+.tsport-section-link:hover {
+  text-decoration: underline;
+}
+
+/* Lưới 5 Thẻ sản phẩm Desktop (232x326 x 5, gap 22px) chuẩn node 3:217 */
+.tsport-products-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 232px);
+  gap: 22px;
+}
+
+.tsport-product-card {
+  width: 232px;
+  height: 326px;
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-8);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.tsport-product-card:hover {
+  border-color: var(--tsport-color-action);
+  box-shadow: var(--tsport-shadow-card);
+  transform: translateY(-2px);
+}
+
+.tsport-product-thumb {
+  flex: 1;
+  background: var(--tsport-color-placeholder);
+  border-radius: var(--tsport-radius-6);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tsport-product-status {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  height: 24px;
+  padding: 0 10px;
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-tint-border);
+  border-radius: var(--tsport-radius-5);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tsport-color-action);
+  display: inline-flex;
+  align-items: center;
+}
+
+.tsport-product-brand-pill {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  height: 22px;
+  padding: 0 8px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tsport-product-caption {
+  position: absolute;
+  bottom: 6px;
+  left: 8px;
+  font-size: 8px;
+  color: var(--tsport-color-muted);
+  letter-spacing: 0.04em;
+}
+
+.tsport-product-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  color: var(--tsport-color-ink);
+  height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tsport-product-meta {
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--tsport-color-muted);
+}
+
+.tsport-product-price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tsport-product-price {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--tsport-color-action);
+}
+
+/* 02 / TÁI SỬ DỤNG: 3 Panel 400x155 */
+.tsport-reuse-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 400px);
+  gap: 24px;
+}
+
+.tsport-reuse-panel {
+  width: 400px;
+  height: 155px;
+  background: var(--tsport-color-surface);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-6);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.tsport-reuse-title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 33px;
+  color: var(--tsport-color-ink);
+}
+
+.tsport-reuse-sub {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--tsport-color-muted);
+}
+
+/* 03 / RA SÂN: 4 Nút 294x56 */
+.tsport-court-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 294px);
+  gap: 24px;
+}
+
+.tsport-court-btn {
+  width: 294px;
+  height: 56px;
+  background: var(--tsport-color-white);
+  border: 1.5px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-5);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tsport-color-ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tsport-court-btn:hover {
+  border-color: var(--tsport-color-action);
+  background: var(--tsport-color-tint);
+  color: var(--tsport-color-action);
+}
+
+/* Footer chuẩn Tsport/Footer (1440x216, px 96px) */
+.tsport-footer {
+  width: 1440px;
+  min-height: 198px;
+  background: var(--tsport-color-surface);
+  border-top: 1px solid var(--tsport-color-border);
+  padding: 24px 96px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tsport-footer-cols {
+  display: flex;
+  gap: 12px;
+  width: 1248px;
+}
+
+.tsport-footer-col-brand {
+  width: 420px;
+}
+
+.tsport-footer-col {
+  width: 268px;
+}
+
+.tsport-footer-brand {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 36px;
+  color: var(--tsport-color-action);
+  margin-bottom: 8px;
+}
+
+.tsport-footer-heading {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  color: var(--tsport-color-ink);
+  margin-bottom: 12px;
+}
+
+.tsport-footer-text {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--tsport-color-muted);
+}
+
+.tsport-footer-divider {
+  width: 1248px;
+  height: 1px;
+  background: var(--tsport-color-border);
+}
+
+.tsport-footer-copy {
+  font-size: 11px;
+  color: var(--tsport-color-muted);
+}
+
+/* ============================================================================
+   4. MÀN HÌNH D02 — DANH SÁCH SẢN PHẨM ĐÃ LỌC TỪ MEGA MENU / API DANH MỤC
+   ============================================================================ */
+.tsport-main-d02 {
+  width: 1440px;
+  padding: 24px 96px 56px;
+  background: var(--tsport-color-white);
+}
+
+.tsport-filter-banner {
+  background: var(--tsport-color-tint);
+  border: 1.5px solid var(--tsport-color-tint-border);
+  border-left: 5px solid var(--tsport-color-action);
+  border-radius: var(--tsport-radius-6);
+  padding: 16px 22px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.tsport-filter-banner-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tsport-breadcrumb {
+  font-size: 12px;
+  color: var(--tsport-color-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tsport-breadcrumb strong {
+  color: var(--tsport-color-action);
+}
+
+.tsport-filter-headline {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--tsport-color-ink);
+}
+
+.tsport-active-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tsport-chip {
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-action);
+  color: var(--tsport-color-action);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tsport-chip-reset {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: var(--tsport-radius-5);
+  cursor: pointer;
+}
+
+.tsport-d02-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+}
+
+.tsport-d02-sidebar {
+  background: var(--tsport-color-surface);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-6);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-self: start;
+}
+
+.tsport-filter-group-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tsport-color-ink);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--tsport-color-action);
+  margin-bottom: 10px;
+}
+
+.tsport-filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tsport-filter-opt-btn {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--tsport-radius-5);
+  border: 1px solid var(--tsport-color-border);
+  background: var(--tsport-color-white);
+  color: var(--tsport-color-ink);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.tsport-filter-opt-btn:hover,
+.tsport-filter-opt-btn.is-selected {
+  background: var(--tsport-color-tint);
+  border-color: var(--tsport-color-action);
+  color: var(--tsport-color-action);
+  font-weight: 700;
+}
+
+.tsport-products-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 220px);
+  gap: 20px;
+}
+
+.tsport-products-grid-4 .tsport-product-card {
+  width: 220px;
+}
+
+/* ============================================================================
+   5. GIAO DIỆN MOBILE 390PX (CHUẨN B02: 390PX • CONTAINER 350PX • LỀ 20PX)
+      + HEADER TÌM KIẾM, TÀI KHOẢN, GIỎ HÀNG
+      + MENU SẢN PHẨM CHUYỂN ACCORDION (LOẠI HÀNG -> THƯƠNG HIỆU & XEM THÊM)
+   ============================================================================ */
+.tsport-mobile-row {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tsport-mobile-frame {
+  width: 390px;
+  min-height: 844px;
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.10);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile Utility Bar */
+.tsport-m-utility {
+  height: 26px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Mobile Header (Container 350px, lề 20px) */
+.tsport-m-header {
+  background: var(--tsport-color-white);
+  border-bottom: 2px solid var(--tsport-color-action);
+  padding: 12px 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tsport-m-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tsport-m-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tsport-m-menu-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--tsport-radius-5);
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tsport-m-logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--tsport-color-action);
+}
+
+.tsport-m-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tsport-m-icon-btn {
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--tsport-radius-5);
+  border: 1px solid var(--tsport-color-border);
+  background: var(--tsport-color-surface);
+  color: var(--tsport-color-ink);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.tsport-m-icon-btn.is-cart {
+  background: var(--tsport-color-tint);
+  border-color: var(--tsport-color-tint-border);
+  color: var(--tsport-color-action);
+  font-weight: 700;
+}
+
+.tsport-m-search-box {
+  width: 350px;
+  height: 40px;
+  background: var(--tsport-color-surface);
+  border: 1.5px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-5);
+  display: flex;
+  align-items: center;
+  padding: 0 6px 0 12px;
+}
+
+.tsport-m-search-box:focus-within {
+  border-color: var(--tsport-color-action);
+  background: var(--tsport-color-white);
+}
+
+.tsport-m-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--tsport-color-ink);
+  outline: none;
+}
+
+.tsport-m-search-btn {
+  height: 28px;
+  padding: 0 10px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Mobile Accordion Menu (Chuyển từ Mega Menu nhiều cột sang Accordion) */
+.tsport-m-accordion-section {
+  padding: 16px 20px;
+  background: var(--tsport-color-white);
+  flex: 1;
+}
+
+.tsport-m-section-banner {
+  background: var(--tsport-color-tint);
+  border: 1px solid var(--tsport-color-tint-border);
+  border-radius: var(--tsport-radius-5);
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tsport-m-section-banner-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tsport-color-action);
+}
+
+.tsport-m-section-banner-sub {
+  font-size: 10px;
+  color: var(--tsport-color-muted);
+}
+
+.tsport-accordion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tsport-accordion-item {
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-6);
+  background: var(--tsport-color-white);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.tsport-accordion-item.is-expanded {
+  border-color: var(--tsport-color-action);
+  box-shadow: 0 4px 14px rgba(217, 76, 38, 0.08);
+}
+
+.tsport-accordion-trigger {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  background: var(--tsport-color-surface);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tsport-accordion-item.is-expanded .tsport-accordion-trigger {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+.tsport-accordion-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tsport-accordion-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.tsport-accordion-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--tsport-color-tint);
+  color: var(--tsport-color-action);
+}
+
+.tsport-accordion-item.is-expanded .tsport-accordion-badge {
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--tsport-color-white);
+}
+
+.tsport-accordion-chevron {
+  font-size: 12px;
+  font-weight: 700;
+  transition: transform 0.18s ease;
+}
+
+.tsport-accordion-item.is-expanded .tsport-accordion-chevron {
+  transform: rotate(180deg);
+}
+
+.tsport-accordion-body {
+  display: none;
+  padding: 12px 14px 14px;
+  background: var(--tsport-color-white);
+  border-top: 1px solid var(--tsport-color-border);
+}
+
+.tsport-accordion-item.is-expanded .tsport-accordion-body {
+  display: block;
+}
+
+.tsport-m-brand-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tsport-m-brand-btn {
+  padding: 8px 10px;
+  background: var(--tsport-color-surface);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-5);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tsport-color-ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.tsport-m-brand-btn:hover {
+  background: var(--tsport-color-tint);
+  border-color: var(--tsport-color-action);
+  color: var(--tsport-color-action);
+}
+
+.tsport-m-more-btn {
+  width: 100%;
+  height: 36px;
+  background: var(--tsport-color-tint);
+  border: 1px solid var(--tsport-color-action);
+  border-radius: var(--tsport-radius-5);
+  color: var(--tsport-color-action);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tsport-m-more-btn:hover {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+/* Mobile 2-Column Filtered Product Grid (Container 350px, 2x 167px, gutter 16px) */
+.tsport-m-filtered-body {
+  padding: 16px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  flex: 1;
+}
+
+.tsport-m-products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 167px);
+  gap: 16px;
+}
+
+.tsport-m-card {
+  width: 167px;
+  height: 246px;
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-6);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.tsport-m-card:hover {
+  border-color: var(--tsport-color-action);
+}
+
+.tsport-m-card-thumb {
+  flex: 1;
+  background: var(--tsport-color-placeholder);
+  border-radius: 5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tsport-m-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 17px;
+  color: var(--tsport-color-ink);
+  height: 34px;
+  overflow: hidden;
+}
+
+.tsport-m-card-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tsport-color-action);
+}
+
+/* ============================================================================
+   6. MODAL / DRAWER TÀI KHOẢN, GIỎ HÀNG & API INSPECTOR
+   ============================================================================ */
+.tsport-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 31, 36, 0.55);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.tsport-modal-backdrop.is-open {
+  display: flex;
+}
+
+.tsport-modal-box {
+  width: 100%;
+  max-width: 560px;
+  background: var(--tsport-color-white);
+  border: 2px solid var(--tsport-color-action);
+  border-radius: var(--tsport-radius-8);
+  box-shadow: var(--tsport-shadow-mega);
+  overflow: hidden;
+}
+
+.tsport-modal-head {
+  background: var(--tsport-color-tint);
+  border-bottom: 1px solid var(--tsport-color-tint-border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tsport-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tsport-color-action);
+}
+
+.tsport-modal-body {
+  padding: 20px;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.tsport-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #20252A;
+  color: #FFFFFF;
+  border-left: 4px solid var(--tsport-color-action);
+  padding: 12px 18px;
+  border-radius: var(--tsport-radius-6);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 2000;
+  display: none;
+}
+
+.tsport-toast.is-visible {
+  display: block;
+}
+
+
+/* ============================================================================
+   7. MÀN HÌNH D08 / D09 (ĐĂNG NHẬP & ĐĂNG KÝ CÓ VALIDATE, LƯU TOKEN, AXIOS INTERCEPTOR)
+      & MÀN HÌNH D10 (TRANG TÀI KHOẢN: SỬA THÔNG TIN CÁ NHÂN & ĐỔI MẬT KHẨU)
+      Chuẩn thành phần B02 Wireframe: Tsport/Field/Default, Readonly, Error
+   ============================================================================ */
+.tsport-auth-stage {
+  width: 1440px;
+  padding: 28px 96px 56px;
+  background: var(--tsport-color-white);
+}
+
+/* Bảng trạng thái Token & Axios Interceptor trực quan */
+.tsport-token-bar {
+  background: #FFF9F6;
+  border: 1.5px solid var(--tsport-color-tint-border);
+  border-left: 5px solid var(--tsport-color-action);
+  border-radius: var(--tsport-radius-8);
+  padding: 16px 22px;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+  align-items: center;
+}
+
+.tsport-token-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tsport-token-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tsport-token-status-pill {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+.tsport-token-status-pill.is-guest {
+  background: #70767D;
+}
+
+.tsport-token-code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11.5px;
+  color: var(--tsport-color-ink);
+  background: var(--tsport-color-white);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-5);
+  padding: 6px 10px;
+  word-break: break-all;
+}
+
+.tsport-interceptor-box {
+  background: #1B1F24;
+  color: #E6EDF3;
+  border-radius: var(--tsport-radius-6);
+  padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tsport-interceptor-title {
+  color: #FF8B6A;
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Lưới 2 cột cho D08 (Đăng nhập) & D09 (Đăng ký) */
+.tsport-auth-grid-2 {
+  display: grid;
+  grid-template-columns: 560px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.tsport-form-card {
+  background: var(--tsport-color-white);
+  border: 1.5px solid var(--tsport-color-border);
+  border-top: 4px solid var(--tsport-color-action);
+  border-radius: var(--tsport-radius-8);
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(34, 38, 43, 0.05);
+}
+
+.tsport-form-card-head {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--tsport-color-border);
+}
+
+.tsport-form-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tsport-color-action);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.tsport-form-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 34px;
+  color: var(--tsport-color-ink);
+}
+
+.tsport-form-subtitle {
+  font-size: 13px;
+  color: var(--tsport-color-muted);
+  margin-top: 4px;
+}
+
+/* Chuẩn thành phần Tsport/Field/Default, Readonly, Error (B02 node 3:205, 3:209, 3:213) */
+.tsport-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tsport-field-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.tsport-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tsport-color-ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tsport-field-req {
+  color: var(--tsport-color-action);
+  margin-left: 3px;
+}
+
+.tsport-field-input {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--tsport-radius-5);
+  border: 1.5px solid var(--tsport-color-border);
+  background: var(--tsport-color-white);
+  font-size: 14px;
+  color: var(--tsport-color-ink);
+  outline: none;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.tsport-field-input:focus {
+  border-color: var(--tsport-color-action);
+  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.12);
+}
+
+/* Tsport/Field/Readonly */
+.tsport-field-input[readonly],
+.tsport-field-input.is-readonly {
+  background: var(--tsport-color-surface);
+  color: var(--tsport-color-muted);
+  border-color: var(--tsport-color-border);
+  cursor: not-allowed;
+}
+
+/* Tsport/Field/Error */
+.tsport-field-group.has-error .tsport-field-input {
+  border-color: #D92D20;
+  background: #FFF5F5;
+}
+
+.tsport-field-error {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  color: #D92D20;
+  min-height: 18px;
+  display: none;
+}
+
+.tsport-field-group.has-error .tsport-field-error {
+  display: block;
+}
+
+.tsport-form-banner-msg {
+  padding: 11px 14px;
+  border-radius: var(--tsport-radius-5);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: none;
+}
+
+.tsport-form-banner-msg.is-success {
+  display: block;
+  background: #ECFDF3;
+  border: 1px solid #ABEFC6;
+  color: #067647;
+}
+
+.tsport-form-banner-msg.is-error {
+  display: block;
+  background: #FEF3F2;
+  border: 1px solid #FECDCA;
+  color: #B42318;
+}
+
+/* Nút điền nhanh tài khoản mẫu (Seed DB) */
+.tsport-seed-bar {
+  background: var(--tsport-color-surface);
+  border: 1px dashed var(--tsport-color-border);
+  border-radius: var(--tsport-radius-6);
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tsport-seed-btn {
+  background: var(--tsport-color-tint);
+  border: 1px solid var(--tsport-color-tint-border);
+  color: var(--tsport-color-action);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.tsport-seed-btn:hover {
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+}
+
+/* Trang Tài khoản D10: Sidebar trái + 2 khung Sửa thông tin & Đổi mật khẩu bên phải */
+.tsport-d10-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.tsport-d10-profile-card {
+  background: var(--tsport-color-surface);
+  border: 1px solid var(--tsport-color-border);
+  border-radius: var(--tsport-radius-8);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tsport-d10-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tsport-d10-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--tsport-color-action);
+  color: var(--tsport-color-white);
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tsport-d10-forms-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}

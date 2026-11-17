@@ -7,8 +7,7 @@
 
 // Thêm trang mới vào menu: thêm 1 dòng vào mảng này (đường dẫn tính từ thư mục frontend/)
 const MENU = [
-  { href: "index.html", label: "Trang chủ" },
-  { href: "pages/items.html", label: "Items (CRUD mẫu)" },
+  { href: "index.html", label: "Trang chủ Tsport" },
 ];
 
 function renderLayout() {
