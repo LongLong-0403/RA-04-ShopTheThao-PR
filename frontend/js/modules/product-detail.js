@@ -175,6 +175,7 @@
           ${isUsed ? 'ĐỒ CŨ MINH BẠCH' : 'HÀNG MỚI CHÍNH HÃNG 100%'}
         </span>
         ${sport ? `<span class="badge badge-sport" style="margin-left:8px;">${escapeHtml(sport.name)}</span>` : ''}
+        ${prod.status === 'INACTIVE' ? `<span class="badge badge-inactive" style="margin-left:8px; font-size:12px; padding:4px 8px;">○ TẠM ẨN / NGỪNG KINH DOANH</span>` : ''}
       `;
     }
 
@@ -327,9 +328,47 @@
       return;
     }
 
+    // Kiểm tra sản phẩm tạm ẩn
+    if (currentProduct && currentProduct.status === 'INACTIVE') {
+      if (stockStatusEl) {
+        stockStatusEl.textContent = "○ Sản phẩm đang tạm ẩn bởi ban quản trị";
+        stockStatusEl.className = "tsport-pdp-stock-status out-stock";
+      }
+      if (btnAddCart) {
+        btnAddCart.disabled = true;
+        btnAddCart.textContent = "Sản phẩm tạm ẩn";
+        btnAddCart.style.opacity = "0.6";
+        btnAddCart.style.cursor = "not-allowed";
+      }
+      if (hintEl) {
+        hintEl.style.display = "block";
+        hintEl.textContent = "⚠️ Sản phẩm này hiện đang tạm ẩn / ngừng kinh doanh, không thể đặt hàng lúc này.";
+      }
+      return;
+    }
+
     // Trường hợp ĐÃ CHỌN ĐỦ BIẾN THỂ
     if (priceEl) priceEl.textContent = formatMoney(matchingSku.price);
     if (hintEl) hintEl.style.display = "none";
+
+    // Kiểm tra SKU riêng lẻ bị tạm ẩn
+    if (matchingSku.status === 'INACTIVE') {
+      if (stockStatusEl) {
+        stockStatusEl.textContent = "○ Biến thể SKU này đang tạm ngưng kinh doanh";
+        stockStatusEl.className = "tsport-pdp-stock-status out-stock";
+      }
+      if (btnAddCart) {
+        btnAddCart.disabled = true;
+        btnAddCart.textContent = "Biến thể tạm ngưng";
+        btnAddCart.style.opacity = "0.6";
+        btnAddCart.style.cursor = "not-allowed";
+      }
+      if (hintEl) {
+        hintEl.style.display = "block";
+        hintEl.textContent = "⚠️ Biến thể SKU này đang tạm ngưng kinh doanh, quý khách vui lòng chọn phân loại khác.";
+      }
+      return;
+    }
 
     if (matchingSku.stock > 0) {
       if (stockStatusEl) {
@@ -338,6 +377,9 @@
       }
       if (btnAddCart) {
         btnAddCart.disabled = false;
+        btnAddCart.textContent = "Thêm vào giỏ hàng";
+        btnAddCart.style.opacity = "1";
+        btnAddCart.style.cursor = "pointer";
       }
       if (qtyInput) {
         qtyInput.max = matchingSku.stock;
@@ -350,6 +392,9 @@
       }
       if (btnAddCart) {
         btnAddCart.disabled = true;
+        btnAddCart.textContent = "Tạm hết hàng";
+        btnAddCart.style.opacity = "0.6";
+        btnAddCart.style.cursor = "not-allowed";
       }
     }
   }

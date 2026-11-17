@@ -167,6 +167,7 @@
                 <td style="padding:8px;">${idx + 1}</td>
                 <td style="padding:8px;">
                   <strong>${escapeHtml(item.product_name)}</strong>
+                  ${item.condition_type === 'CU' ? '<span class="badge" style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 5px; border-radius:4px; margin-left:4px;">CŨ (Lúc đặt)</span>' : '<span class="badge" style="background:#DEF7EC; color:#03543F; font-size:10px; font-weight:700; padding:2px 5px; border-radius:4px; margin-left:4px;">MỚI (Lúc đặt)</span>'}
                   <div style="font-size:11px; color:#64748B;">Mã: ${escapeHtml(item.sku_code)}</div>
                 </td>
                 <td style="padding:8px; text-align:center;">${escapeHtml(item.size)} / ${escapeHtml(item.color)}</td>

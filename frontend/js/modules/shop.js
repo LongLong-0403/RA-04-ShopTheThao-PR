@@ -135,13 +135,14 @@
         const filters = getFiltersFromUrl();
         currentPage = filters.page;
 
-        // Lấy dữ liệu và lọc
+        // Lấy dữ liệu và lọc (chỉ lấy sản phẩm ACTIVE cho khách hàng)
         let list = store.getProducts({
           search: filters.search,
           sport_id: filters.sport_id,
           category_id: filters.category_id,
           brand_id: filters.brand_id,
-          condition_type: filters.condition_type
+          condition_type: filters.condition_type,
+          only_active: true
         });
 
         // Lọc theo khoảng giá

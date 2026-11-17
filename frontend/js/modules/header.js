@@ -9,7 +9,7 @@
     if (megaGrid && window.tsportStore) {
       const categories = window.tsportStore.getCategoryTree();
       const brands = window.tsportStore.getBrands();
-      const products = window.tsportStore.getProducts();
+      const products = window.tsportStore.getProducts({ only_active: true });
 
       let html = "";
       categories.forEach((cat) => {

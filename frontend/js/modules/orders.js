@@ -107,7 +107,10 @@
               <div class="tsport-order-item-row" style="align-items:center;">
                 <img src="${escapeHtml(item.image_url)}" class="tsport-order-item-thumb" alt="${escapeHtml(item.product_name)}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
                 <div class="tsport-order-item-details">
-                  <div class="tsport-order-item-title">${escapeHtml(item.product_name)}</div>
+                  <div class="tsport-order-item-title">
+                    ${escapeHtml(item.product_name)}
+                    ${item.condition_type === 'CU' ? '<span class="badge" style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px;">HÀNG CŨ (Lúc đặt)</span>' : '<span class="badge" style="background:#DEF7EC; color:#03543F; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px;">HÀNG MỚI (Lúc đặt)</span>'}
+                  </div>
                   <div class="tsport-order-item-sub">
                     Phân loại: Size ${escapeHtml(item.size)} • Màu ${escapeHtml(item.color)} | Số lượng: x${item.quantity}
                   </div>
@@ -186,6 +189,7 @@
               <img src="${escapeHtml(i.image_url)}" style="width:36px; height:36px; border-radius:4px; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
               <div>
                 <strong>${escapeHtml(i.product_name)}</strong>
+                ${i.condition_type === 'CU' ? '<span class="badge" style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:4px;">CŨ (Lúc đặt)</span>' : '<span class="badge" style="background:#DEF7EC; color:#03543F; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:4px;">MỚI (Lúc đặt)</span>'}
                 <div style="font-size:11px; color:#64748B;">${i.size} - ${i.color}</div>
               </div>
             </div>

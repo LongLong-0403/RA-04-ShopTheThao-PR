@@ -95,6 +95,10 @@
     document.getElementById("usedSkuStock").value = 1;
     document.getElementById("usedSkuSize").value = "Tiêu chuẩn";
     document.getElementById("usedSkuColor").value = "Nguyên bản";
+    const unitSelect = document.getElementById("usedSkuUnit");
+    if (unitSelect) unitSelect.value = "CHIEC";
+    const lotGroup = document.getElementById("groupUsedSkuLotQty");
+    if (lotGroup) lotGroup.style.display = "none";
 
     openModal("modalCreateUsedSku");
   }
@@ -109,6 +113,8 @@
     const size = document.getElementById("usedSkuSize").value.trim();
     const color = document.getElementById("usedSkuColor").value.trim();
     const wearDesc = document.getElementById("usedSkuWearDesc").value.trim();
+    const unit = document.getElementById("usedSkuUnit")?.value || "CHIEC";
+    const quantity_per_lot = Number(document.getElementById("usedSkuLotQty")?.value) || 1;
 
     try {
       const res = store.createSkuFromBuyback(currentBuybackId, {
@@ -116,7 +122,9 @@
         stock,
         size,
         color,
-        wear_description: wearDesc
+        wear_description: wearDesc,
+        unit,
+        quantity_per_lot
       });
 
       closeModal("modalCreateUsedSku");
@@ -128,6 +136,12 @@
   }
 
   function bindEvents() {
+    document.getElementById("usedSkuUnit")?.addEventListener("change", (e) => {
+      const lotGroup = document.getElementById("groupUsedSkuLotQty");
+      if (lotGroup) {
+        lotGroup.style.display = e.target.value === "LO" ? "block" : "none";
+      }
+    });
     // Filter tabs
     document.querySelectorAll(".js-filter-buyback-status").forEach((btn) => {
       btn.addEventListener("click", () => {

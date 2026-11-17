@@ -799,31 +799,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("d01FeaturedGrid");
     if (!container) return;
 
-    const featured = state.products.filter((p) => p.isHomeFeatured).slice(0, 5);
+    const store = window.tsportStore;
+    let featured = [];
+    if (store && typeof store.getProducts === "function") {
+      const activeNew = store.getProducts({ only_active: true, condition_type: "MOI" });
+      if (activeNew.length > 0) {
+        featured = activeNew.slice(0, 5);
+      }
+    }
+    if (featured.length === 0) {
+      featured = state.products.filter((p) => p.isHomeFeatured).slice(0, 5);
+    }
+
     container.innerHTML = featured
       .map(
         (p) => {
-          const store = window.tsportStore;
+          const brandObj = store ? store.getBrandById(p.brand_id) : null;
+          const brandName = brandObj ? brandObj.name : (p.brand || "Tsport");
           const ratingInfo = store && typeof store.getProductRating === "function"
             ? store.getProductRating(p.id)
             : { avgRating: 5.0, count: 2 };
+          const minPrice = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.price)) : (p.price || 1500000);
+          const primaryImg = (p.images && p.images[0]) ? p.images[0].image_url : null;
 
           return `
           <article class="tsport-product-card" data-add-cart="${p.id}" style="cursor:pointer;" onclick="window.location.href='pages/product-detail.html?id=${p.id}'">
             <div class="tsport-product-thumb">
-              <span class="tsport-product-status">${p.condition}</span>
-              <span class="tsport-product-brand-pill">${p.brand}</span>
-              ${renderWireframeRacketSVG()}
-              <span class="tsport-product-caption">HÌNH SẢN PHẨM</span>
+              <span class="tsport-product-status">${p.condition_type === "CU" ? "Đồ cũ" : "Mới 100%"}</span>
+              <span class="tsport-product-brand-pill">${brandName}</span>
+              ${primaryImg ? `<img src="${primaryImg}" alt="${p.name}" style="width:100%; height:140px; object-fit:cover; border-radius:4px;" />` : renderWireframeRacketSVG()}
             </div>
-            <h3 class="tsport-product-title">${p.name}</h3>
+            <h3 class="tsport-product-title" style="min-height:36px; line-height:1.3; font-size:13px; margin:6px 0 2px;">${p.name}</h3>
             <div style="display:flex; align-items:center; gap:4px; font-size:11px; margin:4px 0;">
               <span style="color:#F59E0B; font-weight:800;">★ ${ratingInfo.avgRating}</span>
               <span style="color:#64748B;">(${ratingInfo.count} đánh giá)</span>
             </div>
-            <p class="tsport-product-meta">${p.variantMeta || "Màu / Size / Đơn vị"}</p>
+            <p class="tsport-product-meta" style="font-size:11px; color:#64748B; margin:0 0 6px;">${p.skus ? p.skus.length + ' biến thể SKU' : (p.variantMeta || "Chính hãng")}</p>
             <div class="tsport-product-price-row">
-              <span class="tsport-product-price">${formatVND(p.price)}</span>
+              <span class="tsport-product-price">${formatVND(minPrice)}</span>
               <span style="font-size:11px; color:#D94C26; font-weight:700;">Chi tiết →</span>
             </div>
           </article>
@@ -841,7 +854,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const store = window.tsportStore;
     let usedProducts = [];
     if (store && typeof store.getProducts === "function") {
-      usedProducts = store.getProducts({ condition_type: "CU" });
+      usedProducts = store.getProducts({ condition_type: "CU", only_active: true });
     }
 
     if (usedProducts.length === 0) {

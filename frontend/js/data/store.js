@@ -8,7 +8,7 @@
  */
 
 (function () {
-  const STORAGE_KEY = "tsport_store_data_v2";
+  const STORAGE_KEY = "tsport_store_data_v3";
 
   // Dữ liệu hạt giống (Seed Data) chuẩn SRS
   const initialData = {
@@ -17,22 +17,27 @@
       { id: 2, name: "Bóng đá", slug: "bong-da", description: "Môn thể thao vua với giày đinh sân cỏ nhân tạo và bóng thi đấu", status: "ACTIVE" },
       { id: 3, name: "Tennis", slug: "tennis", description: "Quần vợt chuyên nghiệp với vợt trợ lực và bóng thi đấu nỉ cao cấp", status: "ACTIVE" },
       { id: 4, name: "Pickleball", slug: "pickleball", description: "Môn thể thao xu hướng kết hợp bóng bàn, tennis và cầu lông", status: "ACTIVE" },
-      { id: 5, name: "Bóng rổ", slug: "bong-ro", description: "Môn thể thao bóng rổ trong nhà sàn gỗ và ngoài trời bê tông", status: "ACTIVE" }
+      { id: 5, name: "Bóng rổ", slug: "bong-ro", description: "Môn thể thao bóng rổ trong nhà sàn gỗ và ngoài trời bê tông", status: "ACTIVE" },
+      { id: 6, name: "Bóng bàn", slug: "bong-ban", description: "Môn bóng bàn phong trào và thi đấu chuyên nghiệp với cốt vợt, mặt vợt và bóng 3 sao chuẩn ITTF", status: "ACTIVE" }
     ],
     categories: [
       { id: 1, parent_id: null, sport_id: 1, name: "Vợt thể thao", slug: "vot-the-thao", status: "ACTIVE" },
       { id: 2, parent_id: 1, sport_id: 1, name: "Vợt cầu lông", slug: "vot-cau-long", status: "ACTIVE" },
       { id: 3, parent_id: 1, sport_id: 3, name: "Vợt Tennis", slug: "vot-tennis", status: "ACTIVE" },
       { id: 4, parent_id: 1, sport_id: 4, name: "Vợt Pickleball", slug: "vot-pickleball", status: "ACTIVE" },
+      { id: 17, parent_id: 1, sport_id: 6, name: "Vợt & Cốt vợt bóng bàn", slug: "vot-cot-vot-bong-ban", status: "ACTIVE" },
+      { id: 18, parent_id: 1, sport_id: 6, name: "Mặt vợt bóng bàn", slug: "mat-vot-bong-ban", status: "ACTIVE" },
       { id: 5, parent_id: null, sport_id: 2, name: "Giày thể thao", slug: "giay-the-thao", status: "ACTIVE" },
       { id: 6, parent_id: 5, sport_id: 1, name: "Giày cầu lông", slug: "giay-cau-long", status: "ACTIVE" },
       { id: 7, parent_id: 5, sport_id: 2, name: "Giày bóng đá", slug: "giay-bong-da", status: "ACTIVE" },
       { id: 8, parent_id: 5, sport_id: 3, name: "Giày Tennis & Pickleball", slug: "giay-tennis-pickleball", status: "ACTIVE" },
+      { id: 19, parent_id: 5, sport_id: 6, name: "Giày bóng bàn & Đa năng", slug: "giay-bong-ban", status: "ACTIVE" },
       { id: 9, parent_id: null, sport_id: 1, name: "Bóng & Quả thi đấu", slug: "bong-va-qua-thi-dau", status: "ACTIVE" },
       { id: 10, parent_id: 9, sport_id: 1, name: "Quả cầu lông", slug: "qua-cau-long", status: "ACTIVE" },
       { id: 11, parent_id: 9, sport_id: 2, name: "Quả bóng đá", slug: "qua-bong-da", status: "ACTIVE" },
       { id: 12, parent_id: 9, sport_id: 3, name: "Bóng Tennis", slug: "bong-tennis", status: "ACTIVE" },
       { id: 13, parent_id: 9, sport_id: 4, name: "Bóng Pickleball", slug: "bong-pickleball", status: "ACTIVE" },
+      { id: 20, parent_id: 9, sport_id: 6, name: "Hộp bóng bàn 3 sao ITTF", slug: "hop-bong-ban-3-sao", status: "ACTIVE" },
       { id: 14, parent_id: null, sport_id: 1, name: "Trang phục & Balo", slug: "trang-phuc-balo", status: "ACTIVE" },
       { id: 15, parent_id: 14, sport_id: 1, name: "Áo đấu & Trang phục", slug: "ao-dau-trang-phuc", status: "ACTIVE" },
       { id: 16, parent_id: 14, sport_id: 1, name: "Túi vợt & Balo", slug: "tui-vot-balo", status: "ACTIVE" }
@@ -48,7 +53,9 @@
       { id: 8, name: "Selkirk", slug: "selkirk", logo_url: "https://images.unsplash.com/photo-1622163642998-1ea32b0bbc67?w=120", status: "ACTIVE" },
       { id: 9, name: "Joola", slug: "joola", logo_url: "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=120", status: "ACTIVE" },
       { id: 10, name: "Mizuno", slug: "mizuno", logo_url: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=120", status: "ACTIVE" },
-      { id: 11, name: "Kamito", slug: "kamito", logo_url: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120", status: "ACTIVE" }
+      { id: 11, name: "Kamito", slug: "kamito", logo_url: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120", status: "ACTIVE" },
+      { id: 12, name: "Butterfly", slug: "butterfly", logo_url: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=120", status: "ACTIVE" },
+      { id: 13, name: "DHS", slug: "dhs", logo_url: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120", status: "ACTIVE" }
     ],
     products: [
       {
@@ -272,7 +279,230 @@
           { id: 18, image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600", is_primary: true, sort_order: 1 }
         ],
         skus: [
-          { id: 18, sku_code: "USED-CZ3-WH-41", size: "41", color: "Trắng Đen", price: 1650000, stock: 1, unit: "CHIEC", quantity_per_lot: 1 }
+          { id: 18, sku_code: "USED-CZ3-WH-41", size: "41", color: "Trắng Đen", price: 1650000, stock: 1, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 13,
+        sport_id: 6,
+        category_id: 17,
+        brand_id: 12,
+        name: "Cốt vợt bóng bàn Butterfly Viscaria ALC",
+        description: "Huyền thoại cốt vợt tấn công số 1 thế giới với sợi Arylate Carbon cân bằng hoàn hảo giữa tốc độ và cảm giác bóng.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { structure: "5 lớp gỗ + 2 lớp ALC", speed: "Mid-Fast", reaction: "11.8", vibration: "10.3", origin: "Nhật Bản (Made in Japan)" },
+        images: [
+          { id: 19, image_url: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 19, sku_code: "VISCARIA-ALC-FL", size: "FL (Chuôi Loe)", color: "Cán Gỗ Xanh", price: 3850000, stock: 15, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 20, sku_code: "VISCARIA-ALC-ST", size: "ST (Chuôi Thẳng)", color: "Cán Gỗ Xanh", price: 3850000, stock: 8, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 14,
+        sport_id: 6,
+        category_id: 18,
+        brand_id: 13,
+        name: "Mặt vợt bóng bàn DHS Hurricane 3 Neo Bản Tỉnh (Lót Cam)",
+        description: "Mặt mút Tàu bám dính cực đỉnh tạo độ xoáy giật bóng ma thuật, lựa chọn số 1 của các tay vợt ĐTQG Trung Quốc.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { sponge_thickness: "2.15mm", hardness: "39 - 40 độ", surface: "Tacky (Dính xoáy)", origin: "Trung Quốc (Chính hãng DHS)" },
+        images: [
+          { id: 20, image_url: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 21, sku_code: "HUR3-NEO-BK-39", size: "2.15mm / 39 độ", color: "Đen Lót Cam", price: 680000, stock: 40, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 22, sku_code: "HUR3-NEO-RD-40", size: "2.15mm / 40 độ", color: "Đỏ Lót Cam", price: 680000, stock: 35, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 15,
+        sport_id: 6,
+        category_id: 20,
+        brand_id: 13,
+        name: "Hộp 6 quả bóng bàn DHS D40+ 3 sao ITTF (Lô 6 quả)",
+        description: "Bóng thi đấu chính thức tại giải Vô địch Thế giới và Olympic, độ tròn hoàn hảo, quỹ đạo chuẩn xác.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { material: "Nhựa ABS Cell-Free", standard: "Đạt chuẩn ITTF Approved", pack: "6 quả / hộp" },
+        images: [
+          { id: 21, image_url: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 23, sku_code: "DHS-D40-3STAR-6PK", size: "Hộp 6 quả", color: "Trắng Thi Đấu", price: 150000, stock: 120, unit: "LO", quantity_per_lot: 6, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 16,
+        sport_id: 6,
+        category_id: 19,
+        brand_id: 10,
+        name: "Giày bóng bàn chuyên dụng Mizuno Wave Drive 9",
+        description: "Trọng lượng siêu nhẹ, đế cao su non bám sàn cực tốt cho bước di chuyển đảo chân linh hoạt cự ly gần.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { sole: "Đế cao su XG Rubber bám sàn", cushion: "Mizuno Wave chống sốc", weight: "245g" },
+        images: [
+          { id: 22, image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 24, sku_code: "MZN-WD9-WH-40", size: "40", color: "Trắng Viền Xanh", price: 2350000, stock: 15, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 25, sku_code: "MZN-WD9-WH-41", size: "41", color: "Trắng Viền Xanh", price: 2350000, stock: 20, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 26, sku_code: "MZN-WD9-WH-42", size: "42", color: "Trắng Viền Xanh", price: 2350000, stock: 18, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 17,
+        sport_id: 1,
+        category_id: 15,
+        brand_id: 1,
+        name: "Áo thi đấu thể thao Yonex Tournament Dry-Fit 2026",
+        description: "Chất liệu mè co giãn 4 chiều kháng khuẩn, thoát mồ hôi siêu tốc Very Cool làm mát cơ thể 3 độ C.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { tech: "Very Cool + Antistatic", material: "100% Polyester", gender: "Unisex" },
+        images: [
+          { id: 23, image_url: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 27, sku_code: "YNX-SHIRT-M-BL", size: "M", color: "Xanh Navy", price: 420000, stock: 30, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 28, sku_code: "YNX-SHIRT-L-BL", size: "L", color: "Xanh Navy", price: 420000, stock: 45, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 29, sku_code: "YNX-SHIRT-XL-BL", size: "XL", color: "Xanh Navy", price: 420000, stock: 25, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 30, sku_code: "YNX-SHIRT-L-RD", size: "L", color: "Đỏ Ruby", price: 420000, stock: 35, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 18,
+        sport_id: 1,
+        category_id: 16,
+        brand_id: 1,
+        name: "Balo cầu lông & thể thao Yonex Pro Tour 6 ngăn",
+        description: "Balo cao cấp có ngăn giữ nhiệt chống ẩm bảo vệ vợt, ngăn riêng đựng giày thông thoáng khử mùi.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { capacity: "Đựng được 4-6 cây vợt + 1 đôi giày", thermal_guard: "Có ngăn tráng bạc giữ nhiệt" },
+        images: [
+          { id: 24, image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 31, sku_code: "YNX-BAG-PRO-BK", size: "Tiêu chuẩn 6 ngăn", color: "Đen Cam Phối Xám", price: 1450000, stock: 25, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 19,
+        sport_id: 4,
+        category_id: 4,
+        brand_id: 8,
+        name: "Vợt Pickleball Selkirk Vanguard Power Air Invikta",
+        description: "Đỉnh cao khí động học với thiết kế hốc gió Air Dynamic Throat giúp vung vợt chớp nhoáng và tạo xoáy ProSpin.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { face: "QuadFlex 4 Lớp Hybrid", core: "SuperCore Polymer", shape: "Invikta Dài Trợ Lực", weight: "7.9 oz" },
+        images: [
+          { id: 25, image_url: "https://images.unsplash.com/photo-1622163642998-1ea32b0bbc67?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 32, sku_code: "SLK-AIR-INVIKTA", size: "Form Dài 16.5 inch", color: "Đỏ Đen Carbon", price: 5600000, stock: 16, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 20,
+        sport_id: 4,
+        category_id: 16,
+        brand_id: 8,
+        name: "Túi đựng vợt Pickleball chuyên dụng Selkirk Tour Bag",
+        description: "Túi xách cao cấp chống nước chuẩn IPX4 với khoang chứa vợt đệm xốp êm ái.",
+        condition_type: "MOI",
+        wear_description: null,
+        status: "ACTIVE",
+        specifications: { material: "Polyurethane tráng chống nước", capacity: "Chứa 3-4 vợt Pickleball + bóng" },
+        images: [
+          { id: 26, image_url: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 33, sku_code: "SLK-TOUR-BAG-BL", size: "Tiêu chuẩn", color: "Xanh Biển Selkirk", price: 1850000, stock: 15, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 21,
+        sport_id: 6,
+        category_id: 17,
+        brand_id: 12,
+        name: "Cốt vợt bóng bàn Butterfly Timo Boll ALC (Đã qua sử dụng 85%)",
+        description: "Cốt vợt danh tiếng của huyền thoại Timo Boll, dán sẵn 2 mặt mút bám xoáy Rozena và Tenergy.",
+        condition_type: "CU",
+        wear_description: "Cốt vợt có 1 vết cấn nhỏ 1mm viền góc 11h đã được xử lý keo bóng mịn phẳng, 2 mặt mút dán còn độ dính bám xoáy 80%, chuôi cầm sạch không nứt.",
+        status: "ACTIVE",
+        specifications: { handle: "FL", rubbers: "Mặt đỏ Tenergy 05 + Mặt đen Rozena", condition_grade: "85%" },
+        images: [
+          { id: 27, image_url: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 34, sku_code: "USED-TIMO-BOLL-85", size: "FL Dán sẵn mút", color: "Gỗ Koto Xanh", price: 2650000, stock: 1, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 22,
+        sport_id: 4,
+        category_id: 4,
+        brand_id: 8,
+        name: "Vợt Pickleball Selkirk Vanguard 2.0 Mach6 (Đã qua sử dụng 88%)",
+        description: "Form vợt dài trợ lực với lõi tổ ong giảm chấn êm ái, thích hợp cả đánh đơn và đôi.",
+        condition_type: "CU",
+        wear_description: "Mặt vợt hơi xước dăm nhẹ do cứu bóng thấp sát sàn, lõi carbon đanh nảy chuẩn, viền bảo vệ cao su nguyên vẹn, đã cuốn cán mới 100%.",
+        status: "ACTIVE",
+        specifications: { shape: "Mach6 Elongated", face: "QuadCarbon Face", condition_grade: "88%" },
+        images: [
+          { id: 28, image_url: "https://images.unsplash.com/photo-1622163642998-1ea32b0bbc67?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 35, sku_code: "USED-SLK-MACH6-88", size: "16.5 inch", color: "Đỏ Đen", price: 2850000, stock: 1, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 23,
+        sport_id: 1,
+        category_id: 10,
+        brand_id: 3,
+        name: "Lô 12 quả cầu lông tập luyện Victor Larus Cũ (Lô 12 quả)",
+        description: "Quả cầu lông lông vịt đã qua 1-2 séc đấu còn nguyên lông 85%, đầu bần chắc chắn nảy chuẩn.",
+        condition_type: "CU",
+        wear_description: "Lông cầu nguyên vẹn 85%, không gãy sống lông chính, đầu bần không móp méo, đã phân loại tuyển chọn đồng đều cho bài tập phản tạt và smash.",
+        status: "ACTIVE",
+        specifications: { speed: "Speed 77", feather_grade: "85%", pack: "12 quả / ống" },
+        images: [
+          { id: 29, image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 36, sku_code: "USED-VIC-LARUS-12PK", size: "Ống 12 quả", color: "Trắng", price: 140000, stock: 20, unit: "LO", quantity_per_lot: 12, status: "ACTIVE" }
+        ]
+      },
+      {
+        id: 24,
+        sport_id: 4,
+        category_id: 13,
+        brand_id: 9,
+        name: "Lô 6 quả bóng Pickleball Franklin X-40 Ngoài trời Cũ (Lô 6 quả)",
+        description: "Bóng Pickleball ngoài trời 40 lỗ tiêu chuẩn USAPA đã qua 2 set giao lưu, bóng tròn đều chuẩn độ nảy.",
+        condition_type: "CU",
+        wear_description: "Bề mặt bóng còn độ ma sát tốt 90%, không nứt vỡ hay biến dạng elip, màu vàng optic còn tươi sáng dễ quan sát dưới ánh nắng.",
+        status: "ACTIVE",
+        specifications: { holes: "40 lỗ khoan máy CNC", type: "Outdoor", condition_grade: "90%", pack: "6 quả / túi" },
+        images: [
+          { id: 30, image_url: "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=600", is_primary: true, sort_order: 1 }
+        ],
+        skus: [
+          { id: 37, sku_code: "USED-FRK-X40-6PK", size: "Túi 6 quả", color: "Vàng Optic Neon", price: 190000, stock: 18, unit: "LO", quantity_per_lot: 6, status: "ACTIVE" }
         ]
       }
     ],
@@ -299,8 +529,10 @@
             size: "4U",
             color: "Đen Đỏ",
             unit: "CHIEC",
-            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
+            condition_type: "MOI",
             price: 4250000,
+            price_at_order: 4250000,
+            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
             quantity: 1
           }
         ]
@@ -326,8 +558,10 @@
             size: "41",
             color: "Trắng Đen",
             unit: "CHIEC",
-            image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
+            condition_type: "MOI",
             price: 2750000,
+            price_at_order: 2750000,
+            image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
             quantity: 1
           }
         ]
@@ -356,8 +590,10 @@
             size: "4U",
             color: "Đen Đỏ",
             unit: "CHIEC",
-            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
+            condition_type: "MOI",
             price: 4250000,
+            price_at_order: 4250000,
+            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
             quantity: 2
           }
         ]
@@ -385,8 +621,10 @@
             size: "4U",
             color: "Vàng Đen",
             unit: "CHIEC",
-            image_url: "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?w=300",
+            condition_type: "MOI",
             price: 3200000,
+            price_at_order: 3200000,
+            image_url: "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?w=300",
             quantity: 1
           }
         ]
@@ -413,8 +651,10 @@
             size: "41",
             color: "Trắng Đen",
             unit: "CHIEC",
-            image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
+            condition_type: "CU",
             price: 1650000,
+            price_at_order: 1650000,
+            image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
             quantity: 1
           }
         ]
@@ -578,14 +818,77 @@
 
     load() {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
+        let saved = localStorage.getItem(STORAGE_KEY);
+        // Tự động chuyển đổi và kế thừa từ v2 hoặc v1 nếu chưa có v3
+        if (!saved) {
+          const prevSaved = localStorage.getItem("tsport_store_data_v2") || localStorage.getItem("tsport_store_data");
+          if (prevSaved) {
+            const parsedPrev = JSON.parse(prevSaved);
+            const mergedInit = {
+              ...initialData,
+              cart: parsedPrev.cart || [],
+              orders: parsedPrev.orders || initialData.orders,
+              matches: parsedPrev.matches || initialData.matches,
+              courts: parsedPrev.courts || initialData.courts,
+              court_slots: parsedPrev.court_slots || initialData.court_slots,
+              bookings: parsedPrev.bookings || initialData.bookings,
+              reviews: parsedPrev.reviews || initialData.reviews,
+              buybacks: parsedPrev.buybacks || initialData.buybacks
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedInit));
+            return mergedInit;
+          }
+        }
         if (saved) {
           const parsed = JSON.parse(saved);
+
+          // Hợp nhất dữ liệu danh mục hạt giống (luôn bổ sung môn 6 và danh mục mới)
+          const mergedSports = [...initialData.sports];
+          (parsed.sports || []).forEach(s => {
+            const idx = mergedSports.findIndex(x => x.id === s.id);
+            if (idx !== -1) mergedSports[idx] = { ...mergedSports[idx], ...s };
+            else mergedSports.push(s);
+          });
+
+          const mergedCategories = [...initialData.categories];
+          (parsed.categories || []).forEach(c => {
+            const idx = mergedCategories.findIndex(x => x.id === c.id);
+            if (idx !== -1) mergedCategories[idx] = { ...mergedCategories[idx], ...c };
+            else mergedCategories.push(c);
+          });
+
+          const mergedBrands = [...initialData.brands];
+          (parsed.brands || []).forEach(b => {
+            const idx = mergedBrands.findIndex(x => x.id === b.id);
+            if (idx !== -1) mergedBrands[idx] = { ...mergedBrands[idx], ...b };
+            else mergedBrands.push(b);
+          });
+
+          const mergedProducts = [...initialData.products];
+          (parsed.products || []).forEach(p => {
+            const idx = mergedProducts.findIndex(x => x.id === p.id);
+            if (idx !== -1) mergedProducts[idx] = { ...mergedProducts[idx], ...p };
+            else mergedProducts.push(p);
+          });
+
+          const safeOrders = (parsed.orders || initialData.orders).map(o => ({
+            ...o,
+            items: (o.items || []).map(i => ({
+              ...i,
+              condition_type: i.condition_type || (i.product_name && i.product_name.includes("Cũ") ? "CU" : "MOI"),
+              price_at_order: i.price_at_order || i.price
+            }))
+          }));
+
           return {
             ...initialData,
             ...parsed,
+            sports: mergedSports,
+            categories: mergedCategories,
+            brands: mergedBrands,
+            products: mergedProducts,
             cart: parsed.cart || [],
-            orders: parsed.orders || initialData.orders,
+            orders: safeOrders,
             matches: parsed.matches || initialData.matches,
             courts: parsed.courts || initialData.courts,
             court_slots: parsed.court_slots || initialData.court_slots,
@@ -740,6 +1043,10 @@
     // --- QUẢN LÝ SẢN PHẨM & SKU ---
     getProducts(filters = {}) {
       let list = [...this.data.products];
+      // Nếu là truy vấn từ khách hàng (Storefront) hoặc có yêu cầu only_active
+      if (filters.only_active || filters.is_customer) {
+        list = list.filter((p) => p.status !== "INACTIVE");
+      }
       if (filters.search) {
         const q = filters.search.toLowerCase().trim();
         list = list.filter((p) =>
@@ -827,6 +1134,16 @@
       return null;
     }
 
+    toggleSkuStatus(productId, skuId) {
+      const p = this.getProductById(productId);
+      if (!p || !p.skus) return null;
+      const sku = p.skus.find((s) => s.id === Number(skuId));
+      if (!sku) return null;
+      sku.status = sku.status === "INACTIVE" ? "ACTIVE" : "INACTIVE";
+      this.save();
+      return sku.status;
+    }
+
     // ==========================================
     // GIỎ HÀNG (CART MODULE)
     // ==========================================
@@ -838,8 +1155,14 @@
     addToCart(productId, skuId, quantity = 1) {
       const prod = this.getProductById(productId);
       if (!prod) throw new Error("Không tìm thấy sản phẩm!");
+      if (prod.status === "INACTIVE") {
+        throw new Error(`Sản phẩm "${prod.name}" hiện đang tạm ẩn, không thể thêm vào giỏ hàng!`);
+      }
       const sku = prod.skus.find((s) => s.id === Number(skuId));
       if (!sku) throw new Error("Không tìm thấy biến thể SKU này!");
+      if (sku.status === "INACTIVE") {
+        throw new Error(`Biến thể SKU "${sku.sku_code}" đang tạm ngưng kinh doanh, không thể thêm vào giỏ hàng!`);
+      }
 
       if (sku.stock <= 0) {
         throw new Error(`Sản phẩm "${prod.name} (${sku.size || ''} - ${sku.color || ''})" hiện đã hết hàng trong kho!`);
@@ -997,7 +1320,22 @@
         restocked: false,  // Đánh dấu cờ hoàn tồn
         created_at: now.toISOString().replace("T", " ").substring(0, 19),
         total_amount: orderItems.reduce((sum, i) => sum + (i.price * i.quantity), 0),
-        items: JSON.parse(JSON.stringify(orderItems))
+        // LƯU ĐÓNG BĂNG GIÁ VÀ TÌNH TRẠNG LÚC ĐẶT HÀNG (BẤT BIẾN THEO CHUẨN SRS)
+        items: orderItems.map((i) => ({
+          product_id: i.product_id,
+          sku_id: i.sku_id,
+          product_name: i.product_name,
+          sku_code: i.sku_code,
+          size: i.size || "-",
+          color: i.color || "-",
+          unit: i.unit || "CHIEC",
+          quantity_per_lot: i.quantity_per_lot || 1,
+          condition_type: i.condition_type || "MOI",
+          price: Number(i.price),
+          price_at_order: Number(i.price),
+          image_url: i.image_url,
+          quantity: Number(i.quantity)
+        }))
       };
 
       this.data.orders.unshift(newOrder);
@@ -1471,7 +1809,7 @@
       return b;
     }
 
-    createSkuFromBuyback(buybackId, { price, stock = 1, size = "Tiêu chuẩn", color = "Nguyên bản", wear_description = "" }) {
+    createSkuFromBuyback(buybackId, { price, stock = 1, size = "Tiêu chuẩn", color = "Nguyên bản", wear_description = "", unit = "CHIEC", quantity_per_lot = 1 }) {
       const b = this.getBuybackById(buybackId);
       if (!b) throw new Error("Không tìm thấy yêu cầu thu mua!");
       if (b.status !== "DA_THU_MUA") {
@@ -1483,6 +1821,8 @@
 
       const generatedSkuCode = `USED-BB${b.id}-${Date.now().toString().slice(-4)}`;
       const finalWearDesc = wear_description || b.wear_description || `Độ mới ${b.condition_grade || '85%'}. Đã qua kiểm định thu mua.`;
+      const finalUnit = (unit || "CHIEC").toUpperCase();
+      const finalQtyPerLot = finalUnit === "LO" ? (Number(quantity_per_lot) || 12) : 1;
 
       // Tạo sản phẩm đồ cũ mới đưa vào kho
       const newProduct = {
@@ -1497,7 +1837,8 @@
         specifications: {
           condition_grade: b.condition_grade || "85%",
           tested_by: "Tsport Inspection Team",
-          origin: "Thu mua khách hàng"
+          origin: "Thu mua từ khách hàng",
+          lot_info: finalUnit === "LO" ? `Đóng gói lô ${finalQtyPerLot} sản phẩm` : "Đơn chiếc"
         },
         images: [
           {
@@ -1515,8 +1856,9 @@
             color: color || "Nguyên bản",
             price: Number(price) || Number(b.proposed_price) || 1500000,
             stock: Number(stock) || 1,
-            unit: "CHIEC",
-            quantity_per_lot: 1
+            unit: finalUnit,
+            quantity_per_lot: finalQtyPerLot,
+            status: "ACTIVE"
           }
         ]
       };
