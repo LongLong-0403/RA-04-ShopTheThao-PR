@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản trị Môn / Cây Danh mục / Thương hiệu | Tsport Store Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- TOP BAR & HEADER -->
+  <header class="tsport-header">
+    <div class="tsport-topbar">
+      <div class="container">
+        <div class="tsport-topbar-left">
+          <span class="tsport-topbar-badge">ADMIN DASHBOARD</span>
+          <span>QUẢN TRỊ 3 TAB: MÔN THỂ THAO • CÂY DANH MỤC CHA-CON • THƯƠNG HIỆU</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="../index.html" style="color:#F8FAFC;">🏠 Về Cửa Hàng</a>
+          <a href="products.html" style="color:#FF6B35; font-weight:700;">📦 Quản lý Sản phẩm & Bảng SKU</a>
+          <a href="auth.html" style="color:#F8FAFC;">🔐 Đăng nhập (D08)</a>
+          <a href="account.html" style="color:#F8FAFC;">👤 Hồ sơ (D10)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-main-bar">
+      <div class="container">
+        <a href="../index.html" class="tsport-logo">
+          <span class="tsport-logo-text">Tsport</span>
+          <span class="tsport-logo-tag">CATALOG ADMIN</span>
+        </a>
+
+        <!-- NÚT TEST VÀ THÊM MỚI -->
+        <div class="tsport-actions">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestDeleteHasProducts" title="Thử xóa danh mục đang có sản phẩm để kiểm tra cảnh báo đỏ">
+            🧪 Test Xóa khi có SP (Chặn lỗi)
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestDeleteHasChildren" title="Thử xóa danh mục cha đang có danh mục con">
+            🧪 Test Xóa khi có DM con
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestCreateEmptyCat" title="Tạo danh mục rỗng chưa có sản phẩm để test xóa thành công">
+            ➕ Tạo DM rỗng (Test xóa OK)
+          </button>
+          <button type="button" class="btn btn-primary" id="btnAddNewCatalogItem">
+            <span>+</span>
+            <span id="btnAddNewText">Thêm Môn thể thao</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="tsport-admin-page">
+    <div class="container">
+      
+      <!-- PAGE HEADER -->
+      <div class="tsport-page-header">
+        <div class="tsport-page-title-wrap">
+          <h1>
+            <span>📁</span>
+            <span>Quản trị Phân loại & Cấu trúc Hàng hóa</span>
+          </h1>
+          <div class="tsport-page-subtitle">
+            Hệ thống 3 tab quản lý danh mục phân cấp theo chuẩn SRS: Môn thể thao, Cây danh mục cha-con và Thương hiệu chính hãng.
+          </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <a href="products.html" class="btn btn-secondary">
+            <span>📦</span>
+            <span>Sang Quản lý Sản phẩm & SKU</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- THANH ĐIỀU HƯỚNG 3 TAB CHÍNH -->
+      <div class="tsport-catalog-tabs">
+        <button type="button" class="tsport-catalog-tab-btn is-active" data-tab="sports">
+          <span>⚽</span>
+          <span>1. Môn Thể Thao</span>
+        </button>
+        <button type="button" class="tsport-catalog-tab-btn" data-tab="categories">
+          <span>🌳</span>
+          <span>2. Cây Danh Mục (Cha - Con)</span>
+        </button>
+        <button type="button" class="tsport-catalog-tab-btn" data-tab="brands">
+          <span>🏷️</span>
+          <span>3. Thương Hiệu</span>
+        </button>
+      </div>
+
+      <!-- CARD CHỨA BẢNG DỮ LIỆU CỦA CÁC TAB -->
+      <div class="tsport-card">
+        
+        <!-- PANE 1: MÔN THỂ THAO -->
+        <div id="pane-sports" class="tsport-tab-pane is-active">
+          <div style="padding:16px 20px; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#FAFBFD;">
+            <div>
+              <strong style="color:#0F172A; font-size:15px;">Danh sách các Môn thể thao</strong>
+              <div style="font-size:12px; color:#64748B;">Mỗi sản phẩm có thể thuộc một môn thể thao tương ứng (Bóng đá, Cầu lông, Bóng rổ...).</div>
+            </div>
+          </div>
+          <div class="tsport-table-responsive">
+            <table class="tsport-table">
+              <thead>
+                <tr>
+                  <th style="width:70px;">MÃ</th>
+                  <th>TÊN MÔN THỂ THAO</th>
+                  <th>SLUG (ĐƯỜNG DẪN)</th>
+                  <th>MÔ TẢ TỔNG QUAN</th>
+                  <th>SẢN PHẨM THAM CHIẾU</th>
+                  <th>TRẠNG THÁI</th>
+                  <th style="width:100px; text-align:center;">THAO TÁC</th>
+                </tr>
+              </thead>
+              <tbody id="sportsTableBody">
+                <!-- Được render tự động qua categories.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PANE 2: CÂY DANH MỤC PHÂN CẤP CHA - CON -->
+        <div id="pane-categories" class="tsport-tab-pane">
+          <div style="padding:16px 20px; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#FAFBFD;">
+            <div>
+              <strong style="color:#0F172A; font-size:15px;">Cây Phân Cấp Danh Mục Sản Phẩm (Parent - Child Hierarchy)</strong>
+              <div style="font-size:12px; color:#64748B;">
+                Cấp 1 (Gốc): Nhóm hàng chính • Cấp 2 (Con): Thụt lề ký hiệu <code>↳</code>, thuộc nhóm hàng cha.
+              </div>
+            </div>
+            <div style="font-size:12px; font-weight:700; color:#D94C26; background:#FFF1EB; padding:4px 10px; border-radius:6px; border:1px solid #FFD9CC;">
+              🛡️ Quy tắc bảo vệ: Không thể xóa Danh mục cha khi còn Danh mục con hoặc còn Sản phẩm!
+            </div>
+          </div>
+          <div class="tsport-table-responsive">
+            <table class="tsport-table tsport-tree-table">
+              <thead>
+                <tr>
+                  <th>TÊN DANH MỤC (CẤY PHÂN CẤP)</th>
+                  <th>DANH MỤC CHA (CẤP TRÊN)</th>
+                  <th>SLUG</th>
+                  <th>SẢN PHẨM TRỰC THUỘC</th>
+                  <th>TRẠNG THÁI</th>
+                  <th style="width:100px; text-align:center;">THAO TÁC</th>
+                </tr>
+              </thead>
+              <tbody id="categoriesTableBody">
+                <!-- Được render tự động qua categories.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PANE 3: THƯƠNG HIỆU -->
+        <div id="pane-brands" class="tsport-tab-pane">
+          <div style="padding:16px 20px; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center; background:#FAFBFD;">
+            <div>
+              <strong style="color:#0F172A; font-size:15px;">Danh sách Thương hiệu phân phối</strong>
+              <div style="font-size:12px; color:#64748B;">Các hãng thể thao chính hãng trong kho (Nike, Adidas, Yonex, Mizuno, Puma...).</div>
+            </div>
+          </div>
+          <div class="tsport-table-responsive">
+            <table class="tsport-table">
+              <thead>
+                <tr>
+                  <th>THƯƠNG HIỆU & LOGO</th>
+                  <th>SLUG</th>
+                  <th>SẢN PHẨM TRONG KHO</th>
+                  <th>TRẠNG THÁI</th>
+                  <th style="width:100px; text-align:center;">THAO TÁC</th>
+                </tr>
+              </thead>
+              <tbody id="brandsTableBody">
+                <!-- Được render tự động qua categories.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ==========================================
+       MODAL THÊM / SỬA (MÔN / DANH MỤC / THƯƠNG HIỆU)
+       ========================================== -->
+  <div class="modal-backdrop" id="modalCatalogForm">
+    <div class="modal" style="max-width:540px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="catalogModalTitle">Thêm mới</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+
+      <form id="formCatalogItem">
+        <div class="modal-body">
+          <!-- Dynamic Form Fields được bơm theo từng loại (sport/category/brand) -->
+          <div id="catalogDynamicFields"></div>
+
+          <div class="form-group" style="margin-top:16px;">
+            <label class="form-label">Trạng thái kích hoạt</label>
+            <select id="catItemStatus" class="form-control">
+              <option value="ACTIVE">ACTIVE (Hiển thị và cho phép chọn)</option>
+              <option value="INACTIVE">INACTIVE (Tạm ẩn)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveCatalogItem">Lưu thay đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL XÁC NHẬN XÓA & BÁO LỖI RÀNG BUỘC TOÀN VẸN
+       ========================================== -->
+  <div class="modal-backdrop" id="modalConfirmDelete">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color:#DC2626; display:flex; align-items:center; gap:8px;">
+          <span>🗑️</span>
+          <span>Xác nhận xóa dữ liệu</span>
+        </h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p id="confirmDeleteText" style="font-size:14px; color:#334155; margin-bottom:16px;">
+          Bạn có chắc chắn muốn xóa mục này không? Thao tác này không thể hoàn tác.
+        </p>
+
+        <!-- KHỐI CẢNH BÁO ĐỎ CHẶN XÓA NẾU CÒN SẢN PHẨM HOẶC DANH MỤC CON -->
+        <div id="confirmIntegrityAlert" class="tsport-integrity-alert" style="display:none; margin-bottom:12px;">
+          <div class="tsport-integrity-icon">🚫</div>
+          <div class="tsport-integrity-body">
+            <div class="tsport-integrity-title">KHÔNG THỂ XÓA — VI PHẠM RÀNG BUỘC TOÀN VẸN DỮ LIỆU!</div>
+            <div id="integrityErrorDesc" class="tsport-integrity-desc">
+              <!-- Nội dung lỗi được gán tự động -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng / Hủy bỏ</button>
+        <button type="button" class="btn btn-danger" id="btnConfirmDeleteAction">Xóa vĩnh viễn</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/categories.js"></script>
+
+  <script>
+    // Cập nhật text của nút thêm mới theo tab đang chọn
+    document.querySelectorAll(".tsport-catalog-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab;
+        const addBtnText = document.getElementById("btnAddNewText");
+        if (addBtnText) {
+          if (tab === "sports") addBtnText.textContent = "Thêm Môn thể thao";
+          else if (tab === "categories") addBtnText.textContent = "Thêm Danh mục";
+          else if (tab === "brands") addBtnText.textContent = "Thêm Thương hiệu";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

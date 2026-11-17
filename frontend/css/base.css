@@ -1,0 +1,359 @@
+/* ==========================================================================
+   TSPORT DESIGN SYSTEM — BASE STYLES & DESIGN TOKENS (CAM – TRẮNG)
+   Chuẩn Figma Wireframe & Prototype Tsport
+   ========================================================================== */
+
+:root {
+  /* Bảng màu chuẩn Cam – Trắng Tsport */
+  --tsport-orange: #D94C26;
+  --tsport-orange-hover: #BF3E1C;
+  --tsport-orange-light: #FF6B35;
+  --tsport-orange-tint: #FFF1EB;
+  --tsport-orange-border: #F5C4B2;
+
+  --tsport-bg: #F8FAFC;
+  --tsport-card: #FFFFFF;
+  --tsport-text: #1E293B;
+  --tsport-text-muted: #64748B;
+  --tsport-text-light: #94A3B8;
+  --tsport-border: #E2E8F0;
+  --tsport-border-dark: #CBD5E1;
+
+  --tsport-success: #16A34A;
+  --tsport-success-bg: #DCFCE7;
+  --tsport-success-border: #86EFAC;
+
+  --tsport-danger: #DC2626;
+  --tsport-danger-bg: #FEE2E2;
+  --tsport-danger-border: #FCA5A5;
+
+  --tsport-warning: #D97706;
+  --tsport-warning-bg: #FEF3C7;
+
+  --tsport-blue: #2563EB;
+  --tsport-blue-bg: #EFF6FF;
+
+  --tsport-radius-sm: 4px;
+  --tsport-radius: 8px;
+  --tsport-radius-lg: 12px;
+  --tsport-radius-full: 9999px;
+
+  --tsport-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --tsport-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --tsport-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  --tsport-font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--tsport-font);
+  background: var(--tsport-bg);
+  color: var(--tsport-text);
+  line-height: 1.5;
+  font-size: 14px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--tsport-orange);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+a:hover {
+  color: var(--tsport-orange-hover);
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  color: var(--tsport-text);
+  line-height: 1.25;
+}
+
+/* Nút bấm (Buttons) */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: var(--tsport-radius);
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--tsport-orange);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--tsport-orange-hover);
+  box-shadow: 0 2px 4px rgba(217, 76, 38, 0.3);
+}
+
+.btn-secondary {
+  background: #fff;
+  border-color: var(--tsport-border-dark);
+  color: var(--tsport-text);
+}
+.btn-secondary:hover {
+  background: #f1f5f9;
+  border-color: var(--tsport-text-muted);
+}
+
+.btn-danger {
+  background: var(--tsport-danger);
+  color: #fff;
+}
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: var(--tsport-radius-sm);
+}
+
+.btn-icon {
+  padding: 6px 10px;
+  border-radius: var(--tsport-radius-sm);
+  background: #fff;
+  border: 1px solid var(--tsport-border);
+  cursor: pointer;
+  color: var(--tsport-text-muted);
+}
+.btn-icon:hover {
+  background: var(--tsport-orange-tint);
+  border-color: var(--tsport-orange-border);
+  color: var(--tsport-orange);
+}
+
+/* Badges & Tags */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--tsport-radius-full);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-sport {
+  background: var(--tsport-blue-bg);
+  color: var(--tsport-blue);
+  border: 1px solid #BFDBFE;
+}
+
+.badge-cat {
+  background: var(--tsport-orange-tint);
+  color: var(--tsport-orange);
+  border: 1px solid var(--tsport-orange-border);
+}
+
+.badge-brand {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #CBD5E1;
+}
+
+.badge-moi {
+  background: var(--tsport-success-bg);
+  color: var(--tsport-success);
+  border: 1px solid var(--tsport-success-border);
+}
+
+.badge-cu {
+  background: #FFF7ED;
+  color: #C2410C;
+  border: 1px solid #FDBA74;
+}
+
+.badge-active {
+  background: var(--tsport-success-bg);
+  color: var(--tsport-success);
+}
+
+.badge-inactive {
+  background: #F1F5F9;
+  color: #94A3B8;
+}
+
+/* Form Controls */
+.form-group {
+  margin-bottom: 16px;
+}
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #475569;
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+.form-label span.req {
+  color: var(--tsport-danger);
+}
+.form-control {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius);
+  font-size: 13px;
+  color: var(--tsport-text);
+  background: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--tsport-orange);
+  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.12);
+}
+.form-control.is-invalid {
+  border-color: var(--tsport-danger) !important;
+  background: #FFFBFB;
+}
+.form-feedback {
+  font-size: 11px;
+  color: var(--tsport-danger);
+  margin-top: 4px;
+}
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(2px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.modal-backdrop.is-open {
+  display: flex;
+  opacity: 1;
+}
+.modal-box {
+  background: #fff;
+  border-radius: var(--tsport-radius-lg);
+  box-shadow: var(--tsport-shadow-lg);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(10px);
+  transition: transform 0.2s ease;
+}
+.modal-backdrop.is-open .modal-box {
+  transform: translateY(0);
+}
+.modal-box.modal-lg {
+  max-width: 960px;
+}
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--tsport-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #F8FAFC;
+}
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tsport-text);
+}
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--tsport-text-muted);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.modal-close-btn:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--tsport-border);
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Toast Notification */
+.tsport-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10000;
+  padding: 12px 20px;
+  border-radius: var(--tsport-radius);
+  background: #1E293B;
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  box-shadow: var(--tsport-shadow-lg);
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+.tsport-toast.is-visible {
+  display: flex;
+  animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tsport-toast.is-success {
+  background: #065F46;
+  border-left: 4px solid #34D399;
+}
+.tsport-toast.is-error {
+  background: #991B1B;
+  border-left: 4px solid #F87171;
+}
+@keyframes slideInToast {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

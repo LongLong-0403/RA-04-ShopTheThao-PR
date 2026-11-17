@@ -1,0 +1,144 @@
+/* ==========================================================================
+   TSPORT — CATEGORIES, SPORTS & BRANDS MANAGEMENT (3 TABS & TREE HIERARCHY)
+   ========================================================================== */
+
+/* 3 Tab điều hướng */
+.tsport-catalog-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #F1F5F9;
+  padding: 6px;
+  border-radius: var(--tsport-radius-lg);
+  margin-bottom: 20px;
+  border: 1px solid var(--tsport-border);
+}
+.tsport-catalog-tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--tsport-text-muted);
+  border-radius: var(--tsport-radius);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.tsport-catalog-tab-btn:hover {
+  color: var(--tsport-text);
+  background: rgba(255, 255, 255, 0.5);
+}
+.tsport-catalog-tab-btn.is-active {
+  background: #fff;
+  color: var(--tsport-orange);
+  box-shadow: var(--tsport-shadow-sm);
+}
+
+/* Tab contents */
+.tsport-tab-pane {
+  display: none;
+}
+.tsport-tab-pane.is-active {
+  display: block;
+}
+
+/* CÂY DANH MỤC PHÂN CẤP (TREE HIERARCHY) */
+.tsport-tree-table tr.tree-level-1 td:first-child {
+  font-weight: 800;
+  color: var(--tsport-text);
+}
+.tsport-tree-table tr.tree-level-2 td:first-child {
+  padding-left: 36px;
+  position: relative;
+}
+.tsport-tree-table tr.tree-level-2 td:first-child::before {
+  content: "↳";
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tsport-orange);
+  font-weight: 900;
+}
+.tsport-tree-badge-parent {
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+.tsport-tree-badge-child {
+  background: #FAF5FF;
+  color: #7E22CE;
+  border: 1px solid #E9D5FF;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* THƯƠNG HIỆU LOGO CELL */
+.tsport-brand-logo-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--tsport-border);
+  background: #fff;
+}
+
+/* CẢNH BÁO LỖI RÀNG BUỘC KHI XÓA (INTEGRITY ERROR ALERT) */
+.tsport-integrity-alert {
+  background: #FEF2F2;
+  border: 2px solid #EF4444;
+  border-radius: var(--tsport-radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.tsport-integrity-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.tsport-integrity-content {
+  flex: 1;
+}
+.tsport-integrity-title {
+  font-weight: 800;
+  color: #991B1B;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.tsport-integrity-desc {
+  font-size: 13px;
+  color: #7F1D1D;
+  line-height: 1.4;
+}
+
+/* Khối Test nhanh nghiệp vụ */
+.tsport-test-panel {
+  background: #F8FAFC;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tsport-test-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #475569;
+  text-transform: uppercase;
+}

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý Sản phẩm & Bảng SKU | Tsport Store Admin</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body data-root="../">
+
+  <!-- TOP BAR -->
+  <header class="tsport-header">
+    <div class="tsport-topbar">
+      <div class="container">
+        <div class="tsport-topbar-left">
+          <span class="tsport-topbar-badge">ADMIN DASHBOARD</span>
+          <span>QUẢN LÝ SẢN PHẨM & BẢNG BIẾN THỂ SKU (CAM – TRẮNG)</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="../index.html" style="color:#F8FAFC;">🏠 Về Cửa Hàng</a>
+          <a href="categories.html" style="color:#FF6B35; font-weight:700;">📁 Cây Danh mục (3 Tab)</a>
+          <a href="auth.html" style="color:#F8FAFC;">🔐 Đăng nhập (D08)</a>
+          <a href="account.html" style="color:#F8FAFC;">👤 Hồ sơ (D10)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsport-main-bar">
+      <div class="container">
+        <a href="../index.html" class="tsport-logo">
+          <span class="tsport-logo-text">Tsport</span>
+          <span class="tsport-logo-tag">PRODUCTS ADMIN</span>
+        </a>
+
+        <div class="tsport-actions">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedNewProd">🧪 Test SP mới (2 SKU)</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedUsedProd">🧪 Test SP cũ (Mô tả hao mòn)</button>
+          <button type="button" class="btn btn-primary" id="btnAddNewProduct">
+            <span>+</span>
+            <span>Thêm sản phẩm mới</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="tsport-admin-page">
+    <div class="container">
+      
+      <div class="tsport-page-header">
+        <div class="tsport-page-title-wrap">
+          <h1>
+            <span>📦</span>
+            <span>Danh sách Sản phẩm</span>
+          </h1>
+          <div class="tsport-page-subtitle">
+            Quản lý kho hàng, thông số kỹ thuật, bộ sưu tập ảnh và bảng biến thể SKU chi tiết.
+          </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <a href="categories.html" class="btn btn-secondary">
+            <span>📁</span>
+            <span>Quản trị Môn / Cây Danh mục / Hãng</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- CARD BẢNG SẢN PHẨM & BỘ LỌC -->
+      <div class="tsport-card">
+        
+        <!-- BỘ LỌC VÀ TÌM KIẾM -->
+        <div class="tsport-filter-bar">
+          <div class="tsport-filter-search">
+            <span class="tsport-filter-search-icon">🔍</span>
+            <input type="text" id="productSearchInput" placeholder="Tìm theo tên sản phẩm, mã, SKU, màu sắc..." />
+          </div>
+
+          <select id="filterSport" class="tsport-filter-select">
+            <option value="ALL">Tất cả môn thể thao</option>
+          </select>
+
+          <select id="filterCategory" class="tsport-filter-select">
+            <option value="ALL">Tất cả loại hàng</option>
+          </select>
+
+          <select id="filterBrand" class="tsport-filter-select">
+            <option value="ALL">Tất cả thương hiệu</option>
+          </select>
+
+          <select id="filterCondition" class="tsport-filter-select">
+            <option value="ALL">Tất cả tình trạng</option>
+            <option value="MOI">Chỉ hàng Mới (100%)</option>
+            <option value="CU">Chỉ hàng Cũ (Đã qua sử dụng)</option>
+          </select>
+
+          <div class="tsport-filter-count" id="productsCountBadge">0 sản phẩm</div>
+        </div>
+
+        <!-- BẢNG DỮ LIỆU SẢN PHẨM -->
+        <div class="tsport-table-responsive">
+          <table class="tsport-table">
+            <thead>
+              <tr>
+                <th style="min-width: 260px;">Sản phẩm</th>
+                <th>Môn thể thao</th>
+                <th>Loại hàng</th>
+                <th>Thương hiệu</th>
+                <th>Tình trạng</th>
+                <th>Khoảng giá / Biến thể</th>
+                <th>Tổng tồn kho</th>
+                <th>Trạng thái</th>
+                <th style="text-align: right;">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody">
+              <!-- Render động từ js/modules/products.js -->
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       MODAL FORM SẢN PHẨM (THÊM / SỬA KÈM BẢNG SKU & HÀNG CŨ)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="modalProductForm">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <div class="modal-title" id="productModalTitle">Thêm sản phẩm mới</div>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modalProductForm')">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="formProductMain">
+
+          <!-- SECTION 1: THÔNG TIN CƠ BẢN -->
+          <div class="tsport-section-box">
+            <div class="tsport-section-header">
+              <span class="tsport-section-title">1. Thông tin cơ bản</span>
+              <span class="tsport-section-sub">Tên, môn, loại hàng & thương hiệu</span>
+            </div>
+
+            <div class="tsport-form-grid">
+              <div class="form-group tsport-form-col-full">
+                <label class="form-label">Tên sản phẩm <span class="req">*</span></label>
+                <input type="text" id="formProdName" class="form-control" placeholder="Ví dụ: Vợt cầu lông Yonex Astrox 88D Pro 2024" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Môn thể thao <span class="req">*</span></label>
+                <select id="formProdSport" class="form-control" required></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Danh mục / Loại hàng <span class="req">*</span></label>
+                <select id="formProdCategory" class="form-control" required></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Thương hiệu <span class="req">*</span></label>
+                <select id="formProdBrand" class="form-control" required></select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Trạng thái mở bán</label>
+                <select id="formProdStatus" class="form-control">
+                  <option value="ACTIVE">ACTIVE (Mở bán ngay)</option>
+                  <option value="INACTIVE">INACTIVE (Tạm ẩn)</option>
+                </select>
+              </div>
+
+              <!-- LỰA CHỌN TÌNH TRẠNG HÀNG MỚI / HÀNG CŨ -->
+              <div class="form-group tsport-form-col-full">
+                <label class="form-label">Tình trạng sản phẩm <span class="req">*</span></label>
+                <div class="tsport-condition-toggle">
+                  <label class="tsport-condition-option is-selected" id="wrapCondMoi">
+                    <input type="radio" name="prodCondition" id="condMoi" value="MOI" checked />
+                    <div>
+                      <div class="tsport-condition-text">Hàng Mới 100%</div>
+                      <div style="font-size:11px; color:#64748B;">Sản phẩm mới nguyên seal, chính hãng</div>
+                    </div>
+                  </label>
+
+                  <label class="tsport-condition-option" id="wrapCondCu">
+                    <input type="radio" name="prodCondition" id="condCu" value="CU" />
+                    <div>
+                      <div class="tsport-condition-text" style="color:#C2410C;">Hàng Cũ (Đã qua sử dụng)</div>
+                      <div style="font-size:11px; color:#64748B;">Bắt buộc khai báo tỷ lệ hao mòn & mô tả chi tiết</div>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- PHẦN HÀNG CŨ (BẬT KHI CHỌN CU) -->
+                <div class="tsport-used-box" id="usedProductBox">
+                  <div class="tsport-used-header">
+                    <span class="tsport-used-title">⚠️ Khai báo độ hao mòn sản phẩm cũ (Chuẩn SRS)</span>
+                    <span style="font-size:11px; color:#9A3412;">Chính sách minh bạch thông tin</span>
+                  </div>
+                  <div class="tsport-form-grid">
+                    <div class="form-group">
+                      <label class="form-label">Độ mới còn lại (%): <span id="wearGradeVal" style="color:#D94C26; font-size:14px; font-weight:800;">90%</span></label>
+                      <input type="range" id="formProdWearGrade" min="70" max="99" value="90" class="form-control" style="padding:0;" oninput="document.getElementById('wearGradeVal').textContent = this.value + '%'" />
+                    </div>
+                    <div class="form-group tsport-form-col-full">
+                      <label class="form-label">Mô tả hao mòn thực tế <span class="req">* (Bắt buộc với hàng Cũ)</span></label>
+                      <textarea id="formProdWearDesc" class="form-control" rows="3" placeholder="Mô tả cụ thể vết xước sơn, tình trạng khung, gen, đũa vợt, độ mòn đế giày..."></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group tsport-form-col-full">
+                <label class="form-label">Mô tả tóm tắt sản phẩm</label>
+                <textarea id="formProdDesc" class="form-control" rows="2" placeholder="Nhập mô tả nổi bật về công nghệ, lối đánh, đối tượng sử dụng..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: BẢNG SKU (BIẾN THỂ SẢN PHẨM) -->
+          <div class="tsport-section-box">
+            <div class="tsport-section-header">
+              <div>
+                <span class="tsport-section-title">2. Bảng biến thể SKU <span class="req">*</span></span>
+                <div class="tsport-section-sub">Mỗi dòng là một biến thể (Size, Màu sắc, Giá bán, Tồn kho, Đơn vị chiếc/lô)</div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" id="btnAddSkuRow">
+                <span>+</span> Thêm dòng SKU
+              </button>
+            </div>
+
+            <div class="tsport-sku-table-wrap">
+              <table class="tsport-sku-table">
+                <thead>
+                  <tr>
+                    <th style="width: 130px;">Mã SKU *</th>
+                    <th style="width: 100px;">Size / Cỡ</th>
+                    <th style="width: 110px;">Màu sắc</th>
+                    <th style="width: 140px;">Giá bán (₫) *</th>
+                    <th style="width: 90px;">Tồn kho *</th>
+                    <th style="width: 130px;">Đơn vị tính *</th>
+                    <th style="width: 90px;">SL / Lô</th>
+                    <th style="width: 50px; text-align: center;">Xóa</th>
+                  </tr>
+                </thead>
+                <tbody id="formSkuTableBody">
+                  <!-- Render động -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- SECTION 3: UPLOAD & QUẢN LÝ ẢNH -->
+          <div class="tsport-section-box">
+            <div class="tsport-section-header">
+              <div>
+                <span class="tsport-section-title">3. Bộ sưu tập Ảnh sản phẩm</span>
+                <div class="tsport-section-sub">Phải có đúng 1 ảnh chính (⭐). Bấm "Đặt chính" trên ảnh bạn muốn.</div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" id="btnAddImage">
+                <span>📷</span> Thêm ảnh URL
+              </button>
+            </div>
+
+            <div class="tsport-image-grid" id="formImageGrid">
+              <!-- Render động -->
+            </div>
+          </div>
+
+          <!-- SECTION 4: THÔNG SỐ KỸ THUẬT -->
+          <div class="tsport-section-box">
+            <div class="tsport-section-header">
+              <div>
+                <span class="tsport-section-title">4. Thông số kỹ thuật (Specifications)</span>
+                <div class="tsport-section-sub">Cặp thuộc tính - giá trị (Key - Value) linh hoạt</div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" id="btnAddSpec">
+                <span>+</span> Thêm thông số
+              </button>
+            </div>
+
+            <div class="tsport-spec-list" id="formSpecList">
+              <!-- Render động -->
+            </div>
+          </div>
+
+          <div class="modal-footer" style="padding: 16px 0 0; background: none; border: none;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalProductForm')">Hủy bỏ</button>
+            <button type="submit" class="btn btn-primary">Lưu sản phẩm & Bảng SKU ✓</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL XEM CHI TIẾT SKU -->
+  <div class="modal-backdrop" id="modalSkuDetail">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title" id="skuDetailTitle">Chi tiết các biến thể SKU</div>
+        <button type="button" class="modal-close-btn" onclick="closeModal('modalSkuDetail')">✕</button>
+      </div>
+      <div class="modal-body" id="skuDetailBody">
+        <!-- Render động -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modalSkuDetail')">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="tsport-toast" id="tsportToast"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/products.js"></script>
+</body>
+</html>
