@@ -1,326 +1,24 @@
 /**
- * TSPORT / VNB — MODULE TRANG CHỦ (HOME STOREFRONT CHUẨN 5 ẢNH MẪU)
- * Quản lý:
- * - Header VNB (Logo, Hotline, Hệ thống cửa hàng, Ô tìm kiếm Debounce, 3 Icon tròn)
- * - Khối "Sản phẩm mới" có 6 Tab lọc danh mục & Khung Cam Vàng (#FCAF17) 5 cột + Nút trượt < >
- * - Khối "Có thể bạn sẽ thích" 6 cột kèm badge giảm giá đỏ (-38%, -22%, -35%, -16%)
- * - Khu hàng cũ minh bạch, Lối vào dịch vụ & Sản phẩm đã xem gần đây (localStorage).
+ * TSPORT — MODULE TRANG CHỦ (HOME STOREFRONT)
+ * Quản lý: Banner, Các môn thể thao, Sản phẩm mới & Bán chạy,
+ * Khu hàng đã qua sử dụng, Lối vào dịch vụ (đặt sân, tìm bạn, thu mua),
+ * Gợi ý tìm kiếm Debounce, Sản phẩm đã xem gần đây (localStorage).
  */
 
 (function () {
   let searchDebounceTimer = null;
-  let currentNewTab = "ALL";
-  let currentNewOffset = 0;
-  let currentHero3DIndex = 0;
-  let hero3DTimer = null;
-
-  // Danh sách ảnh sản phẩm luân chuyển 3D trên Banner chính
-  const VNB_HERO_3D_PRODUCTS = [
-    {
-      id: 1,
-      tag: "SIÊU PHẨM VNB 2026",
-      name: "Vợt Cầu Lông VNB V200 Xanh Chính Hãng",
-      image: "assets/home/racket-v200-xanh.jpg",
-      price_text: "529.000 ₫",
-      old_price_text: "650.000 ₫",
-      link: "pages/product-detail.html?id=1"
-    },
-    {
-      id: 2,
-      tag: "HOT TRAINING 150G",
-      name: "Vợt Cầu Lông VNB Carbon Training 150g Chính Hãng",
-      image: "assets/home/racket-carbon-training.jpg",
-      price_text: "590.000 ₫",
-      old_price_text: "690.000 ₫",
-      link: "pages/product-detail.html?id=2"
-    },
-    {
-      id: 3,
-      tag: "BEST SELLER",
-      name: "Vợt Cầu Lông VNB V200i Hồng Chính Hãng",
-      image: "assets/home/racket-v200i-hong.jpg",
-      price_text: "529.000 ₫",
-      old_price_text: "650.000 ₫",
-      link: "pages/product-detail.html?id=3"
-    },
-    {
-      id: 1,
-      tag: "GIẢM SÂU -38%",
-      name: "Vợt Cầu Lông VNB V88 Xanh Chính Hãng",
-      image: "assets/home/racket-v88-xanh.jpg",
-      price_text: "395.000 ₫",
-      old_price_text: "638.000 ₫",
-      link: "pages/product-detail.html?id=1"
-    },
-    {
-      id: 2,
-      tag: "CHÍNH HÃNG 100%",
-      name: "Vợt Cầu Lông VNB V200 Đỏ Chính Hãng",
-      image: "assets/home/racket-v200-do.jpg",
-      price_text: "529.000 ₫",
-      old_price_text: "650.000 ₫",
-      link: "pages/product-detail.html?id=2"
-    },
-    {
-      id: 3,
-      tag: "SALE OFF -35%",
-      name: "Vợt Cầu Lông Kumpoo Power Control K520 Pro",
-      image: "assets/home/racket-kumpoo-k520.jpg",
-      price_text: "400.000 ₫",
-      old_price_text: "619.000 ₫",
-      link: "pages/product-detail.html?id=3"
-    },
-    {
-      id: 1,
-      tag: "LIMITED COLLECTION",
-      name: "Bộ Sưu Tập Venson × One Piece New Collection",
-      image: "assets/home/hero-banner-1.jpg",
-      price_text: "579.000 ₫",
-      old_price_text: "690.000 ₫",
-      link: "pages/shop.html?sport=1"
-    }
-  ];
-
-  // Danh sách sản phẩm chuẩn Ảnh 2 ("Sản phẩm mới")
-  const VNB_NEW_SHOWCASE = [
-    {
-      id: 1,
-      tab: "VOT_CAULONG",
-      name: "Vợt Cầu Lông VNB V200 Xanh Chính Hãng",
-      image: "assets/home/racket-v200-xanh.jpg",
-      price_text: "529.000 ₫",
-      old_price_text: ""
-    },
-    {
-      id: 2,
-      tab: "VOT_CAULONG",
-      name: "Vợt Cầu Lông VNB Carbon Training 150g Chính Hãng",
-      image: "assets/home/racket-carbon-training.jpg",
-      price_text: "590.000 - 698.000 ₫",
-      old_price_text: "690.000 ₫"
-    },
-    {
-      id: 3,
-      tab: "VOT_CAULONG",
-      name: "Vợt Cầu Lông VNB V200i Hồng Chính Hãng",
-      image: "assets/home/racket-v200i-hong.jpg",
-      price_text: "529.000 ₫",
-      old_price_text: ""
-    },
-    {
-      id: 1,
-      tab: "VOT_CAULONG",
-      name: "Vợt Cầu Lông VNB V88 Xanh Chính Hãng",
-      image: "assets/home/racket-v88-xanh.jpg",
-      price_text: "395.000 - 638.000 ₫",
-      old_price_text: "638.000 ₫"
-    },
-    {
-      id: 2,
-      tab: "VOT_CAULONG",
-      name: "Vợt Cầu Lông VNB V200 Đỏ Chính Hãng",
-      image: "assets/home/racket-v200-do.jpg",
-      price_text: "529.000 ₫",
-      old_price_text: ""
-    },
-    {
-      id: 3,
-      tab: "VOT_CAULONG",
-      name: "Vợt Cầu Lông VNB V88 Cam Chính Hãng",
-      image: "assets/home/racket-v88-cam.jpg",
-      price_text: "499.000 - 638.000 ₫",
-      old_price_text: "638.000 ₫"
-    },
-    {
-      id: 1,
-      tab: "VOT_CAULONG",
-      name: "Vợt Cầu Lông Kumpoo Power Control K520 Pro",
-      image: "assets/home/racket-kumpoo-k520.jpg",
-      price_text: "400.000 - 690.000 ₫",
-      old_price_text: "619.000 ₫"
-    }
-  ];
-
-  // Danh sách sản phẩm chuẩn Ảnh 3 ("Có thể bạn sẽ thích")
-  const VNB_MAY_LIKE_SHOWCASE = [
-    {
-      id: 1,
-      discount_badge: "- 38%",
-      name: "Vợt Cầu Lông VNB V88 Xanh Chính Hãng",
-      image: "assets/home/racket-v88-xanh.jpg",
-      price_text: "395.000 - 638.000 ₫",
-      old_price_text: "638.000 ₫"
-    },
-    {
-      id: 2,
-      discount_badge: "- 22%",
-      name: "Vợt Cầu Lông VNB V88 Cam Chính Hãng",
-      image: "assets/home/racket-v88-cam.jpg",
-      price_text: "499.000 - 638.000 ₫",
-      old_price_text: "638.000 ₫"
-    },
-    {
-      id: 3,
-      discount_badge: "",
-      name: "Vợt Cầu Lông VNB V200 Xanh Chính Hãng",
-      image: "assets/home/racket-v200-xanh.jpg",
-      price_text: "529.000 ₫",
-      old_price_text: ""
-    },
-    {
-      id: 1,
-      discount_badge: "",
-      name: "Vợt Cầu Lông VNB TC88C Chính Hãng",
-      image: "assets/home/racket-tc88c.jpg",
-      price_text: "799.000 ₫",
-      old_price_text: ""
-    },
-    {
-      id: 2,
-      discount_badge: "- 35%",
-      name: "Vợt Cầu Lông Kumpoo Power Control K520 Pro",
-      image: "assets/home/racket-kumpoo-k520.jpg",
-      price_text: "400.000 - 690.000 ₫",
-      old_price_text: "619.000 ₫"
-    },
-    {
-      id: 3,
-      discount_badge: "- 16%",
-      name: "Vợt Cầu Lông Kumpoo Veluriyam",
-      image: "assets/home/racket-kumpoo-veluriyam.jpg",
-      price_text: "579.000 - 690.000 ₫",
-      old_price_text: "690.000 ₫"
-    }
-  ];
 
   function initHome() {
     updateHeaderUser();
     updateCartBadge();
-    initHero3DCarousel();
-    renderNewProductsSection();
-    renderMayLikeSection();
+    renderSportsList();
+    renderFeaturedProducts();
     renderUsedProducts();
     renderRecentlyViewed();
-    bindHomeEvents();
     initSearchDebounce();
   }
 
-  // 0. KHỞI TẠO & TỰ ĐỘNG LUÂN CHUYỂN BANNER SẢN PHẨM 3D TỪNG ẢNH MỘT
-  function initHero3DCarousel() {
-    const stage = document.getElementById("hero3DStage");
-    const dotsWrap = document.getElementById("hero3DDots");
-    const viewport = document.getElementById("hero3DViewport");
-    if (!stage || !dotsWrap) return;
-
-    const total = VNB_HERO_3D_PRODUCTS.length;
-
-    // Tạo sẵn các thẻ DOM để CSS 3D transition mượt mà khi đổi data-pos
-    stage.innerHTML = VNB_HERO_3D_PRODUCTS.map((item, idx) => `
-      <div class="vnb-3d-slide" data-index="${idx}" data-pos="hidden">
-        <div class="vnb-3d-slide-media">
-          <span class="vnb-3d-slide-tag">${escapeHtml(item.tag)}</span>
-          <span class="vnb-3d-slide-step">${idx + 1} / ${total}</span>
-          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" />
-        </div>
-        <div class="vnb-3d-slide-info">
-          <div style="min-width:0; flex:1;">
-            <h3 class="vnb-3d-slide-title" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</h3>
-            <div class="vnb-3d-slide-price-wrap">
-              <span class="vnb-3d-slide-price">${escapeHtml(item.price_text)}</span>
-              ${item.old_price_text ? `<span class="vnb-3d-slide-oldprice">${escapeHtml(item.old_price_text)}</span>` : ''}
-            </div>
-          </div>
-          <a href="${escapeHtml(item.link)}" class="vnb-3d-slide-cta js-3d-cta-link">Mua ngay →</a>
-        </div>
-      </div>
-    `).join("");
-
-    dotsWrap.innerHTML = VNB_HERO_3D_PRODUCTS.map((_, idx) => `
-      <button type="button" class="vnb-hero-3d-dot ${idx === 0 ? 'is-active' : ''}" data-index="${idx}" title="Ảnh sản phẩm ${idx + 1}"></button>
-    `).join("");
-
-    function updateHero3DPositions() {
-      const slides = stage.querySelectorAll(".vnb-3d-slide");
-      slides.forEach((slide, idx) => {
-        let diff = idx - currentHero3DIndex;
-        if (diff > total / 2) diff -= total;
-        if (diff < -total / 2) diff += total;
-
-        let pos = "hidden";
-        if (diff === 0) pos = "0";
-        else if (diff === 1) pos = "1";
-        else if (diff === -1) pos = "-1";
-        else if (diff === 2) pos = "2";
-        else if (diff === -2) pos = "-2";
-
-        slide.setAttribute("data-pos", pos);
-      });
-
-      dotsWrap.querySelectorAll(".vnb-hero-3d-dot").forEach((dot, idx) => {
-        dot.classList.toggle("is-active", idx === currentHero3DIndex);
-      });
-    }
-
-    function stepHero3D(delta) {
-      currentHero3DIndex = (currentHero3DIndex + delta + total) % total;
-      updateHero3DPositions();
-    }
-
-    function startAutoRotate() {
-      stopAutoRotate();
-      hero3DTimer = setInterval(() => {
-        stepHero3D(1);
-      }, 2600);
-    }
-
-    function stopAutoRotate() {
-      if (hero3DTimer) {
-        clearInterval(hero3DTimer);
-        hero3DTimer = null;
-      }
-    }
-
-    updateHero3DPositions();
-    startAutoRotate();
-
-    document.getElementById("btnHero3DPrev")?.addEventListener("click", () => {
-      stepHero3D(-1);
-      startAutoRotate();
-    });
-
-    document.getElementById("btnHero3DNext")?.addEventListener("click", () => {
-      stepHero3D(1);
-      startAutoRotate();
-    });
-
-    dotsWrap.addEventListener("click", (e) => {
-      const dot = e.target.closest(".vnb-hero-3d-dot");
-      if (!dot) return;
-      currentHero3DIndex = Number(dot.dataset.index) || 0;
-      updateHero3DPositions();
-      startAutoRotate();
-    });
-
-    stage.addEventListener("click", (e) => {
-      if (e.target.closest(".js-3d-cta-link")) return;
-      const slide = e.target.closest(".vnb-3d-slide");
-      if (!slide) return;
-      const clickedIdx = Number(slide.dataset.index);
-      if (clickedIdx === currentHero3DIndex) {
-        const item = VNB_HERO_3D_PRODUCTS[clickedIdx];
-        if (item && item.link) window.location.href = item.link;
-      } else {
-        currentHero3DIndex = clickedIdx;
-        updateHero3DPositions();
-        startAutoRotate();
-      }
-    });
-
-    viewport?.addEventListener("mouseenter", stopAutoRotate);
-    viewport?.addEventListener("mouseleave", startAutoRotate);
-  }
-
-  // 1. CẬP NHẬT ICON TÀI KHOẢN & GIỎ HÀNG TRÊN HEADER CHUẨN ẢNH 1
+  // 1. CẬP NHẬT THÔNG TIN NGƯỜI DÙNG & GIỎ HÀNG TRÊN HEADER
   function updateHeaderUser() {
     const userRaw = localStorage.getItem("tsport_current_user");
     const userWrap = document.getElementById("headerUserWrap");
@@ -330,21 +28,21 @@
       try {
         const user = JSON.parse(userRaw);
         const isAdmin = user.role === "ADMIN" || (user.email && user.email.toLowerCase().includes("admin"));
-        const shortName = (user.full_name || user.email || "Tài khoản").split(" ").slice(-2).join(" ");
         userWrap.innerHTML = `
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="pages/${isAdmin ? 'admin-dashboard.html' : 'account.html'}" class="vnb-icon-action" title="${escapeHtml(user.full_name || user.email)}">
-              <div class="vnb-icon-circle">${isAdmin ? '🛡️' : '👤'}</div>
-              <span class="vnb-icon-label">${escapeHtml(isAdmin ? 'ADMIN' : shortName)}</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <a href="pages/${isAdmin ? 'admin-dashboard.html' : 'account.html'}" class="btn btn-secondary btn-sm" style="font-weight:700;">
+              <span>${isAdmin ? '🛡️' : '👤'}</span>
+              <span>${escapeHtml(user.full_name || user.email)}</span>
+              ${isAdmin ? '<span class="badge" style="background:#D94C26; color:#fff; font-size:10px;">ADMIN</span>' : ''}
             </a>
-            <button type="button" id="btnHomeLogout" title="Đăng xuất" style="border:none; background:#FEE2E2; color:#DC2626; border-radius:50%; width:22px; height:22px; font-size:11px; font-weight:800; cursor:pointer;">✕</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnHomeLogout" title="Đăng xuất" style="padding:6px 10px; color:#DC2626;">✕</button>
           </div>
         `;
         document.getElementById("btnHomeLogout")?.addEventListener("click", () => {
           localStorage.removeItem("tsport_current_user");
           localStorage.removeItem("token");
           localStorage.removeItem("tsport_token");
-          if (typeof showToast === "function") showToast("Đã đăng xuất tài khoản!", "info");
+          showToast("Đã đăng xuất tài khoản!", "info");
           updateHeaderUser();
         });
         return;
@@ -352,9 +50,9 @@
     }
 
     userWrap.innerHTML = `
-      <a href="pages/auth.html" class="vnb-icon-action">
-        <div class="vnb-icon-circle">👤</div>
-        <span class="vnb-icon-label">TÀI KHOẢN</span>
+      <a href="pages/auth.html" class="btn btn-secondary btn-sm" style="font-weight:700;">
+        <span>👤</span>
+        <span>Đăng nhập / Đăng ký</span>
       </a>
     `;
   }
@@ -368,86 +66,47 @@
     });
   }
 
-  // 2. RENDER KHỐI "SẢN PHẨM MỚI" TRONG KHUNG CAM VÀNG (ẢNH 2)
-  function getItemsForNewTab(tabKey) {
+  // 2. RENDER DANH SÁCH MÔN THỂ THAO
+  function renderSportsList() {
     const store = window.tsportStore;
-    if (tabKey === "ALL" || tabKey === "VOT_CAULONG") {
-      return VNB_NEW_SHOWCASE;
-    }
+    const container = document.getElementById("homeSportsGrid");
+    if (!container || !store) return;
 
-    if (!store) return VNB_NEW_SHOWCASE;
-    const allProds = (store.getProducts() || []).filter(p => p.status !== "INACTIVE" && p.condition_type !== "CU");
+    const sports = store.getSports() || [];
+    const products = store.getProducts() || [];
 
-    let filtered = [];
-    if (tabKey === "GIAY_CAULONG") {
-      filtered = allProds.filter(p => p.category_id === 6 || p.category_id === 5 || p.name.toLowerCase().includes("giày"));
-    } else if (tabKey === "AO_CAULONG" || tabKey === "VAY_CAULONG" || tabKey === "QUAN_CAULONG") {
-      filtered = allProds.filter(p => p.category_id === 15 || p.category_id === 14 || p.category_id === 16);
-    }
+    const sportIcons = {
+      1: "🏸", // Cầu lông
+      2: "⚽", // Bóng đá
+      3: "🎾", // Tennis
+      4: "🏓", // Pickleball
+      5: "🏀", // Bóng rổ
+      6: "🏓"  // Bóng bàn
+    };
 
-    const mapped = filtered.map(p => {
-      const img = (p.images && p.images[0]) ? p.images[0].image_url : "assets/home/racket-v200-xanh.jpg";
-      const skus = p.skus || [];
-      const hasSale = skus.some(s => s.sale_price && s.sale_price < s.price);
-      const minEff = skus.length ? Math.min(...skus.map(s => (s.sale_price && s.sale_price < s.price) ? s.sale_price : s.price)) : 0;
-      const minOrig = skus.length ? Math.min(...skus.map(s => s.price)) : 0;
-      return {
-        id: p.id,
-        name: p.name,
-        image: img,
-        price_text: formatMoney(minEff),
-        old_price_text: hasSale ? formatMoney(minOrig) : ""
-      };
-    });
-
-    while (mapped.length < 5) {
-      mapped.push(VNB_NEW_SHOWCASE[mapped.length % VNB_NEW_SHOWCASE.length]);
-    }
-    return mapped;
+    container.innerHTML = sports.map((s) => {
+      const count = products.filter((p) => p.sport_id === s.id).length;
+      return `
+        <a href="pages/shop.html?sport=${s.id}" class="tsport-sport-pill">
+          <div class="tsport-sport-icon">${sportIcons[s.id] || "🏅"}</div>
+          <div class="tsport-sport-name">${escapeHtml(s.name)}</div>
+          <div class="tsport-sport-count">${count} sản phẩm</div>
+        </a>
+      `;
+    }).join("");
   }
 
-  function renderNewProductsSection() {
-    const grid = document.getElementById("homeNewProductsGrid");
-    if (!grid) return;
+  // 3. RENDER SẢN PHẨM MỚI VỀ & BÁN CHẠY (BEST SELLERS)
+  function renderFeaturedProducts() {
+    const store = window.tsportStore;
+    const grid = document.getElementById("homeFeaturedGrid");
+    if (!grid || !store) return;
 
-    const list = getItemsForNewTab(currentNewTab);
-    const visible = [];
-    for (let i = 0; i < 5; i++) {
-      visible.push(list[(currentNewOffset + i) % list.length]);
-    }
+    const products = (store.getProducts() || []).filter(p => p.status !== "INACTIVE");
+    // Lấy 8 sản phẩm hàng mới tiêu biểu
+    const newProducts = products.filter(p => p.condition_type !== "CU").slice(0, 8);
 
-    grid.innerHTML = visible.map(item => `
-      <a href="pages/product-detail.html?id=${item.id}" class="vnb-new-card">
-        <div class="vnb-new-card-img-wrap">
-          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.src='assets/home/racket-v200-xanh.jpg'" />
-        </div>
-        <h3 class="vnb-new-card-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</h3>
-        <div class="vnb-new-card-price-row">
-          <span class="vnb-price-red">${escapeHtml(item.price_text)}</span>
-          ${item.old_price_text ? `<span class="vnb-price-old">${escapeHtml(item.old_price_text)}</span>` : ''}
-        </div>
-      </a>
-    `).join("");
-  }
-
-  // 3. RENDER KHỐI "CÓ THỂ BẠN SẼ THÍCH" 6 CỘT (ẢNH 3)
-  function renderMayLikeSection() {
-    const grid = document.getElementById("homeMayLikeGrid");
-    if (!grid) return;
-
-    grid.innerHTML = VNB_MAY_LIKE_SHOWCASE.map(item => `
-      <a href="pages/product-detail.html?id=${item.id}" class="vnb-like-card">
-        ${item.discount_badge ? `<span class="vnb-discount-pill">${escapeHtml(item.discount_badge)}</span>` : ''}
-        <div class="vnb-like-img-wrap">
-          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.src='assets/home/racket-v88-xanh.jpg'" />
-        </div>
-        <h3 class="vnb-like-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</h3>
-        <div style="margin-top:auto;">
-          <div class="vnb-price-red">${escapeHtml(item.price_text)}</div>
-          ${item.old_price_text ? `<div class="vnb-price-old" style="margin-top:2px;">${escapeHtml(item.old_price_text)}</div>` : ''}
-        </div>
-      </a>
-    `).join("");
+    grid.innerHTML = newProducts.map((p) => renderProductCardHtml(p)).join("");
   }
 
   // 4. RENDER KHU HÀNG ĐÃ QUA SỬ DỤNG MINH BẠCH (USED PRODUCTS)
@@ -460,30 +119,75 @@
     const usedProducts = products.filter(p => p.condition_type === "CU").slice(0, 4);
 
     if (usedProducts.length === 0) {
-      grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:#64748B;">Hiện đang cập nhật thêm hàng cũ minh bạch...</div>`;
+      grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:20px; color:#64748B;">Hiện đang cập nhật thêm hàng cũ minh bạch từ chương trình Thu Mua...</div>`;
       return;
     }
 
-    grid.innerHTML = usedProducts.map((p) => {
-      const primaryImg = (p.images && p.images[0]) || { image_url: "assets/home/racket-v200-xanh.jpg" };
-      const skus = p.skus || [];
-      const minEff = skus.length ? Math.min(...skus.map(s => (s.sale_price && s.sale_price < s.price) ? s.sale_price : s.price)) : 0;
-      const wearGrade = p.specifications?.condition_grade || "90%";
+    grid.innerHTML = usedProducts.map((p) => renderProductCardHtml(p, true)).join("");
+  }
 
-      return `
-        <a href="pages/product-detail.html?id=${p.id}" class="vnb-like-card" style="border:1px solid #FED7AA; background:#FFFBF8;">
-          <span class="vnb-discount-pill" style="background:#D94C26;">ĐỒ CŨ ~${escapeHtml(wearGrade)}</span>
-          <div class="vnb-like-img-wrap" style="background:transparent;">
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='assets/home/racket-v200-xanh.jpg'" />
-          </div>
-          <h3 class="vnb-like-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
-          ${p.wear_description ? `<div style="font-size:11px; color:#9A3412; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">🔍 ${escapeHtml(p.wear_description)}</div>` : ''}
-          <div style="margin-top:auto;">
-            <div class="vnb-price-red">${formatMoney(minEff)}</div>
+  // HÀM TẠO HTML CARD SẢN PHẨM DÙNG CHUNG
+  function renderProductCardHtml(p, isUsedSection = false) {
+    const store = window.tsportStore;
+    const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
+    const brand = store ? store.getBrandById(p.brand_id) : null;
+    const ratingInfo = store ? store.getProductRating(p.id) : { avgRating: 5.0, count: 0 };
+
+    const skus = p.skus || [];
+    const hasSale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+    const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
+    const minEffectivePrice = effectivePrices.length ? Math.min(...effectivePrices) : 0;
+    const minOriginalPrice = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
+    const maxDiscountPct = hasSale
+      ? Math.max(...skus.filter(s => s.sale_price && s.sale_price < s.price).map(s => Math.round((1 - s.sale_price / s.price) * 100)))
+      : 0;
+
+    const isUsed = p.condition_type === "CU";
+    const wearGrade = p.specifications?.condition_grade || "90%";
+
+    return `
+      <div class="tsport-product-card">
+        <a href="pages/product-detail.html?id=${p.id}" class="tsport-product-thumb">
+          <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+          <div class="tsport-card-badges">
+            <span class="tsport-badge-condition ${isUsed ? 'cu' : 'moi'}">
+              ${isUsed ? `ĐỒ CŨ (~${wearGrade})` : 'HÀNG MỚI 100%'}
+            </span>
+            ${hasSale ? `<span class="tsport-badge-condition" style="background:#EF4444; color:#fff; font-weight:800;">-${maxDiscountPct}% SALE</span>` : ''}
           </div>
         </a>
-      `;
-    }).join("");
+
+        <div class="tsport-product-info">
+          <div class="tsport-product-brand">${escapeHtml(brand ? brand.name : 'Tsport')}</div>
+          <h3 class="tsport-product-name" title="${escapeHtml(p.name)}">
+            <a href="pages/product-detail.html?id=${p.id}" style="color:inherit; text-decoration:none;">${escapeHtml(p.name)}</a>
+          </h3>
+
+          <div style="display:flex; align-items:center; gap:6px; font-size:12px; margin:4px 0;">
+            <span style="color:#F59E0B; font-weight:800;">★ ${ratingInfo.avgRating}</span>
+            <span style="color:#64748B; font-size:11px;">(${ratingInfo.count} đánh giá)</span>
+          </div>
+
+          ${isUsed && p.wear_description ? `
+            <div style="font-size:11px; color:#9A3412; background:#FFEDD5; padding:4px 8px; border-radius:4px; margin:4px 0; line-height:1.3;" title="${escapeHtml(p.wear_description)}">
+              🔍 <strong>Mô tả hao mòn:</strong> ${escapeHtml(p.wear_description.length > 55 ? p.wear_description.slice(0, 52) + '...' : p.wear_description)}
+            </div>
+          ` : ''}
+
+          <div class="tsport-product-bottom" style="margin-top:auto; padding-top:8px;">
+            <div class="tsport-product-price">
+              ${hasSale 
+                ? `<span>${formatMoney(minEffectivePrice)}</span> <del style="font-size:12px; color:#94A3B8; font-weight:normal; margin-left:4px;">${formatMoney(minOriginalPrice)}</del>`
+                : formatMoney(minEffectivePrice)
+              }
+            </div>
+            <a href="pages/product-detail.html?id=${p.id}" class="btn btn-secondary btn-sm" style="font-weight:700; padding:4px 10px; font-size:12px; color:#D94C26;">
+              Xem →
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   // 5. RENDER SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)
@@ -511,15 +215,15 @@
 
       if (wrap) wrap.style.display = "block";
       container.innerHTML = products.map((p) => {
-        const primaryImg = (p.images && p.images[0]) || { image_url: "assets/home/racket-v200-xanh.jpg" };
+        const primaryImg = (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300" };
         const minPrice = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.sale_price && s.sale_price < s.price ? s.sale_price : s.price)) : 0;
         return `
           <a href="pages/product-detail.html?id=${p.id}" class="tsport-recent-card">
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" class="tsport-recent-img" onerror="this.src='assets/home/racket-v200-xanh.jpg'" />
+            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" class="tsport-recent-img" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
             <div style="font-size:12px; font-weight:700; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(p.name)}">
               ${escapeHtml(p.name)}
             </div>
-            <div style="font-size:12px; font-weight:800; color:#E11D48; margin-top:4px;">
+            <div style="font-size:12px; font-weight:800; color:#D94C26; margin-top:4px;">
               ${formatMoney(minPrice)}
             </div>
           </a>
@@ -530,33 +234,7 @@
     }
   }
 
-  // 6. GẮN SỰ KIỆN TAB & NÚT TRƯỢT < > KHỐI "SẢN PHẨM MỚI"
-  function bindHomeEvents() {
-    const tabsWrap = document.getElementById("vnbNewProductTabs");
-    tabsWrap?.addEventListener("click", (e) => {
-      const btn = e.target.closest(".vnb-new-tab-btn");
-      if (!btn) return;
-      tabsWrap.querySelectorAll(".vnb-new-tab-btn").forEach(b => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      currentNewTab = btn.dataset.tab || "ALL";
-      currentNewOffset = 0;
-      renderNewProductsSection();
-    });
-
-    document.getElementById("btnNewPrev")?.addEventListener("click", () => {
-      const list = getItemsForNewTab(currentNewTab);
-      currentNewOffset = (currentNewOffset - 1 + list.length) % list.length;
-      renderNewProductsSection();
-    });
-
-    document.getElementById("btnNewNext")?.addEventListener("click", () => {
-      const list = getItemsForNewTab(currentNewTab);
-      currentNewOffset = (currentNewOffset + 1) % list.length;
-      renderNewProductsSection();
-    });
-  }
-
-  // 7. TÌM KIẾM GỢI Ý THÔNG MINH (DEBOUNCE 250MS)
+  // 6. TÌM KIẾM GỢI Ý THÔNG MINH (DEBOUNCE 250MS)
   function initSearchDebounce() {
     const input = document.getElementById("homeSearchInput");
     const dropdown = document.getElementById("homeSearchDropdown");
@@ -568,7 +246,7 @@
       e.preventDefault();
       const q = input.value.trim();
       if (q) {
-        window.location.href = `pages/shop.html?q=${encodeURIComponent(q)}`;
+        window.location.href = `pages/shop.html?search=${encodeURIComponent(q)}`;
       }
     });
 
@@ -609,11 +287,11 @@
             Gợi ý sản phẩm phù hợp (${matches.length})
           </div>
           ${matches.map((p) => {
-            const img = (p.images && p.images[0]) || { image_url: "assets/home/racket-v200-xanh.jpg" };
+            const img = (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=100" };
             const minPrice = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.sale_price && s.sale_price < s.price ? s.sale_price : s.price)) : 0;
             return `
               <a href="pages/product-detail.html?id=${p.id}" class="tsport-search-dropdown-item">
-                <img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(p.name)}" class="tsport-search-dropdown-thumb" onerror="this.src='assets/home/racket-v200-xanh.jpg'" />
+                <img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(p.name)}" class="tsport-search-dropdown-thumb" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=100'" />
                 <div class="tsport-search-dropdown-info">
                   <div class="tsport-search-dropdown-name">${escapeHtml(p.name)}</div>
                   <div class="tsport-search-dropdown-price">${formatMoney(minPrice)}</div>
@@ -624,7 +302,7 @@
               </a>
             `;
           }).join("")}
-          <a href="pages/shop.html?q=${encodeURIComponent(query)}" style="display:block; text-align:center; padding:10px; font-size:12px; font-weight:700; color:#E95211; background:#FFF1EB; text-decoration:none;">
+          <a href="pages/shop.html?search=${encodeURIComponent(query)}" style="display:block; text-align:center; padding:10px; font-size:12px; font-weight:700; color:#D94C26; background:#FFF1EB; text-decoration:none;">
             Xem tất cả kết quả cho "${escapeHtml(query)}" →
           </a>
         `;
@@ -632,6 +310,7 @@
       }, 250);
     });
 
+    // Đóng dropdown khi click ra ngoài
     document.addEventListener("click", (e) => {
       if (!input.contains(e.target) && !dropdown.contains(e.target)) {
         dropdown.classList.remove("is-open");
