@@ -45,16 +45,28 @@
     if (hasError) return;
 
     // Giả lập token JWT
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role: "CUSTOMER", exp: Date.now() + 86400000 })) + ".sig_verified_tsport";
+    const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
+    const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
+    const fullName = isSpecialAdmin ? "Quản Trị Viên (admin123)" : email.split("@")[0];
+
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role, exp: Date.now() + 86400000 })) + ".sig_verified_tsport";
     localStorage.setItem("token", token);
     localStorage.setItem("tsport_token", token);
-    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: email.split("@")[0], role: "CUSTOMER" }));
+    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: fullName, role }));
 
     logAxiosInterceptor("POST", "/api/users/login", token);
-    showToast(`Đăng nhập thành công! Đã lưu JWT Token vào localStorage.`, "success");
+    showToast(`Đăng nhập thành công (${role})! Đang chuyển hướng...`, "success");
 
     const userLabel = document.querySelector(".js-header-user-label");
-    if (userLabel) userLabel.textContent = email.split("@")[0];
+    if (userLabel) userLabel.textContent = fullName;
+
+    setTimeout(() => {
+      if (role === "ADMIN") {
+        window.location.href = "admin-dashboard.html";
+      } else {
+        window.location.href = "account.html";
+      }
+    }, 800);
   }
 
   function handleRegisterSubmit(e) {
@@ -97,13 +109,23 @@
       return;
     }
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role: "CUSTOMER" })) + ".sig_verified_tsport";
+    const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
+    const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role })) + ".sig_verified_tsport";
     localStorage.setItem("token", token);
     localStorage.setItem("tsport_token", token);
-    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: fullName, phone, role: "CUSTOMER" }));
+    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: fullName, phone, role }));
 
     logAxiosInterceptor("POST", "/api/users/register", token);
-    showToast(`Đăng ký tài khoản ${email} thành công! Token đã lưu.`, "success");
+    showToast(`Đăng ký tài khoản ${email} (${role}) thành công! Đang chuyển hướng...`, "success");
+
+    setTimeout(() => {
+      if (role === "ADMIN") {
+        window.location.href = "admin-dashboard.html";
+      } else {
+        window.location.href = "account.html";
+      }
+    }, 800);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -125,6 +147,24 @@
     document.getElementById("btnFillCustomerAn")?.addEventListener("click", () => {
       document.getElementById("loginEmail").value = "nguyenvanan@sportstore.vn";
       document.getElementById("loginPassword").value = "Customer@123";
+      document.getElementById("loginEmail").classList.remove("is-invalid");
+      document.getElementById("errLoginEmail").textContent = "";
+      document.getElementById("loginPassword").classList.remove("is-invalid");
+      document.getElementById("errLoginPassword").textContent = "";
+    });
+
+    document.getElementById("btnQuickLoginCustomer")?.addEventListener("click", () => {
+      document.getElementById("loginEmail").value = "nguyenvanan@sportstore.vn";
+      document.getElementById("loginPassword").value = "Customer@123";
+      document.getElementById("loginEmail").classList.remove("is-invalid");
+      document.getElementById("errLoginEmail").textContent = "";
+      document.getElementById("loginPassword").classList.remove("is-invalid");
+      document.getElementById("errLoginPassword").textContent = "";
+    });
+
+    document.getElementById("btnQuickLoginAdmin")?.addEventListener("click", () => {
+      document.getElementById("loginEmail").value = "admin123@gmail.com";
+      document.getElementById("loginPassword").value = "admin123@gmail.com";
       document.getElementById("loginEmail").classList.remove("is-invalid");
       document.getElementById("errLoginEmail").textContent = "";
       document.getElementById("loginPassword").classList.remove("is-invalid");

@@ -63,6 +63,16 @@ document.addEventListener("DOMContentLoaded", () => {
       address: "Số 88 Láng Hạ, Quận Đống Đa, Hà Nội",
       role: "CUSTOMER",
       status: "ACTIVE"
+    },
+    {
+      id: 4,
+      email: "admin123@gmail.com",
+      password: "admin123@gmail.com",
+      full_name: "Quản Trị Viên (admin123)",
+      phone: "0901234567",
+      address: "Trụ sở Ban Quản Trị Tsport Store",
+      role: "ADMIN",
+      status: "ACTIVE"
     }
   ];
 
@@ -493,6 +503,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
     const newUser = {
       id: state.usersDB.length + 1,
       email,
@@ -500,7 +511,7 @@ document.addEventListener("DOMContentLoaded", () => {
       full_name: fullName,
       phone,
       address,
-      role: "CUSTOMER",
+      role: isSpecialAdmin ? "ADMIN" : "CUSTOMER",
       status: "ACTIVE"
     };
     state.usersDB.push(newUser);
