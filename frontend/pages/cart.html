@@ -55,7 +55,6 @@
         <a href="courts.html" class="tsport-nav-link">🏟️ Đặt sân online</a>
         <a href="community.html" class="tsport-nav-link">👥 Kèo giao lưu</a>
         <a href="admin-buyback.html" class="tsport-nav-link">♻️ Thu mua đồ cũ</a>
-        <a href="admin-discounts.html" class="tsport-nav-link" style="color:#2563EB; font-weight:700;">🏷️ Mã giảm giá</a>
       </div>
     </nav>
   </header>
@@ -96,9 +95,38 @@
       <div class="tsport-summary-card" id="cartSummaryWrap">
         <h2 class="tsport-summary-title">Tóm tắt đơn hàng</h2>
 
+        <!-- KHỐI LỰA CHỌN & ÁP DỤNG VOUCHER TRONG GIỎ HÀNG -->
+        <div style="margin-bottom: 16px; padding: 12px; background: #FFFBF8; border: 1px dashed #FDBA74; border-radius: 10px;">
+          <label style="display:block; font-size:13px; font-weight:800; color:#C2410C; margin-bottom:8px;">
+            🏷️ Chọn hoặc Nhập Mã Voucher Giảm Giá:
+          </label>
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <input type="text" id="inputCartCoupon" class="form-control" placeholder="Nhập mã voucher (vd: TSPORT10)..." style="text-transform:uppercase; font-weight:700; font-size:13px;" />
+            <button type="button" class="btn btn-primary btn-sm" id="btnApplyCartCoupon" style="white-space:nowrap; padding:0 14px; font-weight:700;">Áp dụng</button>
+          </div>
+
+          <div id="cartCouponStatusMsg" style="font-size:12px; margin-bottom:8px; display:none;"></div>
+
+          <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">
+            Danh sách Voucher hiện có (Bấm để chọn):
+          </div>
+          <div id="cartVoucherSelectList" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto;">
+            <!-- Render danh sách voucher để người dùng lựa chọn -->
+          </div>
+        </div>
+
         <div class="tsport-summary-row">
           <span>Tạm tính tiền hàng:</span>
           <span id="cartSubtotal" style="font-weight:700; color:#1E293B;">0 ₫</span>
+        </div>
+
+        <!-- DÒNG GIẢM GIÁ VOUCHER TRONG GIỎ -->
+        <div class="tsport-summary-row" id="rowCartDiscount" style="display:none; color:#16A34A; font-weight:700;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span>Voucher (<span id="cartAppliedCouponTag"></span>):</span>
+            <button type="button" id="btnRemoveCartCoupon" style="border:none; background:none; color:#DC2626; cursor:pointer; font-size:12px; padding:0; text-decoration:underline;" title="Bỏ áp dụng mã">✕ Bỏ</button>
+          </div>
+          <span id="cartDiscountAmount">-0 ₫</span>
         </div>
 
         <div class="tsport-summary-row">

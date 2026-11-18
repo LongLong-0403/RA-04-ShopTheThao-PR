@@ -54,7 +54,6 @@
         <a href="courts.html" class="tsport-nav-link">🏟️ Đặt sân online</a>
         <a href="community.html" class="tsport-nav-link">👥 Kèo giao lưu</a>
         <a href="admin-buyback.html" class="tsport-nav-link">♻️ Thu mua đồ cũ</a>
-        <a href="admin-discounts.html" class="tsport-nav-link" style="color:#2563EB; font-weight:700;">🏷️ Mã giảm giá</a>
       </div>
     </nav>
   </header>
@@ -133,17 +132,37 @@
         <!-- NHẮC NHỞ CHỌN ĐỦ BIẾN THỂ -->
         <div id="pdpVariantHint" style="display:none; font-size:12px; font-weight:700; color:#D94C26; margin-bottom:12px;"></div>
 
-        <!-- SỐ LƯỢNG & NÚT THÊM VÀO GIỎ -->
-        <div class="tsport-pdp-actions">
+        <!-- KHỐI CHỌN MÃ GIẢM GIÁ / VOUCHER KHI MUA SẢN PHẨM -->
+        <div class="tsport-pdp-voucher-box" id="pdpVoucherSection" style="margin-bottom:16px; padding:12px 14px; background:#FFFBF8; border:1px dashed #FDBA74; border-radius:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:13px; font-weight:800; color:#C2410C;">🏷️ Chọn Mã Voucher Giảm Giá:</span>
+            <span id="pdpSelectedVoucherStatus" style="font-size:11px; color:#64748B;">Chưa chọn voucher</span>
+          </div>
+          <div id="pdpVoucherList" style="display:flex; flex-direction:column; gap:8px;">
+            <!-- Render danh sách voucher khả dụng từ store.js -->
+          </div>
+          <div id="pdpVoucherPreviewRow" style="display:none; margin-top:10px; padding-top:8px; border-top:1px solid #FED7AA; font-size:13px; justify-content:space-between; align-items:center;">
+            <span style="color:#475569;">Giá dự kiến sau áp mã:</span>
+            <strong id="pdpPriceAfterVoucher" style="color:#16A34A; font-size:15px;">0 ₫</strong>
+          </div>
+        </div>
+
+        <!-- SỐ LƯỢNG & NÚT THÊM VÀO GIỎ / MUA NGAY -->
+        <div class="tsport-pdp-actions" style="flex-wrap:wrap;">
           <div class="tsport-qty-picker">
             <button type="button" class="tsport-qty-btn" id="btnQtyMinus">−</button>
             <input type="number" class="tsport-qty-input" id="pdpQuantity" value="1" min="1" readonly />
             <button type="button" class="tsport-qty-btn" id="btnQtyPlus">+</button>
           </div>
 
-          <button type="button" class="btn-pdp-add-cart" id="btnAddToCart" disabled>
+          <button type="button" class="btn-pdp-add-cart" id="btnAddToCart" disabled style="flex:1;">
             <span>🛒</span>
-            <span>Thêm vào giỏ hàng</span>
+            <span>Thêm vào giỏ</span>
+          </button>
+
+          <button type="button" class="btn btn-primary" id="btnBuyNow" disabled style="padding:12px 18px; font-weight:800; font-size:14px; border-radius:8px;">
+            <span>⚡</span>
+            <span>Mua ngay</span>
           </button>
         </div>
 

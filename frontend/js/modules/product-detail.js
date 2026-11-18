@@ -295,6 +295,7 @@
     const priceEl = document.getElementById("pdpPrice");
     const stockStatusEl = document.getElementById("pdpStockStatus");
     const btnAddCart = document.getElementById("btnAddToCart");
+    const btnBuyNow = document.getElementById("btnBuyNow");
     const hintEl = document.getElementById("pdpVariantHint");
     const qtyInput = document.getElementById("pdpQuantity");
 
@@ -331,10 +332,14 @@
       if (btnAddCart) {
         btnAddCart.disabled = true;
       }
+      if (btnBuyNow) {
+        btnBuyNow.disabled = true;
+      }
       if (hintEl) {
         hintEl.style.display = "block";
         hintEl.textContent = `👉 Vui lòng chọn ${needsSize && needsColor ? 'Kích thước và Màu sắc' : needsSize ? 'Kích thước' : 'Màu sắc'} trước khi thêm vào giỏ!`;
       }
+      renderPdpVouchers(minEffective * (Number(qtyInput?.value) || 1));
       return;
     }
 
@@ -350,6 +355,10 @@
         btnAddCart.style.opacity = "0.6";
         btnAddCart.style.cursor = "not-allowed";
       }
+      if (btnBuyNow) {
+        btnBuyNow.disabled = true;
+        btnBuyNow.style.opacity = "0.6";
+      }
       if (hintEl) {
         hintEl.style.display = "block";
         hintEl.textContent = "⚠️ Sản phẩm này hiện đang tạm ẩn / ngừng kinh doanh, không thể đặt hàng lúc này.";
@@ -358,8 +367,10 @@
     }
 
     // Trường hợp ĐÃ CHỌN ĐỦ BIẾN THỂ
+    const hasSale = matchingSku.sale_price && Number(matchingSku.sale_price) > 0 && Number(matchingSku.sale_price) < Number(matchingSku.price);
+    const unitEffectivePrice = hasSale ? Number(matchingSku.sale_price) : Number(matchingSku.price);
+
     if (priceEl) {
-      const hasSale = matchingSku.sale_price && Number(matchingSku.sale_price) > 0 && Number(matchingSku.sale_price) < Number(matchingSku.price);
       if (hasSale) {
         const discountPct = Math.round((1 - matchingSku.sale_price / matchingSku.price) * 100);
         priceEl.innerHTML = `
@@ -385,6 +396,10 @@
         btnAddCart.style.opacity = "0.6";
         btnAddCart.style.cursor = "not-allowed";
       }
+      if (btnBuyNow) {
+        btnBuyNow.disabled = true;
+        btnBuyNow.style.opacity = "0.6";
+      }
       if (hintEl) {
         hintEl.style.display = "block";
         hintEl.textContent = "⚠️ Biến thể SKU này đang tạm ngưng kinh doanh, quý khách vui lòng chọn phân loại khác.";
@@ -399,9 +414,14 @@
       }
       if (btnAddCart) {
         btnAddCart.disabled = false;
-        btnAddCart.textContent = "Thêm vào giỏ hàng";
+        btnAddCart.innerHTML = `<span>🛒</span><span>Thêm vào giỏ</span>`;
         btnAddCart.style.opacity = "1";
         btnAddCart.style.cursor = "pointer";
+      }
+      if (btnBuyNow) {
+        btnBuyNow.disabled = false;
+        btnBuyNow.style.opacity = "1";
+        btnBuyNow.style.cursor = "pointer";
       }
       if (qtyInput) {
         qtyInput.max = matchingSku.stock;
@@ -418,8 +438,88 @@
         btnAddCart.style.opacity = "0.6";
         btnAddCart.style.cursor = "not-allowed";
       }
+      if (btnBuyNow) {
+        btnBuyNow.disabled = true;
+        btnBuyNow.style.opacity = "0.6";
+      }
     }
+
+    const qty = Number(qtyInput?.value) || 1;
+    renderPdpVouchers(unitEffectivePrice * qty);
   }
+
+  // RENDER KHỐI LỰA CHỌN VOUCHER TRÊN TRANG CHI TIẾT SẢN PHẨM
+  function renderPdpVouchers(itemSubtotal) {
+    const store = window.tsportStore;
+    const listEl = document.getElementById("pdpVoucherList");
+    const statusEl = document.getElementById("pdpSelectedVoucherStatus");
+    const previewRow = document.getElementById("pdpVoucherPreviewRow");
+    const afterPriceEl = document.getElementById("pdpPriceAfterVoucher");
+    if (!store || !listEl) return;
+
+    const today = new Date().toISOString().split("T")[0];
+    const activeCoupons = store.getCoupons({ status: "ACTIVE" }).filter(c => {
+      if (c.expires_at && c.expires_at < today) return false;
+      if (c.usage_limit && Number(c.used_count) >= Number(c.usage_limit)) return false;
+      return true;
+    });
+
+    const selectedCode = localStorage.getItem("tsport_selected_coupon") || "";
+    const amount = Number(itemSubtotal) || 0;
+
+    if (activeCoupons.length === 0) {
+      listEl.innerHTML = `<div style="font-size:12px; color:#64748B;">Hiện chưa có mã voucher khả dụng.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = activeCoupons.map(c => {
+      const isSelected = selectedCode.toUpperCase() === c.code.toUpperCase();
+      const valRes = store.validateAndCalculateCoupon(c.code, amount);
+      const isEligible = valRes.valid;
+      const badgeLabel = c.discount_type === "PERCENT"
+        ? `-${c.discount_value}%`
+        : `-${formatMoney(c.discount_value)}`;
+
+      return `
+        <div class="js-pdp-voucher-item" data-code="${escapeHtml(c.code)}" style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; cursor:pointer; transition:all 0.15s ease; background:${isSelected ? '#FFF7ED' : '#FFFFFF'}; border:1.5px solid ${isSelected ? '#D94C26' : '#E2E8F0'};">
+          <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+            <span style="background:${isSelected ? '#D94C26' : '#F1F5F9'}; color:${isSelected ? '#fff' : '#D94C26'}; font-weight:800; font-size:11px; padding:4px 7px; border-radius:6px; white-space:nowrap;">
+              ${escapeHtml(badgeLabel)}
+            </span>
+            <div style="min-width:0;">
+              <div style="font-size:12.5px; font-weight:800; color:#0F172A;">
+                ${escapeHtml(c.code)}
+                ${isEligible ? `<span style="color:#16A34A; font-weight:700; font-size:11px; margin-left:4px;">(Giảm ${formatMoney(valRes.discount_amount)})</span>` : ''}
+              </div>
+              <div style="font-size:11px; color:#64748B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${escapeHtml(c.description || `Đơn tối thiểu ${formatMoney(c.min_order_value || 0)}`)}
+              </div>
+            </div>
+          </div>
+          <button type="button" style="border:none; border-radius:6px; padding:5px 10px; font-size:11.5px; font-weight:800; cursor:pointer; white-space:nowrap; background:${isSelected ? '#D94C26' : '#FFF1EB'}; color:${isSelected ? '#FFFFFF' : '#D94C26'};">
+            ${isSelected ? '✓ Đã chọn' : 'Chọn'}
+          </button>
+        </div>
+      `;
+    }).join("");
+
+    if (selectedCode) {
+      const check = store.validateAndCalculateCoupon(selectedCode, amount);
+      if (statusEl) {
+        statusEl.innerHTML = `<strong style="color:#D94C26;">Đang chọn: ${escapeHtml(selectedCode)}</strong>`;
+      }
+      if (previewRow && afterPriceEl) {
+        previewRow.style.display = "flex";
+        if (check.valid) {
+          afterPriceEl.innerHTML = `${formatMoney(check.final_total)} <span style="font-size:11px; color:#16A34A; font-weight:700;">(Tiết kiệm ${formatMoney(check.discount_amount)})</span>`;
+        } else {
+          afterPriceEl.innerHTML = `<span style="font-size:11.5px; color:#D97706;">${escapeHtml(check.message)}</span>`;
+        }
+      }
+    } else {
+      if (statusEl) statusEl.textContent = "Bấm để chọn mã ưu đãi";
+      if (previewRow) previewRow.style.display = "none";
+    }
 
   // 4. BẢNG THÔNG SỐ KỸ THUẬT (SPECS)
   function renderSpecifications(prod) {
@@ -483,6 +583,7 @@
       if (val > 1) {
         qtyInput.value = val - 1;
         currentQuantity = val - 1;
+        updateSkuDisplay();
       }
     });
 
@@ -492,9 +593,26 @@
       if (val < max) {
         qtyInput.value = val + 1;
         currentQuantity = val + 1;
+        updateSkuDisplay();
       } else {
         showToast(`Kho chỉ còn tối đa ${max} sản phẩm!`, "error");
       }
+    });
+
+    // CHỌN / BỎ CHỌN VOUCHER TRÊN TRANG SẢN PHẨM
+    document.getElementById("pdpVoucherList")?.addEventListener("click", (e) => {
+      const item = e.target.closest(".js-pdp-voucher-item");
+      if (!item) return;
+      const code = item.dataset.code;
+      const currentSelected = localStorage.getItem("tsport_selected_coupon") || "";
+      if (currentSelected.toUpperCase() === code.toUpperCase()) {
+        localStorage.removeItem("tsport_selected_coupon");
+        showToast(`Đã bỏ chọn mã voucher "${code}".`, "info");
+      } else {
+        localStorage.setItem("tsport_selected_coupon", code);
+        showToast(`Đã chọn mã voucher "${code}" cho đơn hàng của bạn!`, "success");
+      }
+      updateSkuDisplay();
     });
 
     // NÚT THÊM VÀO GIỎ HÀNG
@@ -509,11 +627,32 @@
         const store = window.tsportStore;
         store.addToCart(currentProduct.id, matchingSku.id, qty);
 
-        // Hiển thị toast và cập nhật badge
-        showToast(`Đã thêm ${qty} x "${currentProduct.name}" vào giỏ hàng!`, "success");
+        const selVoucher = localStorage.getItem("tsport_selected_coupon");
+        const voucherNote = selVoucher ? ` (Đã kèm mã voucher ${selVoucher})` : "";
+        showToast(`Đã thêm ${qty} x "${currentProduct.name}" vào giỏ hàng${voucherNote}!`, "success");
         if (typeof window.updateHeaderCartBadge === "function") {
           window.updateHeaderCartBadge();
         }
+      } catch (err) {
+        alert("⚠️ " + err.message);
+      }
+    });
+
+    // NÚT MUA NGAY (ÁP DỤNG VOUCHER & CHUYỂN TỚI THANH TOÁN)
+    document.getElementById("btnBuyNow")?.addEventListener("click", () => {
+      if (!matchingSku) {
+        alert("⚠️ Vui lòng chọn đầy đủ biến thể kích cỡ và màu sắc!");
+        return;
+      }
+
+      const qty = Number(document.getElementById("pdpQuantity")?.value) || 1;
+      try {
+        const store = window.tsportStore;
+        store.addToCart(currentProduct.id, matchingSku.id, qty);
+        if (typeof window.updateHeaderCartBadge === "function") {
+          window.updateHeaderCartBadge();
+        }
+        window.location.href = "checkout.html";
       } catch (err) {
         alert("⚠️ " + err.message);
       }

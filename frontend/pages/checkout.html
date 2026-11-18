@@ -40,6 +40,18 @@
         </div>
       </div>
     </div>
+
+    <!-- THANH MENU CHÍNH -->
+    <nav class="tsport-nav-bar">
+      <div class="container" style="display:flex; gap:20px; align-items:center; overflow-x:auto;">
+        <a href="../index.html" class="tsport-nav-link">Trang chủ</a>
+        <a href="shop.html" class="tsport-nav-link">Tất cả sản phẩm</a>
+        <a href="shop.html?condition=CU" class="tsport-nav-link" style="color:#D94C26; font-weight:700;">♻️ Đồ cũ minh bạch</a>
+        <a href="courts.html" class="tsport-nav-link">🏟️ Đặt sân online</a>
+        <a href="community.html" class="tsport-nav-link">👥 Kèo giao lưu</a>
+        <a href="admin-buyback.html" class="tsport-nav-link">♻️ Thu mua đồ cũ</a>
+      </div>
+    </nav>
   </header>
 
   <!-- NỘI DUNG CHÍNH (CHECKOUT) -->
@@ -132,24 +144,23 @@
           </div>
 
           <!-- KHỐI MÃ GIẢM GIÁ (COUPON & VOUCHER) -->
-          <div style="margin-bottom: 16px; padding: 12px; background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px;">
-            <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">
-              🏷️ Mã giảm giá / Voucher ưu đãi:
+          <div style="margin-bottom: 16px; padding: 12px; background: #FFFBF8; border: 1px dashed #FDBA74; border-radius: 10px;">
+            <label style="display:block; font-size:13px; font-weight:800; color:#C2410C; margin-bottom:8px;">
+              🏷️ Chọn hoặc Nhập Mã Voucher Ưu Đãi:
             </label>
-            <div style="display:flex; gap:6px;">
+            <div style="display:flex; gap:6px; margin-bottom:8px;">
               <input type="text" id="inputCheckoutCoupon" class="form-control" placeholder="Nhập mã (vd: TSPORT10)..." style="text-transform:uppercase; font-weight:700; font-size:13px;" />
-              <button type="button" class="btn btn-secondary btn-sm" id="btnApplyCoupon" style="white-space:nowrap; padding:0 12px; font-weight:700;">Áp dụng</button>
+              <button type="button" class="btn btn-primary btn-sm" id="btnApplyCoupon" style="white-space:nowrap; padding:0 14px; font-weight:700;">Áp dụng</button>
             </div>
             
             <!-- Thông báo trạng thái coupon -->
-            <div id="couponStatusMsg" style="font-size:12px; margin-top:6px; display:none;"></div>
+            <div id="couponStatusMsg" style="font-size:12px; margin-bottom:8px; display:none;"></div>
 
-            <!-- Gợi ý mã có sẵn -->
-            <div style="margin-top:8px; font-size:11px; color:#64748B;">
-              <span>Gợi ý: </span>
-              <a href="javascript:void(0)" class="js-quick-coupon" data-code="TSPORT10" style="color:#D94C26; font-weight:700; text-decoration:underline; margin-right:6px;">TSPORT10 (-10%)</a>
-              <a href="javascript:void(0)" class="js-quick-coupon" data-code="GIAM100K" style="color:#D94C26; font-weight:700; text-decoration:underline; margin-right:6px;">GIAM100K (-100K)</a>
-              <a href="javascript:void(0)" class="js-quick-coupon" data-code="TRIAN50K" style="color:#D94C26; font-weight:700; text-decoration:underline;">TRIAN50K (-50K)</a>
+            <div style="font-size:11.5px; font-weight:700; color:#475569; margin-bottom:6px;">
+              Danh sách Voucher có thể chọn:
+            </div>
+            <div id="checkoutVoucherSelectList" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto;">
+              <!-- Render danh sách voucher để lựa chọn từ cart.js -->
             </div>
           </div>
 

@@ -12,6 +12,71 @@
   let isSubmitting = false;
   let appliedCoupon = null;
 
+  function loadSavedCouponFromStorage() {
+    const store = window.tsportStore;
+    if (!store) return;
+    const savedCode = localStorage.getItem("tsport_selected_coupon");
+    if (savedCode) {
+      const found = store.getCouponByCode(savedCode);
+      if (found && found.status === "ACTIVE") {
+        appliedCoupon = found;
+      }
+    }
+  }
+
+  function renderSelectableVoucherCards(containerId, subtotal) {
+    const store = window.tsportStore;
+    const container = document.getElementById(containerId);
+    if (!store || !container) return;
+
+    const today = new Date().toISOString().split("T")[0];
+    const activeCoupons = store.getCoupons({ status: "ACTIVE" }).filter(c => {
+      if (c.expires_at && c.expires_at < today) return false;
+      if (c.usage_limit && Number(c.used_count) >= Number(c.usage_limit)) return false;
+      return true;
+    });
+
+    if (activeCoupons.length === 0) {
+      container.innerHTML = `<div style="font-size:12px; color:#64748B;">Hiện chưa có mã voucher khả dụng.</div>`;
+      return;
+    }
+
+    const currentCode = appliedCoupon ? appliedCoupon.code.toUpperCase() : "";
+
+    container.innerHTML = activeCoupons.map(c => {
+      const isSelected = currentCode === c.code.toUpperCase();
+      const valRes = store.validateAndCalculateCoupon(c.code, subtotal);
+      const isEligible = valRes.valid;
+      const badgeLabel = c.discount_type === "PERCENT"
+        ? `-${c.discount_value}%`
+        : `-${formatMoney(c.discount_value)}`;
+
+      const neededMore = (c.min_order_value || 0) - subtotal;
+
+      return `
+        <div class="js-select-voucher-card" data-code="${escapeHtml(c.code)}" style="display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; transition:all 0.15s ease; background:${isSelected ? '#FFF7ED' : '#FFFFFF'}; border:1.5px solid ${isSelected ? '#D94C26' : '#E2E8F0'}; opacity:${isEligible ? '1' : '0.85'};">
+          <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+            <span style="background:${isSelected ? '#D94C26' : '#FFF1EB'}; color:${isSelected ? '#FFFFFF' : '#D94C26'}; font-weight:800; font-size:11px; padding:4px 7px; border-radius:6px; white-space:nowrap;">
+              ${escapeHtml(badgeLabel)}
+            </span>
+            <div style="min-width:0;">
+              <div style="font-size:12.5px; font-weight:800; color:#0F172A;">
+                ${escapeHtml(c.code)}
+                ${isEligible ? `<span style="color:#16A34A; font-weight:700; font-size:11px; margin-left:4px;">(-${formatMoney(valRes.discount_amount)})</span>` : ''}
+              </div>
+              <div style="font-size:11px; color:${isEligible ? '#64748B' : '#D97706'}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                ${isEligible ? escapeHtml(c.description || 'Đủ điều kiện áp dụng') : `Mua thêm ${formatMoney(Math.max(0, neededMore))} để áp dụng`}
+              </div>
+            </div>
+          </div>
+          <button type="button" style="border:none; border-radius:6px; padding:5px 10px; font-size:11px; font-weight:800; cursor:pointer; white-space:nowrap; background:${isSelected ? '#D94C26' : (isEligible ? '#FFF1EB' : '#F1F5F9')}; color:${isSelected ? '#FFFFFF' : (isEligible ? '#D94C26' : '#64748B')};">
+            ${isSelected ? '✓ Đang dùng' : 'Chọn'}
+          </button>
+        </div>
+      `;
+    }).join("");
+  }
+
   function updateCheckoutTotals() {
     const store = window.tsportStore;
     if (!store) return;
@@ -22,12 +87,14 @@
     const appliedTag = document.getElementById("appliedCouponTag");
     const discountAmountEl = document.getElementById("checkoutDiscountAmount");
     const msgEl = document.getElementById("couponStatusMsg");
+    const inputEl = document.getElementById("inputCheckoutCoupon");
 
     if (subtotalEl) subtotalEl.textContent = formatMoney(totals.subtotal);
 
     if (appliedCoupon) {
       const valRes = store.validateAndCalculateCoupon(appliedCoupon.code, totals.subtotal);
       if (valRes.valid) {
+        if (inputEl) inputEl.value = appliedCoupon.code;
         if (rowDiscount) rowDiscount.style.display = "flex";
         if (appliedTag) appliedTag.textContent = appliedCoupon.code;
         if (discountAmountEl) discountAmountEl.textContent = `-${formatMoney(valRes.discount_amount)}`;
@@ -38,7 +105,6 @@
           msgEl.textContent = valRes.message;
         }
       } else {
-        appliedCoupon = null;
         if (rowDiscount) rowDiscount.style.display = "none";
         if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
         if (msgEl) {
@@ -51,20 +117,22 @@
       if (rowDiscount) rowDiscount.style.display = "none";
       if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
     }
+
+    renderSelectableVoucherCards("checkoutVoucherSelectList", totals.subtotal);
   }
 
-  function handleApplyCoupon() {
+  function applyCouponByCode(rawCode, isCartPage = false) {
     const store = window.tsportStore;
-    const input = document.getElementById("inputCheckoutCoupon");
-    const msgEl = document.getElementById("couponStatusMsg");
-    if (!input || !store) return;
+    if (!store) return;
+    const msgEl = document.getElementById(isCartPage ? "cartCouponStatusMsg" : "couponStatusMsg");
+    const inputEl = document.getElementById(isCartPage ? "inputCartCoupon" : "inputCheckoutCoupon");
 
-    const code = input.value.trim().toUpperCase();
+    const code = String(rawCode || "").trim().toUpperCase();
     if (!code) {
       if (msgEl) {
         msgEl.style.display = "block";
         msgEl.style.color = "#DC2626";
-        msgEl.textContent = "Vui lòng nhập mã giảm giá!";
+        msgEl.textContent = "Vui lòng chọn hoặc nhập mã voucher!";
       }
       return;
     }
@@ -74,35 +142,58 @@
 
     if (res.valid) {
       appliedCoupon = res.coupon;
-      input.value = res.coupon.code;
+      localStorage.setItem("tsport_selected_coupon", res.coupon.code);
+      if (inputEl) inputEl.value = res.coupon.code;
+      renderTotals(totals);
       updateCheckoutTotals();
-      showToast(`Áp dụng thành công mã "${res.coupon.code}"!`, "success");
+      showToast(`Đã áp dụng voucher "${res.coupon.code}" (-${formatMoney(res.discount_amount)})!`, "success");
     } else {
-      appliedCoupon = null;
-      updateCheckoutTotals();
       if (msgEl) {
         msgEl.style.display = "block";
         msgEl.style.color = "#DC2626";
         msgEl.textContent = res.message;
       }
+      renderTotals(totals);
+      updateCheckoutTotals();
       showToast(res.message, "error");
     }
   }
 
+  function handleApplyCoupon() {
+    const input = document.getElementById("inputCheckoutCoupon");
+    applyCouponByCode(input ? input.value : "", false);
+  }
+
+  function handleApplyCartCoupon() {
+    const input = document.getElementById("inputCartCoupon");
+    applyCouponByCode(input ? input.value : "", true);
+  }
+
   function handleRemoveCoupon() {
     appliedCoupon = null;
-    const input = document.getElementById("inputCheckoutCoupon");
-    const msgEl = document.getElementById("couponStatusMsg");
-    if (input) input.value = "";
-    if (msgEl) {
-      msgEl.style.display = "none";
-      msgEl.textContent = "";
+    localStorage.removeItem("tsport_selected_coupon");
+    const inputCheckout = document.getElementById("inputCheckoutCoupon");
+    const inputCart = document.getElementById("inputCartCoupon");
+    const msgCheckout = document.getElementById("couponStatusMsg");
+    const msgCart = document.getElementById("cartCouponStatusMsg");
+    if (inputCheckout) inputCheckout.value = "";
+    if (inputCart) inputCart.value = "";
+    if (msgCheckout) {
+      msgCheckout.style.display = "none";
+      msgCheckout.textContent = "";
     }
+    if (msgCart) {
+      msgCart.style.display = "none";
+      msgCart.textContent = "";
+    }
+    const store = window.tsportStore;
+    if (store) renderTotals(store.getCartTotals());
     updateCheckoutTotals();
-    showToast("Đã hủy áp dụng mã giảm giá.", "info");
+    showToast("Đã bỏ chọn mã voucher giảm giá.", "info");
   }
 
   function initCartModule() {
+    loadSavedCouponFromStorage();
     renderCartPage();
     initCheckoutPage();
     bindCartEvents();
@@ -171,13 +262,47 @@
   }
 
   function renderTotals(totals) {
+    const store = window.tsportStore;
     const subtotalEl = document.getElementById("cartSubtotal");
     const grandTotalEl = document.getElementById("cartGrandTotal");
     const totalCountEl = document.getElementById("cartTotalCount");
+    const rowDiscountEl = document.getElementById("rowCartDiscount");
+    const tagEl = document.getElementById("cartAppliedCouponTag");
+    const discountAmountEl = document.getElementById("cartDiscountAmount");
+    const msgEl = document.getElementById("cartCouponStatusMsg");
+    const inputEl = document.getElementById("inputCartCoupon");
 
     if (subtotalEl) subtotalEl.textContent = formatMoney(totals.subtotal);
-    if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
     if (totalCountEl) totalCountEl.textContent = `${totals.totalItems} sản phẩm`;
+
+    if (store && appliedCoupon) {
+      const valRes = store.validateAndCalculateCoupon(appliedCoupon.code, totals.subtotal);
+      if (valRes.valid) {
+        if (inputEl) inputEl.value = appliedCoupon.code;
+        if (rowDiscountEl) rowDiscountEl.style.display = "flex";
+        if (tagEl) tagEl.textContent = appliedCoupon.code;
+        if (discountAmountEl) discountAmountEl.textContent = `-${formatMoney(valRes.discount_amount)}`;
+        if (grandTotalEl) grandTotalEl.textContent = formatMoney(valRes.final_total);
+        if (msgEl) {
+          msgEl.style.display = "block";
+          msgEl.style.color = "#16A34A";
+          msgEl.textContent = valRes.message;
+        }
+      } else {
+        if (rowDiscountEl) rowDiscountEl.style.display = "none";
+        if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
+        if (msgEl) {
+          msgEl.style.display = "block";
+          msgEl.style.color = "#DC2626";
+          msgEl.textContent = valRes.message;
+        }
+      }
+    } else {
+      if (rowDiscountEl) rowDiscountEl.style.display = "none";
+      if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
+    }
+
+    renderSelectableVoucherCards("cartVoucherSelectList", totals.subtotal);
 
     if (typeof window.updateHeaderCartBadge === "function") {
       window.updateHeaderCartBadge();
@@ -229,7 +354,7 @@
     const grandTotalEl = document.getElementById("checkoutGrandTotal");
     if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
 
-    // BIND SỰ KIỆN MÃ GIẢM GIÁ (COUPON)
+    // BIND SỰ KIỆN MÃ GIẢM GIÁ (COUPON) Ở TRANG CHECKOUT
     document.getElementById("btnApplyCoupon")?.addEventListener("click", handleApplyCoupon);
     document.getElementById("inputCheckoutCoupon")?.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
@@ -238,17 +363,6 @@
       }
     });
     document.getElementById("btnRemoveCoupon")?.addEventListener("click", handleRemoveCoupon);
-    document.querySelectorAll(".js-quick-coupon").forEach((el) => {
-      el.addEventListener("click", (e) => {
-        e.preventDefault();
-        const code = el.getAttribute("data-code");
-        const input = document.getElementById("inputCheckoutCoupon");
-        if (input && code) {
-          input.value = code;
-          handleApplyCoupon();
-        }
-      });
-    });
     updateCheckoutTotals();
 
     // XỬ LÝ SUBMIT ĐẶT HÀNG (KÈM CHỐNG BẤM LẶP & CHECK TỒN KHO)
@@ -290,6 +404,13 @@
     setTimeout(() => {
       try {
         const store = window.tsportStore;
+        const totals = store.getCartTotals();
+        let validCouponCode = "";
+        if (appliedCoupon) {
+          const check = store.validateAndCalculateCoupon(appliedCoupon.code, totals.subtotal);
+          if (check.valid) validCouponCode = appliedCoupon.code;
+        }
+
         // Gọi hàm tạo đơn hàng trong store (tự động kiểm tra và trừ tồn kho, kiểm tra & tính lại mã giảm giá)
         const order = store.createOrder({
           customer_name: name,
@@ -297,11 +418,14 @@
           address: addr,
           payment_method: payment,
           note,
-          coupon_code: appliedCoupon ? appliedCoupon.code : ""
+          coupon_code: validCouponCode
         });
 
+        // Xóa mã đã lưu sau khi đặt đơn thành công
+        appliedCoupon = null;
+        localStorage.removeItem("tsport_selected_coupon");
+
         // HIỂN THỊ POPUP ĐẶT HÀNG THÀNH CÔNG
-        const successModal = document.getElementById("modalOrderSuccess");
         const codeEl = document.getElementById("successOrderCode");
         const totalEl = document.getElementById("successOrderTotal");
 
@@ -333,11 +457,33 @@
     }, 300);
   }
 
-  // 4. BẮT CÁC SỰ KIỆN TRONG BẢNG GIỎ HÀNG
+  // 4. BẮT CÁC SỰ KIỆN TRONG BẢNG GIỎ HÀNG & LỰA CHỌN VOUCHER
   function bindCartEvents() {
+    document.getElementById("btnApplyCartCoupon")?.addEventListener("click", handleApplyCartCoupon);
+    document.getElementById("inputCartCoupon")?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleApplyCartCoupon();
+      }
+    });
+    document.getElementById("btnRemoveCartCoupon")?.addEventListener("click", handleRemoveCoupon);
+
     document.addEventListener("click", (e) => {
       const store = window.tsportStore;
       if (!store) return;
+
+      // Bấm chọn hoặc bỏ chọn thẻ Voucher trong danh sách (ở Giỏ hàng hoặc Checkout)
+      const voucherCard = e.target.closest(".js-select-voucher-card");
+      if (voucherCard) {
+        const code = voucherCard.dataset.code;
+        if (appliedCoupon && appliedCoupon.code.toUpperCase() === code.toUpperCase()) {
+          handleRemoveCoupon();
+        } else {
+          const isCart = Boolean(voucherCard.closest("#cartVoucherSelectList"));
+          applyCouponByCode(code, isCart);
+        }
+        return;
+      }
 
       // Nút Tăng số lượng (+)
       const plusBtn = e.target.closest(".js-cart-plus");
