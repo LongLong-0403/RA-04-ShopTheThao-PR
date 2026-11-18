@@ -231,29 +231,295 @@
 }
 
 /* ==========================================
-   2. HERO BANNER FULL-WIDTH (ẢNH 1)
+   2. HERO BANNER 3D LUÂN CHUYỂN TỪNG ẢNH SẢN PHẨM
    ========================================== */
-.vnb-hero-banner-wrap {
+.vnb-hero-3d-section {
   width: 100%;
-  background: #430A04;
+  background: radial-gradient(circle at 50% 45%, #7C2D12 0%, #2A0E06 58%, #0F172A 100%);
+  padding: 24px 0 28px 0;
+  margin-bottom: 24px;
   position: relative;
   overflow: hidden;
-  margin-bottom: 24px;
+  border-bottom: 3px solid #E95211;
 }
 
-.vnb-hero-banner-link {
-  display: block;
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
+.vnb-hero-3d-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  text-align: center;
 }
 
-.vnb-hero-banner-img {
+.vnb-hero-3d-badge {
+  background: linear-gradient(90deg, #E95211, #F59E0B);
+  color: #FFFFFF;
+  font-size: 11.5px;
+  font-weight: 900;
+  padding: 5px 14px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(233, 82, 17, 0.4);
+}
+
+.vnb-hero-3d-sub {
+  font-size: 12.5px;
+  color: #FED7AA;
+  font-weight: 500;
+}
+
+.vnb-hero-3d-viewport {
+  position: relative;
   width: 100%;
-  height: auto;
-  max-height: 460px;
-  object-fit: cover;
-  display: block;
+  height: 390px;
+  perspective: 1400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.vnb-hero-3d-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vnb-3d-slide {
+  position: absolute;
+  width: 480px;
+  max-width: 86vw;
+  height: 350px;
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition:
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.8s ease,
+    border-color 0.4s ease;
+  will-change: transform, opacity;
+}
+
+/* VỊ TRÍ 3D CỦA TỪNG THẺ TRONG VÒNG XOAY */
+.vnb-3d-slide[data-pos="0"] {
+  transform: translate3d(0, 0, 110px) rotateY(0deg) scale(1);
+  opacity: 1;
+  z-index: 10;
+  border-color: #FCAF17;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 28px rgba(233, 82, 17, 0.55);
+}
+
+.vnb-3d-slide[data-pos="1"] {
+  transform: translate3d(68%, 0, -70px) rotateY(-36deg) scale(0.84);
+  opacity: 0.85;
+  z-index: 7;
+}
+
+.vnb-3d-slide[data-pos="-1"] {
+  transform: translate3d(-68%, 0, -70px) rotateY(36deg) scale(0.84);
+  opacity: 0.85;
+  z-index: 7;
+}
+
+.vnb-3d-slide[data-pos="2"] {
+  transform: translate3d(118%, 0, -240px) rotateY(-52deg) scale(0.68);
+  opacity: 0.42;
+  z-index: 4;
+}
+
+.vnb-3d-slide[data-pos="-2"] {
+  transform: translate3d(-118%, 0, -240px) rotateY(52deg) scale(0.68);
+  opacity: 0.42;
+  z-index: 4;
+}
+
+.vnb-3d-slide[data-pos="hidden"] {
+  transform: translate3d(0, 0, -420px) rotateY(180deg) scale(0.45);
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Nội dung bên trong mỗi thẻ ảnh sản phẩm 3D */
+.vnb-3d-slide-media {
+  position: relative;
+  width: 100%;
+  height: 235px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.vnb-3d-slide-media img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+}
+
+.vnb-3d-slide[data-pos="0"]:hover .vnb-3d-slide-media img {
+  transform: scale(1.07);
+}
+
+.vnb-3d-slide-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #E95211;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(233, 82, 17, 0.35);
+}
+
+.vnb-3d-slide-step {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #FCAF17;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.vnb-3d-slide-info {
+  flex: 1;
+  background: linear-gradient(180deg, #FFFBF8 0%, #FFFFFF 100%);
+  border-top: 1px solid #FED7AA;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.vnb-3d-slide-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0F172A;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vnb-3d-slide-price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.vnb-3d-slide-price {
+  font-size: 17px;
+  font-weight: 900;
+  color: #E11D48;
+}
+
+.vnb-3d-slide-oldprice {
+  font-size: 12px;
+  color: #94A3B8;
+  text-decoration: line-through;
+}
+
+.vnb-3d-slide-cta {
+  background: #E95211;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 800;
+  padding: 9px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba(233, 82, 17, 0.3);
+}
+
+.vnb-3d-slide-cta:hover {
+  background: #C2410C;
+  transform: translateY(-1px);
+}
+
+/* Nút điều hướng 3D trái / phải */
+.vnb-3d-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid #FCAF17;
+  color: #E95211;
+  font-size: 24px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 25;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  transition: all 0.2s ease;
+}
+
+.vnb-3d-nav-btn:hover {
+  background: #E95211;
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.vnb-3d-nav-btn.prev {
+  left: 12px;
+}
+
+.vnb-3d-nav-btn.next {
+  right: 12px;
+}
+
+/* Dấu chấm chỉ báo thứ tự slide 3D */
+.vnb-hero-3d-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.vnb-hero-3d-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.vnb-hero-3d-dot.is-active {
+  width: 32px;
+  background: #FCAF17;
+  box-shadow: 0 0 10px rgba(252, 175, 23, 0.8);
 }
 
 /* ==========================================

@@ -11,6 +11,75 @@
   let searchDebounceTimer = null;
   let currentNewTab = "ALL";
   let currentNewOffset = 0;
+  let currentHero3DIndex = 0;
+  let hero3DTimer = null;
+
+  // Danh sách ảnh sản phẩm luân chuyển 3D trên Banner chính
+  const VNB_HERO_3D_PRODUCTS = [
+    {
+      id: 1,
+      tag: "SIÊU PHẨM VNB 2026",
+      name: "Vợt Cầu Lông VNB V200 Xanh Chính Hãng",
+      image: "assets/home/racket-v200-xanh.jpg",
+      price_text: "529.000 ₫",
+      old_price_text: "650.000 ₫",
+      link: "pages/product-detail.html?id=1"
+    },
+    {
+      id: 2,
+      tag: "HOT TRAINING 150G",
+      name: "Vợt Cầu Lông VNB Carbon Training 150g Chính Hãng",
+      image: "assets/home/racket-carbon-training.jpg",
+      price_text: "590.000 ₫",
+      old_price_text: "690.000 ₫",
+      link: "pages/product-detail.html?id=2"
+    },
+    {
+      id: 3,
+      tag: "BEST SELLER",
+      name: "Vợt Cầu Lông VNB V200i Hồng Chính Hãng",
+      image: "assets/home/racket-v200i-hong.jpg",
+      price_text: "529.000 ₫",
+      old_price_text: "650.000 ₫",
+      link: "pages/product-detail.html?id=3"
+    },
+    {
+      id: 1,
+      tag: "GIẢM SÂU -38%",
+      name: "Vợt Cầu Lông VNB V88 Xanh Chính Hãng",
+      image: "assets/home/racket-v88-xanh.jpg",
+      price_text: "395.000 ₫",
+      old_price_text: "638.000 ₫",
+      link: "pages/product-detail.html?id=1"
+    },
+    {
+      id: 2,
+      tag: "CHÍNH HÃNG 100%",
+      name: "Vợt Cầu Lông VNB V200 Đỏ Chính Hãng",
+      image: "assets/home/racket-v200-do.jpg",
+      price_text: "529.000 ₫",
+      old_price_text: "650.000 ₫",
+      link: "pages/product-detail.html?id=2"
+    },
+    {
+      id: 3,
+      tag: "SALE OFF -35%",
+      name: "Vợt Cầu Lông Kumpoo Power Control K520 Pro",
+      image: "assets/home/racket-kumpoo-k520.jpg",
+      price_text: "400.000 ₫",
+      old_price_text: "619.000 ₫",
+      link: "pages/product-detail.html?id=3"
+    },
+    {
+      id: 1,
+      tag: "LIMITED COLLECTION",
+      name: "Bộ Sưu Tập Venson × One Piece New Collection",
+      image: "assets/home/hero-banner-1.jpg",
+      price_text: "579.000 ₫",
+      old_price_text: "690.000 ₫",
+      link: "pages/shop.html?sport=1"
+    }
+  ];
 
   // Danh sách sản phẩm chuẩn Ảnh 2 ("Sản phẩm mới")
   const VNB_NEW_SHOWCASE = [
@@ -127,12 +196,128 @@
   function initHome() {
     updateHeaderUser();
     updateCartBadge();
+    initHero3DCarousel();
     renderNewProductsSection();
     renderMayLikeSection();
     renderUsedProducts();
     renderRecentlyViewed();
     bindHomeEvents();
     initSearchDebounce();
+  }
+
+  // 0. KHỞI TẠO & TỰ ĐỘNG LUÂN CHUYỂN BANNER SẢN PHẨM 3D TỪNG ẢNH MỘT
+  function initHero3DCarousel() {
+    const stage = document.getElementById("hero3DStage");
+    const dotsWrap = document.getElementById("hero3DDots");
+    const viewport = document.getElementById("hero3DViewport");
+    if (!stage || !dotsWrap) return;
+
+    const total = VNB_HERO_3D_PRODUCTS.length;
+
+    // Tạo sẵn các thẻ DOM để CSS 3D transition mượt mà khi đổi data-pos
+    stage.innerHTML = VNB_HERO_3D_PRODUCTS.map((item, idx) => `
+      <div class="vnb-3d-slide" data-index="${idx}" data-pos="hidden">
+        <div class="vnb-3d-slide-media">
+          <span class="vnb-3d-slide-tag">${escapeHtml(item.tag)}</span>
+          <span class="vnb-3d-slide-step">${idx + 1} / ${total}</span>
+          <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" />
+        </div>
+        <div class="vnb-3d-slide-info">
+          <div style="min-width:0; flex:1;">
+            <h3 class="vnb-3d-slide-title" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</h3>
+            <div class="vnb-3d-slide-price-wrap">
+              <span class="vnb-3d-slide-price">${escapeHtml(item.price_text)}</span>
+              ${item.old_price_text ? `<span class="vnb-3d-slide-oldprice">${escapeHtml(item.old_price_text)}</span>` : ''}
+            </div>
+          </div>
+          <a href="${escapeHtml(item.link)}" class="vnb-3d-slide-cta js-3d-cta-link">Mua ngay →</a>
+        </div>
+      </div>
+    `).join("");
+
+    dotsWrap.innerHTML = VNB_HERO_3D_PRODUCTS.map((_, idx) => `
+      <button type="button" class="vnb-hero-3d-dot ${idx === 0 ? 'is-active' : ''}" data-index="${idx}" title="Ảnh sản phẩm ${idx + 1}"></button>
+    `).join("");
+
+    function updateHero3DPositions() {
+      const slides = stage.querySelectorAll(".vnb-3d-slide");
+      slides.forEach((slide, idx) => {
+        let diff = idx - currentHero3DIndex;
+        if (diff > total / 2) diff -= total;
+        if (diff < -total / 2) diff += total;
+
+        let pos = "hidden";
+        if (diff === 0) pos = "0";
+        else if (diff === 1) pos = "1";
+        else if (diff === -1) pos = "-1";
+        else if (diff === 2) pos = "2";
+        else if (diff === -2) pos = "-2";
+
+        slide.setAttribute("data-pos", pos);
+      });
+
+      dotsWrap.querySelectorAll(".vnb-hero-3d-dot").forEach((dot, idx) => {
+        dot.classList.toggle("is-active", idx === currentHero3DIndex);
+      });
+    }
+
+    function stepHero3D(delta) {
+      currentHero3DIndex = (currentHero3DIndex + delta + total) % total;
+      updateHero3DPositions();
+    }
+
+    function startAutoRotate() {
+      stopAutoRotate();
+      hero3DTimer = setInterval(() => {
+        stepHero3D(1);
+      }, 2600);
+    }
+
+    function stopAutoRotate() {
+      if (hero3DTimer) {
+        clearInterval(hero3DTimer);
+        hero3DTimer = null;
+      }
+    }
+
+    updateHero3DPositions();
+    startAutoRotate();
+
+    document.getElementById("btnHero3DPrev")?.addEventListener("click", () => {
+      stepHero3D(-1);
+      startAutoRotate();
+    });
+
+    document.getElementById("btnHero3DNext")?.addEventListener("click", () => {
+      stepHero3D(1);
+      startAutoRotate();
+    });
+
+    dotsWrap.addEventListener("click", (e) => {
+      const dot = e.target.closest(".vnb-hero-3d-dot");
+      if (!dot) return;
+      currentHero3DIndex = Number(dot.dataset.index) || 0;
+      updateHero3DPositions();
+      startAutoRotate();
+    });
+
+    stage.addEventListener("click", (e) => {
+      if (e.target.closest(".js-3d-cta-link")) return;
+      const slide = e.target.closest(".vnb-3d-slide");
+      if (!slide) return;
+      const clickedIdx = Number(slide.dataset.index);
+      if (clickedIdx === currentHero3DIndex) {
+        const item = VNB_HERO_3D_PRODUCTS[clickedIdx];
+        if (item && item.link) window.location.href = item.link;
+      } else {
+        currentHero3DIndex = clickedIdx;
+        updateHero3DPositions();
+        startAutoRotate();
+      }
+    });
+
+    viewport?.addEventListener("mouseenter", stopAutoRotate);
+    viewport?.addEventListener("mouseleave", startAutoRotate);
   }
 
   // 1. CẬP NHẬT ICON TÀI KHOẢN & GIỎ HÀNG TRÊN HEADER CHUẨN ẢNH 1

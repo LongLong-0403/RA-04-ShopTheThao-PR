@@ -100,16 +100,28 @@
   </header>
 
   <!-- ==========================================================================
-       2. HERO BANNER FULL-WIDTH: VENSON × ONE PIECE NEW COLLECTION (ẢNH 1)
+       2. HERO BANNER 3D LUÂN CHUYỂN TỪNG ẢNH SẢN PHẨM (3D PRODUCT CAROUSEL)
        ========================================================================== -->
-  <section class="vnb-hero-banner-wrap">
-    <a href="pages/shop.html" class="vnb-hero-banner-link">
-      <img
-        src="assets/home/hero-banner-1.jpg"
-        alt="Venson x One Piece New Collection"
-        class="vnb-hero-banner-img"
-      />
-    </a>
+  <section class="vnb-hero-3d-section" id="homeHero3DSection">
+    <div class="container">
+      <div class="vnb-hero-3d-header">
+        <span class="vnb-hero-3d-badge">⚡ BỘ SƯU TẬP SẢN PHẨM NỔI BẬT 3D</span>
+        <span class="vnb-hero-3d-sub">Tự động luân chuyển 3D từng sản phẩm • Bấm vào ảnh bên cạnh để xoay hoặc xem chi tiết</span>
+      </div>
+
+      <div class="vnb-hero-3d-viewport" id="hero3DViewport">
+        <button type="button" class="vnb-3d-nav-btn prev" id="btnHero3DPrev" title="Ảnh sản phẩm trước">‹</button>
+
+        <div class="vnb-hero-3d-stage" id="hero3DStage">
+          <!-- Các thẻ ảnh sản phẩm 3D được khởi tạo và luân chuyển tự động từ home.js -->
+        </div>
+
+        <button type="button" class="vnb-3d-nav-btn next" id="btnHero3DNext" title="Ảnh sản phẩm tiếp theo">›</button>
+      </div>
+
+      <!-- Dấu chấm chỉ báo thứ tự ảnh đang hiển thị -->
+      <div class="vnb-hero-3d-dots" id="hero3DDots"></div>
+    </div>
   </section>
 
   <!-- ==========================================================================
