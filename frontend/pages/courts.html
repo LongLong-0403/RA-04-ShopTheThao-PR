@@ -49,16 +49,14 @@
 
     <!-- THANH MENU CHÍNH -->
     <nav class="tsport-nav-bar">
-      <div class="container" style="display:flex; gap:16px; align-items:center; overflow-x:auto;">
+      <div class="container" style="display:flex; gap:20px; align-items:center; overflow-x:auto;">
         <a href="../index.html" class="tsport-nav-link">Trang chủ</a>
         <a href="shop.html" class="tsport-nav-link">Tất cả sản phẩm</a>
-        <a href="shop.html?sport=1" class="tsport-nav-link">🏸 Cầu lông</a>
-        <a href="shop.html?sport=2" class="tsport-nav-link">⚽ Bóng đá</a>
-        <a href="shop.html?sport=3" class="tsport-nav-link">🎾 Tennis</a>
-        <a href="shop.html?sport=4" class="tsport-nav-link">🏓 Pickleball</a>
         <a href="shop.html?condition=CU" class="tsport-nav-link" style="color:#D94C26; font-weight:700;">♻️ Đồ cũ minh bạch</a>
-        <a href="courts.html" class="tsport-nav-link is-active">🏟️ Đặt sân thể thao</a>
+        <a href="courts.html" class="tsport-nav-link is-active">🏟️ Đặt sân online</a>
         <a href="community.html" class="tsport-nav-link">👥 Kèo giao lưu</a>
+        <a href="admin-buyback.html" class="tsport-nav-link">♻️ Thu mua đồ cũ</a>
+        <a href="admin-discounts.html" class="tsport-nav-link" style="color:#2563EB; font-weight:700;">🏷️ Mã giảm giá</a>
       </div>
     </nav>
   </header>
@@ -73,7 +71,7 @@
           <span>Dịch Vụ Đặt Sân &amp; Quản Lý Ca Chơi Thể Thao</span>
         </h1>
         <div class="tsport-page-subtitle">
-          Hệ thống đặt sân đa môn: Cầu lông, Bóng đá, Tennis, Pickleball với khung giờ và giá niêm yết cố định.
+          Khám phá danh sách cụm sân chất lượng cao, giữ chỗ nhanh chóng với bảng giá niêm yết cố định.
         </div>
       </div>
     </div>
@@ -82,7 +80,7 @@
     <div class="tsport-catalog-tabs">
       <button type="button" class="tsport-catalog-tab-btn is-active" id="tabBtnCustomer" onclick="switchCourtTab('customer')">
         <span>👤</span>
-        <span>1. Dành Cho Khách Hàng (Đặt sân &amp; Xem trạng thái)</span>
+        <span>1. Dành Cho Khách Hàng (Tìm sân &amp; Đặt lịch)</span>
       </button>
       <button type="button" class="tsport-catalog-tab-btn" id="tabBtnAdmin" onclick="switchCourtTab('admin')">
         <span>🛡️</span>
@@ -94,7 +92,70 @@
          TAB 1: DÀNH CHO KHÁCH HÀNG (ĐẶT SÂN & XEM TRẠNG THÁI)
          ====================================================================== -->
     <div id="courtPaneCustomer" class="tsport-tab-pane is-active">
-      <div class="tsport-booking-layout">
+
+      <!-- 1. THANH CHỌN MÔN THỂ THAO CHUẨN FIGMA (IMAGE 2) -->
+      <div class="tsport-sports-tab-bar" style="border-radius:8px; margin-bottom:16px;">
+        <div class="tsport-sports-tabs" id="courtSportsTabs">
+          <button type="button" class="tsport-sport-tab is-active" data-sport-id="ALL">
+            <span class="tsport-sport-tab-icon">🏆</span>
+            <span class="tsport-sport-tab-text">TẤT CẢ</span>
+          </button>
+          <button type="button" class="tsport-sport-tab" data-sport-id="1">
+            <span class="tsport-sport-tab-icon">🏸</span>
+            <span class="tsport-sport-tab-text">CẦU LÔNG</span>
+          </button>
+          <button type="button" class="tsport-sport-tab" data-sport-id="2">
+            <span class="tsport-sport-tab-icon">⚽</span>
+            <span class="tsport-sport-tab-text">BÓNG ĐÁ</span>
+          </button>
+          <button type="button" class="tsport-sport-tab" data-sport-id="3">
+            <span class="tsport-sport-tab-icon">🎾</span>
+            <span class="tsport-sport-tab-text">TENNIS</span>
+          </button>
+          <button type="button" class="tsport-sport-tab" data-sport-id="4">
+            <span class="tsport-sport-tab-icon">🏓</span>
+            <span class="tsport-sport-tab-text">PICKLEBALL</span>
+          </button>
+          <button type="button" class="tsport-sport-tab" data-sport-id="6">
+            <span class="tsport-sport-tab-icon">🏓</span>
+            <span class="tsport-sport-tab-text">BÓNG BÀN</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- THANH TÌM KIẾM NHANH CỤM SÂN & BỘ LỌC -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+        <div style="position:relative; flex:1; max-width:500px;">
+          <input
+            type="text"
+            id="courtSearchInput"
+            class="form-control"
+            placeholder="🔍 Tìm cụm sân theo tên (Muse, NHF...), địa chỉ (Ba Đình, Tây Hồ, Cầu Giấy...)"
+            style="padding-left:38px; border-radius:24px; font-size:13px;"
+          />
+        </div>
+        <div id="courtCountLabel" style="font-size:13px; font-weight:700; color:#64748B;">
+          Đang hiển thị cụm sân
+        </div>
+      </div>
+
+      <!-- 2. LƯỚI KHUNG ẢNH CÁC CỤM SÂN (IMAGE 1 CHUẨN THIẾT KẾ) -->
+      <div class="tsport-court-grid" id="customerCourtCardsGrid">
+        <!-- Render động từ courts.js -->
+      </div>
+
+      <!-- 3. KHU VỰC FORM ĐẶT SÂN & LỊCH ĐÃ ĐẶT -->
+      <div id="bookingFormSection" style="margin-top:28px; padding-top:20px; border-top:2px dashed #E2E8F0;">
+        <div style="margin-bottom:16px;">
+          <h2 style="font-size:18px; font-weight:800; color:#0F172A; margin:0;">
+            📝 2. Chọn Khung Giờ &amp; Gửi Yêu Cầu Đặt Sân
+          </h2>
+          <div style="font-size:12px; color:#64748B; margin-top:4px;">
+            Nhấp <strong>"ĐẶT LỊCH"</strong> ở bất kỳ cụm sân nào phía trên hoặc chọn trực tiếp bên dưới.
+          </div>
+        </div>
+
+        <div class="tsport-booking-layout">
         
         <!-- FORM ĐẶT SÂN CỦA KHÁCH -->
         <div class="tsport-booking-card">
@@ -182,6 +243,7 @@
 
       </div>
     </div>
+  </div>
 
     <!-- ======================================================================
          TAB 2: DÀNH CHO ADMIN (TẠO SÂN, CA GIÁ CỐ ĐỊNH & DUYỆT YÊU CẦU)

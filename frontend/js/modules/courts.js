@@ -7,15 +7,103 @@
 
 (function () {
   let selectedSlotId = null;
+  let currentSportFilter = "ALL";
+  let currentSearchKeyword = "";
 
   function initCourtsModule() {
     renderBookingSportOptions();
     renderBookingCourts();
     renderBookingSlots();
+    renderCustomerCourtCards();
     renderMyBookings();
     renderAdminBookingRequests();
     renderAdminCourtsAndSlots();
     bindEvents();
+  }
+
+  // 0. RENDER LƯỚI KHUNG ẢNH CỤM SÂN (IMAGE 1 CHUẨN THIẾT KẾ)
+  function renderCustomerCourtCards() {
+    const grid = document.getElementById("customerCourtCardsGrid");
+    const countLabel = document.getElementById("courtCountLabel");
+    const store = window.tsportStore;
+    if (!grid || !store) return;
+
+    let courts = store.getCourts();
+    if (currentSportFilter && currentSportFilter !== "ALL") {
+      courts = courts.filter(c => c.sport_id === Number(currentSportFilter));
+    }
+
+    if (currentSearchKeyword) {
+      courts = courts.filter(c => 
+        (c.name && c.name.toLowerCase().includes(currentSearchKeyword)) ||
+        (c.address && c.address.toLowerCase().includes(currentSearchKeyword)) ||
+        (c.sport_name && c.sport_name.toLowerCase().includes(currentSearchKeyword))
+      );
+    }
+
+    if (countLabel) {
+      countLabel.textContent = `Đang hiển thị ${courts.length} cụm sân`;
+    }
+
+    if (courts.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: #fff; border-radius: 12px; border: 1px dashed #CBD5E1;">
+          <div style="font-size: 36px; margin-bottom: 8px;">🏟️</div>
+          <h3 style="font-size: 16px; font-weight: 800; color: #1E293B;">Không tìm thấy cụm sân phù hợp</h3>
+          <p style="font-size: 13px; color: #64748B;">Vui lòng thử chọn môn thể thao khác hoặc xóa từ khóa tìm kiếm.</p>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = courts.map(c => {
+      const rating = c.rating ? Number(c.rating).toFixed(1) : "5.0";
+      const distance = c.distance || "150m";
+      const hours = c.opening_hours || "06:00 - 23:00";
+      const img = c.image_url || "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800";
+      const logo = c.logo_url || "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120";
+
+      return `
+        <div class="tsport-court-card" data-court-id="${c.id}" data-sport-id="${c.sport_id}">
+          <div class="tsport-court-media">
+            <img src="${escapeHtml(img)}" alt="${escapeHtml(c.name)}" loading="lazy" />
+            
+            <div class="tsport-court-overlay-top-left">
+              <span class="tsport-court-badge-rating">⭐ ${rating}</span>
+              <span class="tsport-court-badge-type">Đơn ngày</span>
+              <span class="tsport-court-badge-event">Sự kiện</span>
+            </div>
+
+            <div class="tsport-court-overlay-top-right">
+              <button type="button" class="tsport-court-btn-round js-btn-court-fav" title="Yêu thích">🤍</button>
+              <button type="button" class="tsport-court-btn-round js-btn-court-map" data-court-name="${escapeHtml(c.name)}" data-court-addr="${escapeHtml(c.address || '')}" title="Chỉ đường">↗</button>
+            </div>
+          </div>
+
+          <div class="tsport-court-body">
+            <img class="tsport-court-avatar" src="${escapeHtml(logo)}" alt="Logo" onerror="this.src='https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120'" />
+            <div class="tsport-court-info">
+              <h3 class="tsport-court-title" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</h3>
+              <div class="tsport-court-meta" title="${escapeHtml(c.address || '')}">
+                <span class="tsport-court-distance">[${escapeHtml(distance)}]</span>
+                <span>${escapeHtml(c.address || '')}</span>
+              </div>
+              <div class="tsport-court-hours">
+                <span>🕒</span>
+                <span>${escapeHtml(hours)}</span>
+              </div>
+            </div>
+
+            <div class="tsport-court-action">
+              ${c.has_discount ? `<span class="tsport-court-promo-badge">${escapeHtml(c.discount_label || 'Ưu đãi')}</span>` : ''}
+              <button type="button" class="tsport-btn-book-court js-btn-book-court" data-court-id="${c.id}" data-sport-id="${c.sport_id}">
+                ĐẶT LỊCH
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
   }
 
   // 1. RENDER DROPDOWN MÔN CHO FORM ĐẶT SÂN
@@ -241,6 +329,78 @@
 
   // GẮN CÁC SỰ KIỆN TƯƠNG TÁC
   function bindEvents() {
+    // 1. Tab chọn môn thể thao (Image 2 style)
+    const sportsTabs = document.querySelectorAll("#courtSportsTabs .tsport-sport-tab");
+    sportsTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        sportsTabs.forEach(t => t.classList.remove("is-active"));
+        tab.classList.add("is-active");
+        currentSportFilter = tab.dataset.sportId;
+        renderCustomerCourtCards();
+      });
+    });
+
+    // 2. Ô tìm kiếm cụm sân
+    const searchInput = document.getElementById("courtSearchInput");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        currentSearchKeyword = e.target.value.trim().toLowerCase();
+        renderCustomerCourtCards();
+      });
+    }
+
+    // 3. Xử lý tương tác trên Lưới cụm sân (ĐẶT LỊCH, Thả tim, Chỉ đường)
+    document.addEventListener("click", (e) => {
+      const bookBtn = e.target.closest(".js-btn-book-court");
+      if (bookBtn) {
+        const courtId = Number(bookBtn.dataset.courtId);
+        const sportId = Number(bookBtn.dataset.sportId);
+
+        const sportSelect = document.getElementById("bookingSportSelect");
+        const courtSelect = document.getElementById("bookingCourtSelect");
+
+        if (sportSelect) {
+          sportSelect.value = sportId;
+          renderBookingCourts();
+        }
+        if (courtSelect) {
+          courtSelect.value = courtId;
+          renderBookingSlots();
+        }
+
+        const formSection = document.getElementById("bookingFormSection");
+        if (formSection) {
+          formSection.scrollIntoView({ behavior: "smooth", block: "start" });
+          formSection.style.transition = "background 0.5s ease";
+          formSection.style.background = "#FFF7ED";
+          setTimeout(() => {
+            formSection.style.background = "transparent";
+          }, 1500);
+        }
+        if (typeof showToast === "function") {
+          showToast(`Đã chọn sân! Vui lòng chọn ca chơi & gửi yêu cầu.`, "info");
+        }
+      }
+
+      const favBtn = e.target.closest(".js-btn-court-fav");
+      if (favBtn) {
+        if (favBtn.textContent === "🤍") {
+          favBtn.textContent = "❤️";
+          if (typeof showToast === "function") showToast("Đã lưu cụm sân vào danh sách yêu thích!", "success");
+        } else {
+          favBtn.textContent = "🤍";
+          if (typeof showToast === "function") showToast("Đã bỏ lưu yêu thích.", "info");
+        }
+      }
+
+      const mapBtn = e.target.closest(".js-btn-court-map");
+      if (mapBtn) {
+        const name = mapBtn.dataset.courtName || "Sân";
+        const addr = mapBtn.dataset.courtAddr || "";
+        if (typeof showToast === "function") showToast(`Chỉ đường tới: ${name} (${addr})`, "info");
+      }
+    });
+
     // Thay đổi môn ở form đặt sân -> cập nhật danh sách sân & ca
     document.getElementById("bookingSportSelect")?.addEventListener("change", () => {
       renderBookingCourts();

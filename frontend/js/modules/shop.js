@@ -123,6 +123,14 @@
     const grid = document.getElementById("shopProductGrid");
     if (!grid) return;
 
+    // Đồng bộ trạng thái active của thanh tab môn thể thao (Image 2 style)
+    const urlFilters = getFiltersFromUrl();
+    const curSport = urlFilters.sport_id || "ALL";
+    const sportsTabs = document.querySelectorAll("#shopSportsTabs .tsport-sport-tab");
+    sportsTabs.forEach(tab => {
+      tab.classList.toggle("is-active", String(tab.dataset.sportId) === String(curSport) || (curSport === "ALL" && tab.dataset.sportId === "ALL"));
+    });
+
     // 1. Hiển thị TRẠNG THÁI ĐANG TẢI (Loading Skeleton)
     renderLoadingState(grid);
 
@@ -398,6 +406,20 @@
     });
     btnCloseMobile?.addEventListener("click", () => {
       sidebar?.classList.remove("is-open");
+    });
+
+    // Bắt sự kiện click trên thanh tab môn thể thao (Image 2 style)
+    const sportsTabs = document.querySelectorAll("#shopSportsTabs .tsport-sport-tab");
+    sportsTabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        sportsTabs.forEach(t => t.classList.remove("is-active"));
+        tab.classList.add("is-active");
+        const sportVal = tab.dataset.sportId;
+        updateUrlParams({ sport: sportVal, page: null });
+        const radio = document.querySelector(`input[name="filterSportRadio"][value="${sportVal}"]`);
+        if (radio) radio.checked = true;
+        loadProductsFromUrl();
+      });
     });
 
     // 2. Bắt sự kiện thay đổi radio môn / danh mục / thương hiệu / tình trạng / khoảng giá

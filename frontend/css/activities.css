@@ -172,3 +172,210 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   LƯỚI KHUNG ẢNH CỤM SÂN THỂ THAO (COURT CARDS GRID - CHUẨN ẢNH NGƯỜI DÙNG)
+   ========================================================================== */
+.tsport-court-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 32px;
+}
+@media (max-width: 1024px) {
+  .tsport-court-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .tsport-court-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tsport-court-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.tsport-court-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.1);
+  border-color: #CBD5E1;
+}
+
+.tsport-court-media {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  background: #0F172A;
+  overflow: hidden;
+}
+.tsport-court-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+  display: block;
+}
+.tsport-court-card:hover .tsport-court-media img {
+  transform: scale(1.05);
+}
+
+.tsport-court-overlay-top-left {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+.tsport-court-badge-rating {
+  background: rgba(255, 255, 255, 0.96);
+  color: #065F46;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.tsport-court-badge-type {
+  background: #10B981;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.tsport-court-badge-event {
+  background: #E879F9;
+  color: #701A75;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.tsport-court-overlay-top-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 2;
+}
+.tsport-court-btn-round {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.15s ease, background 0.15s ease;
+  color: #0F172A;
+}
+.tsport-court-btn-round:hover {
+  transform: scale(1.1);
+  background: #FFFFFF;
+}
+
+.tsport-court-body {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+}
+.tsport-court-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid #E2E8F0;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #F8FAFC;
+}
+.tsport-court-info {
+  flex: 1;
+  min-width: 0;
+}
+.tsport-court-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #064E3B;
+  margin: 0 0 3px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tsport-court-meta {
+  font-size: 11.5px;
+  color: #64748B;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tsport-court-distance {
+  color: #EA580C;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.tsport-court-hours {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.tsport-court-action {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.tsport-court-promo-badge {
+  background: #EF4444;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.tsport-btn-book-court {
+  background: #E58A1F;
+  color: #FFFFFF;
+  border: none;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+.tsport-btn-book-court:hover {
+  background: #D97706;
+  transform: translateY(-1px);
+}

@@ -241,3 +241,59 @@
   font-weight: 700;
   color: var(--tsport-orange);
 }
+
+/* ==========================================================================
+   THANH TAB CÁC MÔN THỂ THAO (SPORTS CATEGORY TABS CHUẨN FIGMA)
+   ========================================================================== */
+.tsport-sports-tab-bar {
+  background: #FFFFFF;
+  border-bottom: 2px solid #E2E8F0;
+  margin-bottom: 24px;
+}
+.tsport-sports-tabs {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 4px;
+}
+.tsport-sports-tabs::-webkit-scrollbar {
+  display: none;
+}
+.tsport-sport-tab {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 12px 12px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.tsport-sport-tab-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+.tsport-sport-tab-text {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #1E293B;
+  text-transform: uppercase;
+}
+.tsport-sport-tab:hover .tsport-sport-tab-text {
+  color: #D94C26;
+}
+.tsport-sport-tab.is-active {
+  border-bottom-color: #D94C26;
+}
+.tsport-sport-tab.is-active .tsport-sport-tab-text {
+  color: #D94C26;
+}
