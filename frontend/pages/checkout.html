@@ -127,6 +127,42 @@
             <!-- Danh sách sản phẩm được nạp tự động -->
           </div>
 
+          <!-- KHỐI MÃ GIẢM GIÁ (COUPON & VOUCHER) -->
+          <div style="margin-bottom: 16px; padding: 12px; background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px;">
+            <label style="display:block; font-size:12px; font-weight:700; color:#334155; margin-bottom:6px;">
+              🏷️ Mã giảm giá / Voucher ưu đãi:
+            </label>
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="inputCheckoutCoupon" class="form-control" placeholder="Nhập mã (vd: TSPORT10)..." style="text-transform:uppercase; font-weight:700; font-size:13px;" />
+              <button type="button" class="btn btn-secondary btn-sm" id="btnApplyCoupon" style="white-space:nowrap; padding:0 12px; font-weight:700;">Áp dụng</button>
+            </div>
+            
+            <!-- Thông báo trạng thái coupon -->
+            <div id="couponStatusMsg" style="font-size:12px; margin-top:6px; display:none;"></div>
+
+            <!-- Gợi ý mã có sẵn -->
+            <div style="margin-top:8px; font-size:11px; color:#64748B;">
+              <span>Gợi ý: </span>
+              <a href="javascript:void(0)" class="js-quick-coupon" data-code="TSPORT10" style="color:#D94C26; font-weight:700; text-decoration:underline; margin-right:6px;">TSPORT10 (-10%)</a>
+              <a href="javascript:void(0)" class="js-quick-coupon" data-code="GIAM100K" style="color:#D94C26; font-weight:700; text-decoration:underline; margin-right:6px;">GIAM100K (-100K)</a>
+              <a href="javascript:void(0)" class="js-quick-coupon" data-code="TRIAN50K" style="color:#D94C26; font-weight:700; text-decoration:underline;">TRIAN50K (-50K)</a>
+            </div>
+          </div>
+
+          <div class="tsport-summary-row" id="rowSubtotal">
+            <span>Tạm tính tiền hàng:</span>
+            <span id="checkoutSubtotal">0 ₫</span>
+          </div>
+
+          <!-- DÒNG GIẢM GIÁ (HIỂN THỊ KHI ÁP MÃ THÀNH CÔNG) -->
+          <div class="tsport-summary-row" id="rowDiscount" style="display:none; color:#16A34A; font-weight:700;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span>Mã giảm giá (<span id="appliedCouponTag"></span>):</span>
+              <button type="button" id="btnRemoveCoupon" style="border:none; background:none; color:#DC2626; cursor:pointer; font-size:12px; padding:0; text-decoration:underline;" title="Bỏ áp dụng mã">✕ Bỏ</button>
+            </div>
+            <span id="checkoutDiscountAmount">-0 ₫</span>
+          </div>
+
           <div class="tsport-summary-row">
             <span>Phí vận chuyển:</span>
             <span style="color:#10B981; font-weight:700;">MIỄN PHÍ</span>

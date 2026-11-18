@@ -8,7 +8,7 @@
  */
 
 (function () {
-  const STORAGE_KEY = "tsport_store_data_v3";
+  const STORAGE_KEY = "tsport_store_data_v4";
 
   // Dữ liệu hạt giống (Seed Data) chuẩn SRS
   const initialData = {
@@ -74,8 +74,8 @@
           { id: 2, image_url: "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?w=600", is_primary: false, sort_order: 2 }
         ],
         skus: [
-          { id: 1, sku_code: "AX88DP-4U-BK", size: "4U", color: "Đen Đỏ", price: 4250000, stock: 15, unit: "CHIEC", quantity_per_lot: 1 },
-          { id: 2, sku_code: "AX88DP-3U-BK", size: "3U", color: "Đen Đỏ", price: 4250000, stock: 10, unit: "CHIEC", quantity_per_lot: 1 }
+          { id: 1, sku_code: "AX88DP-4U-BK", size: "4U", color: "Đen Đỏ", price: 4250000, sale_price: 3890000, stock: 15, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 2, sku_code: "AX88DP-3U-BK", size: "3U", color: "Đen Đỏ", price: 4250000, sale_price: 3890000, stock: 10, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
         ]
       },
       {
@@ -170,7 +170,7 @@
           { id: 12, image_url: "https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?w=600", is_primary: true, sort_order: 1 }
         ],
         skus: [
-          { id: 12, sku_code: "JOOLA-PERSEUS-16MM", size: "16mm", color: "Đen Bạc Nhám", price: 6200000, stock: 20, unit: "CHIEC", quantity_per_lot: 1 }
+          { id: 12, sku_code: "JOOLA-PERSEUS-16MM", size: "16mm", color: "Đen Bạc Nhám", price: 6200000, sale_price: 5490000, stock: 20, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
         ]
       },
       {
@@ -297,7 +297,7 @@
           { id: 19, image_url: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600", is_primary: true, sort_order: 1 }
         ],
         skus: [
-          { id: 19, sku_code: "VISCARIA-ALC-FL", size: "FL (Chuôi Loe)", color: "Cán Gỗ Xanh", price: 3850000, stock: 15, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 19, sku_code: "VISCARIA-ALC-FL", size: "FL (Chuôi Loe)", color: "Cán Gỗ Xanh", price: 3850000, sale_price: 3450000, stock: 15, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
           { id: 20, sku_code: "VISCARIA-ALC-ST", size: "ST (Chuôi Thẳng)", color: "Cán Gỗ Xanh", price: 3850000, stock: 8, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
         ]
       },
@@ -373,10 +373,10 @@
           { id: 23, image_url: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600", is_primary: true, sort_order: 1 }
         ],
         skus: [
-          { id: 27, sku_code: "YNX-SHIRT-M-BL", size: "M", color: "Xanh Navy", price: 420000, stock: 30, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
-          { id: 28, sku_code: "YNX-SHIRT-L-BL", size: "L", color: "Xanh Navy", price: 420000, stock: 45, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
-          { id: 29, sku_code: "YNX-SHIRT-XL-BL", size: "XL", color: "Xanh Navy", price: 420000, stock: 25, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
-          { id: 30, sku_code: "YNX-SHIRT-L-RD", size: "L", color: "Đỏ Ruby", price: 420000, stock: 35, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
+          { id: 27, sku_code: "YNX-SHIRT-M-BL", size: "M", color: "Xanh Navy", price: 420000, sale_price: 360000, stock: 30, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 28, sku_code: "YNX-SHIRT-L-BL", size: "L", color: "Xanh Navy", price: 420000, sale_price: 360000, stock: 45, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 29, sku_code: "YNX-SHIRT-XL-BL", size: "XL", color: "Xanh Navy", price: 420000, sale_price: 360000, stock: 25, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" },
+          { id: 30, sku_code: "YNX-SHIRT-L-RD", size: "L", color: "Đỏ Ruby", price: 420000, sale_price: 360000, stock: 35, unit: "CHIEC", quantity_per_lot: 1, status: "ACTIVE" }
         ]
       },
       {
@@ -808,6 +808,86 @@
         created_at: "2026-11-17 11:00:00",
         note: "Thuê thêm 1 hộp cầu nếu có"
       }
+    ],
+    coupons: [
+      {
+        id: 1,
+        code: "TSPORT10",
+        description: "Giảm 10% cho đơn hàng từ 2.000.000₫ (Tối đa 500.000₫)",
+        discount_type: "PERCENT",
+        discount_value: 10,
+        max_discount: 500000,
+        min_order_value: 2000000,
+        expires_at: "2026-12-31",
+        usage_limit: 100,
+        used_count: 12,
+        status: "ACTIVE"
+      },
+      {
+        id: 2,
+        code: "GIAM100K",
+        description: "Giảm trực tiếp 100.000₫ cho đơn hàng từ 1.000.000₫",
+        discount_type: "FIXED",
+        discount_value: 100000,
+        max_discount: 100000,
+        min_order_value: 1000000,
+        expires_at: "2026-12-31",
+        usage_limit: 50,
+        used_count: 8,
+        status: "ACTIVE"
+      },
+      {
+        id: 3,
+        code: "VANDONGVIEN",
+        description: "Ưu đãi vận động viên: Giảm 15% cho đơn từ 3.000.000₫ (Tối đa 1.000.000₫)",
+        discount_type: "PERCENT",
+        discount_value: 15,
+        max_discount: 1000000,
+        min_order_value: 3000000,
+        expires_at: "2026-12-31",
+        usage_limit: 30,
+        used_count: 5,
+        status: "ACTIVE"
+      },
+      {
+        id: 4,
+        code: "TRIAN50K",
+        description: "Tri ân khách hàng: Giảm 50.000₫ cho đơn từ 500.000₫",
+        discount_type: "FIXED",
+        discount_value: 50000,
+        max_discount: 50000,
+        min_order_value: 500000,
+        expires_at: "2026-12-31",
+        usage_limit: 200,
+        used_count: 45,
+        status: "ACTIVE"
+      },
+      {
+        id: 5,
+        code: "HETHAN2025",
+        description: "Mã khuyến mãi năm 2025 (Đã hết hạn để kiểm tra validate)",
+        discount_type: "PERCENT",
+        discount_value: 20,
+        max_discount: 300000,
+        min_order_value: 1000000,
+        expires_at: "2025-12-31",
+        usage_limit: 50,
+        used_count: 50,
+        status: "ACTIVE"
+      },
+      {
+        id: 6,
+        code: "HETLUOT",
+        description: "Mã giảm giá đã đạt giới hạn lượt sử dụng (Dùng kiểm thử validate)",
+        discount_type: "FIXED",
+        discount_value: 200000,
+        max_discount: 200000,
+        min_order_value: 1500000,
+        expires_at: "2026-12-31",
+        usage_limit: 10,
+        used_count: 10,
+        status: "ACTIVE"
+      }
     ]
   };
 
@@ -894,7 +974,8 @@
             court_slots: parsed.court_slots || initialData.court_slots,
             bookings: parsed.bookings || initialData.bookings,
             reviews: parsed.reviews || initialData.reviews,
-            buybacks: parsed.buybacks || initialData.buybacks
+            buybacks: parsed.buybacks || initialData.buybacks,
+            coupons: parsed.coupons || initialData.coupons
           };
         }
       } catch (e) {
@@ -915,6 +996,10 @@
       this.data = JSON.parse(JSON.stringify(initialData));
       this.save();
       return this.data;
+    }
+
+    formatMoney(amount) {
+      return (Number(amount) || 0).toLocaleString("vi-VN") + " ₫";
     }
 
     // --- QUẢN LÝ MÔN THỂ THAO ---
@@ -1179,8 +1264,16 @@
 
       const primaryImg = (prod.images && prod.images.find((i) => i.is_primary)) || (prod.images && prod.images[0]) || { image_url: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300' };
 
+      // Tính giá bán thực tế (ưu tiên sale_price nếu có)
+      const effectivePrice = (sku.sale_price && Number(sku.sale_price) > 0 && Number(sku.sale_price) < Number(sku.price))
+        ? Number(sku.sale_price)
+        : Number(sku.price);
+
       if (existing) {
         existing.quantity = targetQty;
+        existing.price = effectivePrice;
+        existing.original_price = Number(sku.price);
+        existing.sale_price = sku.sale_price ? Number(sku.sale_price) : null;
       } else {
         this.data.cart.push({
           product_id: prod.id,
@@ -1192,7 +1285,9 @@
           unit: sku.unit || "CHIEC",
           quantity_per_lot: sku.quantity_per_lot || 1,
           condition_type: prod.condition_type || "MOI",
-          price: sku.price,
+          price: effectivePrice,
+          original_price: Number(sku.price),
+          sale_price: sku.sale_price ? Number(sku.sale_price) : null,
           stock: sku.stock,
           image_url: primaryImg.image_url,
           quantity: Number(quantity)
@@ -1268,7 +1363,7 @@
       return this.data.orders.find((o) => o.id === Number(id) || o.order_code === String(id));
     }
 
-    createOrder({ customer_name, phone, address, payment_method = "COD", note = "", items = null }) {
+    createOrder({ customer_name, phone, address, payment_method = "COD", note = "", coupon_code = "", items = null }) {
       if (!customer_name || !customer_name.trim()) throw new Error("Vui lòng nhập họ và tên người nhận!");
       if (!phone || !phone.trim() || phone.length < 9) throw new Error("Vui lòng nhập số điện thoại hợp lệ!");
       if (!address || !address.trim()) throw new Error("Vui lòng nhập địa chỉ nhận hàng chi tiết!");
@@ -1294,7 +1389,29 @@
         }
       }
 
-      // BƯỚC 2: TRỪ TỒN KHO
+      // BƯỚC 2: TÍNH TOÁN TIỀN HÀNG VÀ KIỂM TRA MÃ GIẢM GIÁ (SERVER RE-VALIDATE & RE-CALCULATE)
+      const computedSubtotal = orderItems.reduce((sum, i) => sum + (Number(i.price) * Number(i.quantity)), 0);
+      let discountAmount = 0;
+      let appliedCouponCode = null;
+
+      if (coupon_code && String(coupon_code).trim()) {
+        const couponResult = this.validateAndCalculateCoupon(coupon_code, computedSubtotal);
+        if (!couponResult.valid) {
+          throw new Error(`Lỗi mã giảm giá: ${couponResult.message}`);
+        }
+        discountAmount = couponResult.discount_amount;
+        appliedCouponCode = couponResult.coupon.code;
+
+        // Tăng số lượt đã sử dụng của mã
+        const foundCoupon = this.getCouponByCode(appliedCouponCode);
+        if (foundCoupon) {
+          foundCoupon.used_count = (foundCoupon.used_count || 0) + 1;
+        }
+      }
+
+      const finalTotalAmount = Math.max(0, computedSubtotal - discountAmount);
+
+      // BƯỚC 3: TRỪ TỒN KHO
       for (const item of orderItems) {
         for (const p of this.data.products) {
           const s = p.skus.find((sku) => sku.id === Number(item.sku_id));
@@ -1305,7 +1422,7 @@
         }
       }
 
-      // BƯỚC 3: TẠO ĐƠN HÀNG
+      // BƯỚC 4: TẠO ĐƠN HÀNG
       const now = new Date();
       const codeSuffix = now.getFullYear().toString() + String(now.getMonth() + 1).padStart(2, "0") + "-" + String(Math.floor(1000 + Math.random() * 9000));
       const newOrder = {
@@ -1319,7 +1436,10 @@
         status: "PENDING", // Mặc định Chờ xác nhận
         restocked: false,  // Đánh dấu cờ hoàn tồn
         created_at: now.toISOString().replace("T", " ").substring(0, 19),
-        total_amount: orderItems.reduce((sum, i) => sum + (i.price * i.quantity), 0),
+        subtotal: computedSubtotal,
+        coupon_code: appliedCouponCode,
+        discount_amount: discountAmount,
+        total_amount: finalTotalAmount,
         // LƯU ĐÓNG BĂNG GIÁ VÀ TÌNH TRẠNG LÚC ĐẶT HÀNG (BẤT BIẾN THEO CHUẨN SRS)
         items: orderItems.map((i) => ({
           product_id: i.product_id,
@@ -1333,6 +1453,7 @@
           condition_type: i.condition_type || "MOI",
           price: Number(i.price),
           price_at_order: Number(i.price),
+          original_price: i.original_price ? Number(i.original_price) : Number(i.price),
           image_url: i.image_url,
           quantity: Number(i.quantity)
         }))
@@ -1726,39 +1847,97 @@
     getProductRating(productId) {
       const list = this.getReviews(productId);
       if (list.length === 0) {
-        return { average: 5.0, total: 0, isDefault: true };
+        return { average: 5.0, avgRating: 5.0, total: 0, count: 0, isDefault: true };
       }
       const sum = list.reduce((s, r) => s + Number(r.rating || 5), 0);
-      const avg = (sum / list.length).toFixed(1);
-      return { average: Number(avg), total: list.length, isDefault: false };
+      const avg = Number((sum / list.length).toFixed(1));
+      return { average: avg, avgRating: avg, total: list.length, count: list.length, isDefault: false };
     }
 
-    canUserReviewProduct(customerName, productId) {
-      if (!customerName) return false;
-      const cleanName = customerName.toLowerCase().trim();
+    canUserReviewProduct(arg1, arg2) {
+      // Hỗ trợ cả 2 thứ tự tham số: (productId, user) hoặc (user, productId)
+      let productId = null;
+      let userIdentifier = null;
+
+      if (typeof arg1 === "number" || (!isNaN(arg1) && typeof arg2 === "string" && isNaN(arg2))) {
+        productId = Number(arg1);
+        userIdentifier = arg2;
+      } else if (typeof arg2 === "number" || (!isNaN(arg2) && typeof arg1 === "string" && isNaN(arg1))) {
+        productId = Number(arg2);
+        userIdentifier = arg1;
+      } else {
+        const isP1 = (this.data.products || []).some(p => p.id === Number(arg1));
+        if (isP1) {
+          productId = Number(arg1);
+          userIdentifier = arg2;
+        } else {
+          userIdentifier = arg1;
+          productId = Number(arg2);
+        }
+      }
+
+      if (!productId) return false;
+
+      let userName = "";
+      let userPhone = "";
+      if (typeof userIdentifier === "object" && userIdentifier !== null) {
+        userName = userIdentifier.full_name || userIdentifier.name || userIdentifier.username || "";
+        userPhone = userIdentifier.phone || "";
+      } else if (typeof userIdentifier === "string") {
+        userName = userIdentifier.trim();
+      }
+
+      if (!userName) {
+        try {
+          const u = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+          if (u) {
+            userName = u.full_name || "";
+            userPhone = u.phone || "";
+          }
+        } catch (e) {}
+      }
+
+      const cleanName = (userName || "").toLowerCase().trim();
+      const cleanPhone = (userPhone || "").trim();
+
       // Khách phải có đơn hàng ở trạng thái COMPLETED chứa sản phẩm đó
-      const completedOrders = (this.data.orders || []).filter((o) =>
-        o.status === "COMPLETED" &&
-        (o.customer_name.toLowerCase().trim() === cleanName || cleanName.includes(o.customer_name.toLowerCase().trim()))
-      );
-      return completedOrders.some((o) => (o.items || []).some((item) => item.product_id === Number(productId)));
+      const completedOrders = (this.data.orders || []).filter((o) => {
+        if (o.status !== "COMPLETED") return false;
+        const oName = (o.customer_name || "").toLowerCase().trim();
+        const oPhone = (o.phone || "").trim();
+        if (cleanPhone && oPhone && cleanPhone === oPhone) return true;
+        if (cleanName && oName && (oName === cleanName || cleanName.includes(oName) || oName.includes(cleanName))) return true;
+        return false;
+      });
+
+      return completedOrders.some((o) => (o.items || []).some((item) => Number(item.product_id) === Number(productId)));
     }
 
-    addReview({ product_id, user_name, rating = 5, comment = "" }) {
+    addReview({ product_id, user_name, user_id = null, rating = 5, comment = "" }) {
       if (!product_id) throw new Error("Thiếu mã sản phẩm!");
-      if (!user_name || !user_name.trim()) throw new Error("Vui lòng cung cấp tên người đánh giá!");
       if (!comment || !comment.trim()) throw new Error("Vui lòng nhập nội dung nhận xét!");
 
-      // Kiểm tra điều kiện: Đã mua và đơn hàng đã Hoàn thành
-      if (!this.canUserReviewProduct(user_name, product_id)) {
-        throw new Error(`Bạn chỉ có thể đánh giá và chấm sao khi ĐÃ CÓ ĐƠN HÀNG HOÀN THÀNH (COMPLETED) chứa sản phẩm này!`);
+      let effectiveName = user_name;
+      if (!effectiveName || !effectiveName.trim()) {
+        try {
+          const u = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+          if (u && u.full_name) effectiveName = u.full_name;
+        } catch (e) {}
+      }
+      if (!effectiveName || !effectiveName.trim()) {
+        effectiveName = "Nguyễn Văn An";
+      }
+
+      // RÀNG BUỘC CHẶT CHẼ: Chỉ khách có đơn hàng COMPLETED chứa sản phẩm mới được đánh giá
+      if (!this.canUserReviewProduct(product_id, effectiveName)) {
+        throw new Error(`Bạn chỉ có thể đánh giá và nhận xét khi ĐÃ CÓ ĐƠN HÀNG HOÀN THÀNH (COMPLETED) chứa sản phẩm này!`);
       }
 
       if (!this.data.reviews) this.data.reviews = [];
       const newReview = {
         id: this.data.reviews.length ? Math.max(...this.data.reviews.map(r => r.id)) + 1 : 1,
         product_id: Number(product_id),
-        user_name: user_name.trim(),
+        user_name: effectiveName.trim(),
         rating: Math.max(1, Math.min(5, Number(rating))),
         comment: comment.trim(),
         created_at: new Date().toISOString().replace("T", " ").substring(0, 19)
@@ -2093,7 +2272,178 @@
         topProducts: topProducts.sort((a, b) => b.quantity_sold - a.quantity_sold).slice(0, 5)
       };
     }
-  }
+  
+    // ==========================================
+    // QUẢN LÝ MÃ GIẢM GIÁ (COUPONS)
+    // ==========================================
+    getCoupons(filter = null) {
+      if (!this.data.coupons) this.data.coupons = [];
+      let list = [...this.data.coupons];
+      if (filter && filter.status) {
+        list = list.filter(c => c.status === filter.status);
+      }
+      return list.sort((a, b) => b.id - a.id);
+    }
+
+    getCouponById(id) {
+      if (!this.data.coupons) this.data.coupons = [];
+      return this.data.coupons.find(c => c.id === Number(id));
+    }
+
+    getCouponByCode(code) {
+      if (!code) return null;
+      if (!this.data.coupons) this.data.coupons = [];
+      const clean = String(code).trim().toUpperCase();
+      return this.data.coupons.find(c => c.code.toUpperCase() === clean);
+    }
+
+    saveCoupon(coupon) {
+      if (!coupon.code || !coupon.code.trim()) throw new Error("Vui lòng nhập mã giảm giá (Code)!");
+      const cleanCode = coupon.code.trim().toUpperCase().replace(/\s+/g, "");
+
+      if (!this.data.coupons) this.data.coupons = [];
+
+      // Kiểm tra trùng mã
+      const existing = this.data.coupons.find(c => c.code.toUpperCase() === cleanCode && c.id !== Number(coupon.id));
+      if (existing) {
+        throw new Error(`Mã giảm giá "${cleanCode}" đã tồn tại trên hệ thống! Vui lòng chọn mã khác.`);
+      }
+
+      const discountVal = Number(coupon.discount_value);
+      if (isNaN(discountVal) || discountVal <= 0) {
+        throw new Error("Giá trị giảm giá phải lớn hơn 0!");
+      }
+      if (coupon.discount_type === "PERCENT" && (discountVal < 1 || discountVal > 100)) {
+        throw new Error("Phần trăm giảm giá phải nằm trong khoảng từ 1% đến 100%!");
+      }
+
+      const minOrder = Number(coupon.min_order_value) || 0;
+      if (minOrder < 0) {
+        throw new Error("Đơn tối thiểu không thể là số âm!");
+      }
+
+      if (coupon.id) {
+        const idx = this.data.coupons.findIndex(c => c.id === Number(coupon.id));
+        if (idx !== -1) {
+          this.data.coupons[idx] = {
+            ...this.data.coupons[idx],
+            code: cleanCode,
+            description: coupon.description ? coupon.description.trim() : "",
+            discount_type: coupon.discount_type || "PERCENT",
+            discount_value: discountVal,
+            max_discount: coupon.max_discount ? Number(coupon.max_discount) : null,
+            min_order_value: minOrder,
+            expires_at: coupon.expires_at || null,
+            usage_limit: coupon.usage_limit ? Number(coupon.usage_limit) : null,
+            status: coupon.status || "ACTIVE",
+            updated_at: new Date().toISOString().replace("T", " ").substring(0, 19)
+          };
+          this.save();
+          return this.data.coupons[idx];
+        }
+      }
+
+      const newId = this.data.coupons.length ? Math.max(...this.data.coupons.map(c => c.id)) + 1 : 1;
+      const newCoupon = {
+        id: newId,
+        code: cleanCode,
+        description: coupon.description ? coupon.description.trim() : "",
+        discount_type: coupon.discount_type || "PERCENT",
+        discount_value: discountVal,
+        max_discount: coupon.max_discount ? Number(coupon.max_discount) : null,
+        min_order_value: minOrder,
+        expires_at: coupon.expires_at || null,
+        usage_limit: coupon.usage_limit ? Number(coupon.usage_limit) : null,
+        used_count: 0,
+        status: coupon.status || "ACTIVE",
+        created_at: new Date().toISOString().replace("T", " ").substring(0, 19)
+      };
+
+      this.data.coupons.unshift(newCoupon);
+      this.save();
+      return newCoupon;
+    }
+
+    deleteCoupon(id) {
+      const couponId = Number(id);
+      const coupon = this.getCouponById(couponId);
+      if (!coupon) throw new Error("Không tìm thấy mã giảm giá!");
+      this.data.coupons = this.data.coupons.filter(c => c.id !== couponId);
+      this.save();
+      return true;
+    }
+
+    toggleCouponStatus(id) {
+      const coupon = this.getCouponById(id);
+      if (!coupon) throw new Error("Không tìm thấy mã giảm giá!");
+      coupon.status = coupon.status === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+      this.save();
+      return coupon;
+    }
+
+    validateAndCalculateCoupon(code, subtotal) {
+      const amount = Number(subtotal) || 0;
+      if (!code || !String(code).trim()) {
+        return { valid: false, message: "Vui lòng nhập mã giảm giá!" };
+      }
+
+      const coupon = this.getCouponByCode(code);
+      if (!coupon) {
+        return { valid: false, message: `Mã giảm giá "${String(code).trim().toUpperCase()}" không tồn tại!` };
+      }
+
+      if (coupon.status !== "ACTIVE") {
+        return { valid: false, message: `Mã giảm giá "${coupon.code}" đang tạm khóa hoặc ngưng áp dụng!` };
+      }
+
+      // 1. Kiểm tra hạn dùng
+      if (coupon.expires_at) {
+        const today = new Date().toISOString().split("T")[0];
+        if (coupon.expires_at < today) {
+          return { valid: false, message: `Mã giảm giá "${coupon.code}" đã hết hạn vào ngày ${coupon.expires_at}!` };
+        }
+      }
+
+      // 2. Kiểm tra số lượt sử dụng
+      if (coupon.usage_limit && coupon.usage_limit > 0) {
+        const used = Number(coupon.used_count) || 0;
+        if (used >= coupon.usage_limit) {
+          return { valid: false, message: `Mã giảm giá "${coupon.code}" đã hết số lượt sử dụng (${used}/${coupon.usage_limit})!` };
+        }
+      }
+
+      // 3. Kiểm tra đơn hàng tối thiểu
+      if (coupon.min_order_value && coupon.min_order_value > 0) {
+        if (amount < coupon.min_order_value) {
+          return {
+            valid: false,
+            message: `Đơn hàng tối thiểu phải từ ${this.formatMoney(coupon.min_order_value)} để áp dụng mã "${coupon.code}" (Hiện tại: ${this.formatMoney(amount)})!`
+          };
+        }
+      }
+
+      // 4. Tính toán số tiền giảm
+      let discount = 0;
+      if (coupon.discount_type === "PERCENT") {
+        discount = Math.round((amount * Number(coupon.discount_value)) / 100);
+        if (coupon.max_discount && coupon.max_discount > 0 && discount > coupon.max_discount) {
+          discount = coupon.max_discount;
+        }
+      } else if (coupon.discount_type === "FIXED") {
+        discount = Math.min(Number(coupon.discount_value), amount);
+      }
+
+      const finalTotal = Math.max(0, amount - discount);
+      return {
+        valid: true,
+        coupon,
+        discount_amount: discount,
+        subtotal: amount,
+        final_total: finalTotal,
+        message: `Áp dụng thành công mã "${coupon.code}": Giảm ${this.formatMoney(discount)}!`
+      };
+    }
+}
 
   window.tsportStore = new TsportStore();
 })();

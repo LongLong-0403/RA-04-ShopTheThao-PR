@@ -10,6 +10,97 @@
 
 (function () {
   let isSubmitting = false;
+  let appliedCoupon = null;
+
+  function updateCheckoutTotals() {
+    const store = window.tsportStore;
+    if (!store) return;
+    const totals = store.getCartTotals();
+    const subtotalEl = document.getElementById("checkoutSubtotal");
+    const grandTotalEl = document.getElementById("checkoutGrandTotal");
+    const rowDiscount = document.getElementById("rowDiscount");
+    const appliedTag = document.getElementById("appliedCouponTag");
+    const discountAmountEl = document.getElementById("checkoutDiscountAmount");
+    const msgEl = document.getElementById("couponStatusMsg");
+
+    if (subtotalEl) subtotalEl.textContent = formatMoney(totals.subtotal);
+
+    if (appliedCoupon) {
+      const valRes = store.validateAndCalculateCoupon(appliedCoupon.code, totals.subtotal);
+      if (valRes.valid) {
+        if (rowDiscount) rowDiscount.style.display = "flex";
+        if (appliedTag) appliedTag.textContent = appliedCoupon.code;
+        if (discountAmountEl) discountAmountEl.textContent = `-${formatMoney(valRes.discount_amount)}`;
+        if (grandTotalEl) grandTotalEl.textContent = formatMoney(valRes.final_total);
+        if (msgEl) {
+          msgEl.style.display = "block";
+          msgEl.style.color = "#16A34A";
+          msgEl.textContent = valRes.message;
+        }
+      } else {
+        appliedCoupon = null;
+        if (rowDiscount) rowDiscount.style.display = "none";
+        if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
+        if (msgEl) {
+          msgEl.style.display = "block";
+          msgEl.style.color = "#DC2626";
+          msgEl.textContent = valRes.message;
+        }
+      }
+    } else {
+      if (rowDiscount) rowDiscount.style.display = "none";
+      if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
+    }
+  }
+
+  function handleApplyCoupon() {
+    const store = window.tsportStore;
+    const input = document.getElementById("inputCheckoutCoupon");
+    const msgEl = document.getElementById("couponStatusMsg");
+    if (!input || !store) return;
+
+    const code = input.value.trim().toUpperCase();
+    if (!code) {
+      if (msgEl) {
+        msgEl.style.display = "block";
+        msgEl.style.color = "#DC2626";
+        msgEl.textContent = "Vui lòng nhập mã giảm giá!";
+      }
+      return;
+    }
+
+    const totals = store.getCartTotals();
+    const res = store.validateAndCalculateCoupon(code, totals.subtotal);
+
+    if (res.valid) {
+      appliedCoupon = res.coupon;
+      input.value = res.coupon.code;
+      updateCheckoutTotals();
+      showToast(`Áp dụng thành công mã "${res.coupon.code}"!`, "success");
+    } else {
+      appliedCoupon = null;
+      updateCheckoutTotals();
+      if (msgEl) {
+        msgEl.style.display = "block";
+        msgEl.style.color = "#DC2626";
+        msgEl.textContent = res.message;
+      }
+      showToast(res.message, "error");
+    }
+  }
+
+  function handleRemoveCoupon() {
+    appliedCoupon = null;
+    const input = document.getElementById("inputCheckoutCoupon");
+    const msgEl = document.getElementById("couponStatusMsg");
+    if (input) input.value = "";
+    if (msgEl) {
+      msgEl.style.display = "none";
+      msgEl.textContent = "";
+    }
+    updateCheckoutTotals();
+    showToast("Đã hủy áp dụng mã giảm giá.", "info");
+  }
 
   function initCartModule() {
     renderCartPage();
@@ -138,6 +229,28 @@
     const grandTotalEl = document.getElementById("checkoutGrandTotal");
     if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
 
+    // BIND SỰ KIỆN MÃ GIẢM GIÁ (COUPON)
+    document.getElementById("btnApplyCoupon")?.addEventListener("click", handleApplyCoupon);
+    document.getElementById("inputCheckoutCoupon")?.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleApplyCoupon();
+      }
+    });
+    document.getElementById("btnRemoveCoupon")?.addEventListener("click", handleRemoveCoupon);
+    document.querySelectorAll(".js-quick-coupon").forEach((el) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        const code = el.getAttribute("data-code");
+        const input = document.getElementById("inputCheckoutCoupon");
+        if (input && code) {
+          input.value = code;
+          handleApplyCoupon();
+        }
+      });
+    });
+    updateCheckoutTotals();
+
     // XỬ LÝ SUBMIT ĐẶT HÀNG (KÈM CHỐNG BẤM LẶP & CHECK TỒN KHO)
     checkoutForm.addEventListener("submit", handleCheckoutSubmit);
   }
@@ -177,13 +290,14 @@
     setTimeout(() => {
       try {
         const store = window.tsportStore;
-        // Gọi hàm tạo đơn hàng trong store (tự động kiểm tra và trừ tồn kho)
+        // Gọi hàm tạo đơn hàng trong store (tự động kiểm tra và trừ tồn kho, kiểm tra & tính lại mã giảm giá)
         const order = store.createOrder({
           customer_name: name,
           phone,
           address: addr,
           payment_method: payment,
-          note
+          note,
+          coupon_code: appliedCoupon ? appliedCoupon.code : ""
         });
 
         // HIỂN THỊ POPUP ĐẶT HÀNG THÀNH CÔNG

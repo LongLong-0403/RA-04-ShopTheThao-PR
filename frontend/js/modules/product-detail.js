@@ -312,8 +312,18 @@
     const needsColor = skus.some(s => s.color) && !selectedColor;
 
     if (needsSize || needsColor || !matchingSku) {
-      const minPrice = skus.length ? Math.min(...skus.map(s => s.price)) : 0;
-      if (priceEl) priceEl.textContent = formatMoney(minPrice);
+      const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
+      const minEffective = effectivePrices.length ? Math.min(...effectivePrices) : 0;
+      const minRegular = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
+      const hasAnySale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+
+      if (priceEl) {
+        if (hasAnySale) {
+          priceEl.innerHTML = `${formatMoney(minEffective)} <del style="font-size:16px; color:#94A3B8; font-weight:normal; margin-left:8px;">${formatMoney(minRegular)}</del>`;
+        } else {
+          priceEl.textContent = formatMoney(minEffective);
+        }
+      }
       if (stockStatusEl) {
         stockStatusEl.textContent = "Chưa chọn đủ biến thể";
         stockStatusEl.className = "tsport-pdp-stock-status";
@@ -348,7 +358,19 @@
     }
 
     // Trường hợp ĐÃ CHỌN ĐỦ BIẾN THỂ
-    if (priceEl) priceEl.textContent = formatMoney(matchingSku.price);
+    if (priceEl) {
+      const hasSale = matchingSku.sale_price && Number(matchingSku.sale_price) > 0 && Number(matchingSku.sale_price) < Number(matchingSku.price);
+      if (hasSale) {
+        const discountPct = Math.round((1 - matchingSku.sale_price / matchingSku.price) * 100);
+        priceEl.innerHTML = `
+          <span>${formatMoney(matchingSku.sale_price)}</span>
+          <del style="font-size:16px; color:#94A3B8; font-weight:normal; margin-left:8px;">${formatMoney(matchingSku.price)}</del>
+          <span style="font-size:12px; background:#FEE2E2; color:#DC2626; padding:2px 8px; border-radius:12px; font-weight:800; margin-left:8px;">-${discountPct}% SALE</span>
+        `;
+      } else {
+        priceEl.textContent = formatMoney(matchingSku.price);
+      }
+    }
     if (hintEl) hintEl.style.display = "none";
 
     // Kiểm tra SKU riêng lẻ bị tạm ẩn

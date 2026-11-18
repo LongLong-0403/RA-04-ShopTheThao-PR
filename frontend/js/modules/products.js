@@ -260,7 +260,7 @@
 
       // Mặc định 1 dòng SKU mẫu
       formSkus = [
-        { sku_code: "SKU-NEW-01", size: "Tiêu chuẩn", color: "Cam Trắng", price: 1200000, stock: 10, unit: "CHIEC", quantity_per_lot: 1 }
+        { sku_code: "SKU-NEW-01", size: "Tiêu chuẩn", color: "Cam Trắng", price: 1200000, sale_price: 1050000, stock: 10, unit: "CHIEC", quantity_per_lot: 1 }
       ];
       // Mặc định 1 ảnh mẫu
       formImages = [
@@ -294,7 +294,7 @@
     if (!tbody) return;
 
     if (formSkus.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#94A3B8;padding:16px;">Chưa có dòng SKU nào. Bấm "+ Thêm dòng SKU" bên dưới!</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;color:#94A3B8;padding:16px;">Chưa có dòng SKU nào. Bấm "+ Thêm dòng SKU" bên dưới!</td></tr>`;
       return;
     }
 
@@ -312,7 +312,10 @@
             <input type="text" class="tsport-sku-input" value="${escapeHtml(sku.color || '')}" placeholder="Đỏ, Xanh..." onchange="window.__updateSku(${idx}, 'color', this.value)" />
           </td>
           <td>
-            <input type="number" class="tsport-sku-input sku-price" value="${sku.price || 0}" step="10000" onchange="window.__updateSku(${idx}, 'price', Number(this.value))" />
+            <input type="number" class="tsport-sku-input sku-price" value="${sku.price || 0}" step="10000" placeholder="Giá niêm yết" onchange="window.__updateSku(${idx}, 'price', Number(this.value))" />
+          </td>
+          <td>
+            <input type="number" class="tsport-sku-input sku-sale-price" value="${sku.sale_price !== undefined && sku.sale_price !== null ? sku.sale_price : ''}" step="10000" placeholder="Giá sale (KM)" onchange="window.__updateSku(${idx}, 'sale_price', this.value === '' ? null : Number(this.value))" />
           </td>
           <td>
             <input type="number" class="tsport-sku-input" value="${sku.stock || 0}" min="0" onchange="window.__updateSku(${idx}, 'stock', Number(this.value))" />
@@ -391,6 +394,18 @@
       });
       if (isCu) specsObj.condition_grade = `${wearGrade}%`;
 
+      // Kiểm tra tính hợp lệ của giá sale so với giá niêm yết
+      for (const s of formSkus) {
+        if (s.sale_price !== null && s.sale_price !== undefined && s.sale_price !== "") {
+          const sp = Number(s.sale_price);
+          const pr = Number(s.price);
+          if (sp >= pr) {
+            alert(`⚠️ Cảnh báo biến thể SKU "${s.sku_code}": Giá sale (${formatMoney(sp)}) phải nhỏ hơn Giá niêm yết (${formatMoney(pr)})!`);
+            return;
+          }
+        }
+      }
+
       const prodData = {
         id: currentEditingProductId,
         name: document.getElementById("formProdName").value.trim(),
@@ -458,6 +473,7 @@
               <th>Size / Cỡ</th>
               <th>Màu sắc</th>
               <th>Giá niêm yết</th>
+              <th>Giá sale (KM)</th>
               <th>Tồn kho</th>
               <th>Đơn vị</th>
               <th>Quy cách</th>
@@ -468,12 +484,22 @@
           <tbody>
             ${skus.map((s) => {
               const isInactive = s.status === 'INACTIVE';
+              const hasSale = s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price);
+              const discountPercent = hasSale ? Math.round((1 - s.sale_price / s.price) * 100) : 0;
               return `
                 <tr style="${isInactive ? 'opacity:0.65; background:#F8FAFC;' : ''}">
                   <td><code>${escapeHtml(s.sku_code)}</code></td>
                   <td><strong>${escapeHtml(s.size || '-')}</strong></td>
                   <td>${escapeHtml(s.color || '-')}</td>
-                  <td style="color:#D94C26; font-weight:700;">${formatMoney(s.price)}</td>
+                  <td style="${hasSale ? 'text-decoration:line-through; color:#94A3B8;' : 'color:#D94C26; font-weight:700;'}">
+                    ${formatMoney(s.price)}
+                  </td>
+                  <td>
+                    ${hasSale 
+                      ? `<div style="color:#D94C26; font-weight:800;">${formatMoney(s.sale_price)} <span class="badge" style="background:#FEE2E2; color:#DC2626; font-size:10px;">-${discountPercent}%</span></div>`
+                      : '<span style="color:#94A3B8;">-</span>'
+                    }
+                  </td>
                   <td><span class="badge ${s.stock > 0 ? 'badge-moi' : 'badge-inactive'}">${s.stock} SP</span></td>
                   <td>${s.unit === 'LO' ? 'Lô' : 'Chiếc'}</td>
                   <td>${s.quantity_per_lot} ${s.unit === 'LO' ? 'cái/lô' : 'cái'}</td>
@@ -488,6 +514,13 @@
                       data-product-id="${prod.id}" 
                       data-sku-id="${s.id}" 
                       style="font-size:11px; padding:3px 8px; ${isInactive ? 'color:#16A34A; border-color:#86EFAC;' : 'color:#DC2626; border-color:#FCA5A5;'}">
+                      ${isInactive ? 'Mở bán lại' : 'Tạm ẩn SKU'}
+                    </button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
                       ${isInactive ? '▶ Hiện SKU' : '⏸ Ẩn SKU'}
                     </button>
                   </td>
@@ -532,7 +565,7 @@
     // Thêm dòng SKU
     document.getElementById("btnAddSkuRow")?.addEventListener("click", () => {
       const code = `SKU-${Date.now().toString().slice(-4)}`;
-      formSkus.push({ sku_code: code, size: "4U", color: "Tiêu chuẩn", price: 1500000, stock: 10, unit: "CHIEC", quantity_per_lot: 1 });
+      formSkus.push({ sku_code: code, size: "4U", color: "Tiêu chuẩn", price: 1500000, sale_price: null, stock: 10, unit: "CHIEC", quantity_per_lot: 1 });
       renderSkuRows();
     });
 

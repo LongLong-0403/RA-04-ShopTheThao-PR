@@ -272,9 +272,16 @@
       // Ảnh chính
       const primaryImg = (p.images && p.images.find((i) => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
 
-      // Giá thấp nhất trong các SKU
-      const minPrice = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.price)) : 0;
-      const totalStock = p.skus ? p.skus.reduce((sum, s) => sum + s.stock, 0) : 0;
+      // Giá thấp nhất trong các SKU (tính cả giá sale nếu có)
+      const skus = p.skus || [];
+      const hasSale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+      const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
+      const minEffectivePrice = effectivePrices.length ? Math.min(...effectivePrices) : 0;
+      const minOriginalPrice = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
+      const maxDiscountPct = hasSale
+        ? Math.max(...skus.filter(s => s.sale_price && s.sale_price < s.price).map(s => Math.round((1 - s.sale_price / s.price) * 100)))
+        : 0;
+      const totalStock = skus.reduce((sum, s) => sum + s.stock, 0);
 
       // Nhãn Mới / Cũ
       const isUsed = p.condition_type === "CU";
@@ -292,6 +299,7 @@
               <span class="tsport-badge-condition ${isUsed ? 'cu' : 'moi'}">
                 ${isUsed ? 'ĐỒ CŨ MINH BẠCH' : 'HÀNG MỚI 100%'}
               </span>
+              ${hasSale ? `<span class="tsport-badge-condition" style="background:#EF4444; color:#FFF; font-weight:800;">-${maxDiscountPct}% SALE</span>` : ''}
               ${sport ? `<span class="tsport-badge-sport-tag">${escapeHtml(sport.name)}</span>` : ''}
             </div>
           </div>
@@ -314,7 +322,12 @@
             </div>
 
             <div class="tsport-product-bottom">
-              <div class="tsport-product-price">${formatMoney(minPrice)}</div>
+              <div class="tsport-product-price">
+                ${hasSale 
+                  ? `<span>${formatMoney(minEffectivePrice)}</span> <del style="font-size:12px; color:#94A3B8; font-weight:normal; margin-left:4px;">${formatMoney(minOriginalPrice)}</del>`
+                  : formatMoney(minEffectivePrice)
+                }
+              </div>
               <span style="font-size:12px; color:#D94C26; font-weight:700;">Xem chi tiết →</span>
             </div>
           </div>
