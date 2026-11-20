@@ -258,6 +258,33 @@
       </div>
     </section>
 
+    <!-- 8. ĐỒ CŨ MINH BẠCH — KHUNG TAB CHUẨN + LƯỚT CHUỘT TRÁI / PHẢI -->
+    <section class="ts-min-section js-gsap-section" id="sectionHomeUsed">
+      <div class="ts-tabbox-header">
+        <h2 class="ts-tabbox-title">Đồ cũ minh bạch, thêm một cuộc chơi</h2>
+        <div class="ts-tabbox-underline"></div>
+      </div>
+
+      <div class="ts-tabbox-shell">
+        <div class="ts-tabbox-tabs" id="homeUsedFilters" role="tablist">
+          <button type="button" class="ts-tabbox-tab is-active" data-filter="ALL" role="tab" aria-selected="true">Tất cả</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="VOT_CU" role="tab" aria-selected="false">Vợt cũ</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="SPORT_1" role="tab" aria-selected="false">Cầu lông</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="SPORT_4" role="tab" aria-selected="false">Pickleball</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="SPORT_6" role="tab" aria-selected="false">Bóng bàn</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="GIAY_BONG" role="tab" aria-selected="false">Giày &amp; Bóng cũ</button>
+        </div>
+
+        <div class="ts-tabbox-golden-stage">
+          <div class="ts-featured-drag-viewport" id="homeUsedViewport">
+            <div class="ts-tabbox-track" id="homeUsedTrack">
+              <!-- Render động các sản phẩm đồ cũ từ store.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 7. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (CHỈ HIỆN KHI NGƯỜI DÙNG ĐÃ XEM SẢN PHẨM) -->
     <section class="ts-min-section" id="homeRecentWrap" style="display:none;">
       <div class="ts-min-sec-head">

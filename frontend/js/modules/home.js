@@ -18,6 +18,7 @@
     initTabbedShowcase();
     initHomeCourtsShowcase();
     initHomeMatchesShowcase();
+    initHomeUsedShowcase();
     renderRecentlyViewed();
     initSearchDebounce();
     initGsapAnimations();
@@ -653,6 +654,98 @@
 
     bindMouseDragScroll(viewport);
     renderMatches(false);
+  }
+
+  // 2E. ĐỒ CŨ MINH BẠCH — KHUNG TAB CHUẨN + LƯỚT CHUỘT TRÁI / PHẢI
+  function initHomeUsedShowcase() {
+    const viewport = document.getElementById("homeUsedViewport");
+    const track = document.getElementById("homeUsedTrack");
+    const filtersWrap = document.getElementById("homeUsedFilters");
+    const store = window.tsportStore;
+    if (!viewport || !track || !store) return;
+
+    let currentFilter = "ALL";
+
+    function getFilteredUsed(filterKey) {
+      const allUsed = (store.getProducts() || []).filter(p => p.status !== "INACTIVE" && p.condition_type === "CU");
+      switch (filterKey) {
+        case "VOT_CU":
+          return allUsed.filter(p => [2, 3, 4, 17].includes(p.category_id));
+        case "SPORT_1":
+          return allUsed.filter(p => p.sport_id === 1);
+        case "SPORT_4":
+          return allUsed.filter(p => p.sport_id === 4);
+        case "SPORT_6":
+          return allUsed.filter(p => p.sport_id === 6);
+        case "GIAY_BONG":
+          return allUsed.filter(p => [6, 7, 8, 10, 13, 19, 20].includes(p.category_id));
+        case "ALL":
+        default:
+          return allUsed;
+      }
+    }
+
+    function renderUsed(animate = false) {
+      const list = getFilteredUsed(currentFilter);
+      if (list.length === 0) {
+        track.innerHTML = `<div style="width:100%; background:#fff; border-radius:4px; padding:28px; text-align:center; color:#6B7280; font-size:13.5px;">Hiện chưa có sản phẩm đồ cũ trong mục này.</div>`;
+        return;
+      }
+
+      track.innerHTML = list.map((p) => {
+        const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
+        const skus = p.skus || [];
+        const hasSale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+        const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
+        const minEff = effectivePrices.length ? Math.min(...effectivePrices) : 0;
+        const minOrig = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
+        const wearGrade = p.specifications?.condition_grade || "90%";
+
+        return `
+          <a href="pages/product-detail.html?id=${p.id}" class="ts-tabbox-card" draggable="false">
+            <div class="ts-tabbox-img-wrap">
+              <span class="ts-min-product-badge">Đồ cũ ~${escapeHtml(wearGrade)}</span>
+              <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+            </div>
+            <h3 class="ts-tabbox-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
+            ${p.wear_description ? `<div style="font-size:11px; color:#6B7280; margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(p.wear_description)}">${escapeHtml(p.wear_description)}</div>` : ''}
+            <div class="ts-tabbox-price-row">
+              <span class="ts-tabbox-price">${formatMoney(minEff)}</span>
+              ${hasSale ? `<span class="ts-tabbox-oldprice">${formatMoney(minOrig)}</span>` : ""}
+            </div>
+          </a>
+        `;
+      }).join("");
+
+      viewport.scrollLeft = 0;
+
+      if (animate && typeof window.gsap !== "undefined") {
+        window.gsap.from(track.querySelectorAll(".ts-tabbox-card"), {
+          x: 32,
+          opacity: 0,
+          duration: 0.4,
+          stagger: 0.05,
+          ease: "power2.out",
+          clearProps: "transform,opacity"
+        });
+      }
+    }
+
+    filtersWrap?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".ts-tabbox-tab");
+      if (!btn) return;
+      filtersWrap.querySelectorAll(".ts-tabbox-tab").forEach((b) => {
+        b.classList.remove("is-active");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("is-active");
+      btn.setAttribute("aria-selected", "true");
+      currentFilter = btn.dataset.filter || "ALL";
+      renderUsed(true);
+    });
+
+    bindMouseDragScroll(viewport);
+    renderUsed(false);
   }
 
   // 3. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)
