@@ -326,31 +326,32 @@ body.tsport-home-body {
 }
 
 /* ==========================================
-   3. 4 THẺ CAM KẾT NGANG (CHỈ CHỮ, KHÔNG ICON)
+   3. 4 MỤC CAM KẾT NGANG (BỎ KHUNG, CHỮ NHỎ GỌN)
    ========================================== */
 .ts-usp-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
-  margin-bottom: 36px;
+  margin: 14px 0 28px 0;
+  padding: 6px 0;
 }
 
 .ts-usp-card {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 8px;
-  padding: 16px 18px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 2px 4px;
 }
 
 .ts-usp-title {
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .ts-usp-desc {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #6B7280;
 }
 
