@@ -1670,3 +1670,11 @@ body.tsport-courts-body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Tab panes (dùng cho courts.html) */
+.tsport-tab-pane {
+  display: none;
+}
+.tsport-tab-pane.is-active {
+  display: block;
+}
