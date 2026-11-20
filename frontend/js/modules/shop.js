@@ -1,17 +1,14 @@
 /**
- * TSPORT — MODULE SẢN PHẨM KHÁCH HÀNG (SHOP CATALOG & GRID)
- * Tính năng:
- * - Lưới ảnh - tên - giá VNĐ (2/3/4 cột theo màn hình)
- * - Bộ lọc bên trái (Môn, Loại hàng, Thương hiệu, Mới/Cũ, Khoảng giá)
- * - Mở / đóng bộ lọc dạng Drawer trên Mobile
- * - Sắp xếp theo giá (tăng dần / giảm dần / mới nhất)
- * - Phân trang (Pagination)
- * - Giữ điều kiện lọc trên URL (URLSearchParams) để khi reload hoặc mở từ menu hiển thị đúng danh sách
- * - 3 Trạng thái chuẩn: Đang tải (Loading Skeleton) / Danh sách rỗng (Empty) / Lỗi tải (Error retry)
+ * TSPORT — MODULE SẢN PHẨM THỂ THAO (SHOP CATALOG V2 — TỐI GIẢN CHUẨN FIGMA)
+ * - Lưới 3 cột (desktop) / 2 cột (mobile), 9 sản phẩm/trang
+ * - Bộ lọc bên trái: Môn thể thao, Danh mục (cây cha-con), Thương hiệu, Tình trạng, Khoảng giá (slider)
+ * - Nút "Áp dụng bộ lọc" & "Xóa lọc", Drawer trên Mobile
+ * - Sắp xếp giá, Phân trang vuông căn giữa, giữ trạng thái qua URLSearchParams
  */
 
 (function () {
-  const ITEMS_PER_PAGE = 8;
+  const ITEMS_PER_PAGE = 9;
+  const DEFAULT_MAX_PRICE = 7000000;
   let currentPage = 1;
 
   function initShopModule() {
@@ -20,36 +17,20 @@
     loadProductsFromUrl();
   }
 
-  // Đọc điều kiện lọc từ URL
   function getFiltersFromUrl() {
     const params = getUrlParams();
     return {
-      search: params.q || "",
+      search: params.q || params.search || "",
       sport_id: params.sport || "ALL",
       category_id: params.cat || "ALL",
       brand_id: params.brand || "ALL",
       condition_type: params.condition || "ALL",
-      price_range: params.price || "ALL",
+      max_price: params.max_price ? Number(params.max_price) : DEFAULT_MAX_PRICE,
       sort: params.sort || "newest",
       page: Number(params.page) || 1
     };
   }
 
-  // Lưu điều kiện lọc lên URL
-  function syncFiltersToUrl(filters) {
-    updateUrlParams({
-      q: filters.search,
-      sport: filters.sport_id,
-      cat: filters.category_id,
-      brand: filters.brand_id,
-      condition: filters.condition_type,
-      price: filters.price_range,
-      sort: filters.sort,
-      page: filters.page > 1 ? filters.page : null
-    });
-  }
-
-  // Render Bộ lọc bên trái (Sidebar)
   function renderFiltersSidebar() {
     const store = window.tsportStore;
     if (!store) return;
@@ -61,32 +42,32 @@
     if (sportList) {
       const sports = store.getSports();
       sportList.innerHTML = `
-        <label class="tsport-filter-label">
+        <label class="ts-shop-check-row">
           <input type="radio" name="filterSportRadio" value="ALL" ${current.sport_id === "ALL" ? "checked" : ""} />
           <span>Tất cả môn</span>
         </label>
         ${sports.map((s) => `
-          <label class="tsport-filter-label">
-            <input type="radio" name="filterSportRadio" value="${s.id}" ${current.sport_id == s.id ? "checked" : ""} />
+          <label class="ts-shop-check-row">
+            <input type="radio" name="filterSportRadio" value="${s.id}" ${String(current.sport_id) === String(s.id) ? "checked" : ""} />
             <span>${escapeHtml(s.name)}</span>
           </label>
         `).join("")}
       `;
     }
 
-    // 2. Danh mục sản phẩm (Cây phân cấp)
+    // 2. Danh mục (Cây cha - con gọn gàng)
     const catList = document.getElementById("filterCategoriesList");
     if (catList) {
       const categories = store.getCategories();
       catList.innerHTML = `
-        <label class="tsport-filter-label">
+        <label class="ts-shop-check-row">
           <input type="radio" name="filterCatRadio" value="ALL" ${current.category_id === "ALL" ? "checked" : ""} />
-          <span>Tất cả loại</span>
+          <span>Tất cả danh mục</span>
         </label>
         ${categories.map((c) => `
-          <label class="tsport-filter-label" style="${c.parent_id ? 'padding-left:14px;' : 'font-weight:700;'}">
-            <input type="radio" name="filterCatRadio" value="${c.id}" ${current.category_id == c.id ? "checked" : ""} />
-            <span>${c.parent_id ? '↳ ' : ''}${escapeHtml(c.name)}</span>
+          <label class="ts-shop-check-row ${c.parent_id ? 'is-child' : ''}">
+            <input type="radio" name="filterCatRadio" value="${c.id}" ${String(current.category_id) === String(c.id) ? "checked" : ""} />
+            <span>${escapeHtml(c.name)}</span>
           </label>
         `).join("")}
       `;
@@ -95,22 +76,33 @@
     // 3. Thương hiệu
     const brandList = document.getElementById("filterBrandsList");
     if (brandList) {
-      const brands = store.getBrands();
+      const brands = store.getBrands().slice(0, 8);
       brandList.innerHTML = `
-        <label class="tsport-filter-label">
+        <label class="ts-shop-check-row">
           <input type="radio" name="filterBrandRadio" value="ALL" ${current.brand_id === "ALL" ? "checked" : ""} />
           <span>Tất cả thương hiệu</span>
         </label>
         ${brands.map((b) => `
-          <label class="tsport-filter-label">
-            <input type="radio" name="filterBrandRadio" value="${b.id}" ${current.brand_id == b.id ? "checked" : ""} />
+          <label class="ts-shop-check-row">
+            <input type="radio" name="filterBrandRadio" value="${b.id}" ${String(current.brand_id) === String(b.id) ? "checked" : ""} />
             <span>${escapeHtml(b.name)}</span>
           </label>
         `).join("")}
       `;
     }
 
-    // Đồng bộ select sắp xếp và ô tìm kiếm
+    // 4. Tình trạng
+    document.querySelectorAll('input[name="filterConditionRadio"]').forEach((r) => {
+      r.checked = r.value === current.condition_type;
+    });
+
+    // 5. Khoảng giá slider
+    const slider = document.getElementById("filterMaxPriceSlider");
+    const priceLabel = document.getElementById("filterPriceRangeText");
+    if (slider) slider.value = current.max_price;
+    if (priceLabel) priceLabel.textContent = `0đ - ${Number(current.max_price).toLocaleString("vi-VN")}đ`;
+
+    // Đồng bộ sắp xếp & ô tìm kiếm
     const sortSelect = document.getElementById("shopSortSelect");
     if (sortSelect) sortSelect.value = current.sort;
 
@@ -118,32 +110,32 @@
     if (searchInput) searchInput.value = current.search;
   }
 
-  // Tải danh sách sản phẩm với hiệu ứng loading và các trạng thái
   function loadProductsFromUrl() {
     const grid = document.getElementById("shopProductGrid");
     if (!grid) return;
 
-    // Đồng bộ trạng thái active của thanh tab môn thể thao (Image 2 style)
-    const urlFilters = getFiltersFromUrl();
-    const curSport = urlFilters.sport_id || "ALL";
-    const sportsTabs = document.querySelectorAll("#shopSportsTabs .tsport-sport-tab");
-    sportsTabs.forEach(tab => {
-      tab.classList.toggle("is-active", String(tab.dataset.sportId) === String(curSport) || (curSport === "ALL" && tab.dataset.sportId === "ALL"));
+    const filters = getFiltersFromUrl();
+    currentPage = filters.page;
+
+    // Đồng bộ trạng thái active trên thanh điều hướng (Sản phẩm vs Đồ cũ)
+    const navLinks = document.querySelectorAll(".ts-nav-full-orange .ts-inline-nav-link");
+    navLinks.forEach((a) => {
+      const href = a.getAttribute("href") || "";
+      if (filters.condition_type === "CU") {
+        a.classList.toggle("is-active", href.includes("condition=CU"));
+      } else {
+        a.classList.toggle("is-active", href === "shop.html");
+      }
     });
 
-    // 1. Hiển thị TRẠNG THÁI ĐANG TẢI (Loading Skeleton)
+    // Loading skeleton ngắn gọn
     renderLoadingState(grid);
 
-    // Giả lập độ trễ mạng nhẹ (150ms) để thể hiện trạng thái tải mượt mà
     setTimeout(() => {
       try {
         const store = window.tsportStore;
-        if (!store) throw new Error("Chưa khởi tạo Store dữ liệu!");
+        if (!store) throw new Error("Chưa khởi tạo dữ liệu cửa hàng.");
 
-        const filters = getFiltersFromUrl();
-        currentPage = filters.page;
-
-        // Lấy dữ liệu và lọc (chỉ lấy sản phẩm ACTIVE cho khách hàng)
         let list = store.getProducts({
           search: filters.search,
           sport_id: filters.sport_id,
@@ -153,200 +145,133 @@
           only_active: true
         });
 
-        // Lọc theo khoảng giá
-        if (filters.price_range && filters.price_range !== "ALL") {
+        // Lọc theo mức giá tối đa từ slider
+        if (filters.max_price && filters.max_price < DEFAULT_MAX_PRICE) {
           list = list.filter((p) => {
-            const minPrice = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.price)) : 0;
-            if (filters.price_range === "UNDER_1M") return minPrice < 1000000;
-            if (filters.price_range === "1M_3M") return minPrice >= 1000000 && minPrice <= 3000000;
-            if (filters.price_range === "3M_5M") return minPrice >= 3000000 && minPrice <= 5000000;
-            if (filters.price_range === "ABOVE_5M") return minPrice > 5000000;
-            return true;
+            const minPrice = getMinEffectivePrice(p);
+            return minPrice <= filters.max_price;
           });
         }
 
-        // Sắp xếp theo giá hoặc mới nhất
+        // Sắp xếp
         if (filters.sort === "price_asc") {
-          list.sort((a, b) => {
-            const pA = a.skus.length ? Math.min(...a.skus.map(s => s.price)) : 0;
-            const pB = b.skus.length ? Math.min(...b.skus.map(s => s.price)) : 0;
-            return pA - pB;
-          });
+          list.sort((a, b) => getMinEffectivePrice(a) - getMinEffectivePrice(b));
         } else if (filters.sort === "price_desc") {
-          list.sort((a, b) => {
-            const pA = a.skus.length ? Math.min(...a.skus.map(s => s.price)) : 0;
-            const pB = b.skus.length ? Math.min(...b.skus.map(s => s.price)) : 0;
-            return pB - pA;
-          });
-        } else if (filters.sort === "name_asc") {
-          list.sort((a, b) => a.name.localeCompare(b.name, "vi"));
+          list.sort((a, b) => getMinEffectivePrice(b) - getMinEffectivePrice(a));
         } else {
-          // Mới nhất (id giảm dần)
           list.sort((a, b) => b.id - a.id);
         }
 
         const totalItems = list.length;
-        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
-        if (currentPage > totalPages) currentPage = 1;
+        const countEl = document.getElementById("shopTotalCount");
+        if (countEl) countEl.textContent = `${totalItems} sản phẩm`;
 
-        // Phân trang
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const pagedList = list.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-        // Cập nhật số lượng sản phẩm hiển thị trên badge
-        const countBadge = document.getElementById("shopResultCount");
-        if (countBadge) {
-          countBadge.innerHTML = `Hiển thị <strong>${pagedList.length}</strong> / <strong>${totalItems}</strong> sản phẩm`;
-        }
-
-        // 2. Kiểm tra TRẠNG THÁI RỖNG (Empty State)
         if (totalItems === 0) {
           renderEmptyState(grid);
           renderPagination(0, 1);
           return;
         }
 
-        // 3. Render danh sách sản phẩm bình thường
-        renderProducts(grid, pagedList);
-        renderPagination(totalPages, currentPage);
+        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+        if (currentPage > totalPages) currentPage = totalPages;
+        const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+        const paginatedList = list.slice(startIdx, startIdx + ITEMS_PER_PAGE);
 
+        renderProducts(grid, paginatedList);
+        renderPagination(totalPages, currentPage);
       } catch (err) {
-        console.error("Lỗi tải sản phẩm:", err);
-        // 4. TRẠNG THÁI LỖI (Error State)
         renderErrorState(grid, err.message);
       }
-    }, 150);
+    }, 100);
   }
 
-  // TRẠNG THÁI 1: LOADING SKELETON
+  function getMinEffectivePrice(prod) {
+    if (!prod.skus || prod.skus.length === 0) return 0;
+    return Math.min(...prod.skus.map((s) =>
+      (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price))
+        ? Number(s.sale_price)
+        : Number(s.price)
+    ));
+  }
+
   function renderLoadingState(grid) {
-    let skeletons = "";
-    for (let i = 0; i < 8; i++) {
-      skeletons += `
-        <div class="tsport-skeleton-card">
-          <div class="tsport-skeleton-thumb"></div>
-          <div class="tsport-skeleton-line short"></div>
-          <div class="tsport-skeleton-line"></div>
-          <div class="tsport-skeleton-line short" style="margin-top:14px;"></div>
+    let html = "";
+    for (let i = 0; i < 6; i++) {
+      html += `
+        <div class="ts-shop-card-v2" style="pointer-events:none;">
+          <div class="ts-shop-card-media tsport-skeleton"></div>
+          <div class="tsport-skeleton" style="height:14px; width:82%; margin-bottom:8px; border-radius:4px;"></div>
+          <div class="tsport-skeleton" style="height:11px; width:55%; margin-bottom:10px; border-radius:4px;"></div>
+          <div class="tsport-skeleton" style="height:16px; width:45%; border-radius:4px;"></div>
         </div>
       `;
     }
-    grid.innerHTML = skeletons;
+    grid.innerHTML = html;
   }
 
-  // TRẠNG THÁI 2: EMPTY STATE
   function renderEmptyState(grid) {
     grid.innerHTML = `
-      <div class="tsport-empty-state">
-        <div class="tsport-empty-icon">🔍📦</div>
-        <h3 class="tsport-empty-title">Không tìm thấy sản phẩm nào!</h3>
-        <p class="tsport-empty-desc">
-          Rất tiếc, không có sản phẩm nào khớp với các tiêu chí lọc hiện tại của bạn. Vui lòng thử tìm kiếm khác hoặc xóa bớt bộ lọc.
-        </p>
-        <button type="button" class="btn btn-primary" id="btnResetFiltersEmpty">
-          ✕ Xóa tất cả bộ lọc & Xem toàn bộ sản phẩm
-        </button>
+      <div style="grid-column:1/-1; background:#FFFFFF; border:1px solid #E5E7EB; border-radius:10px; padding:48px 24px; text-align:center;">
+        <h3 style="font-size:17px; font-weight:800; color:#111827; margin:0 0 8px 0;">Không tìm thấy sản phẩm phù hợp</h3>
+        <p style="font-size:13px; color:#6B7280; margin:0 0 18px 0;">Vui lòng thử từ khóa khác hoặc xóa bộ lọc đang áp dụng.</p>
+        <button type="button" class="ts-shop-apply-btn" id="btnResetFiltersEmpty" style="width:auto; padding:10px 22px;">Xóa bộ lọc</button>
       </div>
     `;
     document.getElementById("btnResetFiltersEmpty")?.addEventListener("click", resetAllFilters);
   }
 
-  // TRẠNG THÁI 3: ERROR STATE
   function renderErrorState(grid, errMsg) {
     grid.innerHTML = `
-      <div class="tsport-error-state">
-        <div class="tsport-error-icon">⚠️</div>
-        <h3 class="tsport-error-title">Đã xảy ra lỗi khi tải dữ liệu!</h3>
-        <p class="tsport-error-desc">${escapeHtml(errMsg || "Không thể kết nối đến kho dữ liệu.")}</p>
-        <button type="button" class="btn btn-secondary" id="btnRetryShopLoad">
-          🔄 Thử tải lại ngay
-        </button>
+      <div style="grid-column:1/-1; background:#FFFFFF; border:1px solid #FECACA; border-radius:10px; padding:40px 24px; text-align:center;">
+        <h3 style="font-size:16px; font-weight:800; color:#991B1B; margin:0 0 6px 0;">Lỗi tải danh sách sản phẩm</h3>
+        <p style="font-size:13px; color:#6B7280; margin:0 0 16px 0;">${escapeHtml(errMsg || "Không thể kết nối dữ liệu.")}</p>
+        <button type="button" class="ts-shop-apply-btn" id="btnRetryShopLoad" style="width:auto; padding:9px 20px;">Thử tải lại</button>
       </div>
     `;
     document.getElementById("btnRetryShopLoad")?.addEventListener("click", loadProductsFromUrl);
   }
 
-  // RENDER LƯỚI SẢN PHẨM 2/3/4 CỘT
   function renderProducts(grid, products) {
-    const store = window.tsportStore;
-    const brands = store ? store.getBrands() : [];
-    const sports = store ? store.getSports() : [];
-
-    let html = "";
-    products.forEach((p) => {
-      const brand = brands.find((b) => b.id === p.brand_id);
-      const sport = sports.find((s) => s.id === p.sport_id);
-
-      // Ảnh chính
+    grid.innerHTML = products.map((p) => {
       const primaryImg = (p.images && p.images.find((i) => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
-
-      // Giá thấp nhất trong các SKU (tính cả giá sale nếu có)
       const skus = p.skus || [];
-      const hasSale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
-      const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
-      const minEffectivePrice = effectivePrices.length ? Math.min(...effectivePrices) : 0;
-      const minOriginalPrice = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
-      const maxDiscountPct = hasSale
-        ? Math.max(...skus.filter(s => s.sale_price && s.sale_price < s.price).map(s => Math.round((1 - s.sale_price / s.price) * 100)))
-        : 0;
-      const totalStock = skus.reduce((sum, s) => sum + s.stock, 0);
-
-      // Nhãn Mới / Cũ
+      const hasSale = skus.some((s) => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+      const minEff = getMinEffectivePrice(p);
+      const minOrig = skus.length ? Math.min(...skus.map((s) => Number(s.price))) : 0;
       const isUsed = p.condition_type === "CU";
+      const sizes = [...new Set(skus.map((s) => s.size).filter(Boolean))].slice(0, 2).join(", ");
+      const metaText = sizes ? `Màu / Size ${sizes} / Chiếc` : "Màu / Size / Đơn vị";
 
-      // Điểm đánh giá trung bình
-      const ratingInfo = store && typeof store.getProductRating === "function"
-        ? store.getProductRating(p.id)
-        : { avgRating: 5.0, count: 0 };
-
-      html += `
-        <a href="product-detail.html?id=${p.id}" class="tsport-product-card">
-          <div class="tsport-product-thumb">
+      return `
+        <a href="product-detail.html?id=${p.id}" class="ts-shop-card-v2">
+          <div class="ts-shop-card-media">
+            <span class="ts-shop-card-badge ${isUsed ? 'is-used' : ''}">
+              ${isUsed ? 'Đã qua sử dụng' : 'Mới'}
+            </span>
             <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
-            <div class="tsport-card-badges">
-              <span class="tsport-badge-condition ${isUsed ? 'cu' : 'moi'}">
-                ${isUsed ? 'ĐỒ CŨ MINH BẠCH' : 'HÀNG MỚI 100%'}
-              </span>
-              ${hasSale ? `<span class="tsport-badge-condition" style="background:#EF4444; color:#FFF; font-weight:800;">-${maxDiscountPct}% SALE</span>` : ''}
-              ${sport ? `<span class="tsport-badge-sport-tag">${escapeHtml(sport.name)}</span>` : ''}
-            </div>
           </div>
-
-          <div class="tsport-product-info">
-            <div class="tsport-product-brand">${escapeHtml(brand ? brand.name : 'Tsport')}</div>
-            <h3 class="tsport-product-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
-            
-            <div style="display:flex; align-items:center; gap:6px; font-size:12px; margin:4px 0;">
-              <span style="color:#F59E0B; font-weight:800;">★ ${ratingInfo.avgRating}</span>
-              <span style="color:#64748B; font-size:11px;">(${ratingInfo.count} đánh giá)</span>
-            </div>
-
-            <div class="tsport-product-meta">
-              <span>${p.skus ? p.skus.length : 0} biến thể</span>
-              <span>•</span>
-              <span class="tsport-product-stock-tag ${totalStock > 0 ? '' : 'out'}">
-                ${totalStock > 0 ? `Còn hàng (${totalStock})` : 'Tạm hết hàng'}
-              </span>
-            </div>
-
-            <div class="tsport-product-bottom">
-              <div class="tsport-product-price">
-                ${hasSale 
-                  ? `<span>${formatMoney(minEffectivePrice)}</span> <del style="font-size:12px; color:#94A3B8; font-weight:normal; margin-left:4px;">${formatMoney(minOriginalPrice)}</del>`
-                  : formatMoney(minEffectivePrice)
-                }
-              </div>
-              <span style="font-size:12px; color:#D94C26; font-weight:700;">Xem chi tiết →</span>
-            </div>
+          <h3 class="ts-shop-card-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
+          <div class="ts-shop-card-meta">${escapeHtml(metaText)}</div>
+          <div class="ts-shop-card-price-row">
+            <span class="ts-shop-card-price">${formatShopMoney(minEff)}</span>
+            ${hasSale ? `<span class="ts-shop-card-oldprice">${formatShopMoney(minOrig)}</span>` : ""}
           </div>
         </a>
       `;
-    });
+    }).join("");
 
-    grid.innerHTML = html;
+    if (typeof window.gsap !== "undefined") {
+      window.gsap.from(grid.querySelectorAll(".ts-shop-card-v2"), {
+        y: 12,
+        opacity: 0,
+        duration: 0.35,
+        stagger: 0.03,
+        ease: "power2.out",
+        clearProps: "transform,opacity"
+      });
+    }
   }
 
-  // RENDER THANH PHÂN TRANG (PAGINATION)
   function renderPagination(totalPages, activePage) {
     const container = document.getElementById("shopPagination");
     if (!container) return;
@@ -355,30 +280,44 @@
       return;
     }
 
-    let html = `
-      <button type="button" class="tsport-page-btn" ${activePage <= 1 ? 'disabled' : ''} data-page="${activePage - 1}">
-        ‹ Trước
-      </button>
-    `;
-
+    let html = "";
     for (let p = 1; p <= totalPages; p++) {
       html += `
-        <button type="button" class="tsport-page-btn ${p === activePage ? 'is-active' : ''}" data-page="${p}">
+        <button type="button" class="ts-shop-page-btn ${p === activePage ? 'is-active' : ''}" data-page="${p}">
           ${p}
         </button>
       `;
     }
 
     html += `
-      <button type="button" class="tsport-page-btn" ${activePage >= totalPages ? 'disabled' : ''} data-page="${activePage + 1}">
-        Sau ›
+      <button type="button" class="ts-shop-page-btn" ${activePage >= totalPages ? 'disabled' : ''} data-page="${activePage + 1}" aria-label="Trang sau">
+        →
       </button>
     `;
 
     container.innerHTML = html;
   }
 
-  // Xóa toàn bộ bộ lọc
+  function applySelectedFiltersFromSidebar() {
+    const sportVal = document.querySelector('input[name="filterSportRadio"]:checked')?.value || "ALL";
+    const catVal = document.querySelector('input[name="filterCatRadio"]:checked')?.value || "ALL";
+    const brandVal = document.querySelector('input[name="filterBrandRadio"]:checked')?.value || "ALL";
+    const condVal = document.querySelector('input[name="filterConditionRadio"]:checked')?.value || "ALL";
+    const maxPriceVal = Number(document.getElementById("filterMaxPriceSlider")?.value) || DEFAULT_MAX_PRICE;
+
+    updateUrlParams({
+      sport: sportVal === "ALL" ? null : sportVal,
+      cat: catVal === "ALL" ? null : catVal,
+      brand: brandVal === "ALL" ? null : brandVal,
+      condition: condVal === "ALL" ? null : condVal,
+      max_price: maxPriceVal < DEFAULT_MAX_PRICE ? maxPriceVal : null,
+      page: null
+    });
+
+    document.getElementById("shopFilterSidebar")?.classList.remove("is-open");
+    loadProductsFromUrl();
+  }
+
   function resetAllFilters() {
     updateUrlParams({
       q: null,
@@ -386,7 +325,7 @@
       cat: null,
       brand: null,
       condition: null,
-      price: null,
+      max_price: null,
       sort: "newest",
       page: null
     }, true);
@@ -394,87 +333,70 @@
     loadProductsFromUrl();
   }
 
-  // GẮN CÁC SỰ KIỆN
   function bindEvents() {
-    // 1. Mobile Filter Drawer Open / Close
     const btnToggleMobile = document.getElementById("btnToggleMobileFilter");
     const btnCloseMobile = document.getElementById("btnCloseMobileFilter");
     const sidebar = document.getElementById("shopFilterSidebar");
 
-    btnToggleMobile?.addEventListener("click", () => {
-      sidebar?.classList.add("is-open");
-    });
-    btnCloseMobile?.addEventListener("click", () => {
-      sidebar?.classList.remove("is-open");
-    });
+    btnToggleMobile?.addEventListener("click", () => sidebar?.classList.add("is-open"));
+    btnCloseMobile?.addEventListener("click", () => sidebar?.classList.remove("is-open"));
 
-    // Bắt sự kiện click trên thanh tab môn thể thao (Image 2 style)
-    const sportsTabs = document.querySelectorAll("#shopSportsTabs .tsport-sport-tab");
-    sportsTabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        sportsTabs.forEach(t => t.classList.remove("is-active"));
-        tab.classList.add("is-active");
-        const sportVal = tab.dataset.sportId;
-        updateUrlParams({ sport: sportVal, page: null });
-        const radio = document.querySelector(`input[name="filterSportRadio"][value="${sportVal}"]`);
-        if (radio) radio.checked = true;
-        loadProductsFromUrl();
-      });
-    });
-
-    // 2. Bắt sự kiện thay đổi radio môn / danh mục / thương hiệu / tình trạng / khoảng giá
-    document.addEventListener("change", (e) => {
-      if (e.target.name === "filterSportRadio") {
-        updateUrlParams({ sport: e.target.value, page: null });
-        loadProductsFromUrl();
-      } else if (e.target.name === "filterCatRadio") {
-        updateUrlParams({ cat: e.target.value, page: null });
-        loadProductsFromUrl();
-      } else if (e.target.name === "filterBrandRadio") {
-        updateUrlParams({ brand: e.target.value, page: null });
-        loadProductsFromUrl();
-      } else if (e.target.name === "filterConditionRadio") {
-        updateUrlParams({ condition: e.target.value, page: null });
-        loadProductsFromUrl();
-      } else if (e.target.name === "filterPriceRadio") {
-        updateUrlParams({ price: e.target.value, page: null });
-        loadProductsFromUrl();
+    // Cập nhật text khoảng giá khi kéo thanh trượt
+    const priceSlider = document.getElementById("filterMaxPriceSlider");
+    const priceLabel = document.getElementById("filterPriceRangeText");
+    priceSlider?.addEventListener("input", () => {
+      if (priceLabel) {
+        priceLabel.textContent = `0đ - ${Number(priceSlider.value).toLocaleString("vi-VN")}đ`;
       }
     });
 
-    // 3. Sắp xếp giá
+    // Nút Áp dụng bộ lọc
+    document.getElementById("btnApplyFilters")?.addEventListener("click", applySelectedFiltersFromSidebar);
+
+    // Lọc tức thì khi thay đổi radio trên desktop
+    document.addEventListener("change", (e) => {
+      if (
+        e.target.name === "filterSportRadio" ||
+        e.target.name === "filterCatRadio" ||
+        e.target.name === "filterBrandRadio" ||
+        e.target.name === "filterConditionRadio"
+      ) {
+        applySelectedFiltersFromSidebar();
+      }
+    });
+
+    // Sắp xếp
     document.getElementById("shopSortSelect")?.addEventListener("change", (e) => {
       updateUrlParams({ sort: e.target.value, page: null });
       loadProductsFromUrl();
     });
 
-    // 4. Tìm kiếm từ ô input
-    const searchForm = document.getElementById("shopSearchForm");
-    searchForm?.addEventListener("submit", (e) => {
+    // Tìm kiếm
+    document.getElementById("shopSearchForm")?.addEventListener("submit", (e) => {
       e.preventDefault();
-      const val = document.getElementById("shopSearchInput")?.value.trim() || "";
-      updateUrlParams({ q: val, page: null });
+      const q = document.getElementById("shopSearchInput")?.value.trim() || "";
+      updateUrlParams({ q: q || null, page: null });
       loadProductsFromUrl();
     });
 
-    // 5. Nút xóa bộ lọc trên sidebar
+    // Xóa lọc
     document.getElementById("btnResetFilters")?.addEventListener("click", resetAllFilters);
 
-    // 6. Phân trang
+    // Phân trang
     document.getElementById("shopPagination")?.addEventListener("click", (e) => {
-      const btn = e.target.closest(".tsport-page-btn");
-      if (btn && !btn.disabled && btn.dataset.page) {
-        updateUrlParams({ page: Number(btn.dataset.page) });
+      const btn = e.target.closest(".ts-shop-page-btn");
+      if (!btn || btn.disabled) return;
+      const targetPage = Number(btn.dataset.page);
+      if (targetPage) {
+        updateUrlParams({ page: targetPage > 1 ? targetPage : null });
         loadProductsFromUrl();
-        window.scrollTo({ top: 120, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     });
+  }
 
-    // 7. Lắng nghe popstate (người dùng bấm nút Back/Forward trên trình duyệt)
-    window.addEventListener("popstate", () => {
-      renderFiltersSidebar();
-      loadProductsFromUrl();
-    });
+  function formatShopMoney(amount) {
+    return (Number(amount) || 0).toLocaleString("vi-VN") + "đ";
   }
 
   document.addEventListener("DOMContentLoaded", initShopModule);

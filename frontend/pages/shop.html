@@ -3,229 +3,213 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cửa hàng Đồ Thể Thao Chính Hãng | Tsport Store</title>
-    <!-- Google Fonts: Roboto -->
+  <title>Sản phẩm thể thao | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 </head>
-<body data-root="../">
+<body class="tsport-home-body" data-root="../">
 
-  <!-- HEADER & NAVIGATION -->
-  <header class="tsport-header">
-    <div class="tsport-topbar">
-      <div class="container">
-        <div class="tsport-topbar-left">
-          <span class="tsport-topbar-badge">CỬA HÀNG TSPORT</span>
-          <span>LƯỚI 2/3/4 CỘT • BỘ LỌC ĐA NĂNG • SẮP GIÁ • ĐỒ CŨ MINH BẠCH</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <a href="../index.html" style="color:#F8FAFC;">🏠 Về Showcase</a>
-          <a href="orders.html" style="color:#F8FAFC;">📦 Đơn hàng của tôi</a>
-          <a href="cart.html" style="color:#FF6B35; font-weight:700;">🛒 Giỏ hàng (<span class="js-cart-count">0</span>)</a>
-        </div>
-      </div>
-    </div>
+  <!-- ==========================================
+       1. HEADER GIỮ NGUYÊN ĐỒNG BỘ TRANG CHỦ
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
 
-    <div class="tsport-main-bar">
-      <div class="container">
-        <a href="../index.html" class="tsport-logo">
-          <span class="tsport-logo-text">Tsport</span>
-          <span class="tsport-logo-tag">OFFICIAL STORE</span>
-        </a>
-
-        <!-- THANH TÌM KIẾM CỬA HÀNG -->
-        <form id="shopSearchForm" style="flex:1; max-width:480px; margin:0 24px;">
-          <div style="position:relative; display:flex;">
-            <input type="text" id="shopSearchInput" class="form-control" placeholder="Tìm vợt, giày, áo quần, thương hiệu (Yonex, Nike...)" style="padding-left:36px; border-radius:20px 0 0 20px;" />
-            <span style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:#94A3B8;">🔍</span>
-            <button type="submit" class="btn btn-primary" style="border-radius:0 20px 20px 0; padding:0 20px;">Tìm</button>
-          </div>
+      <div class="ts-min-search-wrap">
+        <form id="shopSearchForm">
+          <input
+            type="text"
+            id="shopSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
         </form>
+      </div>
 
-        <div class="tsport-actions">
-          <a href="cart.html" class="btn btn-secondary btn-sm" style="position:relative;">
-            <span>🛒</span>
-            <span>Giỏ hàng</span>
-            <span class="badge badge-sport js-cart-count" style="margin-left:4px;">0</span>
-          </a>
-          <a href="products.html" class="btn btn-secondary btn-sm">⚙️ Quản trị Admin</a>
-        </div>
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <a href="auth.html" class="ts-min-header-link js-header-user-label">Tài khoản</a>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
       </div>
     </div>
-
-    <!-- THANH MENU CHÍNH -->
-    <nav class="tsport-nav-bar">
-      <div class="container" style="display:flex; gap:24px; align-items:center; overflow-x:auto;">
-        <a href="../index.html" class="tsport-nav-link">Trang chủ</a>
-        <a href="shop.html" class="tsport-nav-link is-active">Sản phẩm</a>
-        <a href="shop.html?condition=CU" class="tsport-nav-link">Đồ cũ</a>
-        <a href="courts.html" class="tsport-nav-link">Đặt sân</a>
-        <a href="community.html" class="tsport-nav-link">Ghép kèo</a>
-        <a href="admin-buyback.html" class="tsport-nav-link">Thu mua đồ cũ</a>
-      </div>
-    </nav>
   </header>
 
-  <!-- NỘI DUNG CHÍNH -->
-  <main class="container" style="padding-bottom:50px;">
-    
-    <!-- THANH CHỌN MÔN THỂ THAO CHUẨN FIGMA (IMAGE 2) -->
-    <div class="tsport-sports-tab-bar" style="border-radius:8px; margin-top:16px;">
-      <div class="tsport-sports-tabs" id="shopSportsTabs">
-        <button type="button" class="tsport-sport-tab is-active" data-sport-id="ALL">
-          <span class="tsport-sport-tab-icon">🏆</span>
-          <span class="tsport-sport-tab-text">TẤT CẢ</span>
-        </button>
-        <button type="button" class="tsport-sport-tab" data-sport-id="1">
-          <span class="tsport-sport-tab-icon">🏸</span>
-          <span class="tsport-sport-tab-text">CẦU LÔNG</span>
-        </button>
-        <button type="button" class="tsport-sport-tab" data-sport-id="2">
-          <span class="tsport-sport-tab-icon">⚽</span>
-          <span class="tsport-sport-tab-text">BÓNG ĐÁ</span>
-        </button>
-        <button type="button" class="tsport-sport-tab" data-sport-id="3">
-          <span class="tsport-sport-tab-icon">🎾</span>
-          <span class="tsport-sport-tab-text">TENNIS</span>
-        </button>
-        <button type="button" class="tsport-sport-tab" data-sport-id="4">
-          <span class="tsport-sport-tab-icon">🏓</span>
-          <span class="tsport-sport-tab-text">PICKLEBALL</span>
-        </button>
-        <button type="button" class="tsport-sport-tab" data-sport-id="6">
-          <span class="tsport-sport-tab-icon">🏓</span>
-          <span class="tsport-sport-tab-text">BÓNG BÀN</span>
-        </button>
-      </div>
+  <!-- THANH ĐIỀU HƯỚNG CAM ĐẬM FULL MÀN HÌNH GIỮ NGUYÊN ĐỒNG BỘ TRANG CHỦ -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link is-active">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
     </div>
-    
-    <div class="tsport-shop-layout">
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: SẢN PHẨM THỂ THAO
+       ========================================== -->
+  <main class="container ts-shop-page-main">
+
+    <!-- Breadcrumb & Tiêu đề trang -->
+    <div class="ts-shop-breadcrumb">
+      <a href="../index.html">Trang chủ</a>
+      <span>/</span>
+      <span>Sản phẩm thể thao</span>
+    </div>
+
+    <div class="ts-shop-page-head">
+      <h1 class="ts-shop-page-title">Sản phẩm thể thao</h1>
+      <p class="ts-shop-page-sub">Lọc theo môn, danh mục, thương hiệu, tình trạng và giá.</p>
+    </div>
+
+    <div class="ts-shop-layout-v2">
 
       <!-- ==========================================
-           BỘ LỌC BÊN TRÁI (SIDEBAR & DRAWER MOBILE)
+           CỘT TRÁI: BỘ LỌC (SIDEBAR & DRAWER MOBILE)
            ========================================== -->
-      <aside class="tsport-filter-sidebar" id="shopFilterSidebar">
-        <div class="tsport-filter-header">
-          <h2 class="tsport-filter-title">
-            <span>⚙️</span>
-            <span>Bộ Lọc Sản Phẩm</span>
-          </h2>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <button type="button" class="tsport-filter-reset" id="btnResetFilters">Xóa tất cả</button>
-            <button type="button" class="btn-icon" id="btnCloseMobileFilter" style="display:none; font-size:18px;">✕</button>
+      <aside class="ts-shop-sidebar-v2" id="shopFilterSidebar">
+        <div class="ts-shop-filter-head">
+          <span class="ts-shop-filter-heading">BỘ LỌC</span>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button type="button" class="ts-shop-filter-clear" id="btnResetFilters">Xóa lọc</button>
+            <button type="button" class="ts-shop-mobile-close" id="btnCloseMobileFilter" aria-label="Đóng bộ lọc">✕</button>
           </div>
         </div>
 
         <!-- 1. Môn thể thao -->
-        <div class="tsport-filter-group">
-          <h3 class="tsport-filter-group-title">Môn thể thao</h3>
-          <div class="tsport-filter-list" id="filterSportsList"></div>
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Môn thể thao</div>
+          <div class="ts-shop-filter-list" id="filterSportsList"></div>
         </div>
 
-        <!-- 2. Danh mục sản phẩm (Cây cha - con) -->
-        <div class="tsport-filter-group">
-          <h3 class="tsport-filter-group-title">Danh mục hàng hóa</h3>
-          <div class="tsport-filter-list" id="filterCategoriesList"></div>
+        <!-- 2. Danh mục -->
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Danh mục</div>
+          <div class="ts-shop-filter-list" id="filterCategoriesList"></div>
         </div>
 
         <!-- 3. Thương hiệu -->
-        <div class="tsport-filter-group">
-          <h3 class="tsport-filter-group-title">Thương hiệu</h3>
-          <div class="tsport-filter-list" id="filterBrandsList"></div>
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Thương hiệu</div>
+          <div class="ts-shop-filter-list" id="filterBrandsList"></div>
         </div>
 
-        <!-- 4. Tình trạng hàng hóa -->
-        <div class="tsport-filter-group">
-          <h3 class="tsport-filter-group-title">Tình trạng sản phẩm</h3>
-          <div class="tsport-filter-list">
-            <label class="tsport-filter-label">
+        <!-- 4. Tình trạng -->
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Tình trạng</div>
+          <div class="ts-shop-filter-list">
+            <label class="ts-shop-check-row">
               <input type="radio" name="filterConditionRadio" value="ALL" checked />
-              <span>Tất cả tình trạng</span>
+              <span>Tất cả</span>
             </label>
-            <label class="tsport-filter-label">
+            <label class="ts-shop-check-row">
               <input type="radio" name="filterConditionRadio" value="MOI" />
-              <span>Hàng Mới 100% chính hãng</span>
+              <span>Mới</span>
             </label>
-            <label class="tsport-filter-label">
+            <label class="ts-shop-check-row">
               <input type="radio" name="filterConditionRadio" value="CU" />
-              <span>Đồ cũ minh bạch (Đã kiểm định)</span>
+              <span>Đã qua sử dụng</span>
             </label>
           </div>
         </div>
 
         <!-- 5. Khoảng giá -->
-        <div class="tsport-filter-group">
-          <h3 class="tsport-filter-group-title">Khoảng giá (VNĐ)</h3>
-          <div class="tsport-filter-list">
-            <label class="tsport-filter-label">
-              <input type="radio" name="filterPriceRadio" value="ALL" checked />
-              <span>Tất cả mức giá</span>
-            </label>
-            <label class="tsport-filter-label">
-              <input type="radio" name="filterPriceRadio" value="UNDER_1M" />
-              <span>Dưới 1.000.000 ₫</span>
-            </label>
-            <label class="tsport-filter-label">
-              <input type="radio" name="filterPriceRadio" value="1M_3M" />
-              <span>1.000.000 ₫ - 3.000.000 ₫</span>
-            </label>
-            <label class="tsport-filter-label">
-              <input type="radio" name="filterPriceRadio" value="3M_5M" />
-              <span>3.000.000 ₫ - 5.000.000 ₫</span>
-            </label>
-            <label class="tsport-filter-label">
-              <input type="radio" name="filterPriceRadio" value="ABOVE_5M" />
-              <span>Trên 5.000.000 ₫</span>
-            </label>
-          </div>
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Khoảng giá</div>
+          <input
+            type="range"
+            id="filterMaxPriceSlider"
+            class="ts-shop-price-slider"
+            min="500000"
+            max="7000000"
+            step="250000"
+            value="7000000"
+          />
+          <div class="ts-shop-price-range-text" id="filterPriceRangeText">0đ - 7.000.000đ</div>
         </div>
+
+        <button type="button" class="ts-shop-apply-btn" id="btnApplyFilters">Áp dụng bộ lọc</button>
       </aside>
 
       <!-- ==========================================
-           CỘT PHẢI: TOOLBAR & LƯỚI SẢN PHẨM 2/3/4 CỘT
+           CỘT PHẢI: TOOLBAR + LƯỚI 3 CỘT + PHÂN TRANG
            ========================================== -->
-      <section class="tsport-shop-main">
-        
-        <!-- THANH TOOLBAR -->
-        <div class="tsport-shop-toolbar">
-          <div class="tsport-shop-toolbar-left">
-            <button type="button" class="tsport-mobile-filter-btn" id="btnToggleMobileFilter">
-              <span>☰</span>
-              <span>Bộ lọc</span>
-            </button>
-            <div id="shopResultCount" style="font-size:13px; color:#475569;">
-              Đang tải danh sách...
-            </div>
+      <section class="ts-shop-content-v2">
+        <div class="ts-shop-toolbar-v2">
+          <div class="ts-shop-toolbar-left">
+            <button type="button" class="ts-shop-mobile-filter-btn" id="btnToggleMobileFilter">Bộ lọc</button>
+            <span class="ts-shop-count-text" id="shopTotalCount">0 sản phẩm</span>
           </div>
 
-          <!-- SẮP XẾP GIÁ -->
-          <div class="tsport-sort-wrap">
-            <span class="tsport-sort-label">Sắp xếp:</span>
-            <select class="tsport-sort-select" id="shopSortSelect">
-              <option value="newest">Mới nhất</option>
-              <option value="price_asc">Giá: Thấp đến Cao</option>
-              <option value="price_desc">Giá: Cao đến Thấp</option>
-              <option value="name_asc">Tên sản phẩm: A → Z</option>
+          <div class="ts-shop-sort-wrap">
+            <select id="shopSortSelect" class="ts-shop-sort-select" aria-label="Sắp xếp sản phẩm">
+              <option value="newest">Sắp xếp: Mới nhất</option>
+              <option value="price_asc">Sắp xếp: Giá thấp đến cao</option>
+              <option value="price_desc">Sắp xếp: Giá cao đến thấp</option>
             </select>
           </div>
         </div>
 
-        <!-- LƯỚI SẢN PHẨM 2/3/4 CỘT (RESPONSIVE GRID) -->
-        <div class="tsport-product-grid" id="shopProductGrid">
-          <!-- Được render tự động qua shop.js -->
+        <!-- LƯỚI SẢN PHẨM 3 CỘT CHUẨN ẢNH -->
+        <div class="ts-shop-grid-v2" id="shopProductGrid">
+          <!-- Render động từ shop.js -->
         </div>
 
-        <!-- THANH PHÂN TRANG (PAGINATION) -->
-        <div class="tsport-pagination" id="shopPagination"></div>
-
+        <!-- PHÂN TRANG CĂN GIỮA -->
+        <div class="ts-shop-pagination-v2" id="shopPagination"></div>
       </section>
 
     </div>
-
   </main>
+
+  <!-- FOOTER SÁNG TỐI GIẢN ĐỒNG BỘ TRANG CHỦ -->
+  <footer class="ts-min-footer">
+    <div class="container">
+      <div class="ts-min-footer-grid">
+        <div>
+          <div class="ts-min-footer-brand">Tsport</div>
+          <p class="ts-min-footer-tagline">Mọi môn thể thao. Mọi cuộc chơi.</p>
+        </div>
+
+        <div class="ts-min-footer-col">
+          <h4>MUA SẮM</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="shop.html">Sản phẩm mới</a></li>
+            <li><a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a></li>
+          </ul>
+        </div>
+
+        <div class="ts-min-footer-col">
+          <h4>DỊCH VỤ</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="courts.html">Đặt sân thể thao</a></li>
+            <li><a href="community.html">Ghép kèo • Thu mua đồ cũ</a></li>
+          </ul>
+        </div>
+
+        <div class="ts-min-footer-col">
+          <h4>TÀI KHOẢN</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="account.html">Hồ sơ cá nhân</a></li>
+            <li><a href="orders.html">Đơn hàng • Lịch đặt sân</a></li>
+            <li><a href="admin-dashboard.html">Quản trị hệ thống</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
@@ -237,13 +221,5 @@
   <script src="../js/data/store.js"></script>
   <script src="../js/modules/header.js"></script>
   <script src="../js/modules/shop.js"></script>
-
-  <style>
-    @media (max-width: 767px) {
-      #btnCloseMobileFilter {
-        display: inline-block !important;
-      }
-    }
-  </style>
 </body>
 </html>
