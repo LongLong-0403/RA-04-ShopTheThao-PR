@@ -28,10 +28,40 @@
       return;
     }
 
+    if (params.success === "1") {
+      const latest = (store.getBookings && store.getBookings()[0]) || {
+        court_name: currentCourt.name,
+        booking_date: toISODate(new Date()),
+        time_slot: "16:00 - 18:00",
+        fixed_price: 180000
+      };
+      showBookingSuccessView(latest);
+      return;
+    }
+
     renderCourtInfo(currentCourt);
     populateDateSelect();
     renderSlotsGrid();
     bindEvents();
+  }
+
+  function showBookingSuccessView(booking) {
+    const detailView = document.getElementById("courtDetailView");
+    const successView = document.getElementById("courtBookingSuccessView");
+    const courtEl = document.getElementById("bkgSuccessCourt");
+    const dateEl = document.getElementById("bkgSuccessDate");
+    const slotEl = document.getElementById("bkgSuccessSlot");
+    const priceEl = document.getElementById("bkgSuccessPrice");
+
+    if (courtEl) courtEl.textContent = booking.court_name || (currentCourt ? currentCourt.name : "Sân thể thao");
+    if (dateEl) dateEl.textContent = formatDMY(booking.booking_date);
+    if (slotEl) slotEl.textContent = booking.time_slot || "16:00 - 18:00";
+    if (priceEl) priceEl.textContent = formatMoneyVN(booking.fixed_price);
+
+    if (detailView) detailView.style.display = "none";
+    if (successView) successView.style.display = "block";
+    document.title = "Đã gửi yêu cầu đặt sân | Tsport";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function initHeaderSearch() {
@@ -249,9 +279,8 @@
           phone: user.phone || "0901234567",
           note: ""
         });
-        showToast(`Đã gửi yêu cầu đặt sân (${bkg.booking_code})! Ca đã được giữ chỗ.`, "success");
-        selectedSlotId = null;
-        renderSlotsGrid();
+        showToast(`Đã gửi yêu cầu đặt sân (${bkg.booking_code})!`, "success");
+        showBookingSuccessView(bkg);
       } catch (err) {
         showToast(err.message || "Không thể gửi yêu cầu đặt sân.", "error");
       }

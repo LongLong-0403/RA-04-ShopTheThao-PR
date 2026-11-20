@@ -59,24 +59,26 @@
   </nav>
 
   <!-- ==========================================
-       2. NỘI DUNG CHÍNH: CHI TIẾT SÂN & CHỌN CA
+       2. NỘI DUNG CHÍNH: CHI TIẾT SÂN & ĐẶT SÂN THÀNH CÔNG
        ========================================== -->
   <main class="container ts-court-det-main">
 
-    <!-- Breadcrumb -->
-    <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
-      <a href="../index.html">Trang chủ</a>
-      <span>/</span>
-      <a href="courts.html">Đặt sân</a>
-      <span>/</span>
-      <span class="is-current" id="cdBreadcrumbName">Sân cầu lông số 1</span>
-    </nav>
+    <!-- VIEW 1: CHI TIẾT SÂN & CHỌN CA -->
+    <div id="courtDetailView">
+      <!-- Breadcrumb -->
+      <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <a href="courts.html">Đặt sân</a>
+        <span>/</span>
+        <span class="is-current" id="cdBreadcrumbName">Sân cầu lông số 1</span>
+      </nav>
 
-    <!-- Tên sân & Địa chỉ -->
-    <header class="ts-court-det-head">
-      <h1 class="ts-court-det-title" id="cdCourtName">Sân cầu lông số 1</h1>
-      <p class="ts-court-det-sub" id="cdCourtSub">12 Nguyễn Trãi, Thanh Xuân, Hà Nội • Mặt sân trong nhà</p>
-    </header>
+      <!-- Tên sân & Địa chỉ -->
+      <header class="ts-court-det-head">
+        <h1 class="ts-court-det-title" id="cdCourtName">Sân cầu lông số 1</h1>
+        <p class="ts-court-det-sub" id="cdCourtSub">12 Nguyễn Trãi, Thanh Xuân, Hà Nội • Mặt sân trong nhà</p>
+      </header>
 
     <!-- Lưới 2 cột: Ảnh & Thông tin sân (trái) | Ngày, Ca chơi & Xác nhận đặt sân (phải) -->
     <section class="ts-court-det-grid">
@@ -128,10 +130,34 @@
 
     </section>
 
-    <!-- THANH LƯU Ý GIỮ CHỖ FULL CHIỀU NGANG -->
-    <div class="ts-court-det-notice">
-      Ca đang chờ duyệt hoặc đã xác nhận được giữ chỗ. Nếu ca vừa được đặt, hãy chọn ca khác.
+      <!-- THANH LƯU Ý GIỮ CHỖ FULL CHIỀU NGANG -->
+      <div class="ts-court-det-notice">
+        Ca đang chờ duyệt hoặc đã xác nhận được giữ chỗ. Nếu ca vừa được đặt, hãy chọn ca khác.
+      </div>
     </div>
+
+    <!-- VIEW 2: ĐÃ GỬI YÊU CẦU ĐẶT SÂN THÀNH CÔNG (CHUẨN FIGMA) -->
+    <section class="ts-bkg-success-wrap" id="courtBookingSuccessView" style="display:none;" aria-live="polite">
+      <div class="ts-bkg-success-card">
+        <div class="ts-bkg-success-top">
+          <span class="ts-bkg-success-pill">Chờ xác nhận</span>
+          <h1 class="ts-bkg-success-title">Đã gửi yêu cầu đặt sân</h1>
+        </div>
+
+        <div class="ts-bkg-success-info">
+          <h2 class="ts-bkg-success-court" id="bkgSuccessCourt">Sân cầu lông số 1</h2>
+          <div class="ts-bkg-success-line">Ngày: <span id="bkgSuccessDate">08/11/2026</span></div>
+          <div class="ts-bkg-success-line">Ca: <span id="bkgSuccessSlot">16:00 - 18:00</span></div>
+          <div class="ts-bkg-success-line">Giá tại thời điểm đặt: <span id="bkgSuccessPrice">180.000đ</span></div>
+        </div>
+
+        <div class="ts-bkg-success-notice">
+          Lịch của bạn đang chờ quản trị viên duyệt. Bạn có thể theo dõi hoặc hủy yêu cầu trong tài khoản.
+        </div>
+
+        <a href="account.html" class="ts-bkg-success-btn">Xem lịch đặt sân của tôi</a>
+      </div>
+    </section>
 
   </main>
 

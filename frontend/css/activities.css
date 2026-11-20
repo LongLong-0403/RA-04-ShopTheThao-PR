@@ -933,3 +933,96 @@ body.tsport-courts-body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   MÀN HÌNH ĐÃ GỬI YÊU CẦU ĐẶT SÂN THÀNH CÔNG (CHUẨN FIGMA)
+   ========================================================================== */
+.ts-bkg-success-wrap {
+  max-width: 720px;
+  margin: 28px auto 52px;
+}
+
+.ts-bkg-success-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 40px 44px 44px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+.ts-bkg-success-top {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.ts-bkg-success-pill {
+  display: inline-block;
+  background: #FFF1EB;
+  color: #D94C26;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 16px;
+  border-radius: 5px;
+  margin-bottom: 18px;
+}
+
+.ts-bkg-success-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.ts-bkg-success-info {
+  margin-bottom: 24px;
+}
+
+.ts-bkg-success-court {
+  font-size: 17px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+.ts-bkg-success-line {
+  font-size: 13.5px;
+  color: #6B7280;
+  line-height: 1.75;
+}
+
+.ts-bkg-success-notice {
+  background: #FFF1EB;
+  border-left: 3px solid #D94C26;
+  border-radius: 6px;
+  padding: 16px 18px;
+  font-size: 12.5px;
+  color: #374151;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.ts-bkg-success-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: #D94C26;
+  color: #FFFFFF;
+  border-radius: 6px;
+  padding: 13px 18px;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.ts-bkg-success-btn:hover {
+  background: #BF3E1C;
+}
+
+@media (max-width: 640px) {
+  .ts-bkg-success-card {
+    padding: 28px 20px;
+  }
+}
