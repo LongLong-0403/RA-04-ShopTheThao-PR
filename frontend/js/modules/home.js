@@ -549,10 +549,14 @@
     }
 
     filtersWrap?.addEventListener("click", (e) => {
-      const btn = e.target.closest(".ts-home-court-filter-btn");
+      const btn = e.target.closest(".ts-tabbox-tab");
       if (!btn) return;
-      filtersWrap.querySelectorAll(".ts-home-court-filter-btn").forEach(b => b.classList.remove("is-active"));
+      filtersWrap.querySelectorAll(".ts-tabbox-tab").forEach((b) => {
+        b.classList.remove("is-active");
+        b.setAttribute("aria-selected", "false");
+      });
       btn.classList.add("is-active");
+      btn.setAttribute("aria-selected", "true");
       currentSport = btn.dataset.sport || "ALL";
       renderCourts(true);
     });

@@ -204,30 +204,29 @@
       </div>
     </section>
 
-    <!-- 6. 03 / RA SÂN — CHỌN SÂN, HẸN GIỜ, BẮT ĐẦU CHƠI (LƯỚT CHUỘT TRÁI / PHẢI) -->
+    <!-- 6. 03 / RA SÂN — CHỌN SÂN, HẸN GIỜ, BẮT ĐẦU CHƠI (KHUNG TAB CHUẨN ẢNH + LƯỚT CHUỘT) -->
     <section class="ts-min-section js-gsap-section" id="sectionHomeCourts">
-      <div class="ts-min-sec-head">
-        <div>
-          <div class="ts-min-sec-eyebrow">03 / RA SÂN</div>
-          <h2 class="ts-min-sec-title">Chọn sân, hẹn giờ, bắt đầu chơi</h2>
+      <div class="ts-tabbox-header">
+        <h2 class="ts-tabbox-title">Chọn sân, hẹn giờ, bắt đầu chơi</h2>
+        <div class="ts-tabbox-underline"></div>
+      </div>
+
+      <div class="ts-tabbox-shell">
+        <div class="ts-tabbox-tabs" id="homeCourtSportFilters" role="tablist">
+          <button type="button" class="ts-tabbox-tab is-active" data-sport="ALL" role="tab" aria-selected="true">Tất cả</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="4" role="tab" aria-selected="false">Pickleball</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="1" role="tab" aria-selected="false">Cầu lông</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="2" role="tab" aria-selected="false">Bóng đá</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="3" role="tab" aria-selected="false">Tennis</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="6" role="tab" aria-selected="false">Bóng bàn</button>
         </div>
-        <a href="pages/courts.html" class="ts-min-sec-link">Tìm sân trống →</a>
-      </div>
 
-      <!-- Bộ lọc nhanh theo môn thể thao (không icon thừa) -->
-      <div class="ts-home-court-filters" id="homeCourtSportFilters">
-        <button type="button" class="ts-home-court-filter-btn is-active" data-sport="ALL">Tất cả</button>
-        <button type="button" class="ts-home-court-filter-btn" data-sport="4">Pickleball</button>
-        <button type="button" class="ts-home-court-filter-btn" data-sport="1">Cầu lông</button>
-        <button type="button" class="ts-home-court-filter-btn" data-sport="2">Bóng đá</button>
-        <button type="button" class="ts-home-court-filter-btn" data-sport="3">Tennis</button>
-        <button type="button" class="ts-home-court-filter-btn" data-sport="6">Bóng bàn</button>
-      </div>
-
-      <!-- Khung lướt chuột ngang các thẻ ảnh sân cụ thể -->
-      <div class="ts-featured-drag-viewport" id="homeCourtsViewport">
-        <div class="ts-home-courts-track" id="homeCourtsTrack">
-          <!-- Render động các thẻ sân từ store.js -->
+        <div class="ts-tabbox-golden-stage">
+          <div class="ts-featured-drag-viewport" id="homeCourtsViewport">
+            <div class="ts-home-courts-track" id="homeCourtsTrack">
+              <!-- Render động các thẻ sân từ store.js -->
+            </div>
+          </div>
         </div>
       </div>
     </section>
