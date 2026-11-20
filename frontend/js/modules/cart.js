@@ -124,13 +124,15 @@
       return name.includes("vợt") || Number(p.category_id) === 2 || Number(p.category_id) === 3 || Number(p.category_id) === 4;
     });
 
-    // Đưa Victor Auraspeed 90K II (id=10) và các mẫu vợt nổi bật lên trước, lấy 6 sản phẩm
+    // Đưa Victor Auraspeed 90K II (id=10) và các mẫu vợt nổi bật lên trước
     const sorted = [...rackets].sort((a, b) => {
       if (Number(a.id) === 10) return -1;
       if (Number(b.id) === 10) return 1;
       return Number(a.id) - Number(b.id);
     });
-    const list = sorted.slice(0, 6);
+    const baseList = sorted.slice(0, 6);
+    // Nhân đôi danh sách để trượt vô tận mượt từ trái sang phải và kéo chuột thoải mái
+    const list = baseList.length ? [...baseList, ...baseList] : [];
 
     const fallbackImg = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
     const promoDiscounts = [18, 0, 15, 0, 22, 25];
@@ -152,21 +154,23 @@
         let minEff = effPrices.length ? Math.min(...effPrices) : minOrig;
         let discountPct = 0;
 
+        const promoIdx = idx % promoDiscounts.length;
         if (minEff < minOrig) {
           discountPct = Math.round(((minOrig - minEff) / minOrig) * 100);
-        } else if (promoDiscounts[idx] > 0) {
-          discountPct = promoDiscounts[idx];
+        } else if (promoDiscounts[promoIdx] > 0) {
+          discountPct = promoDiscounts[promoIdx];
           minEff = Math.round((minOrig * (100 - discountPct)) / 100 / 1000) * 1000;
         }
 
         return `
-          <a href="product-detail.html?id=${p.id}" class="ts-cart-rec-card">
+          <a href="product-detail.html?id=${p.id}" class="ts-cart-rec-card" draggable="false">
             <div class="ts-cart-rec-media">
               ${discountPct > 0 ? `<span class="ts-cart-rec-discount">- ${discountPct}%</span>` : ""}
               <img
                 src="${escapeHtml(primaryImg.image_url)}"
                 alt="${escapeHtml(p.name)}"
                 loading="lazy"
+                draggable="false"
                 onerror="this.src='${fallbackImg}'"
               />
             </div>
@@ -177,6 +181,149 @@
         `;
       })
       .join("");
+
+    initCartRecCarousel(grid);
+  }
+
+  // CAROUSEL GỢI Ý: KÉO CHUỘT MƯỢT + TỰ TRƯỢT TỪ TRÁI SANG PHẢI TRONG ĐÚNG 1S
+  function initCartRecCarousel(track) {
+    if (!track || track.dataset.carouselBound === "true") return;
+    track.dataset.carouselBound = "true";
+
+    let isDown = false;
+    let isHovered = false;
+    let didDrag = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+    let animFrame = null;
+    let autoTimer = null;
+
+    function getHalfWidth() {
+      return track.scrollWidth / 2;
+    }
+
+    // Bắt đầu từ nửa sau để có khoảng trống trượt mượt từ trái sang phải ngay lập tức
+    requestAnimationFrame(() => {
+      const half = getHalfWidth();
+      if (half > 0) track.scrollLeft = half;
+    });
+
+    function animateScrollTo(targetLeft, durationMs) {
+      if (animFrame) cancelAnimationFrame(animFrame);
+      const from = track.scrollLeft;
+      const diff = targetLeft - from;
+      const startTime = performance.now();
+
+      function tick(now) {
+        const t = Math.min(1, (now - startTime) / durationMs);
+        // Cubic ease-in-out mượt mà trong đúng 1s
+        const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        track.scrollLeft = from + diff * eased;
+        if (t < 1) {
+          animFrame = requestAnimationFrame(tick);
+        } else {
+          animFrame = null;
+        }
+      }
+      animFrame = requestAnimationFrame(tick);
+    }
+
+    function slideLeftToRightOnce() {
+      if (isDown || isHovered) return;
+      const firstCard = track.querySelector(".ts-cart-rec-card");
+      if (!firstCard) return;
+
+      const step = firstCard.getBoundingClientRect().width + 18;
+      const half = getHalfWidth();
+      if (half <= 0) return;
+
+      // Nếu sắp chạm mép trái thì nhảy ngầm sang nửa sau cùng vị trí để trượt vô tận không khựng
+      if (track.scrollLeft <= step * 0.5) {
+        track.scrollLeft += half;
+      }
+
+      const target = Math.max(0, track.scrollLeft - step);
+      animateScrollTo(target, 1000);
+    }
+
+    function startAuto() {
+      stopAuto();
+      autoTimer = setInterval(slideLeftToRightOnce, 2200);
+    }
+
+    function stopAuto() {
+      if (autoTimer) {
+        clearInterval(autoTimer);
+        autoTimer = null;
+      }
+      if (animFrame) {
+        cancelAnimationFrame(animFrame);
+        animFrame = null;
+      }
+    }
+
+    // Kéo chuột (Mouse / Touch drag-to-scroll)
+    track.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      isDown = true;
+      didDrag = false;
+      startX = e.clientX;
+      startScrollLeft = track.scrollLeft;
+      stopAuto();
+      track.classList.add("is-dragging");
+      track.setPointerCapture?.(e.pointerId);
+    });
+
+    track.addEventListener("pointermove", (e) => {
+      if (!isDown) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 6) didDrag = true;
+      track.scrollLeft = startScrollLeft - dx;
+
+      const half = getHalfWidth();
+      if (half > 0) {
+        if (track.scrollLeft <= 2) {
+          track.scrollLeft += half;
+          startScrollLeft = track.scrollLeft;
+          startX = e.clientX;
+        } else if (track.scrollLeft >= half + half - track.clientWidth - 2) {
+          track.scrollLeft -= half;
+          startScrollLeft = track.scrollLeft;
+          startX = e.clientX;
+        }
+      }
+    });
+
+    function endDrag(e) {
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove("is-dragging");
+      track.releasePointerCapture?.(e.pointerId);
+      if (!isHovered) startAuto();
+    }
+
+    track.addEventListener("pointerup", endDrag);
+    track.addEventListener("pointercancel", endDrag);
+
+    track.addEventListener("click", (e) => {
+      if (didDrag) {
+        e.preventDefault();
+        e.stopPropagation();
+        didDrag = false;
+      }
+    });
+
+    track.addEventListener("mouseenter", () => {
+      isHovered = true;
+      stopAuto();
+    });
+
+    track.addEventListener("mouseleave", () => {
+      isHovered = false;
+      if (!isDown) startAuto();
+    });
+
+    startAuto();
   }
 
   function initCartHeaderSearch() {

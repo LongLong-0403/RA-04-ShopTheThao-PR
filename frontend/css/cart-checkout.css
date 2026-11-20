@@ -679,18 +679,40 @@ body.tsport-cart-body {
 .ts-cart-rec-heading {
   font-size: 22px;
   font-weight: 800;
-  color: #1F2937;
-  margin: 0 0 22px 0;
+  color: #D94C26;
+  margin: 0 0 16px 0;
   letter-spacing: -0.2px;
 }
 
-.ts-cart-rec-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 20px;
+.ts-cart-rec-frame {
+  background: #FFFFFF;
+  border: 2px solid #D94C26;
+  border-radius: 10px;
+  padding: 18px 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(217, 76, 38, 0.08);
+}
+
+.ts-cart-rec-track {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ts-cart-rec-track::-webkit-scrollbar {
+  display: none;
+}
+
+.ts-cart-rec-track.is-dragging {
+  cursor: grabbing;
 }
 
 .ts-cart-rec-card {
+  flex: 0 0 calc((100% - 90px) / 6);
   display: flex;
   flex-direction: column;
   text-decoration: none;
@@ -774,15 +796,13 @@ body.tsport-cart-body {
 }
 
 @media (max-width: 1024px) {
-  .ts-cart-rec-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
+  .ts-cart-rec-card {
+    flex: 0 0 calc((100% - 36px) / 3);
   }
 }
 
 @media (max-width: 640px) {
-  .ts-cart-rec-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+  .ts-cart-rec-card {
+    flex: 0 0 calc((100% - 18px) / 2);
   }
 }
