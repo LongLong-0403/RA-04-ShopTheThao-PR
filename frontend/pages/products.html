@@ -3,369 +3,220 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quản lý Sản phẩm & Bảng SKU | Tsport Store Admin</title>
-    <!-- Google Fonts: Roboto -->
+  <title>Sản phẩm &amp; SKU | Tsport Admin</title>
+
+  <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body data-root="../">
+<body class="ts-adm-body" data-root="../">
 
-  <div class="tsport-admin-wrapper">
-    <!-- BACKDROP MOBILE -->
-    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+  <div class="ts-adm-shell">
 
-    <!-- SIDEBAR DÙNG CHUNG CHO CẢ NHÓM -->
-    <aside class="tsport-admin-sidebar" id="adminSidebar"></aside>
+    <!-- SIDEBAR TRÁI NỀN TỐI -->
+    <aside class="ts-adm-sidebar" id="adminSidebar">
+      <div class="ts-adm-brand">
+        <a href="admin-dashboard.html" class="ts-adm-logo">Tsport</a>
+        <div class="ts-adm-logo-sub">QUẢN TRỊ HỆ THỐNG</div>
+      </div>
 
-    <!-- NỘI DUNG CHÍNH (MAIN) -->
-    <div class="tsport-admin-main">
-      <header class="tsport-admin-topbar">
-        <div class="tsport-admin-topbar-left">
-          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
-          <div>
-            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">📦 Quản Lý Sản Phẩm &amp; Bảng Biến Thể SKU</h1>
-            <div style="font-size:12px; color:#64748B;">Kho hàng, bảng SKU theo Size/Màu, quản lý hàng cũ và nhập CSV hàng loạt</div>
+      <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
+        <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
+        <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
+        <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
+        <a href="categories.html" class="ts-adm-nav-link">Danh mục cha / con</a>
+        <a href="products.html" class="ts-adm-nav-link is-active">Sản phẩm &amp; SKU</a>
+        <a href="admin-courts.html" class="ts-adm-nav-link">Sân &amp; Ca giờ</a>
+        <a href="admin-courts.html#bookings" class="ts-adm-nav-link">Lịch đặt sân</a>
+        <a href="admin-orders.html" class="ts-adm-nav-link">Đơn hàng</a>
+        <a href="admin-buyback.html" class="ts-adm-nav-link">Thu mua đồ cũ</a>
+      </nav>
+
+      <div class="ts-adm-sidebar-foot">
+        <a href="../index.html" class="ts-adm-back-shop">Quay về cửa hàng ↗</a>
+      </div>
+    </aside>
+
+    <!-- CỘT PHẢI -->
+    <div class="ts-adm-main-wrap">
+
+      <!-- TOP BAR -->
+      <header class="ts-adm-topbar">
+        <div class="ts-adm-topbar-left">
+          <button type="button" class="ts-adm-mobile-menu-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div class="ts-adm-breadcrumb">
+            <span>Quản trị</span>
+            <span>/</span>
+            <span class="is-current">Sản phẩm &amp; SKU</span>
           </div>
         </div>
 
-        <div class="tsport-actions" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenCsvImportModal" style="background:#FFF7ED; border-color:#FDBA74; color:#C2410C; font-weight:700;">
-            📥 Nhập CSV Sản phẩm &amp; SKU
+        <div class="ts-adm-user-wrap">
+          <button type="button" class="ts-adm-user-btn" id="btnAdminUserMenu">
+            <span>Admin</span>
+            <span style="font-size:10px;">▾</span>
           </button>
-          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedNewProd">🧪 Test SP mới</button>
-          <button type="button" class="btn btn-secondary btn-sm" id="btnTestSeedUsedProd">🧪 Test SP cũ</button>
-          <button type="button" class="btn btn-primary btn-sm" id="btnAddNewProduct">
-            <span>+</span>
-            <span>Thêm sản phẩm</span>
-          </button>
-          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Cửa Hàng</a>
+          <div class="ts-adm-user-dropdown" id="adminUserDropdown">
+            <a href="../index.html">Về cửa hàng</a>
+            <button type="button" id="btnAdminLogout">Đăng xuất</button>
+          </div>
         </div>
       </header>
 
-      <div class="tsport-admin-body">
-        
-        <!-- CARD BẢNG SẢN PHẨM & BỘ LỌC -->
-        <div class="tsport-card" style="margin:0;">
-          
-          <!-- BỘ LỌC VÀ TÌM KIẾM -->
-          <div class="tsport-filter-bar">
-            <div class="tsport-filter-search">
-              <span class="tsport-filter-search-icon">🔍</span>
-              <input type="text" id="productSearchInput" placeholder="Tìm theo tên sản phẩm, mã, SKU, màu sắc..." />
-            </div>
+      <!-- NỘI DUNG SẢN PHẨM & SKU -->
+      <main class="ts-adm-content">
 
-            <select id="filterSport" class="tsport-filter-select">
-              <option value="ALL">Tất cả môn thể thao</option>
+        <header class="ts-adm-page-head">
+          <h1 class="ts-adm-page-title">Sản phẩm &amp; SKU</h1>
+          <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+        </header>
+
+        <!-- THANH TÌM KIẾM, LỌC TÌNH TRẠNG & THÊM SẢN PHẨM -->
+        <section class="ts-adm-filter-block">
+          <label for="prodSearchInput" class="ts-adm-filter-label">Tìm sản phẩm</label>
+          <div class="ts-adm-filter-row">
+            <input
+              type="text"
+              id="prodSearchInput"
+              class="ts-adm-input"
+              placeholder="Tên sản phẩm / SKU"
+            />
+            <select id="prodConditionFilter" class="ts-adm-select" aria-label="Lọc theo tình trạng">
+              <option value="ALL">Tình trạng: Tất cả</option>
+              <option value="MOI">Tình trạng: Mới</option>
+              <option value="CU">Tình trạng: Cũ</option>
             </select>
-
-            <select id="filterCategory" class="tsport-filter-select">
-              <option value="ALL">Tất cả loại hàng</option>
-            </select>
-
-            <select id="filterBrand" class="tsport-filter-select">
-              <option value="ALL">Tất cả thương hiệu</option>
-            </select>
-
-            <select id="filterCondition" class="tsport-filter-select">
-              <option value="ALL">Tất cả tình trạng</option>
-              <option value="MOI">Chỉ hàng Mới (100%)</option>
-              <option value="CU">Chỉ hàng Cũ (Đã qua sử dụng)</option>
-            </select>
-
-            <div class="tsport-filter-count" id="productsCountBadge">0 sản phẩm</div>
+            <button type="button" class="ts-adm-btn-primary ts-adm-filter-btn" id="btnAddProduct">
+              + Thêm sản phẩm
+            </button>
           </div>
+        </section>
 
-          <!-- BẢNG DỮ LIỆU SẢN PHẨM -->
-          <div class="tsport-table-responsive">
-            <table class="tsport-table">
+        <!-- BẢNG 6 CỘT SẢN PHẨM & SKU -->
+        <section class="ts-adm-table-section">
+          <div class="ts-orders-v2-table-wrap">
+            <table class="ts-orders-v2-table ts-adm-table">
               <thead>
                 <tr>
-                  <th style="min-width: 260px;">Sản phẩm</th>
-                  <th>Môn thể thao</th>
-                  <th>Loại hàng</th>
-                  <th>Thương hiệu</th>
+                  <th>Sản phẩm</th>
+                  <th>Môn / Danh mục</th>
                   <th>Tình trạng</th>
-                  <th>Khoảng giá / Biến thể</th>
-                  <th>Tổng tồn kho</th>
+                  <th>Tồn SKU</th>
                   <th>Trạng thái</th>
-                  <th style="text-align: right;">Thao tác</th>
+                  <th>Thao tác</th>
                 </tr>
               </thead>
-              <tbody id="productsTableBody">
-                <!-- Render động từ js/modules/products.js -->
+              <tbody id="adminProductsTbody">
+                <!-- Render động từ products.js -->
               </tbody>
             </table>
           </div>
+        </section>
 
+        <!-- NÚT SỬA SẢN PHẨM ĐANG CHỌN -->
+        <div class="ts-orders-v2-bottom-bar" style="margin-top:20px;">
+          <button type="button" class="ts-adm-btn-secondary" id="btnEditSelectedProduct" style="min-width:210px;">
+            Sửa sản phẩm đang chọn
+          </button>
         </div>
 
-      </div>
+        <!-- THANH LƯU Ý SẢN PHẨM CŨ & SKU -->
+        <div class="ts-court-det-notice" style="margin-top:20px;">
+          Sản phẩm cũ phải có mô tả hao mòn. Giá bán và tồn kho được quản lý trên từng SKU.
+        </div>
+
+      </main>
     </div>
   </div>
 
-  <!-- ========================================================================
-       MODAL FORM SẢN PHẨM (THÊM / SỬA KÈM BẢNG SKU & HÀNG CŨ)
-       ======================================================================== -->
-  <div class="modal-backdrop" id="modalProductForm">
-    <div class="modal-box modal-lg">
+  <!-- MODAL THÊM / SỬA SẢN PHẨM & SKU -->
+  <div class="modal-backdrop" id="modalAdminProduct">
+    <div class="modal" style="max-width:640px;">
       <div class="modal-header">
-        <div class="modal-title" id="productModalTitle">Thêm sản phẩm mới</div>
-        <button type="button" class="modal-close-btn" onclick="closeModal('modalProductForm')">✕</button>
+        <h3 class="modal-title" id="modalProdTitle">Thêm / Sửa sản phẩm &amp; SKU</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
       </div>
 
-      <div class="modal-body">
-        <form id="formProductMain">
+      <form id="formAdminProduct">
+        <div class="modal-body">
+          <div class="ts-courts-v2-field">
+            <label for="admProdName" class="ts-adm-filter-label">Tên sản phẩm *</label>
+            <input type="text" id="admProdName" class="ts-adm-input" placeholder="Vợt cầu lông Yonex Astrox 88D" required />
+          </div>
 
-          <!-- SECTION 1: THÔNG TIN CƠ BẢN -->
-          <div class="tsport-section-box">
-            <div class="tsport-section-header">
-              <span class="tsport-section-title">1. Thông tin cơ bản</span>
-              <span class="tsport-section-sub">Tên, môn, loại hàng & thương hiệu</span>
+          <div class="ts-adm-edit-grid-2">
+            <div>
+              <label for="admProdSport" class="ts-adm-filter-label">Môn thể thao</label>
+              <select id="admProdSport" class="ts-adm-select"></select>
             </div>
-
-            <div class="tsport-form-grid">
-              <div class="form-group tsport-form-col-full">
-                <label class="form-label">Tên sản phẩm <span class="req">*</span></label>
-                <input type="text" id="formProdName" class="form-control" placeholder="Ví dụ: Vợt cầu lông Yonex Astrox 88D Pro 2024" required />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Môn thể thao <span class="req">*</span></label>
-                <select id="formProdSport" class="form-control" required></select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Danh mục / Loại hàng <span class="req">*</span></label>
-                <select id="formProdCategory" class="form-control" required></select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Thương hiệu <span class="req">*</span></label>
-                <select id="formProdBrand" class="form-control" required></select>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Trạng thái mở bán</label>
-                <select id="formProdStatus" class="form-control">
-                  <option value="ACTIVE">ACTIVE (Mở bán ngay)</option>
-                  <option value="INACTIVE">INACTIVE (Tạm ẩn)</option>
-                </select>
-              </div>
-
-              <!-- LỰA CHỌN TÌNH TRẠNG HÀNG MỚI / HÀNG CŨ -->
-              <div class="form-group tsport-form-col-full">
-                <label class="form-label">Tình trạng sản phẩm <span class="req">*</span></label>
-                <div class="tsport-condition-toggle">
-                  <label class="tsport-condition-option is-selected" id="wrapCondMoi">
-                    <input type="radio" name="prodCondition" id="condMoi" value="MOI" checked />
-                    <div>
-                      <div class="tsport-condition-text">Hàng Mới 100%</div>
-                      <div style="font-size:11px; color:#64748B;">Sản phẩm mới nguyên seal, chính hãng</div>
-                    </div>
-                  </label>
-
-                  <label class="tsport-condition-option" id="wrapCondCu">
-                    <input type="radio" name="prodCondition" id="condCu" value="CU" />
-                    <div>
-                      <div class="tsport-condition-text" style="color:#C2410C;">Hàng Cũ (Đã qua sử dụng)</div>
-                      <div style="font-size:11px; color:#64748B;">Bắt buộc khai báo tỷ lệ hao mòn & mô tả chi tiết</div>
-                    </div>
-                  </label>
-                </div>
-
-                <!-- PHẦN HÀNG CŨ (BẬT KHI CHỌN CU) -->
-                <div class="tsport-used-box" id="usedProductBox">
-                  <div class="tsport-used-header">
-                    <span class="tsport-used-title">⚠️ Khai báo độ hao mòn sản phẩm cũ (Chuẩn SRS)</span>
-                    <span style="font-size:11px; color:#9A3412;">Chính sách minh bạch thông tin</span>
-                  </div>
-                  <div class="tsport-form-grid">
-                    <div class="form-group">
-                      <label class="form-label">Độ mới còn lại (%): <span id="wearGradeVal" style="color:#D94C26; font-size:14px; font-weight:800;">90%</span></label>
-                      <input type="range" id="formProdWearGrade" min="70" max="99" value="90" class="form-control" style="padding:0;" oninput="document.getElementById('wearGradeVal').textContent = this.value + '%'" />
-                    </div>
-                    <div class="form-group tsport-form-col-full">
-                      <label class="form-label">Mô tả hao mòn thực tế <span class="req">* (Bắt buộc với hàng Cũ)</span></label>
-                      <textarea id="formProdWearDesc" class="form-control" rows="3" placeholder="Mô tả cụ thể vết xước sơn, tình trạng khung, gen, đũa vợt, độ mòn đế giày..."></textarea>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group tsport-form-col-full">
-                <label class="form-label">Mô tả tóm tắt sản phẩm</label>
-                <textarea id="formProdDesc" class="form-control" rows="2" placeholder="Nhập mô tả nổi bật về công nghệ, lối đánh, đối tượng sử dụng..."></textarea>
-              </div>
+            <div>
+              <label for="admProdCategory" class="ts-adm-filter-label">Danh mục</label>
+              <select id="admProdCategory" class="ts-adm-select"></select>
             </div>
           </div>
 
-          <!-- SECTION 2: BẢNG SKU (BIẾN THỂ SẢN PHẨM) -->
-          <div class="tsport-section-box">
-            <div class="tsport-section-header">
-              <div>
-                <span class="tsport-section-title">2. Bảng biến thể SKU <span class="req">*</span></span>
-                <div class="tsport-section-sub">Mỗi dòng là một biến thể (Size, Màu sắc, Giá bán, Tồn kho, Đơn vị chiếc/lô)</div>
-              </div>
-              <button type="button" class="btn btn-secondary btn-sm" id="btnAddSkuRow">
-                <span>+</span> Thêm dòng SKU
-              </button>
+          <div class="ts-adm-edit-grid-2">
+            <div>
+              <label for="admProdBrand" class="ts-adm-filter-label">Thương hiệu</label>
+              <select id="admProdBrand" class="ts-adm-select"></select>
             </div>
-
-            <div class="tsport-sku-table-wrap">
-              <table class="tsport-sku-table">
-                <thead>
-                  <tr>
-                    <th style="width: 120px;">Mã SKU *</th>
-                    <th style="width: 90px;">Size / Cỡ</th>
-                    <th style="width: 100px;">Màu sắc</th>
-                    <th style="width: 125px;">Giá niêm yết (₫) *</th>
-                    <th style="width: 125px;">Giá sale / KM (₫)</th>
-                    <th style="width: 80px;">Tồn kho *</th>
-                    <th style="width: 120px;">Đơn vị tính *</th>
-                    <th style="width: 80px;">SL / Lô</th>
-                    <th style="width: 45px; text-align: center;">Xóa</th>
-                  </tr>
-                </thead>
-                <tbody id="formSkuTableBody">
-                  <!-- Render động -->
-                </tbody>
-              </table>
+            <div>
+              <label for="admProdCondition" class="ts-adm-filter-label">Tình trạng</label>
+              <select id="admProdCondition" class="ts-adm-select">
+                <option value="MOI">Mới</option>
+                <option value="CU">Đã qua sử dụng (Cũ)</option>
+              </select>
             </div>
           </div>
 
-          <!-- SECTION 3: UPLOAD & QUẢN LÝ ẢNH -->
-          <div class="tsport-section-box">
-            <div class="tsport-section-header">
-              <div>
-                <span class="tsport-section-title">3. Bộ sưu tập Ảnh sản phẩm</span>
-                <div class="tsport-section-sub">Phải có đúng 1 ảnh chính (⭐). Bấm "Đặt chính" trên ảnh bạn muốn.</div>
-              </div>
-              <button type="button" class="btn btn-secondary btn-sm" id="btnAddImage">
-                <span>📷</span> Thêm ảnh URL
-              </button>
-            </div>
+          <div class="ts-courts-v2-field" id="admProdWearWrap" style="display:none;">
+            <label for="admProdWearDesc" class="ts-adm-filter-label">Mô tả hao mòn (Bắt buộc cho đồ cũ) *</label>
+            <textarea id="admProdWearDesc" class="ts-courts-v2-input" rows="2" placeholder="Trầy nhẹ viền khung, không nứt, cán nguyên bản..."></textarea>
+          </div>
 
-            <div class="tsport-image-grid" id="formImageGrid">
-              <!-- Render động -->
+          <div class="ts-adm-edit-grid-2">
+            <div>
+              <label for="admSkuSize" class="ts-adm-filter-label">Biến thể Size / Trọng lượng</label>
+              <input type="text" id="admSkuSize" class="ts-adm-input" placeholder="4U" />
+            </div>
+            <div>
+              <label for="admSkuColor" class="ts-adm-filter-label">Màu sắc</label>
+              <input type="text" id="admSkuColor" class="ts-adm-input" placeholder="Đen / Đỏ" />
             </div>
           </div>
 
-          <!-- SECTION 4: THÔNG SỐ KỸ THUẬT -->
-          <div class="tsport-section-box">
-            <div class="tsport-section-header">
-              <div>
-                <span class="tsport-section-title">4. Thông số kỹ thuật (Specifications)</span>
-                <div class="tsport-section-sub">Cặp thuộc tính - giá trị (Key - Value) linh hoạt</div>
-              </div>
-              <button type="button" class="btn btn-secondary btn-sm" id="btnAddSpec">
-                <span>+</span> Thêm thông số
-              </button>
+          <div class="ts-adm-edit-grid-2">
+            <div>
+              <label for="admSkuPrice" class="ts-adm-filter-label">Giá bán SKU (VNĐ) *</label>
+              <input type="number" id="admSkuPrice" class="ts-adm-input" min="10000" step="10000" placeholder="2500000" required />
             </div>
-
-            <div class="tsport-spec-list" id="formSpecList">
-              <!-- Render động -->
+            <div>
+              <label for="admSkuStock" class="ts-adm-filter-label">Tồn kho SKU *</label>
+              <input type="number" id="admSkuStock" class="ts-adm-input" min="0" placeholder="8" required />
             </div>
           </div>
+        </div>
 
-          <div class="modal-footer" style="padding: 16px 0 0; background: none; border: none;">
-            <button type="button" class="btn btn-secondary" onclick="closeModal('modalProductForm')">Hủy bỏ</button>
-            <button type="submit" class="btn btn-primary">Lưu sản phẩm & Bảng SKU ✓</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- MODAL XEM CHI TIẾT SKU -->
-  <div class="modal-backdrop" id="modalSkuDetail">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title" id="skuDetailTitle">Chi tiết các biến thể SKU</div>
-        <button type="button" class="modal-close-btn" onclick="closeModal('modalSkuDetail')">✕</button>
-      </div>
-      <div class="modal-body" id="skuDetailBody">
-        <!-- Render động -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modalSkuDetail')">Đóng</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL NHẬP CSV SẢN PHẨM & SKU -->
-  <div class="modal-backdrop" id="modalCsvImport">
-    <div class="modal-box" style="max-width:850px; width:95%;">
-      <div class="modal-header">
-        <div class="modal-title">📥 Nhập CSV Sản Phẩm &amp; Biến Thể SKU Hàng Loạt</div>
-        <button type="button" class="modal-close-btn" onclick="closeModal('modalCsvImport')">✕</button>
-      </div>
-      <div class="modal-body" style="display:flex; flex-direction:column; gap:16px;">
-        <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:12px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-          <div>
-            <div style="font-weight:700; font-size:13px; color:#0F172A;">Kiểm tra chi tiết từng dòng (Line-by-line validation)</div>
-            <div style="font-size:12px; color:#64748B;">Kiểm tra bắt buộc tên, môn, danh mục, hãng, hàng cũ (mô tả hao mòn), biến thể SKU, giá &gt; 0, tồn &ge; 0.</div>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button type="button" class="btn btn-secondary btn-sm" id="btnDownloadCsvTemplate">⬇️ Tải file CSV mẫu</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnLoadSampleValidCsv">🧪 Dán mẫu HỢP LỆ</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnLoadSampleInvalidCsv">🧪 Dán mẫu CÓ LỖI</button>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="csvFileInput">Chọn file CSV từ máy tính:</label>
-          <input type="file" id="csvFileInput" accept=".csv,text/csv" class="form-control" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="csvRawText">Hoặc dán nội dung CSV vào đây:</label>
-          <textarea id="csvRawText" class="form-control" rows="6" placeholder="name,sport_id,category_id,brand_id,condition_type,wear_description,sku_code,size,color,price,stock,unit,quantity_per_lot..." style="font-family:monospace; font-size:12px;"></textarea>
-        </div>
-
-        <div style="display:flex; gap:8px;">
-          <button type="button" class="btn btn-primary" id="btnParseCsvText">🔍 Phân tích &amp; Kiểm tra dữ liệu CSV</button>
-        </div>
-
-        <!-- BẢNG BÁO CÁO KẾT QUẢ KIỂM TRA -->
-        <div id="csvValidationReport" style="display:none; margin-top:8px;">
-          <div id="csvValidationSummary" style="padding:10px; background:#F1F5F9; border-radius:6px; margin-bottom:10px;"></div>
-          <div class="tsport-table-responsive" style="max-height:220px; overflow-y:auto;">
-            <table class="tsport-table">
-              <thead>
-                <tr>
-                  <th style="width:70px;">Dòng</th>
-                  <th style="width:130px;">Trường</th>
-                  <th>Giá trị nhận được</th>
-                  <th>Chi tiết lỗi vi phạm</th>
-                </tr>
-              </thead>
-              <tbody id="csvErrorsTbody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modalCsvImport')">Đóng</button>
-        <button type="button" class="btn btn-primary" id="btnCommitCsvImport" disabled>Nhập vào Kho Sản Phẩm</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div class="tsport-toast" id="tsportToast"></div>
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
 
   <!-- SCRIPTS -->
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/utils.js"></script>
   <script src="../js/data/store.js"></script>
-  <script src="../js/modules/admin-nav.js"></script>
-  <script src="../js/modules/header.js"></script>
   <script src="../js/modules/products.js"></script>
-  <script src="../js/modules/csv-import.js"></script>
 </body>
 </html>
-
