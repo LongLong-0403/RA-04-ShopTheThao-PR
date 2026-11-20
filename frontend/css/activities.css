@@ -1299,3 +1299,173 @@ body.tsport-courts-body {
     min-height: auto;
   }
 }
+
+
+/* ==========================================================================
+   TSPORT — TRANG THU MUA ĐỒ CŨ TỐI GIẢN (BUYBACK V2 FIGMA)
+   ========================================================================== */
+.ts-bb-v2-main {
+  padding-top: 22px;
+  padding-bottom: 64px;
+}
+
+.ts-bb-v2-head {
+  margin-bottom: 24px;
+}
+
+.ts-bb-v2-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px 0;
+}
+
+.ts-bb-v2-sub {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.ts-bb-v2-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(280px, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.ts-bb-v2-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 26px 28px 30px;
+}
+
+.ts-bb-v2-textarea {
+  resize: vertical;
+  min-height: 104px;
+  line-height: 1.55;
+}
+
+.ts-bb-v2-upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 120px;
+  padding: 22px 16px;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ts-bb-v2-upload-box:hover {
+  border-color: #D94C26;
+  background: #FFF9F6;
+}
+
+.ts-bb-v2-upload-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.ts-bb-v2-upload-sub {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+.ts-bb-v2-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ts-bb-v2-preview-item {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+  background: #F9FAFB;
+}
+
+.ts-bb-v2-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ts-bb-v2-preview-del {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(17, 24, 39, 0.78);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ts-bb-v2-caption {
+  font-size: 12px;
+  color: #6B7280;
+  margin: 14px 0 0 0;
+}
+
+/* CỘT PHẢI: QUY TRÌNH THU MUA */
+.ts-bb-v2-process-card {
+  background: #F8F9FA;
+  border-radius: 10px;
+  padding: 26px 26px 32px;
+}
+
+.ts-bb-v2-process-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 24px 0;
+}
+
+.ts-bb-v2-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.ts-bb-v2-step-head {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.ts-bb-v2-step-head span {
+  display: inline-block;
+  margin-right: 6px;
+  color: #111827;
+}
+
+.ts-bb-v2-step-desc {
+  font-size: 12.5px;
+  color: #6B7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .ts-bb-v2-layout {
+    grid-template-columns: 1fr;
+  }
+}

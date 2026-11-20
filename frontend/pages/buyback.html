@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thu mua đồ cũ | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="tsport-courts-body" data-root="../">
+
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="bbHeaderSearchForm">
+          <input
+            type="text"
+            id="bbHeaderSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="auth.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link is-active">Thu mua đồ cũ</a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: THU MUA ĐỒ CŨ
+       ========================================== -->
+  <main class="container ts-bb-v2-main">
+
+    <!-- Breadcrumb -->
+    <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Trang chủ</a>
+      <span>/</span>
+      <span class="is-current">Dụng cụ cũ. Hành trình mới.</span>
+    </nav>
+
+    <header class="ts-bb-v2-head">
+      <h1 class="ts-bb-v2-title">Dụng cụ cũ. Hành trình mới.</h1>
+      <p class="ts-bb-v2-sub">Gửi thông tin và ảnh thực tế để nhận giá đề nghị từ cửa hàng.</p>
+    </header>
+
+    <div class="ts-bb-v2-layout">
+
+      <!-- CỘT TRÁI: FORM GỬI YÊU CẦU ĐỊNH GIÁ -->
+      <section class="ts-bb-v2-card">
+        <form id="formBuybackRequest">
+          <div class="ts-courts-v2-field">
+            <label for="bbSportSelect" class="ts-courts-v2-label">Môn thể thao</label>
+            <select id="bbSportSelect" class="ts-courts-v2-input"></select>
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="bbModelInput" class="ts-courts-v2-label">Hãng / Model *</label>
+            <input
+              type="text"
+              id="bbModelInput"
+              class="ts-courts-v2-input"
+              placeholder="Yonex Astrox 88D"
+              required
+            />
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="bbConditionDesc" class="ts-courts-v2-label">Mô tả tình trạng thực tế *</label>
+            <textarea
+              id="bbConditionDesc"
+              class="ts-courts-v2-input ts-bb-v2-textarea"
+              rows="4"
+              placeholder="Trầy nhẹ ở viền khung; không nứt, đã sử dụng 6 tháng."
+              required
+            ></textarea>
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="bbExpectedPrice" class="ts-courts-v2-label">Giá mong muốn *</label>
+            <input
+              type="text"
+              id="bbExpectedPrice"
+              class="ts-courts-v2-input"
+              placeholder="1.200.000đ"
+              required
+            />
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label class="ts-courts-v2-label">Ảnh thực tế *</label>
+            <label for="bbPhotoInput" class="ts-bb-v2-upload-box" id="bbUploadBox">
+              <input type="file" id="bbPhotoInput" accept="image/*" multiple hidden />
+              <div class="ts-bb-v2-upload-title">+ Tải ảnh sản phẩm</div>
+              <div class="ts-bb-v2-upload-sub">Mặt trước • Mặt sau • Vị trí hao mòn</div>
+            </label>
+            <div class="ts-bb-v2-preview-row" id="bbPhotoPreviews"></div>
+          </div>
+
+          <button type="submit" class="ts-courts-v2-submit" style="margin-top:10px;">
+            Gửi yêu cầu định giá
+          </button>
+
+          <p class="ts-bb-v2-caption">
+            Bạn sẽ phản hồi đồng ý hoặc từ chối sau khi nhận giá đề nghị.
+          </p>
+        </form>
+      </section>
+
+      <!-- CỘT PHẢI: QUY TRÌNH THU MUA 4 BƯỚC -->
+      <aside class="ts-bb-v2-process-card">
+        <h2 class="ts-bb-v2-process-title">Quy trình thu mua</h2>
+
+        <div class="ts-bb-v2-steps">
+          <div class="ts-bb-v2-step">
+            <div class="ts-bb-v2-step-head"><span>01</span> Gửi yêu cầu</div>
+            <p class="ts-bb-v2-step-desc">Nhập thông tin, giá mong muốn và ảnh.</p>
+          </div>
+
+          <div class="ts-bb-v2-step">
+            <div class="ts-bb-v2-step-head"><span>02</span> Nhận đề nghị</div>
+            <p class="ts-bb-v2-step-desc">Quản trị viên thẩm định và báo giá.</p>
+          </div>
+
+          <div class="ts-bb-v2-step">
+            <div class="ts-bb-v2-step-head"><span>03</span> Phản hồi</div>
+            <p class="ts-bb-v2-step-desc">Bạn đồng ý hoặc từ chối giá đề nghị.</p>
+          </div>
+
+          <div class="ts-bb-v2-step">
+            <div class="ts-bb-v2-step-head"><span>04</span> Hoàn tất</div>
+            <p class="ts-bb-v2-step-desc">Cửa hàng hoàn tất việc thu mua.</p>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/buyback.js"></script>
+</body>
+</html>
