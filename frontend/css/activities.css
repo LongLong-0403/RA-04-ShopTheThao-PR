@@ -54,7 +54,7 @@
   position: relative;
 }
 .tsport-match-card:hover {
-  border-color: #FED7AA;
+  border-color: #D1D5DB;
   transform: translateY(-2px);
 }
 .tsport-match-card.is-hidden {
@@ -143,7 +143,7 @@
 }
 .tsport-slot-btn.is-active {
   border-color: var(--tsport-orange);
-  background: #FFF7ED;
+  background: #F3F4F6;
   box-shadow: 0 0 0 1px var(--tsport-orange);
 }
 .tsport-slot-time {
@@ -334,7 +334,7 @@
   text-overflow: ellipsis;
 }
 .tsport-court-distance {
-  color: #EA580C;
+  color: #111827;
   font-weight: 700;
   margin-right: 4px;
 }
@@ -444,7 +444,7 @@ body.tsport-courts-body {
 
 .ts-courts-v2-mode-btn.is-active {
   background: #FFFFFF;
-  color: #D94C26;
+  color: #111827;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
 }
 
@@ -481,13 +481,13 @@ body.tsport-courts-body {
 }
 
 .ts-courts-v2-pill:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 .ts-courts-v2-pill.is-active {
-  background: #D94C26;
-  border-color: #D94C26;
+  background: #111827;
+  border-color: #111827;
   color: #FFFFFF;
 }
 
@@ -513,7 +513,7 @@ body.tsport-courts-body {
 }
 
 .ts-courts-v2-search-input:focus {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-courts-v2-count {
@@ -609,13 +609,13 @@ body.tsport-courts-body {
 }
 
 .ts-courts-v2-input:focus {
-  border-color: #D94C26;
-  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.1);
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
 }
 
 .ts-courts-v2-submit {
   width: 100%;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -628,7 +628,7 @@ body.tsport-courts-body {
 }
 
 .ts-courts-v2-submit:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-courts-v2-admin-bar {
@@ -774,7 +774,7 @@ body.tsport-courts-body {
 }
 
 .ts-court-det-date-select:focus {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-court-det-slots-grid {
@@ -800,7 +800,7 @@ body.tsport-courts-body {
 }
 
 .ts-court-det-slot:hover:not(:disabled) {
-  border-color: #D94C26;
+  border-color: #111827;
   transform: translateY(-1px);
 }
 
@@ -821,8 +821,8 @@ body.tsport-courts-body {
 
 /* CA ĐANG CHỌN (CAM NỔI BẬT) */
 .ts-court-det-slot.is-selected {
-  background: #D94C26;
-  border-color: #D94C26;
+  background: #111827;
+  border-color: #111827;
 }
 
 .ts-court-det-slot.is-selected .ts-court-det-slot-time {
@@ -885,13 +885,13 @@ body.tsport-courts-body {
 .ts-court-det-confirm-price {
   font-size: 22px;
   font-weight: 900;
-  color: #D94C26;
+  color: #111827;
   white-space: nowrap;
 }
 
 .ts-court-det-submit-btn {
   width: 100%;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -903,7 +903,7 @@ body.tsport-courts-body {
 }
 
 .ts-court-det-submit-btn:hover:not(:disabled) {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-court-det-submit-btn:disabled {
@@ -914,8 +914,8 @@ body.tsport-courts-body {
 /* THANH LƯU Ý GIỮ CHỖ */
 .ts-court-det-notice {
   margin-top: 28px;
-  background: #FFF1EB;
-  border-left: 3px solid #D94C26;
+  background: #F3F4F6;
+  border-left: 3px solid #111827;
   border-radius: 6px;
   padding: 14px 18px;
   font-size: 12.5px;
@@ -958,8 +958,8 @@ body.tsport-courts-body {
 
 .ts-bkg-success-pill {
   display: inline-block;
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   font-size: 11.5px;
   font-weight: 700;
   padding: 5px 16px;
@@ -993,8 +993,8 @@ body.tsport-courts-body {
 }
 
 .ts-bkg-success-notice {
-  background: #FFF1EB;
-  border-left: 3px solid #D94C26;
+  background: #F3F4F6;
+  border-left: 3px solid #111827;
   border-radius: 6px;
   padding: 16px 18px;
   font-size: 12.5px;
@@ -1007,7 +1007,7 @@ body.tsport-courts-body {
   display: block;
   width: 100%;
   text-align: center;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border-radius: 6px;
   padding: 13px 18px;
@@ -1018,7 +1018,7 @@ body.tsport-courts-body {
 }
 
 .ts-bkg-success-btn:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 @media (max-width: 640px) {
@@ -1062,7 +1062,7 @@ body.tsport-courts-body {
 .ts-comm-v2-create-btn {
   min-width: 196px;
   padding: 12px 22px;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -1073,7 +1073,7 @@ body.tsport-courts-body {
 }
 
 .ts-comm-v2-create-btn:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 /* THANH LỌC 4 CỘT */
@@ -1108,7 +1108,7 @@ body.tsport-courts-body {
 }
 
 .ts-comm-v2-filter-control:focus {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-comm-v2-search-btn {
@@ -1125,8 +1125,8 @@ body.tsport-courts-body {
 }
 
 .ts-comm-v2-search-btn:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 /* LƯỚI BÀI ĐĂNG 2 CỘT */
@@ -1147,7 +1147,7 @@ body.tsport-courts-body {
 }
 
 .ts-comm-v2-card:hover {
-  border-color: #D94C26;
+  border-color: #111827;
   box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
 }
 
@@ -1165,8 +1165,8 @@ body.tsport-courts-body {
   font-weight: 700;
   padding: 5px 12px;
   border-radius: 5px;
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
 }
 
 .ts-comm-v2-pill.is-closed {
@@ -1210,7 +1210,7 @@ body.tsport-courts-body {
 }
 
 .ts-comm-v2-contact a:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-comm-v2-card-actions {
@@ -1230,7 +1230,7 @@ body.tsport-courts-body {
 }
 
 .ts-comm-v2-mini-btn:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 @media (max-width: 900px) {
@@ -1363,7 +1363,7 @@ body.tsport-courts-body {
 }
 
 .ts-bb-v2-upload-box:hover {
-  border-color: #D94C26;
+  border-color: #111827;
   background: #FFF9F6;
 }
 
@@ -1593,7 +1593,7 @@ body.tsport-courts-body {
 .ts-mybb-price-offered {
   font-size: 22px;
   font-weight: 900;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-mybb-offer-actions {
@@ -1605,9 +1605,9 @@ body.tsport-courts-body {
 
 .ts-mybb-btn-accept {
   padding: 12px 16px;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
-  border: 1px solid #D94C26;
+  border: 1px solid #111827;
   border-radius: 6px;
   font-size: 13.5px;
   font-weight: 700;
@@ -1616,7 +1616,7 @@ body.tsport-courts-body {
 }
 
 .ts-mybb-btn-accept:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-mybb-btn-reject {

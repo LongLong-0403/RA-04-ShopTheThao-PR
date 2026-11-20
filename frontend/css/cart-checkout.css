@@ -156,7 +156,7 @@
 }
 .btn-checkout:hover:not(:disabled) {
   background: var(--tsport-orange-hover);
-  box-shadow: 0 4px 14px rgba(217, 76, 38, 0.3);
+  box-shadow: 0 4px 14px rgba(17, 24, 39, 0.3);
 }
 .btn-checkout:disabled {
   background: #CBD5E1;
@@ -193,7 +193,7 @@
 }
 .tsport-payment-option.is-selected {
   border-color: var(--tsport-orange);
-  background: #FFF7ED;
+  background: #F3F4F6;
 }
 
 /* CẢNH BÁO LỖI TỒN KHO TRONG CHECKOUT */
@@ -285,7 +285,7 @@ body.tsport-cart-body {
 }
 
 .ts-cart-v2-breadcrumb a:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-cart-v2-breadcrumb .is-current {
@@ -380,7 +380,7 @@ body.tsport-cart-body {
 }
 
 .ts-cart-v2-name:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-cart-v2-cond {
@@ -396,8 +396,8 @@ body.tsport-cart-body {
 }
 
 .ts-cart-v2-cond.is-used {
-  background: #FFEDD5;
-  color: #D94C26;
+  background: #E5E7EB;
+  color: #111827;
 }
 
 .ts-cart-v2-variant {
@@ -473,7 +473,7 @@ body.tsport-cart-body {
   text-align: right;
   font-size: 15px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-cart-v2-remove {
@@ -488,7 +488,7 @@ body.tsport-cart-body {
 }
 
 .ts-cart-v2-remove:hover {
-  color: #D94C26;
+  color: #111827;
   text-decoration: underline;
 }
 
@@ -514,13 +514,13 @@ body.tsport-cart-body {
 }
 
 .ts-cart-v2-continue-btn:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 .ts-cart-v2-notice {
-  background: #FFF1EB;
-  border-left: 3px solid #D94C26;
+  background: #F3F4F6;
+  border-left: 3px solid #111827;
   border-radius: 6px;
   padding: 13px 16px;
   font-size: 12.5px;
@@ -551,7 +551,7 @@ body.tsport-cart-body {
 
 .ts-cart-v2-empty-btn {
   display: inline-block;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   font-size: 13.5px;
   font-weight: 700;
@@ -561,7 +561,7 @@ body.tsport-cart-body {
 }
 
 .ts-cart-v2-empty-btn:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 /* CỘT PHẢI: TÓM TẮT ĐƠN HÀNG */
@@ -592,7 +592,7 @@ body.tsport-cart-body {
 
 .ts-cart-v2-summary-val {
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-cart-v2-summary-row.is-total {
@@ -613,7 +613,7 @@ body.tsport-cart-body {
   display: block;
   width: 100%;
   text-align: center;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -626,7 +626,7 @@ body.tsport-cart-body {
 }
 
 .ts-cart-v2-checkout-btn:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-cart-v2-checkout-btn.is-disabled {
@@ -681,18 +681,18 @@ body.tsport-cart-body {
 .ts-cart-rec-heading {
   font-size: 22px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
   margin: 0 0 16px 0;
   letter-spacing: -0.2px;
 }
 
 .ts-cart-rec-frame {
   background: #FFFFFF;
-  border: 2px solid #D94C26;
+  border: 2px solid #111827;
   border-radius: 0;
   padding: 18px 16px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(217, 76, 38, 0.08);
+  box-shadow: 0 4px 16px rgba(17, 24, 39, 0.08);
 }
 
 .ts-cart-rec-track {
@@ -785,7 +785,7 @@ body.tsport-cart-body {
 }
 
 .ts-cart-rec-card:hover .ts-cart-rec-name {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-cart-rec-price {
@@ -848,7 +848,7 @@ body.tsport-checkout-body {
 }
 
 .ts-checkout-v2-steps a:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-checkout-v2-steps .is-current {
@@ -912,8 +912,8 @@ body.tsport-checkout-body {
 
 .ts-checkout-v2-input:focus,
 .ts-checkout-v2-textarea:focus {
-  border-color: #D94C26;
-  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.1);
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
 }
 
 .ts-checkout-v2-pay-wrap {
@@ -946,12 +946,12 @@ body.tsport-checkout-body {
 }
 
 .ts-checkout-v2-cod-box:hover {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-checkout-v2-cod-box.is-selected {
   background: #FFF9F6;
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-checkout-v2-cod-box input {
@@ -971,7 +971,7 @@ body.tsport-checkout-body {
 }
 
 .ts-checkout-v2-cod-box.is-selected .ts-checkout-v2-radio-ui {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-checkout-v2-cod-box.is-selected .ts-checkout-v2-radio-ui::after {
@@ -979,7 +979,7 @@ body.tsport-checkout-body {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #D94C26;
+  background: #111827;
 }
 
 .ts-checkout-v2-pay-detail {
@@ -1037,13 +1037,13 @@ body.tsport-checkout-body {
 }
 
 .ts-checkout-v2-wallet-btn:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 .ts-checkout-v2-wallet-btn.is-active {
-  background: #D94C26;
-  border-color: #D94C26;
+  background: #111827;
+  border-color: #111827;
   color: #FFFFFF;
 }
 
@@ -1123,7 +1123,7 @@ body.tsport-checkout-body {
 
 .ts-checkout-v2-val {
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-checkout-v2-total-row.is-grand {
@@ -1141,7 +1141,7 @@ body.tsport-checkout-body {
 
 .ts-checkout-v2-submit {
   width: 100%;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -1153,7 +1153,7 @@ body.tsport-checkout-body {
 }
 
 .ts-checkout-v2-submit:hover:not(:disabled) {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-checkout-v2-submit:disabled {
@@ -1170,8 +1170,8 @@ body.tsport-checkout-body {
 /* THANH LƯU Ý TỒN KHO FULL CHIỀU NGANG */
 .ts-checkout-v2-notice {
   margin-top: 24px;
-  background: #FFF1EB;
-  border-left: 3px solid #D94C26;
+  background: #F3F4F6;
+  border-left: 3px solid #111827;
   border-radius: 6px;
   padding: 14px 18px;
   font-size: 12.5px;
@@ -1216,8 +1216,8 @@ body.tsport-checkout-body {
   height: 60px;
   margin: 0 auto 22px;
   border-radius: 50%;
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   font-size: 26px;
   font-weight: 900;
   display: flex;
@@ -1242,8 +1242,8 @@ body.tsport-checkout-body {
 
 .ts-order-success-status {
   display: inline-block;
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   font-size: 11.5px;
   font-weight: 700;
   padding: 5px 14px;
@@ -1268,9 +1268,9 @@ body.tsport-checkout-body {
 .ts-order-success-btn-primary {
   min-width: 196px;
   padding: 12px 24px;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
-  border: 1px solid #D94C26;
+  border: 1px solid #111827;
   border-radius: 6px;
   font-size: 13.5px;
   font-weight: 700;
@@ -1279,7 +1279,7 @@ body.tsport-checkout-body {
 }
 
 .ts-order-success-btn-primary:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-order-success-btn-secondary {
@@ -1296,8 +1296,8 @@ body.tsport-checkout-body {
 }
 
 .ts-order-success-btn-secondary:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 @media (max-width: 640px) {

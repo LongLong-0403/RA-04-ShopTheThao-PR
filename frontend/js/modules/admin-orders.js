@@ -173,7 +173,7 @@
         flowLine.innerHTML = steps
           .map((s) =>
             s.key === order.status
-              ? `<strong style="color:#D94C26;">${s.label}</strong>`
+              ? `<strong style="color:#111827;">${s.label}</strong>`
               : `<span>${s.label}</span>`
           )
           .join(' <span style="margin:0 8px; color:#9CA3AF;">→</span> ');

@@ -207,7 +207,7 @@
     }
 
     const statusBadgeMap = {
-      PENDING: '<span class="badge" style="background:#FEF3C7; color:#B45309;">⏳ Chờ duyệt</span>',
+      PENDING: '<span class="badge" style="background:#F3F4F6; color:#374151;">⏳ Chờ duyệt</span>',
       CONFIRMED: '<span class="badge badge-active">✓ Đã duyệt (Thành công)</span>',
       REJECTED: '<span class="badge badge-inactive" style="background:#FEE2E2; color:#B91C1C;">✕ Từ chối</span>',
       CANCELLED: '<span class="badge badge-inactive">Đã hủy</span>'
@@ -222,7 +222,7 @@
         </td>
         <td>${escapeHtml(b.booking_date)}</td>
         <td><code>${escapeHtml(b.time_slot)}</code></td>
-        <td style="font-weight:800; color:#D94C26;">${formatMoney(b.fixed_price)}</td>
+        <td style="font-weight:800; color:#111827;">${formatMoney(b.fixed_price)}</td>
         <td>
           ${statusBadgeMap[b.status] || b.status}
           ${b.admin_note ? `<div style="font-size:11px; color:#DC2626; margin-top:2px;">Lý do: ${escapeHtml(b.admin_note)}</div>` : ''}
@@ -267,7 +267,7 @@
           <div style="font-size:11px; color:#64748B;">${b.sport_name} • Ngày: ${b.booking_date}</div>
         </td>
         <td><code>${escapeHtml(b.time_slot)}</code></td>
-        <td style="font-weight:700; color:#D94C26;">${formatMoney(b.fixed_price)}</td>
+        <td style="font-weight:700; color:#111827;">${formatMoney(b.fixed_price)}</td>
         <td><span class="badge ${b.status === 'CONFIRMED' ? 'badge-active' : b.status === 'PENDING' ? 'badge-warning' : 'badge-inactive'}">${b.status}</span></td>
         <td style="text-align:center;">
           ${b.status === 'PENDING' ? `
@@ -322,7 +322,7 @@
             <td>#${s.id}</td>
             <td><strong>${escapeHtml(court ? court.name : `#${s.court_id}`)}</strong></td>
             <td><code>${escapeHtml(s.time_slot)}</code></td>
-            <td style="font-weight:800; color:#D94C26;">${formatMoney(s.fixed_price)}</td>
+            <td style="font-weight:800; color:#111827;">${formatMoney(s.fixed_price)}</td>
           </tr>
         `;
       }).join("");
@@ -374,7 +374,7 @@
         if (formSection) {
           formSection.scrollIntoView({ behavior: "smooth", block: "start" });
           formSection.style.transition = "background 0.5s ease";
-          formSection.style.background = "#FFF7ED";
+          formSection.style.background = "#F3F4F6";
           setTimeout(() => {
             formSection.style.background = "transparent";
           }, 1500);

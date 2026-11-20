@@ -1073,7 +1073,7 @@
             <div style="font-size:12.5px; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(p.name)}">
               ${escapeHtml(p.name)}
             </div>
-            <div style="font-size:13px; font-weight:800; color:#D94C26; margin-top:4px;">
+            <div style="font-size:13px; font-weight:800; color:#111827; margin-top:4px;">
               ${formatMoney(minPrice)}
             </div>
           </a>
@@ -1145,7 +1145,7 @@
             </a>
           `;
         }).join("") + `
-          <a href="pages/shop.html?q=${encodeURIComponent(query)}" style="display:block; text-align:center; padding:10px; font-size:12px; font-weight:700; color:#D94C26; background:#FFF7ED; text-decoration:none;">
+          <a href="pages/shop.html?q=${encodeURIComponent(query)}" style="display:block; text-align:center; padding:10px; font-size:12px; font-weight:700; color:#111827; background:#F3F4F6; text-decoration:none;">
             Xem tất cả kết quả cho "${escapeHtml(query)}" →
           </a>
         `;

@@ -188,7 +188,7 @@
 .tsport-product-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--tsport-shadow-md);
-  border-color: #FED7AA;
+  border-color: #D1D5DB;
 }
 
 .tsport-product-thumb {
@@ -511,7 +511,7 @@
 }
 
 .ts-shop-breadcrumb a:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-shop-page-head {
@@ -567,7 +567,7 @@
 .ts-shop-filter-clear {
   background: none;
   border: none;
-  color: #D94C26;
+  color: #111827;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -622,11 +622,11 @@
 }
 
 .ts-shop-check-row:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-shop-check-row input {
-  accent-color: #D94C26;
+  accent-color: #111827;
   width: 14px;
   height: 14px;
   cursor: pointer;
@@ -641,7 +641,7 @@
 
 .ts-shop-price-slider {
   width: 100%;
-  accent-color: #D94C26;
+  accent-color: #111827;
   cursor: pointer;
   margin: 4px 0 6px 0;
 }
@@ -653,7 +653,7 @@
 
 .ts-shop-apply-btn {
   width: 100%;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -666,7 +666,7 @@
 }
 
 .ts-shop-apply-btn:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 /* BANNER QUẢNG CÁO THƯƠNG HIỆU VỢT (CHỈ ẢNH, FULL CHIỀU RỘNG CỘT SẢN PHẨM, TRƯỢT TRÁI -> PHẢI 1S) */
@@ -732,7 +732,7 @@
 
 .ts-shop-brand-dot.is-active {
   width: 24px;
-  background: #D94C26;
+  background: #111827;
 }
 
 /* TOOLBAR & LƯỚI 3 CỘT */
@@ -781,7 +781,7 @@
 }
 
 .ts-shop-sort-select:focus {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-shop-grid-v2 {
@@ -803,7 +803,7 @@
 }
 
 .ts-shop-card-v2:hover {
-  border-color: #D94C26;
+  border-color: #111827;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
@@ -844,8 +844,8 @@
 }
 
 .ts-shop-card-badge.is-used {
-  background: #FFEDD5;
-  color: #D94C26;
+  background: #E5E7EB;
+  color: #111827;
 }
 
 .ts-shop-card-name {
@@ -878,7 +878,7 @@
 .ts-shop-card-price {
   font-size: 16px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-shop-card-oldprice {
@@ -914,13 +914,13 @@
 }
 
 .ts-shop-page-btn:hover:not(:disabled) {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 .ts-shop-page-btn.is-active {
-  background: #D94C26;
-  border-color: #D94C26;
+  background: #111827;
+  border-color: #111827;
   color: #FFFFFF;
 }
 

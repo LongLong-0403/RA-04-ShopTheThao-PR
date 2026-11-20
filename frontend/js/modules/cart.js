@@ -490,7 +490,7 @@
     const summaryItems = document.getElementById("checkoutSummaryItems");
     if (summaryItems) {
       if (orderItems.length === 0) {
-        summaryItems.innerHTML = '<div style="color:#D94C26; font-weight:700; font-size:13px;">Giỏ hàng đang trống. Vui lòng quay lại giỏ hàng để thêm sản phẩm.</div>';
+        summaryItems.innerHTML = '<div style="color:#111827; font-weight:700; font-size:13px;">Giỏ hàng đang trống. Vui lòng quay lại giỏ hàng để thêm sản phẩm.</div>';
         const submitBtn = document.getElementById("btnPlaceOrder");
         if (submitBtn) submitBtn.disabled = true;
       } else {

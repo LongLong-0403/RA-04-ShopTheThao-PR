@@ -254,8 +254,8 @@ body.tsport-auth-body {
 }
 
 .ts-auth-v2-input:focus {
-  border-color: #D94C26;
-  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.1);
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
 }
 
 .ts-auth-v2-input.is-invalid {
@@ -277,7 +277,7 @@ body.tsport-auth-body {
 
 .ts-auth-v2-submit {
   width: 100%;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -290,7 +290,7 @@ body.tsport-auth-body {
 }
 
 .ts-auth-v2-submit:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-auth-v2-switch-row {
@@ -304,7 +304,7 @@ body.tsport-auth-body {
   padding: 0;
   font-size: 13px;
   font-weight: 600;
-  color: #D94C26;
+  color: #111827;
   cursor: pointer;
 }
 
@@ -313,8 +313,8 @@ body.tsport-auth-body {
 }
 
 .ts-auth-v2-notice {
-  background: #FFF1EB;
-  border-left: 3px solid #D94C26;
+  background: #F3F4F6;
+  border-left: 3px solid #111827;
   border-radius: 6px;
   padding: 14px 16px;
   font-size: 12.5px;
@@ -359,7 +359,7 @@ body.tsport-auth-body {
   padding: 0;
   font-size: 12.5px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
   cursor: pointer;
   text-decoration: none;
 }
@@ -475,7 +475,7 @@ body.tsport-auth-body {
 }
 
 a.ts-admin-channel-val:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-admin-contact-textarea {
@@ -509,7 +509,7 @@ a.ts-admin-channel-val:hover {
 
 .ts-admin-contact-submit {
   padding: 10px 20px;
-  background: #D94C26;
+  background: #111827;
   border: none;
   border-radius: 6px;
   font-size: 13px;
@@ -520,7 +520,7 @@ a.ts-admin-channel-val:hover {
 }
 
 .ts-admin-contact-submit:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 @media (max-width: 640px) {
@@ -558,7 +558,7 @@ a.ts-admin-channel-val:hover {
 
 .ts-auth-v2-pass-toggle:hover,
 .ts-auth-v2-pass-toggle.is-visible {
-  color: #D94C26;
+  color: #111827;
 }
 
 
@@ -661,12 +661,12 @@ body.tsport-account-body {
 
 .ts-acc-v2-menu-link:hover {
   background: #F9FAFB;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-acc-v2-menu-link.is-active {
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   font-weight: 700;
 }
 
@@ -688,7 +688,7 @@ body.tsport-account-body {
 }
 
 .ts-acc-v2-logout-btn:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 /* CỘT PHẢI: THẺ THÔNG TIN CÁ NHÂN & ĐỔI MẬT KHẨU */
@@ -749,8 +749,8 @@ body.tsport-account-body {
 }
 
 .ts-acc-v2-input:focus {
-  border-color: #D94C26;
-  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.1);
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
 }
 
 .ts-acc-v2-input.is-readonly {
@@ -776,7 +776,7 @@ body.tsport-account-body {
 
 .ts-acc-v2-btn-primary {
   min-width: 156px;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -788,7 +788,7 @@ body.tsport-account-body {
 }
 
 .ts-acc-v2-btn-primary:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-acc-v2-divider {
@@ -817,8 +817,8 @@ body.tsport-account-body {
 }
 
 .ts-acc-v2-btn-secondary:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 @media (max-width: 900px) {

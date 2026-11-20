@@ -1,6 +1,6 @@
 /**
  * TSPORT — TRANG CHỦ TỐI GIẢN CHUẨN LAYOUT FIGMA (KHÔNG ICON THỪA)
- * Bảng màu: Cam Tsport (#D94C26), Than (#1E242B / #111827), Xám nhạt (#F3F4F6 / #ECEEF1), Trắng (#FFFFFF)
+ * Bảng màu: Cam Tsport (#111827), Than (#1E242B / #111827), Xám nhạt (#F3F4F6 / #ECEEF1), Trắng (#FFFFFF)
  */
 
 body.tsport-home-body {
@@ -30,7 +30,7 @@ body.tsport-home-body {
 .ts-min-logo {
   font-size: 24px;
   font-weight: 900;
-  color: #D94C26;
+  color: #111827;
   text-decoration: none;
   letter-spacing: -0.6px;
   flex-shrink: 0;
@@ -60,7 +60,7 @@ body.tsport-home-body {
 
 .ts-min-search-input:focus {
   background: #FFFFFF;
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-min-header-links {
@@ -80,7 +80,7 @@ body.tsport-home-body {
 }
 
 .ts-min-header-link:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-min-header-cart {
@@ -92,7 +92,7 @@ body.tsport-home-body {
 }
 
 .ts-min-header-cart:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 /* DROPDOWN TÌM KIẾM DEBOUNCE */
@@ -127,7 +127,7 @@ body.tsport-home-body {
 }
 
 .tsport-search-dropdown-item:hover {
-  background: #FFF7ED;
+  background: #F3F4F6;
 }
 
 .tsport-search-dropdown-thumb {
@@ -155,7 +155,7 @@ body.tsport-home-body {
 .tsport-search-dropdown-price {
   font-size: 12px;
   font-weight: 700;
-  color: #D94C26;
+  color: #111827;
   margin-top: 2px;
 }
 
@@ -215,7 +215,7 @@ body.tsport-home-body {
 
 .ts-cat-sidebar-link:hover {
   background: #F9FAFB;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-cat-sidebar-chevron {
@@ -246,9 +246,9 @@ body.tsport-home-body {
   overflow: visible;
   z-index: 950;
   width: 100%;
-  background: #D94C26;
-  border-top: 1px solid #B83B19;
-  border-bottom: 2px solid #B83B19;
+  background: #111827;
+  border-top: 1px solid #1F2937;
+  border-bottom: 2px solid #000000;
   padding: 0;
   margin: 0;
 }
@@ -280,7 +280,7 @@ body.tsport-home-body {
 .ts-inline-nav-link:hover,
 .ts-inline-nav-link.is-active {
   color: #FFFFFF;
-  background: rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.12);
   border-bottom-color: #FFFFFF;
 }
 
@@ -335,7 +335,7 @@ body.tsport-home-body {
   display: block;
   font-size: 13px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
   text-transform: uppercase;
   letter-spacing: 0.2px;
   text-decoration: none;
@@ -369,7 +369,7 @@ body.tsport-home-body {
 }
 
 .ts-mega-link:hover {
-  color: #D94C26;
+  color: #111827;
   transform: translateX(2px);
 }
 
@@ -378,7 +378,7 @@ body.tsport-home-body {
   margin-top: 8px;
   font-size: 13px;
   font-weight: 600;
-  color: #D94C26;
+  color: #111827;
   text-decoration: none;
   transition: color 0.14s ease;
 }
@@ -514,7 +514,7 @@ body.tsport-home-body {
 .ts-min-sec-eyebrow {
   font-size: 10.5px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
   letter-spacing: 0.6px;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -537,7 +537,7 @@ body.tsport-home-body {
 }
 
 .ts-min-sec-link:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 /* ==========================================
@@ -588,7 +588,7 @@ body.tsport-home-body {
 }
 
 .ts-min-product-card:hover {
-  border-color: #D94C26;
+  border-color: #111827;
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
 }
@@ -651,7 +651,7 @@ body.tsport-home-body {
   margin-top: auto;
   font-size: 15px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-min-product-oldprice {
@@ -901,13 +901,13 @@ body.tsport-home-body {
 }
 
 .ts-home-court-filter-btn:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 .ts-home-court-filter-btn.is-active {
-  background: #D94C26;
-  border-color: #D94C26;
+  background: #111827;
+  border-color: #111827;
   color: #FFFFFF;
 }
 
@@ -957,8 +957,8 @@ body.tsport-home-body {
 }
 
 .ts-home-match-sport {
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   font-size: 11px;
   font-weight: 800;
   padding: 3px 9px;
@@ -1021,7 +1021,7 @@ body.tsport-home-body {
 .ts-home-match-price {
   font-size: 13.5px;
   font-weight: 800;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-home-match-author {
@@ -1078,7 +1078,7 @@ body.tsport-home-body {
 }
 
 .ts-sale-timer-box {
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   font-size: 11.5px;
   padding: 4px 8px;
@@ -1222,7 +1222,7 @@ body.tsport-home-body {
 }
 
 .ts-min-footer-links a:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 /* ==========================================

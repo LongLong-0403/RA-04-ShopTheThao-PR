@@ -289,11 +289,11 @@
   text-transform: uppercase;
 }
 .tsport-sport-tab:hover .tsport-sport-tab-text {
-  color: #D94C26;
+  color: #111827;
 }
 .tsport-sport-tab.is-active {
-  border-bottom-color: #D94C26;
+  border-bottom-color: #111827;
 }
 .tsport-sport-tab.is-active .tsport-sport-tab-text {
-  color: #D94C26;
+  color: #111827;
 }

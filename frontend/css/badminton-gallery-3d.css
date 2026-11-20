@@ -229,7 +229,7 @@
 
 .ts-bg3d-back-btn:hover,
 .ts-bg3d-back-btn:focus-visible {
-  color: #D94C26;
+  color: #111827;
   outline: none;
 }
 
@@ -247,7 +247,7 @@
 }
 
 .ts-bg3d-detail-top-link:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 /* Bố cục 2 cột Desktop */
@@ -414,7 +414,7 @@
 }
 
 .ts-bg3d-add-btn:hover {
-  background: #D94C26;
+  background: #111827;
 }
 
 .ts-bg3d-fullpage-link {

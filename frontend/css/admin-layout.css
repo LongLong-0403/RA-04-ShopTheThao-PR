@@ -51,7 +51,7 @@
   letter-spacing: -0.5px;
 }
 .tsport-admin-brand-badge {
-  background: #D94C26;
+  background: #111827;
   color: #fff;
   font-size: 10px;
   font-weight: 800;
@@ -104,10 +104,10 @@
   color: #F8FAFC;
 }
 .tsport-admin-nav-item.is-active {
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(217, 76, 38, 0.4);
+  box-shadow: 0 2px 8px rgba(17, 24, 39, 0.4);
 }
 .tsport-admin-nav-icon {
   font-size: 16px;
@@ -129,7 +129,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #D94C26;
+  background: #111827;
   color: #fff;
   display: flex;
   align-items: center;
@@ -506,7 +506,7 @@ body.ts-adm-body {
 .ts-adm-user-dropdown a:hover,
 .ts-adm-user-dropdown button:hover {
   background: #F3F4F6;
-  color: #D94C26;
+  color: #111827;
 }
 
 /* NỘI DUNG CHÍNH — CÂN ĐỐI ĐỀU TRÊN MÀN HÌNH DESKTOP */
@@ -554,7 +554,7 @@ body.ts-adm-body {
 }
 
 .ts-adm-kpi-card:hover {
-  border-color: #D94C26;
+  border-color: #111827;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
 }
 
@@ -614,9 +614,9 @@ body.ts-adm-body {
   display: block;
   text-align: center;
   padding: 13px 18px;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
-  border: 1px solid #D94C26;
+  border: 1px solid #111827;
   border-radius: 6px;
   font-size: 13.5px;
   font-weight: 700;
@@ -626,7 +626,7 @@ body.ts-adm-body {
 }
 
 .ts-adm-btn-primary:hover {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-adm-btn-secondary {
@@ -645,8 +645,8 @@ body.ts-adm-body {
 }
 
 .ts-adm-btn-secondary:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 @media (max-width: 1024px) {
@@ -722,7 +722,7 @@ body.ts-adm-body {
 
 .ts-adm-input:focus,
 .ts-adm-select:focus {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-adm-filter-btn {
@@ -806,8 +806,8 @@ body.ts-adm-body {
 }
 
 .ts-adm-tab-pill.is-active {
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   font-weight: 700;
 }
 
@@ -832,7 +832,7 @@ body.ts-adm-body {
   padding: 4px 8px;
   font-size: 12.5px;
   font-weight: 700;
-  color: #D94C26;
+  color: #111827;
   cursor: pointer;
 }
 
@@ -924,11 +924,11 @@ body.ts-adm-body {
 
 .ts-adm-cat-node:hover {
   background: #F9FAFB;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-adm-cat-node.is-active {
-  color: #D94C26;
+  color: #111827;
   font-weight: 800;
   background: #FFF9F6;
 }
@@ -971,7 +971,7 @@ body.ts-adm-body {
 }
 
 .ts-adm-textarea:focus {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-adm-prod-media-sec {
@@ -1052,7 +1052,7 @@ body.ts-adm-body {
 }
 
 .ts-adm-sku-input:focus {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-adm-sku-del {
@@ -1138,12 +1138,12 @@ body.ts-adm-body {
 }
 
 .ts-adm-court-item:hover {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-adm-court-item.is-active {
-  background: #FFF1EB;
-  border-color: #FAD5C5;
+  background: #F3F4F6;
+  border-color: #D1D5DB;
 }
 
 .ts-adm-court-item-name {
@@ -1244,8 +1244,8 @@ body.ts-adm-body {
   border-radius: 6px;
   font-size: 12px;
   font-weight: 700;
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   white-space: nowrap;
 }
 

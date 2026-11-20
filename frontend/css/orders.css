@@ -17,7 +17,7 @@
   transition: all 0.2s ease;
 }
 .tsport-order-card:hover {
-  border-color: #FED7AA;
+  border-color: #D1D5DB;
 }
 
 .tsport-order-header {
@@ -114,8 +114,8 @@
   gap: 6px;
 }
 .tsport-badge-order-status.pending {
-  background: #FEF3C7;
-  color: #B45309;
+  background: #F3F4F6;
+  color: #374151;
 }
 .tsport-badge-order-status.confirmed {
   background: #DBEAFE;
@@ -191,12 +191,12 @@ body.tsport-orders-body {
 }
 
 .ts-orders-v2-tab:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-orders-v2-tab.is-active {
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
   font-weight: 700;
 }
 
@@ -263,8 +263,8 @@ body.tsport-orders-body {
 }
 
 .ts-orders-v2-status.is-pending {
-  background: #FFF1EB;
-  color: #D94C26;
+  background: #F3F4F6;
+  color: #111827;
 }
 
 .ts-orders-v2-status.is-cancelled {
@@ -284,7 +284,7 @@ body.tsport-orders-body {
 }
 
 .ts-orders-v2-detail-btn:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-orders-v2-bottom-bar {
@@ -307,8 +307,8 @@ body.tsport-orders-body {
 }
 
 .ts-orders-v2-pending-btn:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 /* ==========================================
@@ -373,13 +373,13 @@ body.tsport-orders-body {
 
 .ts-ord-det-step.is-done .ts-ord-det-step-dot,
 .ts-ord-det-step.is-current .ts-ord-det-step-dot {
-  background: #D94C26;
-  border-color: #D94C26;
+  background: #111827;
+  border-color: #111827;
 }
 
 .ts-ord-det-step.is-done .ts-ord-det-step-label,
 .ts-ord-det-step.is-current .ts-ord-det-step-label {
-  color: #D94C26;
+  color: #111827;
   font-weight: 700;
 }
 
@@ -463,7 +463,7 @@ body.tsport-orders-body {
 .ts-ord-det-total-val {
   font-size: 24px;
   font-weight: 900;
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-ord-det-cancel-btn {

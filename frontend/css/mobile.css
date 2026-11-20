@@ -91,7 +91,7 @@
   }
 
   .ts-mob-cart-link:hover {
-    color: #D94C26;
+    color: #111827;
   }
 
   /* ==========================================
@@ -176,8 +176,8 @@
   }
 
   .ts-mob-drawer-link.is-active {
-    background: #FFF1EB;
-    color: #D94C26;
+    background: #F3F4F6;
+    color: #111827;
     font-weight: 700;
   }
 
@@ -226,12 +226,12 @@
   }
 
   .ts-mob-tab-item.is-active {
-    color: #D94C26;
+    color: #111827;
     font-weight: 700;
   }
 
   .ts-mob-tab-item.is-active .ts-mob-tab-dot {
-    background: #D94C26;
+    background: #111827;
   }
 
   /* ==========================================
@@ -276,7 +276,7 @@
 
   .ts-mob-search-input:focus {
     background: #FFFFFF;
-    border-color: #D94C26;
+    border-color: #111827;
   }
 
   /* Banner chính */
@@ -308,7 +308,7 @@
   .ts-mob-hero-cta {
     display: inline-block;
     padding: 12px 26px;
-    background: #D94C26;
+    background: #111827;
     color: #FFFFFF;
     border-radius: 8px;
     font-size: 13.5px;
@@ -318,7 +318,7 @@
   }
 
   .ts-mob-hero-cta:active {
-    background: #BF3E1C;
+    background: #27272A;
   }
 
   /* 4 nút môn thể thao 2x2 */
@@ -343,8 +343,8 @@
   }
 
   .ts-mob-sport-pill.is-active {
-    background: #FFF1EB;
-    color: #D94C26;
+    background: #F3F4F6;
+    color: #111827;
     font-weight: 700;
   }
 
@@ -367,7 +367,7 @@
   .ts-mob-sec-more {
     font-size: 12.5px;
     font-weight: 600;
-    color: #D94C26;
+    color: #111827;
     text-decoration: none;
   }
 
@@ -392,7 +392,7 @@
   }
 
   .ts-mob-prod-card:active {
-    border-color: #D94C26;
+    border-color: #111827;
   }
 
   .ts-mob-prod-thumb {
@@ -453,7 +453,7 @@
   .ts-mob-prod-price {
     font-size: 15px;
     font-weight: 900;
-    color: #D94C26;
+    color: #111827;
     margin-top: auto;
   }
 
@@ -487,8 +487,8 @@
   }
 
   .ts-mob-service-btn:active {
-    border-color: #D94C26;
-    color: #D94C26;
+    border-color: #111827;
+    color: #111827;
   }
 
   /* ==========================================
@@ -820,7 +820,7 @@
 
   .ts-court-det-confirm-price {
     font-size: 22px !important;
-    color: #D94C26 !important;
+    color: #111827 !important;
   }
 
   .ts-court-det-submit-btn {

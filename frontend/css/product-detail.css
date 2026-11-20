@@ -31,7 +31,7 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-breadcrumb a:hover {
-  color: #D94C26;
+  color: #111827;
 }
 
 .ts-pdp-breadcrumb .is-current {
@@ -102,7 +102,7 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-mode-btn.is-active {
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
 }
 
@@ -176,8 +176,8 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-3d-ctrl-btn:hover {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 .ts-pdp-3d-ctrl-btn.is-active {
@@ -223,12 +223,12 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-thumb:hover {
-  border-color: #D94C26;
+  border-color: #111827;
 }
 
 .ts-pdp-thumb.is-active {
-  border-color: #D94C26;
-  box-shadow: 0 0 0 1px #D94C26;
+  border-color: #111827;
+  box-shadow: 0 0 0 1px #111827;
 }
 
 .ts-pdp-thumb img {
@@ -267,7 +267,7 @@ body.tsport-pdp-body {
 .ts-pdp-thumb-3d-sub {
   font-size: 10px;
   font-weight: 600;
-  color: #FDBA74;
+  color: #D1D5DB;
 }
 
 /* ==========================================
@@ -293,8 +293,8 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-cond-pill.is-used {
-  background: #FFEDD5;
-  color: #D94C26;
+  background: #E5E7EB;
+  color: #111827;
 }
 
 .ts-pdp-title {
@@ -322,7 +322,7 @@ body.tsport-pdp-body {
 .ts-pdp-price {
   font-size: 30px;
   font-weight: 900;
-  color: #D94C26;
+  color: #111827;
   line-height: 1.1;
 }
 
@@ -365,8 +365,8 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-var-btn:hover:not(:disabled) {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 .ts-pdp-var-btn.is-active {
@@ -392,7 +392,7 @@ body.tsport-pdp-body {
 .ts-pdp-variant-hint {
   font-size: 12.5px;
   font-weight: 700;
-  color: #D94C26;
+  color: #111827;
   margin-bottom: 12px;
 }
 
@@ -447,7 +447,7 @@ body.tsport-pdp-body {
 .ts-pdp-btn-cart {
   flex: 1;
   height: 44px;
-  background: #D94C26;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   border-radius: 6px;
@@ -458,7 +458,7 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-btn-cart:hover:not(:disabled) {
-  background: #BF3E1C;
+  background: #27272A;
 }
 
 .ts-pdp-btn-cart:disabled,
@@ -481,13 +481,13 @@ body.tsport-pdp-body {
 }
 
 .ts-pdp-btn-buynow:hover:not(:disabled) {
-  border-color: #D94C26;
-  color: #D94C26;
+  border-color: #111827;
+  color: #111827;
 }
 
 /* THÔNG BÁO COD */
 .ts-pdp-cod-note {
-  background: #FFF1EB;
+  background: #F3F4F6;
   border-radius: 8px;
   padding: 13px 16px;
   font-size: 12.5px;
@@ -602,8 +602,8 @@ body.tsport-pdp-body {
 .ts-pdp-wear-badge {
   display: inline-block;
   margin-top: 16px;
-  background: #FFEDD5;
-  color: #D94C26;
+  background: #E5E7EB;
+  color: #111827;
   font-size: 11.5px;
   font-weight: 700;
   padding: 5px 12px;
