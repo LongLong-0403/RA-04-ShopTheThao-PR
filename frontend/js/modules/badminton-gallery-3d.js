@@ -745,6 +745,8 @@
       this.savedAngle = this.controls.angle;
       this.controls.locked = true;
       this.controls.velocity = 0;
+      artwork.artMat.color.setRGB(1, 1, 1);
+      artwork.setOpacity(1);
 
       this._populateDetail(artwork.item);
 
@@ -1086,20 +1088,27 @@
     const collSubEl = document.getElementById("bg3dCollSub");
     let lastCenteredId = null;
 
-    // Vòng lặp render 60fps dùng delta time + tự động di chuyển trái -> phải (0,5s / bước)
+    // Vòng lặp render 60fps + chuyển động lần lượt trái -> phải thay đổi sau mỗi 1s
     let rafId = null;
     let lastTs = performance.now();
     let isPointerInside = false;
+    let autoStepElapsed = 0;
+    let autoTween = null;
 
     stageEl.addEventListener("pointerenter", () => {
       isPointerInside = true;
+      autoStepElapsed = 0;
+      if (autoTween) {
+        autoTween.kill();
+        autoTween = null;
+      }
     });
     stageEl.addEventListener("pointerleave", () => {
       isPointerInside = false;
+      autoStepElapsed = 0;
     });
 
-    // Tốc độ góc liên tục mượt từ trái sang phải (1 khoảng sản phẩm / 0,5s khi giảm dần nhẹ)
-    const autoAngularSpeed = -(stepAngle / Math.max(0.2, BADMINTON_GALLERY_CONFIG.autoPlaySpeedSec || 0.5));
+    const stepIntervalSec = Math.max(0.4, BADMINTON_GALLERY_CONFIG.autoPlaySpeedSec || 1.0);
 
     function animate(ts) {
       rafId = requestAnimationFrame(animate);
@@ -1108,7 +1117,7 @@
 
       controls.update(dt);
 
-      // Tự động trượt mượt từ trái sang phải khi không kéo/hover/mở chi tiết
+      // Chuyển động từng sản phẩm lần lượt từ trái sang phải, đổi sau mỗi 1s
       if (
         BADMINTON_GALLERY_CONFIG.autoPlay &&
         !REDUCED_MOTION &&
@@ -1118,7 +1127,25 @@
         !isPointerInside &&
         Math.abs(controls.velocity) < 0.01
       ) {
-        controls.angle += autoAngularSpeed * dt;
+        autoStepElapsed += dt;
+        if (autoStepElapsed >= stepIntervalSec && !autoTween) {
+          autoStepElapsed = 0;
+          const snappedTarget = Math.round(controls.angle / stepAngle) * stepAngle - stepAngle;
+          autoTween = window.gsap.to(controls, {
+            angle: snappedTarget,
+            duration: 0.62,
+            ease: "power3.inOut",
+            onComplete: () => {
+              autoTween = null;
+            }
+          });
+        }
+      } else {
+        autoStepElapsed = 0;
+        if (autoTween && (controls.isDragging || controls.locked || transitionCtrl.state !== "gallery")) {
+          autoTween.kill();
+          autoTween = null;
+        }
       }
 
       sceneObj.galleryGroup.rotation.y = controls.angle;
@@ -1126,16 +1153,21 @@
       if (transitionCtrl.state === "gallery") {
         artworks.forEach((a) => {
           const isHov = a === hoveredArtwork;
-          a.setHover(isHov);
-
-          // Làm mờ các sản phẩm 2 bên, chỉ giữ sắc nét nổi bật sản phẩm ở giữa
           const distFromCenter = Math.abs(normalizeAngle(a.theta + controls.angle));
-          const focusFactor = Math.exp(-Math.pow(distFromCenter / (stepAngle * 0.95), 2));
-          let targetOpacity = 0.24 + 0.76 * focusFactor;
-          if (isHov) targetOpacity = Math.min(1, targetOpacity + 0.45);
+          const focusFactor = Math.exp(-Math.pow(distFromCenter / (stepAngle * 0.72), 2));
+
+          // Sản phẩm chính giữa nổi bật sáng rõ và nhô nhẹ về phía người xem; hai bên tối & mờ dịu
+          a.setHover(isHov || focusFactor > 0.72);
+
+          const targetOpacity = isHov ? 1.0 : (0.34 + 0.66 * focusFactor);
           a.artMat.opacity += (targetOpacity - a.artMat.opacity) * 0.16;
 
-          const targetCapOpacity = isHov ? 0.96 : (0.14 + 0.86 * Math.pow(focusFactor, 1.4));
+          const targetBright = isHov ? 1.0 : (0.62 + 0.38 * focusFactor);
+          const curBright = a.artMat.color.r;
+          const nextBright = curBright + (targetBright - curBright) * 0.16;
+          a.artMat.color.setRGB(nextBright, nextBright, nextBright);
+
+          const targetCapOpacity = isHov ? 1.0 : (0.16 + 0.84 * Math.pow(focusFactor, 1.5));
           a.capMat.opacity += (targetCapOpacity - a.capMat.opacity) * 0.16;
         });
 
