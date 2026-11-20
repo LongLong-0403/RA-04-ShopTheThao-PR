@@ -31,7 +31,7 @@
     maxVelocity: 2.2,         // Giới hạn vận tốc góc (rad/s)
     clickThresholdPx: 8,      // Ngưỡng phân biệt click (<8px) và drag
     autoPlay: true,           // Tự động di chuyển sản phẩm từ trái sang phải
-    autoPlaySpeedSec: 0.5,    // Tốc độ 0,5s (di chuyển mượt từ trái sang phải mỗi 0,5 giây)
+    autoPlaySpeedSec: 1.0,    // Tốc độ 1s (di chuyển mượt từ trái sang phải mỗi 1 giây)
     focusDuration: 0.55,      // Giai đoạn A: xoay ngắn nhất đưa sản phẩm về trung tâm (giây)
     zoomDuration: 0.85,       // Giai đoạn B: tiến camera gần sản phẩm (giây)
     detailDuration: 0.65      // Giai đoạn C: trượt ảnh sang cột trái & hiện chi tiết (giây)
@@ -1124,7 +1124,21 @@
       sceneObj.galleryGroup.rotation.y = controls.angle;
 
       if (transitionCtrl.state === "gallery") {
-        artworks.forEach((a) => a.setHover(a === hoveredArtwork));
+        artworks.forEach((a) => {
+          const isHov = a === hoveredArtwork;
+          a.setHover(isHov);
+
+          // Làm mờ các sản phẩm 2 bên, chỉ giữ sắc nét nổi bật sản phẩm ở giữa
+          const distFromCenter = Math.abs(normalizeAngle(a.theta + controls.angle));
+          const focusFactor = Math.exp(-Math.pow(distFromCenter / (stepAngle * 0.95), 2));
+          let targetOpacity = 0.24 + 0.76 * focusFactor;
+          if (isHov) targetOpacity = Math.min(1, targetOpacity + 0.45);
+          a.artMat.opacity += (targetOpacity - a.artMat.opacity) * 0.16;
+
+          const targetCapOpacity = isHov ? 0.96 : (0.14 + 0.86 * Math.pow(focusFactor, 1.4));
+          a.capMat.opacity += (targetCapOpacity - a.capMat.opacity) * 0.16;
+        });
+
         const centered = getCenteredArtwork();
         if (centered && centered.item.id !== lastCenteredId) {
           lastCenteredId = centered.item.id;
