@@ -9,6 +9,7 @@
   width: 100%;
   background: #F4F4F2;
   border-bottom: 1px solid #E5E5E2;
+  margin-bottom: 64px;
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
@@ -17,7 +18,7 @@
 .ts-bg3d-stage {
   position: relative;
   width: 100%;
-  height: clamp(540px, 78vh, 800px);
+  height: clamp(580px, 82vh, 840px);
   background: #F2F2F0;
   cursor: grab;
   touch-action: pan-y;

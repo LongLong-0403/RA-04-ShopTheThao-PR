@@ -14,17 +14,17 @@
   // 1. CẤU HÌNH TẬP TRUNG (CHỈNH TẤT CẢ THÔNG SỐ HIỆU ỨNG TẠI ĐÂY)
   // ==========================================================================
   const BADMINTON_GALLERY_CONFIG = {
-    wallRadius: 15.6,         // Bán kính bức tường cong hình trụ đứng
-    wallHeight: 11.4,         // Chiều cao tường
-    floorY: -2.65,            // Cao độ mặt sàn (tạo đường tiếp giáp cong rõ theo phối cảnh)
-    artworkY: 0.35,           // Cao độ trưng bày thống nhất cho toàn bộ sản phẩm
-    artworkInset: 0.14,       // Khoảng cách từ mặt sản phẩm tới mặt tường (tránh z-fighting)
+    wallRadius: 14.8,         // Bán kính bức tường cong hình trụ đứng
+    wallHeight: 11.8,         // Chiều cao tường
+    floorY: -2.85,            // Cao độ mặt sàn (tạo đường tiếp giáp cong rõ theo phối cảnh)
+    artworkY: 0.42,           // Cao độ trưng bày thống nhất cho toàn bộ sản phẩm
+    artworkInset: 0.16,       // Khoảng cách từ mặt sản phẩm tới mặt tường (tránh z-fighting)
     artworkSpacing: null,     // Tự động chia đều 2*PI / N để xoay vòng lặp vô hạn không bước nhảy
-    maxItems: 20,             // 16–24 tác phẩm dọc theo tường cong
-    cameraFov: 52,            // FOV rộng vừa đủ để thấy 7–9 sản phẩm, giữa nhỏ xa & hai mép lớn nghiêng
-    cameraMobileFov: 60,      // FOV trên mobile
-    cameraZ: -2.4,            // Camera đứng trong lòng hình trụ -> giữa xa nhất, hai bên gần và lớn hơn
-    cameraY: 0.1,
+    maxItems: 18,             // 18 tác phẩm dọc theo tường cong — thoáng và thấy rõ từng sản phẩm
+    cameraFov: 48,            // FOV cân đối để sản phẩm giữa rõ nét, hai mép lớn và nghiêng đẹp
+    cameraMobileFov: 56,      // FOV trên mobile
+    cameraZ: -3.8,            // Camera tiến gần hơn một chút để thấy rõ chi tiết sản phẩm
+    cameraY: 0.16,
     dragSensitivity: 0.0022,  // Độ nhạy kéo chuột / vuốt ngang
     wheelSensitivity: 0.00055,// Độ nhạy con lăn / trackpad
     damping: 5.2,             // Hệ số tắt dần quán tính (theo delta time)
@@ -81,7 +81,7 @@
       const minPrice = Math.min(...skus.map((s) => Number(s.sale_price || s.price) || 0));
       const img = p.images?.[0]?.image_url || "/frontend/assets/products/catalog/p001.webp";
 
-      // Phối hợp khung đứng và khung ngang tự nhiên giống triển lãm nghệ thuật
+      // Phối hợp khung đứng và khung ngang kích thước lớn rõ nét
       const isLandscape = Number(p.category_id) === 6 || (idx % 4 === 2);
       return {
         id: p.id,
@@ -89,8 +89,8 @@
         artist: brand,
         collection: cat,
         image: img,
-        width: isLandscape ? 2.65 : 2.15,
-        height: isLandscape ? 2.1 : 2.75,
+        width: isLandscape ? 3.25 : 2.75,
+        height: isLandscape ? 2.6 : 3.4,
         price: minPrice,
         description: p.description || "Sản phẩm cầu lông chính hãng phân phối tại Tsport.",
         specifications: p.specifications || {},
@@ -284,17 +284,17 @@
       this.group.add(this.artMesh);
 
       // Nhãn nhỏ bên dưới đi theo sản phẩm & chịu phối cảnh 3D
-      const capW = Math.max(item.width, 2.25);
-      const capH = 0.44;
+      const capW = Math.max(item.width, 2.8);
+      const capH = 0.56;
       this.capGeo = new THREE.PlaneGeometry(capW, capH);
       this.capMat = new THREE.MeshBasicMaterial({
         map: this._createCaptionTexture(item),
         transparent: true,
-        opacity: 0.92,
+        opacity: 0.96,
         depthWrite: false
       });
       this.capMesh = new THREE.Mesh(this.capGeo, this.capMat);
-      this.capMesh.position.set(0, -item.height / 2 - 0.34, 0.01);
+      this.capMesh.position.set(0, -item.height / 2 - 0.38, 0.01);
       this.group.add(this.capMesh);
 
       this.loadedImage = null;
@@ -321,7 +321,7 @@
       img.onload = () => {
         this.loadedImage = img;
         const c = document.createElement("canvas");
-        const cw = 640;
+        const cw = 960;
         const ch = Math.round(cw * (item.height / item.width));
         c.width = cw;
         c.height = ch;
@@ -331,7 +331,7 @@
         ctx.fillStyle = "#FFFFFF";
         ctx.fillRect(0, 0, cw, ch);
 
-        const pad = Math.round(Math.min(cw, ch) * 0.08);
+        const pad = Math.round(Math.min(cw, ch) * 0.04);
         const availW = cw - pad * 2;
         const availH = ch - pad * 2;
         const scale = Math.min(availW / img.naturalWidth, availH / img.naturalHeight);
@@ -340,13 +340,13 @@
         ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
 
         // Đường viền mảnh cực nhẹ phân tách ảnh trắng trên tường trắng xám
-        ctx.strokeStyle = "rgba(17, 24, 39, 0.06)";
+        ctx.strokeStyle = "rgba(17, 24, 39, 0.08)";
         ctx.lineWidth = 2;
         ctx.strokeRect(1, 1, cw - 2, ch - 2);
 
         const tex = new window.THREE.CanvasTexture(c);
         if (window.THREE.SRGBColorSpace) tex.colorSpace = window.THREE.SRGBColorSpace;
-        tex.anisotropy = 4;
+        tex.anisotropy = 8;
         if (this.artMat.map) this.artMat.map.dispose();
         this.artMat.map = tex;
         this.artMat.needsUpdate = true;
@@ -356,21 +356,21 @@
 
     _createCaptionTexture(item) {
       const c = document.createElement("canvas");
-      c.width = 640;
-      c.height = 128;
+      c.width = 768;
+      c.height = 152;
       const ctx = c.getContext("2d");
       ctx.clearRect(0, 0, c.width, c.height);
 
-      ctx.fillStyle = "#171717";
-      ctx.font = "700 24px Roboto, sans-serif";
+      ctx.fillStyle = "#111827";
+      ctx.font = "800 30px Roboto, sans-serif";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
       const title = item.title.length > 34 ? item.title.slice(0, 33) + "…" : item.title;
-      ctx.fillText(title, 6, 14);
+      ctx.fillText(title, 6, 12);
 
-      ctx.fillStyle = "#6B7280";
-      ctx.font = "500 20px Roboto, sans-serif";
-      ctx.fillText(`${item.artist}  •  ${formatVND(item.price)}`, 6, 52);
+      ctx.fillStyle = "#4B5563";
+      ctx.font = "600 24px Roboto, sans-serif";
+      ctx.fillText(`${item.artist}  •  ${formatVND(item.price)}`, 6, 58);
 
       const tex = new window.THREE.CanvasTexture(c);
       if (window.THREE.SRGBColorSpace) tex.colorSpace = window.THREE.SRGBColorSpace;
