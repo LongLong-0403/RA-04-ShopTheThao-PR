@@ -96,14 +96,17 @@
 
             <div class="ts-auth-v2-field">
               <label for="loginPassword" class="ts-auth-v2-label">Mật khẩu</label>
-              <input
-                type="password"
-                id="loginPassword"
-                class="ts-auth-v2-input"
-                placeholder="••••••••••••"
-                value="123456"
-                required
-              />
+              <div class="ts-auth-v2-pass-wrap">
+                <input
+                  type="password"
+                  id="loginPassword"
+                  class="ts-auth-v2-input ts-auth-v2-pass-input"
+                  placeholder="••••••••••••"
+                  value="123456"
+                  required
+                />
+                <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="loginPassword" aria-label="Hiện mật khẩu">Hiện</button>
+              </div>
               <div class="ts-auth-v2-error" id="errLoginPassword"></div>
             </div>
 
@@ -154,13 +157,19 @@
 
             <div class="ts-auth-v2-field">
               <label for="regPassword" class="ts-auth-v2-label">Mật khẩu *</label>
-              <input type="password" id="regPassword" class="ts-auth-v2-input" placeholder="••••••••••••" required />
+              <div class="ts-auth-v2-pass-wrap">
+                <input type="password" id="regPassword" class="ts-auth-v2-input ts-auth-v2-pass-input" placeholder="••••••••••••" required />
+                <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="regPassword" aria-label="Hiện mật khẩu">Hiện</button>
+              </div>
               <div class="ts-auth-v2-error" id="errRegPassword"></div>
             </div>
 
             <div class="ts-auth-v2-field">
               <label for="regConfirmPassword" class="ts-auth-v2-label">Nhập lại mật khẩu *</label>
-              <input type="password" id="regConfirmPassword" class="ts-auth-v2-input" placeholder="••••••••••••" required />
+              <div class="ts-auth-v2-pass-wrap">
+                <input type="password" id="regConfirmPassword" class="ts-auth-v2-input ts-auth-v2-pass-input" placeholder="••••••••••••" required />
+                <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="regConfirmPassword" aria-label="Hiện mật khẩu">Hiện</button>
+              </div>
               <div class="ts-auth-v2-error" id="errRegConfirm"></div>
             </div>
 

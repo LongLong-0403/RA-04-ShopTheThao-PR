@@ -165,45 +165,25 @@ body.tsport-auth-body {
   display: grid;
   grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
   gap: 56px;
-  align-items: start;
+  align-items: stretch;
 }
 
-/* CỘT TRÁI: KHUNG ẢNH THỂ THAO GIỮ NGUYÊN KÍCH CỠ CỐ ĐỊNH GIỮA ĐĂNG NHẬP & ĐĂNG KÝ */
+/* CỘT TRÁI: KHUNG ẢNH THỂ THAO FULL-BLEED */
 .ts-auth-v2-brand-card {
-  position: sticky;
-  top: 28px;
   background: #111827;
   border-radius: 10px;
   padding: 0;
-  height: 410px;
+  min-height: 460px;
   overflow: hidden;
   display: block;
 }
 
 .ts-auth-v2-brand-img {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center top;
   display: block;
-}
-
-@keyframes tsAuthPanelFade {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-#authLoginPanel,
-#authRegisterPanel {
-  animation: tsAuthPanelFade 0.22s ease;
 }
 
 .ts-auth-v2-brand-logo {
@@ -347,9 +327,7 @@ body.tsport-auth-body {
     gap: 28px;
   }
   .ts-auth-v2-brand-card {
-    position: relative;
-    top: 0;
-    height: 320px;
+    min-height: 320px;
     padding: 0;
   }
   .ts-auth-v2-form-col {
@@ -549,4 +527,36 @@ a.ts-admin-channel-val:hover {
   .ts-admin-contact-channels {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* NÚT HIỆN / ẨN MẬT KHẨU */
+.ts-auth-v2-pass-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ts-auth-v2-pass-input {
+  padding-right: 58px;
+}
+
+.ts-auth-v2-pass-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6B7280;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.ts-auth-v2-pass-toggle:hover,
+.ts-auth-v2-pass-toggle.is-visible {
+  color: #D94C26;
 }

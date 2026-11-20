@@ -133,6 +133,20 @@
     document.getElementById("formLogin")?.addEventListener("submit", handleLoginSubmit);
     document.getElementById("formRegister")?.addEventListener("submit", handleRegisterSubmit);
 
+    // Nút Hiện / Ẩn mật khẩu cho tất cả ô nhập mật khẩu
+    document.querySelectorAll(".js-toggle-pass").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        if (!input) return;
+        const isPassword = input.type === "password";
+        input.type = isPassword ? "text" : "password";
+        btn.textContent = isPassword ? "Ẩn" : "Hiện";
+        btn.classList.toggle("is-visible", isPassword);
+        btn.setAttribute("aria-label", isPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu");
+      });
+    });
+
     // Tìm kiếm từ header
     document.getElementById("authSearchForm")?.addEventListener("submit", (e) => {
       e.preventDefault();
