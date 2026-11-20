@@ -280,7 +280,7 @@ body.tsport-home-body {
   border-bottom-color: #FFFFFF;
 }
 
-/* Hero Banner Khớp Đúng Tỷ Lệ 16:9 & Nét Chuẩn 1:1 (Chuyển Mượt 2s) */
+/* Hero Banner Full Màn Hình Edge-to-Edge Khớp Đúng Tỷ Lệ Cắt 1920x680 (Chuyển Mượt 2s) */
 .ts-hero-full-wrap {
   width: 100%;
   background: #0F172A;
@@ -289,11 +289,12 @@ body.tsport-home-body {
 
 .ts-min-hero-banner.ts-hero-slider-only.ts-hero-fullscreen {
   width: 100%;
-  max-width: 1120px;
-  aspect-ratio: 16 / 9;
+  max-width: none;
+  aspect-ratio: 1920 / 680;
+  max-height: 560px;
   height: auto;
-  min-height: 0;
-  margin: 0 auto;
+  min-height: 260px;
+  margin: 0;
   background: #0F172A;
   border-radius: 0;
   padding: 0;
