@@ -465,6 +465,108 @@
     </div>
   </footer>
 
+  <!-- ==========================================
+       MOBILE STOREFRONT UI (<= 768px)
+       ========================================== -->
+  <header class="ts-mob-header" aria-label="Điều hướng di động">
+    <div class="ts-mob-header-left">
+      <button type="button" class="ts-mob-menu-btn" id="btnMobMenuOpen" aria-label="Mở menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <a href="index.html" class="ts-mob-logo">Tsport</a>
+    </div>
+    <a href="pages/cart.html" class="ts-mob-cart-link">
+      Giỏ (<span class="js-cart-count">0</span>)
+    </a>
+  </header>
+
+  <div class="ts-mob-drawer-backdrop" id="mobDrawerBackdrop"></div>
+  <aside class="ts-mob-drawer" id="mobDrawer" aria-label="Menu di động">
+    <div class="ts-mob-drawer-head">
+      <a href="index.html" class="ts-mob-logo">Tsport</a>
+      <button type="button" class="ts-mob-drawer-close" id="btnMobMenuClose" aria-label="Đóng menu">✕</button>
+    </div>
+    <nav class="ts-mob-drawer-nav">
+      <a href="index.html" class="ts-mob-drawer-link is-active">Trang chủ</a>
+      <a href="pages/shop.html" class="ts-mob-drawer-link">Sản phẩm</a>
+      <a href="pages/shop.html?condition=CU" class="ts-mob-drawer-link">Đồ cũ</a>
+      <a href="pages/courts.html" class="ts-mob-drawer-link">Đặt sân</a>
+      <a href="pages/community.html" class="ts-mob-drawer-link">Ghép kèo</a>
+      <a href="pages/buyback.html" class="ts-mob-drawer-link">Thu mua đồ cũ</a>
+      <hr class="ts-mob-drawer-divider" />
+      <a href="pages/orders.html" class="ts-mob-drawer-link">Đơn hàng của tôi</a>
+      <a href="pages/my-bookings.html" class="ts-mob-drawer-link">Lịch đặt sân của tôi</a>
+      <a href="pages/account.html" class="ts-mob-drawer-link">Tài khoản</a>
+      <a href="pages/admin-dashboard.html" class="ts-mob-drawer-link">Quản trị hệ thống</a>
+    </nav>
+  </aside>
+
+  <section class="ts-mob-home" id="tsMobileHome" aria-label="Trang chủ di động">
+    <!-- Thanh tìm kiếm -->
+    <form class="ts-mob-search-form" id="mobHomeSearchForm">
+      <input
+        type="text"
+        id="mobHomeSearchInput"
+        class="ts-mob-search-input"
+        placeholder="Tìm sản phẩm thể thao..."
+        autocomplete="off"
+      />
+    </form>
+
+    <!-- Banner chính -->
+    <div class="ts-mob-hero-card">
+      <div class="ts-mob-hero-eyebrow">BANNER CHÍNH</div>
+      <h1 class="ts-mob-hero-title">Sẵn sàng cho<br />cuộc chơi tiếp theo.</h1>
+      <a href="pages/shop.html" class="ts-mob-hero-cta">Khám phá sản phẩm</a>
+    </div>
+
+    <!-- 4 bộ lọc môn thể thao -->
+    <div class="ts-mob-sport-pills" id="mobSportPills" role="tablist" aria-label="Môn thể thao">
+      <button type="button" class="ts-mob-sport-pill is-active" data-sport="all">Cầu lông</button>
+      <button type="button" class="ts-mob-sport-pill" data-sport="bong-da">Bóng đá</button>
+      <button type="button" class="ts-mob-sport-pill" data-sport="tennis">Tennis</button>
+      <button type="button" class="ts-mob-sport-pill" data-sport="pickleball">Pickleball</button>
+    </div>
+
+    <!-- Sản phẩm mới -->
+    <div class="ts-mob-sec-head">
+      <h2 class="ts-mob-sec-title">Sản phẩm mới</h2>
+      <a href="pages/shop.html" class="ts-mob-sec-more">Xem thêm</a>
+    </div>
+
+    <div class="ts-mob-prod-grid" id="mobNewProductsGrid">
+      <!-- Render động từ home.js -->
+    </div>
+
+    <!-- Đặt sân • Ghép kèo • Đồ cũ -->
+    <div class="ts-mob-service-card">
+      <h3 class="ts-mob-service-title">Đặt sân • Ghép kèo • Đồ cũ</h3>
+      <a href="pages/courts.html" class="ts-mob-service-btn">Khám phá dịch vụ</a>
+    </div>
+  </section>
+
+  <!-- Thanh điều hướng cố định phía dưới -->
+  <nav class="ts-mob-bottom-nav" aria-label="Điều hướng nhanh">
+    <a href="index.html" class="ts-mob-tab-item is-active">
+      <span class="ts-mob-tab-dot"></span>
+      <span>Trang chủ</span>
+    </a>
+    <a href="pages/shop.html" class="ts-mob-tab-item">
+      <span class="ts-mob-tab-dot"></span>
+      <span>Sản phẩm</span>
+    </a>
+    <a href="pages/courts.html" class="ts-mob-tab-item">
+      <span class="ts-mob-tab-dot"></span>
+      <span>Đặt sân</span>
+    </a>
+    <a href="pages/account.html" class="ts-mob-tab-item">
+      <span class="ts-mob-tab-dot"></span>
+      <span>Tài khoản</span>
+    </a>
+  </nav>
+
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- SCRIPTS -->

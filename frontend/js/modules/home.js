@@ -23,6 +23,7 @@
     initHomeFlashSaleShowcase();
     renderRecentlyViewed();
     initSearchDebounce();
+    initMobileHome();
     initGsapAnimations();
   }
 
@@ -1202,6 +1203,106 @@
           });
         });
       }
+    });
+  }
+
+  // ==========================================
+  // MOBILE HOMEPAGE (<= 768px)
+  // ==========================================
+  function initMobileHome() {
+    const openBtn = document.getElementById("btnMobMenuOpen");
+    const closeBtn = document.getElementById("btnMobMenuClose");
+    const drawer = document.getElementById("mobDrawer");
+    const backdrop = document.getElementById("mobDrawerBackdrop");
+
+    function closeDrawer() {
+      drawer?.classList.remove("is-open");
+      backdrop?.classList.remove("is-open");
+    }
+
+    openBtn?.addEventListener("click", () => {
+      drawer?.classList.add("is-open");
+      backdrop?.classList.add("is-open");
+    });
+    closeBtn?.addEventListener("click", closeDrawer);
+    backdrop?.addEventListener("click", closeDrawer);
+
+    const searchForm = document.getElementById("mobHomeSearchForm");
+    const searchInput = document.getElementById("mobHomeSearchInput");
+    searchForm?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = (searchInput?.value || "").trim();
+      window.location.href = q ? `pages/shop.html?q=${encodeURIComponent(q)}` : "pages/shop.html";
+    });
+
+    const grid = document.getElementById("mobNewProductsGrid");
+    const pillsWrap = document.getElementById("mobSportPills");
+    if (!grid) return;
+
+    const sportSlugToId = {
+      "cau-long": 1,
+      "bong-da": 2,
+      "tennis": 3,
+      "pickleball": 4
+    };
+
+    function renderMobProducts(sportKey) {
+      const store = window.tsportStore;
+      if (!store) return;
+
+      const all = (store.getProducts({ only_active: true }) || []).filter(
+        (p) => (p.condition_type || "MOI") !== "CU"
+      );
+
+      let list = all;
+      if (sportKey && sportKey !== "all") {
+        const targetId = sportSlugToId[sportKey];
+        const filtered = all.filter((p) => Number(p.sport_id) === Number(targetId));
+        if (filtered.length) list = filtered;
+      }
+
+      const items = list.slice(0, 4);
+      const fallbackImg = "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=400";
+
+      grid.innerHTML = items
+        .map((p) => {
+          const skus = Array.isArray(p.skus) ? p.skus : [];
+          const minPrice = skus.length
+            ? Math.min(...skus.map((s) => Number(s.price) || 0))
+            : Number(p.price) || 0;
+          const img = p.images?.[0]?.image_url || p.image_url || fallbackImg;
+          const condLabel = p.condition_type === "CU" ? "Cũ" : "Mới";
+          const firstSku = skus[0];
+          const metaText = firstSku
+            ? [firstSku.color, firstSku.size, firstSku.unit === "LO" ? "Lô" : "Chiếc"]
+                .filter(Boolean)
+                .join(" / ")
+            : "Màu / Size / Đơn vị";
+
+          return `
+            <a href="pages/product-detail.html?id=${p.id}" class="ts-mob-prod-card">
+              <div class="ts-mob-prod-thumb">
+                <span class="ts-mob-prod-badge">${condLabel}</span>
+                <img src="${escapeHtml(img)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='${fallbackImg}'" />
+              </div>
+              <h3 class="ts-mob-prod-name">${escapeHtml(p.name)}</h3>
+              <div class="ts-mob-prod-meta">${escapeHtml(metaText)}</div>
+              <div class="ts-mob-prod-price">${formatMoney(minPrice)}</div>
+            </a>
+          `;
+        })
+        .join("");
+    }
+
+    renderMobProducts("all");
+
+    pillsWrap?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".ts-mob-sport-pill");
+      if (!btn) return;
+      pillsWrap.querySelectorAll(".ts-mob-sport-pill").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      const key = btn.dataset.sport === "all" ? "cau-long" : btn.dataset.sport;
+      renderMobProducts(key);
     });
   }
 
