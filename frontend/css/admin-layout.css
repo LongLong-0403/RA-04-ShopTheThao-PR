@@ -313,7 +313,7 @@ body.ts-adm-body {
 
 /* SIDEBAR TRÁI TỐI */
 .ts-adm-sidebar {
-  width: 220px;
+  width: 240px;
   background: #1C2127;
   color: #E5E7EB;
   display: flex;
@@ -402,10 +402,10 @@ body.ts-adm-body {
 }
 
 .ts-adm-topbar {
-  height: 60px;
+  height: 62px;
   background: #FFFFFF;
   border-bottom: 1px solid #E5E7EB;
-  padding: 0 32px;
+  padding: 0 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -509,19 +509,20 @@ body.ts-adm-body {
   color: #D94C26;
 }
 
-/* NỘI DUNG CHÍNH */
+/* NỘI DUNG CHÍNH — CÂN ĐỐI ĐỀU TRÊN MÀN HÌNH DESKTOP */
 .ts-adm-content {
-  padding: 28px 32px 48px;
-  max-width: 1200px;
+  padding: 32px 36px 56px;
+  max-width: 1440px;
   width: 100%;
+  margin: 0 auto;
 }
 
 .ts-adm-page-head {
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 
 .ts-adm-page-title {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
   color: #111827;
   letter-spacing: -0.3px;
@@ -529,7 +530,7 @@ body.ts-adm-body {
 }
 
 .ts-adm-page-sub {
-  font-size: 13px;
+  font-size: 13.5px;
   color: #6B7280;
   margin: 0;
 }
@@ -538,15 +539,15 @@ body.ts-adm-body {
 .ts-adm-kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  margin-bottom: 24px;
+  gap: 20px;
+  margin-bottom: 26px;
 }
 
 .ts-adm-kpi-card {
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
   border-radius: 10px;
-  padding: 20px 22px;
+  padding: 22px 26px;
   text-decoration: none;
   color: inherit;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
