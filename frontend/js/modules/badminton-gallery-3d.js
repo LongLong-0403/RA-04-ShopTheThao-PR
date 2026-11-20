@@ -30,6 +30,8 @@
     damping: 5.2,             // Hệ số tắt dần quán tính (theo delta time)
     maxVelocity: 2.2,         // Giới hạn vận tốc góc (rad/s)
     clickThresholdPx: 8,      // Ngưỡng phân biệt click (<8px) và drag
+    autoPlay: true,           // Tự động di chuyển sản phẩm từ trái sang phải
+    autoPlaySpeedSec: 0.5,    // Tốc độ 0,5s (di chuyển mượt từ trái sang phải mỗi 0,5 giây)
     focusDuration: 0.55,      // Giai đoạn A: xoay ngắn nhất đưa sản phẩm về trung tâm (giây)
     zoomDuration: 0.85,       // Giai đoạn B: tiến camera gần sản phẩm (giây)
     detailDuration: 0.65      // Giai đoạn C: trượt ảnh sang cột trái & hiện chi tiết (giây)
@@ -1084,9 +1086,20 @@
     const collSubEl = document.getElementById("bg3dCollSub");
     let lastCenteredId = null;
 
-    // Vòng lặp render 60fps dùng delta time (không cập nhật DOM thừa mỗi frame)
+    // Vòng lặp render 60fps dùng delta time + tự động di chuyển trái -> phải (0,5s / bước)
     let rafId = null;
     let lastTs = performance.now();
+    let isPointerInside = false;
+
+    stageEl.addEventListener("pointerenter", () => {
+      isPointerInside = true;
+    });
+    stageEl.addEventListener("pointerleave", () => {
+      isPointerInside = false;
+    });
+
+    // Tốc độ góc liên tục mượt từ trái sang phải (1 khoảng sản phẩm / 0,5s khi giảm dần nhẹ)
+    const autoAngularSpeed = -(stepAngle / Math.max(0.2, BADMINTON_GALLERY_CONFIG.autoPlaySpeedSec || 0.5));
 
     function animate(ts) {
       rafId = requestAnimationFrame(animate);
@@ -1094,6 +1107,20 @@
       lastTs = ts;
 
       controls.update(dt);
+
+      // Tự động trượt mượt từ trái sang phải khi không kéo/hover/mở chi tiết
+      if (
+        BADMINTON_GALLERY_CONFIG.autoPlay &&
+        !REDUCED_MOTION &&
+        transitionCtrl.state === "gallery" &&
+        !controls.locked &&
+        !controls.isDragging &&
+        !isPointerInside &&
+        Math.abs(controls.velocity) < 0.01
+      ) {
+        controls.angle += autoAngularSpeed * dt;
+      }
+
       sceneObj.galleryGroup.rotation.y = controls.angle;
 
       if (transitionCtrl.state === "gallery") {
