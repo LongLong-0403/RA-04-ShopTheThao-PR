@@ -1183,3 +1183,246 @@ body.ts-adm-body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   ADMIN BUYBACK APPRAISAL (THẨM ĐỊNH THU MUA ĐỒ CŨ FIGMA)
+   ========================================================================== */
+.ts-adm-bb-page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ts-adm-bb-switcher {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ts-adm-bb-switcher label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6B7280;
+  white-space: nowrap;
+}
+
+.ts-adm-bb-switcher .ts-adm-select {
+  min-width: 240px;
+  height: 38px;
+  padding: 0 12px;
+  font-size: 13px;
+}
+
+.ts-adm-bb-card {
+  padding: 28px 30px;
+}
+
+.ts-adm-bb-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.ts-adm-bb-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.ts-adm-bb-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #FFF1EB;
+  color: #D94C26;
+  white-space: nowrap;
+}
+
+.ts-adm-bb-status-pill.is-neutral {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.ts-adm-bb-status-pill.is-success {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.ts-adm-bb-status-pill.is-cancelled {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.ts-adm-bb-meta {
+  font-size: 13px;
+  color: #6B7280;
+  margin-bottom: 22px;
+}
+
+.ts-adm-bb-photos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 26px;
+}
+
+.ts-adm-bb-photo-slot {
+  position: relative;
+  aspect-ratio: 1.15 / 1;
+  background: #EFF1F5;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts-adm-bb-photo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ts-adm-bb-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9CA3AF;
+}
+
+.ts-adm-bb-photo-label {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #6B7280;
+  background: rgba(239, 241, 245, 0.88);
+  padding: 2px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.ts-adm-bb-desc-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.ts-adm-bb-desc-text {
+  font-size: 13.5px;
+  color: #4B5563;
+  line-height: 1.6;
+  margin: 0 0 22px 0;
+}
+
+.ts-adm-bb-expected-box {
+  background: #F4F5F7;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+}
+
+.ts-adm-bb-expected-label {
+  font-size: 12.5px;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
+
+.ts-adm-bb-expected-val {
+  font-size: 22px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.3px;
+}
+
+.ts-adm-bb-offer-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.ts-adm-bb-offer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(220px, 0.9fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.ts-adm-bb-divider {
+  border: 0;
+  border-top: 1px solid #E5E7EB;
+  margin: 26px 0 20px;
+}
+
+.ts-adm-bb-feedback {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0 0 18px 0;
+}
+
+.ts-adm-bb-feedback strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+.ts-adm-bb-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ts-adm-bb-btn-muted {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 12px 18px;
+  background: #E5E7EB;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: not-allowed;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ts-adm-bb-btn-muted.is-ready {
+  background: #111827;
+  border-color: #111827;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.ts-adm-bb-btn-muted.is-ready:hover {
+  background: #1F2937;
+}
+
+@media (max-width: 900px) {
+  .ts-adm-bb-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ts-adm-bb-offer-row,
+  .ts-adm-bb-actions {
+    grid-template-columns: 1fr;
+  }
+}
