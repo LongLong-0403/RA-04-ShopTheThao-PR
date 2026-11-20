@@ -19,6 +19,7 @@
     initHomeCourtsShowcase();
     initHomeMatchesShowcase();
     initHomeUsedShowcase();
+    initHomeFlashSaleShowcase();
     renderRecentlyViewed();
     initSearchDebounce();
     initGsapAnimations();
@@ -828,6 +829,82 @@
 
     bindMouseDragScroll(viewport);
     renderUsed(false);
+  }
+
+  // 2F. SẢN PHẨM SALE THEO THỜI HẠN (ĐẾM NGƯỢC THỜI GIAN THỰC + LƯỚT CHUỘT)
+  function initHomeFlashSaleShowcase() {
+    const viewport = document.getElementById("homeSaleViewport");
+    const track = document.getElementById("homeSaleTrack");
+    const store = window.tsportStore;
+    if (!viewport || !track || !store) return;
+
+    // 1. Bộ đếm ngược thời hạn chương trình Sale (tự cập nhật từng giây)
+    const saleEndTime = Date.now() + (2 * 24 * 60 * 60 + 11 * 60 * 60 + 45 * 60) * 1000;
+    const elDays = document.getElementById("saleTimerDays");
+    const elHours = document.getElementById("saleTimerHours");
+    const elMins = document.getElementById("saleTimerMins");
+    const elSecs = document.getElementById("saleTimerSecs");
+
+    function tickCountdown() {
+      const diff = Math.max(0, saleEndTime - Date.now());
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      if (elDays) elDays.textContent = String(days).padStart(2, "0");
+      if (elHours) elHours.textContent = String(hours).padStart(2, "0");
+      if (elMins) elMins.textContent = String(mins).padStart(2, "0");
+      if (elSecs) elSecs.textContent = String(secs).padStart(2, "0");
+    }
+    tickCountdown();
+    setInterval(tickCountdown, 1000);
+
+    // 2. Lấy toàn bộ sản phẩm đang có giá Sale từ store.js
+    const allProds = (store.getProducts() || []).filter(p => p.status !== "INACTIVE");
+    const saleProds = allProds.filter(p =>
+      (p.skus || []).some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price))
+    );
+
+    if (saleProds.length === 0) {
+      track.innerHTML = `<div style="width:100%; background:#fff; border-radius:4px; padding:28px; text-align:center; color:#6B7280; font-size:13.5px;">Hiện chưa có sản phẩm đang giảm giá.</div>`;
+      return;
+    }
+
+    const endDateObj = new Date(saleEndTime);
+    const deadlineStr = `${String(endDateObj.getDate()).padStart(2, "0")}/${String(endDateObj.getMonth() + 1).padStart(2, "0")}/${endDateObj.getFullYear()}`;
+
+    track.innerHTML = saleProds.map((p, idx) => {
+      const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
+      const skus = p.skus || [];
+      const saleSkus = skus.filter(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+      const minSale = Math.min(...saleSkus.map(s => Number(s.sale_price)));
+      const minOrig = Math.min(...saleSkus.map(s => Number(s.price)));
+      const maxPct = Math.max(...saleSkus.map(s => Math.round((1 - Number(s.sale_price) / Number(s.price)) * 100)));
+      const totalStock = skus.reduce((sum, s) => sum + (Number(s.stock) || 0), 0);
+      const soldPercent = Math.min(92, Math.max(35, 85 - idx * 7));
+
+      return `
+        <a href="pages/product-detail.html?id=${p.id}" class="ts-tabbox-card" draggable="false">
+          <div class="ts-tabbox-img-wrap">
+            <span class="ts-sale-discount-badge">-${maxPct}%</span>
+            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+          </div>
+          <h3 class="ts-tabbox-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
+          <div class="ts-sale-deadline-meta">Hạn ưu đãi: ${deadlineStr}</div>
+          <div class="ts-tabbox-price-row">
+            <span class="ts-tabbox-price">${formatMoney(minSale)}</span>
+            <span class="ts-tabbox-oldprice">${formatMoney(minOrig)}</span>
+          </div>
+          <div class="ts-sale-progress-track">
+            <div class="ts-sale-progress-fill" style="width:${soldPercent}%;"></div>
+          </div>
+          <div class="ts-sale-stock-label">Còn lại ${totalStock} sản phẩm giá sale</div>
+        </a>
+      `;
+    }).join("");
+
+    bindMouseDragScroll(viewport);
   }
 
   // 3. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)

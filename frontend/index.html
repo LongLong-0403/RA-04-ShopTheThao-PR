@@ -278,6 +278,42 @@
       </div>
     </section>
 
+    <!-- 9. SẢN PHẨM SALE THEO THỜI HẠN (ĐẾM NGƯỢC + LƯỚT CHUỘT TRÁI / PHẢI) -->
+    <section class="ts-min-section js-gsap-section" id="sectionHomeFlashSale">
+      <div class="ts-tabbox-header">
+        <h2 class="ts-tabbox-title">Sản phẩm Sale theo thời hạn</h2>
+        <div class="ts-tabbox-underline"></div>
+      </div>
+
+      <div class="ts-tabbox-shell">
+        <!-- Thanh đếm ngược thời hạn kết thúc đợt Sale -->
+        <div class="ts-sale-countdown-bar">
+          <div class="ts-sale-countdown-left">
+            <span class="ts-sale-live-tag">ƯU ĐÃI CÓ THỜI HẠN</span>
+            <span class="ts-sale-countdown-note">Giá ưu đãi tự động kết thúc khi hết giờ</span>
+          </div>
+          <div class="ts-sale-timer-group" id="homeSaleCountdown">
+            <span class="ts-sale-timer-label">Kết thúc sau:</span>
+            <span class="ts-sale-timer-box"><strong id="saleTimerDays">02</strong> ngày</span>
+            <span class="ts-sale-timer-sep">:</span>
+            <span class="ts-sale-timer-box"><strong id="saleTimerHours">12</strong> giờ</span>
+            <span class="ts-sale-timer-sep">:</span>
+            <span class="ts-sale-timer-box"><strong id="saleTimerMins">30</strong> phút</span>
+            <span class="ts-sale-timer-sep">:</span>
+            <span class="ts-sale-timer-box"><strong id="saleTimerSecs">00</strong> giây</span>
+          </div>
+        </div>
+
+        <div class="ts-tabbox-golden-stage">
+          <div class="ts-featured-drag-viewport" id="homeSaleViewport">
+            <div class="ts-tabbox-track" id="homeSaleTrack">
+              <!-- Render động các sản phẩm đang sale có thời hạn từ store.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 7. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (CHỈ HIỆN KHI NGƯỜI DÙNG ĐÃ XEM SẢN PHẨM) -->
     <section class="ts-min-section" id="homeRecentWrap" style="display:none;">
       <div class="ts-min-sec-head">

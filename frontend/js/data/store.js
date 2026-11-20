@@ -93,7 +93,7 @@
           { id: 3, image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600", is_primary: true, sort_order: 1 }
         ],
         skus: [
-          { id: 3, sku_code: "NF1000Z-4U-YL", size: "4U", color: "Vàng Lightning", price: 4100000, stock: 18, unit: "CHIEC", quantity_per_lot: 1 }
+          { id: 3, sku_code: "NF1000Z-4U-YL", size: "4U", color: "Vàng Lightning", price: 4100000, sale_price: 3590000, stock: 18, unit: "CHIEC", quantity_per_lot: 1 }
         ]
       },
       {
@@ -130,9 +130,9 @@
           { id: 5, image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600", is_primary: true, sort_order: 1 }
         ],
         skus: [
-          { id: 6, sku_code: "65Z3-WH-40", size: "40", color: "Trắng Đỏ", price: 2650000, stock: 20, unit: "CHIEC", quantity_per_lot: 1 },
-          { id: 7, sku_code: "65Z3-WH-41", size: "41", color: "Trắng Đỏ", price: 2650000, stock: 30, unit: "CHIEC", quantity_per_lot: 1 },
-          { id: 8, sku_code: "65Z3-WH-42", size: "42", color: "Trắng Đỏ", price: 2650000, stock: 25, unit: "CHIEC", quantity_per_lot: 1 }
+          { id: 6, sku_code: "65Z3-WH-40", size: "40", color: "Trắng Đỏ", price: 2650000, sale_price: 2290000, stock: 20, unit: "CHIEC", quantity_per_lot: 1 },
+          { id: 7, sku_code: "65Z3-WH-41", size: "41", color: "Trắng Đỏ", price: 2650000, sale_price: 2290000, stock: 30, unit: "CHIEC", quantity_per_lot: 1 },
+          { id: 8, sku_code: "65Z3-WH-42", size: "42", color: "Trắng Đỏ", price: 2650000, sale_price: 2290000, stock: 25, unit: "CHIEC", quantity_per_lot: 1 }
         ]
       },
       {
@@ -150,9 +150,9 @@
           { id: 9, image_url: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=600", is_primary: true, sort_order: 1 }
         ],
         skus: [
-          { id: 9, sku_code: "VAPOR15-TF-40", size: "40", color: "Đỏ Cam Hồng", price: 2850000, stock: 15, unit: "CHIEC", quantity_per_lot: 1 },
-          { id: 10, sku_code: "VAPOR15-TF-41", size: "41", color: "Đỏ Cam Hồng", price: 2850000, stock: 20, unit: "CHIEC", quantity_per_lot: 1 },
-          { id: 11, sku_code: "VAPOR15-TF-42", size: "42", color: "Đỏ Cam Hồng", price: 2850000, stock: 18, unit: "CHIEC", quantity_per_lot: 1 }
+          { id: 9, sku_code: "VAPOR15-TF-40", size: "40", color: "Đỏ Cam Hồng", price: 2850000, sale_price: 2390000, stock: 15, unit: "CHIEC", quantity_per_lot: 1 },
+          { id: 10, sku_code: "VAPOR15-TF-41", size: "41", color: "Đỏ Cam Hồng", price: 2850000, sale_price: 2390000, stock: 20, unit: "CHIEC", quantity_per_lot: 1 },
+          { id: 11, sku_code: "VAPOR15-TF-42", size: "42", color: "Đỏ Cam Hồng", price: 2850000, sale_price: 2390000, stock: 18, unit: "CHIEC", quantity_per_lot: 1 }
         ]
       },
       {
