@@ -17,6 +17,7 @@
     renderFeaturedProducts();
     initTabbedShowcase();
     initHomeCourtsShowcase();
+    initHomeMatchesShowcase();
     renderRecentlyViewed();
     initSearchDebounce();
     initGsapAnimations();
@@ -576,6 +577,82 @@
 
     bindMouseDragScroll(viewport);
     renderCourts(false);
+  }
+
+  // 2D. GHÉP KÈO GIAO LƯU — KHUNG TAB + LƯỚT CHUỘT TRÁI / PHẢI
+  function initHomeMatchesShowcase() {
+    const viewport = document.getElementById("homeMatchesViewport");
+    const track = document.getElementById("homeMatchesTrack");
+    const filtersWrap = document.getElementById("homeMatchSportFilters");
+    const store = window.tsportStore;
+    if (!viewport || !track || !store) return;
+
+    let currentSport = "ALL";
+
+    function renderMatches(animate = false) {
+      let list = store.getMatches({ sport_id: currentSport, include_hidden: false }) || [];
+      list = list.filter(m => m.status === "OPEN");
+
+      if (list.length === 0) {
+        track.innerHTML = `<div style="width:100%; background:#fff; border-radius:8px; padding:28px; text-align:center; color:#6B7280; font-size:13.5px;">Hiện chưa có kèo giao lưu đang mở cho môn này.</div>`;
+        return;
+      }
+
+      track.innerHTML = list.map((m) => `
+        <div class="ts-home-match-card" draggable="false">
+          <div>
+            <div class="ts-home-match-top">
+              <span class="ts-home-match-sport">${escapeHtml(m.sport_name || 'Thể thao')}</span>
+              <span class="ts-home-match-slots">Thiếu ${Number(m.slots_needed) || 1} người</span>
+            </div>
+            <h3 class="ts-home-match-title" style="margin-top:10px;" title="${escapeHtml(m.title)}">${escapeHtml(m.title)}</h3>
+          </div>
+
+          <div class="ts-home-match-meta">
+            <div class="ts-home-match-meta-row"><strong>Thời gian:</strong> ${escapeHtml(m.match_time || '')} • ${escapeHtml(m.match_date || '')}</div>
+            <div class="ts-home-match-meta-row" title="${escapeHtml(m.location || '')}"><strong>Địa điểm:</strong> ${escapeHtml(m.location || '')}</div>
+            <div class="ts-home-match-meta-row"><strong>Trình độ:</strong> ${escapeHtml(m.level || 'Phong trào')}</div>
+          </div>
+
+          <div class="ts-home-match-footer">
+            <div>
+              <div class="ts-home-match-price">${escapeHtml(m.price_share || 'Chia đều sân')}</div>
+              <div class="ts-home-match-author">Chủ kèo: ${escapeHtml(m.contact_name || 'Thành viên')}</div>
+            </div>
+            <a href="pages/community.html?sport=${m.sport_id}" class="tsport-btn-book-court" style="text-decoration:none;">THAM GIA</a>
+          </div>
+        </div>
+      `).join("");
+
+      viewport.scrollLeft = 0;
+
+      if (animate && typeof window.gsap !== "undefined") {
+        window.gsap.from(track.querySelectorAll(".ts-home-match-card"), {
+          x: 32,
+          opacity: 0,
+          duration: 0.4,
+          stagger: 0.05,
+          ease: "power2.out",
+          clearProps: "transform,opacity"
+        });
+      }
+    }
+
+    filtersWrap?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".ts-tabbox-tab");
+      if (!btn) return;
+      filtersWrap.querySelectorAll(".ts-tabbox-tab").forEach((b) => {
+        b.classList.remove("is-active");
+        b.setAttribute("aria-selected", "false");
+      });
+      btn.classList.add("is-active");
+      btn.setAttribute("aria-selected", "true");
+      currentSport = btn.dataset.sport || "ALL";
+      renderMatches(true);
+    });
+
+    bindMouseDragScroll(viewport);
+    renderMatches(false);
   }
 
   // 3. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)

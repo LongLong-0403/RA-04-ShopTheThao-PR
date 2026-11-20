@@ -231,6 +231,33 @@
       </div>
     </section>
 
+    <!-- 7. GHÉP KÈO GIAO LƯU — KHUNG TAB CHUẨN + LƯỚT CHUỘT TRÁI / PHẢI -->
+    <section class="ts-min-section js-gsap-section" id="sectionHomeMatches">
+      <div class="ts-tabbox-header">
+        <h2 class="ts-tabbox-title">Ghép kèo, tìm bạn cùng chơi</h2>
+        <div class="ts-tabbox-underline"></div>
+      </div>
+
+      <div class="ts-tabbox-shell">
+        <div class="ts-tabbox-tabs" id="homeMatchSportFilters" role="tablist">
+          <button type="button" class="ts-tabbox-tab is-active" data-sport="ALL" role="tab" aria-selected="true">Tất cả</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="1" role="tab" aria-selected="false">Cầu lông</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="2" role="tab" aria-selected="false">Bóng đá</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="3" role="tab" aria-selected="false">Tennis</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="4" role="tab" aria-selected="false">Pickleball</button>
+          <button type="button" class="ts-tabbox-tab" data-sport="6" role="tab" aria-selected="false">Bóng bàn</button>
+        </div>
+
+        <div class="ts-tabbox-golden-stage">
+          <div class="ts-featured-drag-viewport" id="homeMatchesViewport">
+            <div class="ts-home-courts-track" id="homeMatchesTrack">
+              <!-- Render động các thẻ kèo giao lưu từ store.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 7. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (CHỈ HIỆN KHI NGƯỜI DÙNG ĐÃ XEM SẢN PHẨM) -->
     <section class="ts-min-section" id="homeRecentWrap" style="display:none;">
       <div class="ts-min-sec-head">
