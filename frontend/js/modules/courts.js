@@ -83,7 +83,9 @@
           <div class="tsport-court-body">
             <img class="tsport-court-avatar" src="${escapeHtml(logo)}" alt="Logo" onerror="this.src='https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120'" />
             <div class="tsport-court-info">
-              <h3 class="tsport-court-title" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</h3>
+              <h3 class="tsport-court-title" title="${escapeHtml(c.name)}">
+                <a href="court-detail.html?id=${c.id}" style="color:inherit; text-decoration:none;">${escapeHtml(c.name)}</a>
+              </h3>
               <div class="tsport-court-meta" title="${escapeHtml(c.address || '')}">
                 <span class="tsport-court-distance">[${escapeHtml(distance)}]</span>
                 <span>${escapeHtml(c.address || '')}</span>
@@ -96,9 +98,9 @@
 
             <div class="tsport-court-action">
               ${c.has_discount ? `<span class="tsport-court-promo-badge">${escapeHtml(c.discount_label || 'Ưu đãi')}</span>` : ''}
-              <button type="button" class="tsport-btn-book-court js-btn-book-court" data-court-id="${c.id}" data-sport-id="${c.sport_id}">
+              <a href="court-detail.html?id=${c.id}" class="tsport-btn-book-court" style="text-decoration:none; display:inline-flex; align-items:center; justify-content:center;">
                 ĐẶT LỊCH
-              </button>
+              </a>
             </div>
           </div>
         </div>
