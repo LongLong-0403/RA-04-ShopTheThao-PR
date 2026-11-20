@@ -379,3 +379,288 @@
   background: #D97706;
   transform: translateY(-1px);
 }
+
+
+/* ==========================================================================
+   TSPORT — TRANG ĐẶT SÂN THỂ THAO TỐI GIẢN (COURTS V2 CHUẨN LAYOUT)
+   ========================================================================== */
+body.tsport-courts-body {
+  background: #FFFFFF;
+  color: #111827;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ts-courts-v2-main {
+  padding-top: 22px;
+  padding-bottom: 64px;
+}
+
+.ts-courts-v2-head-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.ts-courts-v2-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px 0;
+}
+
+.ts-courts-v2-sub {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.ts-courts-v2-mode-tabs {
+  display: inline-flex;
+  background: #F3F4F6;
+  padding: 4px;
+  border-radius: 8px;
+  gap: 4px;
+}
+
+.ts-courts-v2-mode-btn {
+  border: none;
+  background: transparent;
+  color: #4B5563;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ts-courts-v2-mode-btn:hover {
+  color: #111827;
+}
+
+.ts-courts-v2-mode-btn.is-active {
+  background: #FFFFFF;
+  color: #D94C26;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+/* TOOLBAR LỌC MÔN & TÌM KIẾM */
+.ts-courts-v2-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 14px 16px;
+  background: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  margin-bottom: 22px;
+}
+
+.ts-courts-v2-sport-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ts-courts-v2-pill {
+  border: 1px solid #E5E7EB;
+  background: #FFFFFF;
+  color: #374151;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ts-courts-v2-pill:hover {
+  border-color: #D94C26;
+  color: #D94C26;
+}
+
+.ts-courts-v2-pill.is-active {
+  background: #D94C26;
+  border-color: #D94C26;
+  color: #FFFFFF;
+}
+
+.ts-courts-v2-search-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 260px;
+}
+
+.ts-courts-v2-search-input {
+  width: 100%;
+  max-width: 300px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+}
+
+.ts-courts-v2-search-input:focus {
+  border-color: #D94C26;
+}
+
+.ts-courts-v2-count {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #6B7280;
+  white-space: nowrap;
+}
+
+.ts-courts-v2-grid {
+  margin-bottom: 36px;
+}
+
+/* KHU VỰC ĐẶT SÂN & LỊCH ĐÃ ĐẶT */
+.ts-courts-v2-booking-sec {
+  padding-top: 28px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.ts-courts-v2-booking-head {
+  margin-bottom: 20px;
+}
+
+.ts-courts-v2-sec-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+
+.ts-courts-v2-sec-sub {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.ts-courts-v2-booking-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.ts-courts-v2-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 24px;
+}
+
+.ts-courts-v2-card-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 14px 0;
+}
+
+.ts-courts-v2-card-sub {
+  font-size: 12.5px;
+  color: #6B7280;
+  margin: -8px 0 16px 0;
+}
+
+.ts-courts-v2-row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ts-courts-v2-field {
+  margin-bottom: 16px;
+}
+
+.ts-courts-v2-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.ts-courts-v2-input {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ts-courts-v2-input:focus {
+  border-color: #D94C26;
+  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.1);
+}
+
+.ts-courts-v2-submit {
+  width: 100%;
+  background: #D94C26;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.15s ease;
+}
+
+.ts-courts-v2-submit:hover {
+  background: #BF3E1C;
+}
+
+.ts-courts-v2-admin-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.ts-courts-v2-admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 960px) {
+  .ts-courts-v2-booking-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .ts-courts-v2-row-2 {
+    grid-template-columns: 1fr;
+  }
+  .ts-courts-v2-search-row {
+    justify-content: flex-start;
+  }
+  .ts-courts-v2-search-input {
+    max-width: 100%;
+  }
+}
