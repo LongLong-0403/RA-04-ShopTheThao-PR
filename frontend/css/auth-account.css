@@ -168,20 +168,17 @@ body.tsport-auth-body {
   align-items: stretch;
 }
 
-/* CỘT TRÁI: KHUNG ẢNH THỂ THAO CAO BẰNG CHÍNH XÁC FORM ĐĂNG NHẬP / ĐĂNG KÝ */
+/* CỘT TRÁI: KHUNG ẢNH THỂ THAO FULL-BLEED */
 .ts-auth-v2-brand-card {
-  position: relative;
   background: #111827;
   border-radius: 10px;
   padding: 0;
-  min-height: 0;
+  min-height: 460px;
   overflow: hidden;
   display: block;
 }
 
 .ts-auth-v2-brand-img {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -218,7 +215,7 @@ body.tsport-auth-body {
 
 /* CỘT PHẢI: FORM ĐĂNG NHẬP / ĐĂNG KÝ */
 .ts-auth-v2-form-col {
-  padding-top: 0;
+  padding-top: 10px;
   max-width: 520px;
   width: 100%;
 }
@@ -330,7 +327,9 @@ body.tsport-auth-body {
     gap: 28px;
   }
   .ts-auth-v2-brand-card {
-    min-height: 320px;
+    position: relative;
+    top: 0;
+    height: 320px;
     padding: 0;
   }
   .ts-auth-v2-form-col {
