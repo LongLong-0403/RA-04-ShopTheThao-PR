@@ -579,13 +579,20 @@ body.tsport-home-body {
   position: relative;
 }
 
-.ts-tabbox-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+.ts-tabbox-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.ts-tabbox-track {
+  display: flex;
   gap: 12px;
+  will-change: transform;
 }
 
 .ts-tabbox-card {
+  flex: 0 0 calc((100% - 48px) / 5);
+  min-width: 0;
   background: #FFFFFF;
   border-radius: 4px;
   padding: 12px;
@@ -823,9 +830,11 @@ body.tsport-home-body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
-  .ts-min-products-grid,
-  .ts-tabbox-grid {
+  .ts-min-products-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+  .ts-tabbox-card {
+    flex: 0 0 calc((100% - 24px) / 3);
   }
   .ts-tabbox-tabs {
     grid-template-columns: repeat(3, 1fr);
@@ -869,8 +878,10 @@ body.tsport-home-body {
   .ts-min-footer-grid {
     grid-template-columns: 1fr;
   }
-  .ts-min-products-grid,
-  .ts-tabbox-grid {
+  .ts-min-products-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .ts-tabbox-card {
+    flex: 0 0 calc((100% - 12px) / 2);
   }
 }

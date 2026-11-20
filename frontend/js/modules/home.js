@@ -179,17 +179,21 @@
     }).join("");
   }
 
-  // 2B. KHỐI LỌC SẢN PHẨM THEO DANH MỤC (KHUNG CAM VÀNG CHUẨN ẢNH)
+  // 2B. KHỐI LỌC SẢN PHẨM THEO DANH MỤC (CHUYỂN ĐỘNG MƯỢT TỪ PHẢI QUA TRÁI 1S BẰNG GSAP 3)
   function initTabbedShowcase() {
     const tabsWrap = document.getElementById("homeCategoryTabs");
-    const grid = document.getElementById("homeTabBoxGrid");
+    const stage = document.getElementById("homeTabBoxStage");
+    const track = document.getElementById("homeTabBoxGrid");
     const btnPrev = document.getElementById("btnTabBoxPrev");
     const btnNext = document.getElementById("btnTabBoxNext");
     const store = window.tsportStore;
-    if (!tabsWrap || !grid || !store) return;
+    if (!tabsWrap || !track || !store) return;
 
     let activeFilter = "ALL";
-    let offset = 0;
+    let isAnimating = false;
+    let isHovered = false;
+    let autoTimer = null;
+    const GAP_PX = 12;
 
     function getFilteredProducts(filterKey) {
       const all = (store.getProducts() || []).filter(p => p.status !== "INACTIVE");
@@ -210,60 +214,149 @@
       }
     }
 
-    function renderGrid(animate = false) {
-      const list = getFilteredProducts(activeFilter);
-      const showArrows = list.length > 5;
-      btnPrev?.classList.toggle("is-hidden", !showArrows);
-      btnNext?.classList.toggle("is-hidden", !showArrows);
+    function buildCardHtml(p) {
+      const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
+      const skus = p.skus || [];
+      const hasSale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+      const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
+      const minEff = effectivePrices.length ? Math.min(...effectivePrices) : 0;
+      const maxEff = effectivePrices.length ? Math.max(...effectivePrices) : 0;
+      const minOrig = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
 
+      const priceLabel = (minEff !== maxEff)
+        ? `${minEff.toLocaleString("vi-VN")} - ${formatMoney(maxEff)}`
+        : formatMoney(minEff);
+
+      return `
+        <a href="pages/product-detail.html?id=${p.id}" class="ts-tabbox-card">
+          <div class="ts-tabbox-img-wrap">
+            ${p.condition_type === "CU" ? `<span class="ts-min-product-badge">Đồ cũ</span>` : ""}
+            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+          </div>
+          <h3 class="ts-tabbox-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
+          <div class="ts-tabbox-price-row">
+            <span class="ts-tabbox-price">${priceLabel}</span>
+            ${hasSale ? `<span class="ts-tabbox-oldprice">${formatMoney(minOrig)}</span>` : ""}
+          </div>
+        </a>
+      `;
+    }
+
+    function getStepPx() {
+      const firstCard = track.firstElementChild;
+      if (!firstCard) return 0;
+      return firstCard.getBoundingClientRect().width + GAP_PX;
+    }
+
+    function stopAutoSlide() {
+      if (autoTimer) {
+        clearTimeout(autoTimer);
+        autoTimer = null;
+      }
+    }
+
+    function scheduleNextSlide() {
+      stopAutoSlide();
+      if (isHovered || track.children.length <= 1) return;
+      autoTimer = setTimeout(() => {
+        slideRightToLeft();
+      }, 1000);
+    }
+
+    // Trượt mượt từ phải qua trái (duration: 1s)
+    function slideRightToLeft() {
+      if (isAnimating || track.children.length <= 1) return;
+      const stepPx = getStepPx();
+      if (stepPx <= 0) return;
+
+      isAnimating = true;
+      if (typeof window.gsap !== "undefined") {
+        window.gsap.to(track, {
+          x: -stepPx,
+          duration: 1,
+          ease: "power2.inOut",
+          onComplete: () => {
+            track.appendChild(track.firstElementChild);
+            window.gsap.set(track, { x: 0 });
+            isAnimating = false;
+            scheduleNextSlide();
+          }
+        });
+      } else {
+        track.appendChild(track.firstElementChild);
+        isAnimating = false;
+        scheduleNextSlide();
+      }
+    }
+
+    // Trượt ngược từ trái qua phải khi bấm mũi tên trái (duration: 1s)
+    function slideLeftToRight() {
+      if (isAnimating || track.children.length <= 1) return;
+      const stepPx = getStepPx();
+      if (stepPx <= 0) return;
+
+      isAnimating = true;
+      if (typeof window.gsap !== "undefined") {
+        track.insertBefore(track.lastElementChild, track.firstElementChild);
+        window.gsap.set(track, { x: -stepPx });
+        window.gsap.to(track, {
+          x: 0,
+          duration: 1,
+          ease: "power2.inOut",
+          onComplete: () => {
+            isAnimating = false;
+            scheduleNextSlide();
+          }
+        });
+      } else {
+        track.insertBefore(track.lastElementChild, track.firstElementChild);
+        isAnimating = false;
+        scheduleNextSlide();
+      }
+    }
+
+    function renderTrack(animateEntrance = false) {
+      stopAutoSlide();
+      isAnimating = false;
+      if (typeof window.gsap !== "undefined") {
+        window.gsap.killTweensOf(track);
+        window.gsap.set(track, { x: 0 });
+      }
+
+      const list = getFilteredProducts(activeFilter);
       if (list.length === 0) {
-        grid.innerHTML = `<div style="grid-column:1/-1; background:#fff; border-radius:4px; padding:32px; text-align:center; color:#6B7280; font-size:13.5px;">Chưa có sản phẩm trong mục này.</div>`;
+        btnPrev?.classList.add("is-hidden");
+        btnNext?.classList.add("is-hidden");
+        track.innerHTML = `<div style="width:100%; background:#fff; border-radius:4px; padding:32px; text-align:center; color:#6B7280; font-size:13.5px;">Chưa có sản phẩm trong mục này.</div>`;
         return;
       }
 
-      const visibleCount = Math.min(5, list.length);
-      const visibleItems = [];
-      for (let i = 0; i < visibleCount; i++) {
-        visibleItems.push(list[(offset + i) % list.length]);
+      // Nhân bản mượt nếu danh sách lọc có ít hơn 6 sản phẩm để vòng trượt phải -> trái luôn kín khung
+      let trackItems = [...list];
+      if (list.length > 1) {
+        while (trackItems.length < 7) {
+          trackItems = trackItems.concat(list);
+        }
       }
 
-      grid.innerHTML = visibleItems.map((p) => {
-        const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
-        const skus = p.skus || [];
-        const hasSale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
-        const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
-        const minEff = effectivePrices.length ? Math.min(...effectivePrices) : 0;
-        const maxEff = effectivePrices.length ? Math.max(...effectivePrices) : 0;
-        const minOrig = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
+      const canSlide = trackItems.length > 1;
+      btnPrev?.classList.toggle("is-hidden", !canSlide);
+      btnNext?.classList.toggle("is-hidden", !canSlide);
 
-        const priceLabel = (minEff !== maxEff)
-          ? `${minEff.toLocaleString("vi-VN")} - ${formatMoney(maxEff)}`
-          : formatMoney(minEff);
+      track.innerHTML = trackItems.map(buildCardHtml).join("");
 
-        return `
-          <a href="pages/product-detail.html?id=${p.id}" class="ts-tabbox-card">
-            <div class="ts-tabbox-img-wrap">
-              ${p.condition_type === "CU" ? `<span class="ts-min-product-badge">Đồ cũ</span>` : ""}
-              <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
-            </div>
-            <h3 class="ts-tabbox-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
-            <div class="ts-tabbox-price-row">
-              <span class="ts-tabbox-price">${priceLabel}</span>
-              ${hasSale ? `<span class="ts-tabbox-oldprice">${formatMoney(minOrig)}</span>` : ""}
-            </div>
-          </a>
-        `;
-      }).join("");
-
-      if (animate && typeof window.gsap !== "undefined") {
-        window.gsap.from(grid.querySelectorAll(".ts-tabbox-card"), {
-          y: 12,
+      if (animateEntrance && typeof window.gsap !== "undefined") {
+        window.gsap.from(track.querySelectorAll(".ts-tabbox-card"), {
+          x: 56,
           opacity: 0,
-          duration: 0.3,
-          stagger: 0.04,
-          ease: "power2.out",
-          clearProps: "transform,opacity"
+          duration: 1,
+          stagger: 0.05,
+          ease: "power3.out",
+          clearProps: "transform,opacity",
+          onComplete: scheduleNextSlide
         });
+      } else {
+        scheduleNextSlide();
       }
     }
 
@@ -277,25 +370,30 @@
       btn.classList.add("is-active");
       btn.setAttribute("aria-selected", "true");
       activeFilter = btn.dataset.filter || "ALL";
-      offset = 0;
-      renderGrid(true);
-    });
-
-    btnPrev?.addEventListener("click", () => {
-      const list = getFilteredProducts(activeFilter);
-      if (list.length <= 5) return;
-      offset = (offset - 1 + list.length) % list.length;
-      renderGrid(false);
+      renderTrack(true);
     });
 
     btnNext?.addEventListener("click", () => {
-      const list = getFilteredProducts(activeFilter);
-      if (list.length <= 5) return;
-      offset = (offset + 1) % list.length;
-      renderGrid(false);
+      stopAutoSlide();
+      slideRightToLeft();
     });
 
-    renderGrid(false);
+    btnPrev?.addEventListener("click", () => {
+      stopAutoSlide();
+      slideLeftToRight();
+    });
+
+    stage?.addEventListener("mouseenter", () => {
+      isHovered = true;
+      stopAutoSlide();
+    });
+
+    stage?.addEventListener("mouseleave", () => {
+      isHovered = false;
+      scheduleNextSlide();
+    });
+
+    renderTrack(false);
   }
 
   // 3. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)
