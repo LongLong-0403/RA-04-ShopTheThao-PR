@@ -103,15 +103,27 @@
   }
 
   function initCartModule() {
+    initCartHeaderSearch();
     renderCartPage();
     initCheckoutPage();
     bindCartEvents();
   }
 
-  // 1. RENDER TRANG GIỎ HÀNG
+  function initCartHeaderSearch() {
+    const form = document.getElementById("cartSearchForm");
+    const input = document.getElementById("cartSearchInput");
+    if (!form || !input) return;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      window.location.href = q ? `shop.html?q=${encodeURIComponent(q)}` : "shop.html";
+    });
+  }
+
+  // 1. RENDER TRANG GIỎ HÀNG (TỐI GIẢN CHUẨN FIGMA)
   function renderCartPage() {
     const listWrap = document.getElementById("cartItemsList");
-    const summaryWrap = document.getElementById("cartSummaryWrap");
+    const checkoutBtn = document.getElementById("cartCheckoutBtn");
     if (!listWrap) return;
 
     const store = window.tsportStore;
@@ -120,54 +132,65 @@
     const totals = store.getCartTotals();
     const items = totals.items;
 
+    renderTotals(totals);
+
     if (items.length === 0) {
       listWrap.innerHTML = `
-        <div style="text-align:center; padding:48px 20px;">
-          <div style="font-size:48px; margin-bottom:12px;">🛒</div>
-          <h3 style="font-size:18px; font-weight:800; color:#1E293B; margin-bottom:6px;">Giỏ hàng của bạn đang trống</h3>
-          <p style="font-size:13px; color:#64748B; margin-bottom:18px;">Hãy dạo qua cửa hàng để chọn những món đồ thể thao ưng ý nhé!</p>
-          <a href="shop.html" class="btn btn-primary">🛍️ Khám phá cửa hàng ngay</a>
+        <div class="ts-cart-v2-empty">
+          <h3 class="ts-cart-v2-empty-title">Giỏ hàng của bạn đang trống</h3>
+          <p class="ts-cart-v2-empty-desc">Hãy chọn sản phẩm thể thao bạn cần và kiểm tra biến thể trước khi thanh toán.</p>
+          <a href="shop.html" class="ts-cart-v2-empty-btn">Khám phá sản phẩm ngay</a>
         </div>
       `;
-      if (summaryWrap) summaryWrap.style.display = "none";
+      if (checkoutBtn) checkoutBtn.classList.add("is-disabled");
       return;
     }
 
-    if (summaryWrap) summaryWrap.style.display = "block";
+    if (checkoutBtn) checkoutBtn.classList.remove("is-disabled");
 
-    listWrap.innerHTML = items.map((item) => `
-      <div class="tsport-cart-item" data-sku-id="${item.sku_id}">
-        <img src="${escapeHtml(item.image_url)}" class="tsport-cart-img" alt="${escapeHtml(item.product_name)}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
-        
-        <div>
-          <h4 class="tsport-cart-item-name">${escapeHtml(item.product_name)}</h4>
-          <div class="tsport-cart-item-variant">
-            <span>Size: <strong>${escapeHtml(item.size)}</strong></span>
-            <span>•</span>
-            <span>Màu: <strong>${escapeHtml(item.color)}</strong></span>
-            ${item.condition_type === 'CU' ? '<span class="badge" style="background:#FEF3C7; color:#92400E; font-size:10px;">ĐỒ CŨ</span>' : ''}
+    listWrap.innerHTML = items.map((item) => {
+      const isUsed = item.condition_type === "CU";
+      const unitText = item.unit === "LO"
+        ? `Ống / ${item.quantity_per_lot || 12} quả`
+        : "Chiếc";
+      const variantParts = [item.size, item.color, unitText].filter(Boolean).join(" • ");
+      const stockText = Number(item.stock) > 0 ? "Còn hàng" : "Tạm hết hàng";
+      const detailUrl = item.product_id ? `product-detail.html?id=${item.product_id}` : "shop.html";
+
+      return `
+        <article class="ts-cart-v2-item" data-sku-id="${item.sku_id}">
+          <a href="${detailUrl}" class="ts-cart-v2-thumb">
+            <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.product_name)}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
+          </a>
+
+          <div class="ts-cart-v2-info">
+            <div>
+              <a href="${detailUrl}" class="ts-cart-v2-name">${escapeHtml(item.product_name)}</a>
+              <span class="ts-cart-v2-cond ${isUsed ? 'is-used' : ''}">${isUsed ? 'Đã qua sử dụng' : 'Mới'}</span>
+              <div class="ts-cart-v2-variant">${escapeHtml(variantParts)}</div>
+            </div>
+            <div class="ts-cart-v2-stock">${stockText}</div>
           </div>
-          <div style="font-size:12px; color:#64748B; margin-top:4px;">
-            Đơn giá: ${formatMoney(item.price)} / ${item.unit === 'LO' ? 'lô' : 'chiếc'}
+
+          <div class="ts-cart-v2-right">
+            <div class="ts-cart-v2-right-top">
+              <div class="ts-cart-v2-qty">
+                <button type="button" class="ts-cart-v2-qty-btn js-cart-minus" data-sku="${item.sku_id}" aria-label="Giảm số lượng">−</button>
+                <input type="number" class="ts-cart-v2-qty-input js-cart-input" value="${item.quantity}" min="1" max="${item.stock}" data-sku="${item.sku_id}" aria-label="Số lượng" />
+                <button type="button" class="ts-cart-v2-qty-btn js-cart-plus" data-sku="${item.sku_id}" aria-label="Tăng số lượng">+</button>
+              </div>
+              <div class="ts-cart-v2-price">${formatCartMoney(item.price * item.quantity)}</div>
+            </div>
+
+            <button type="button" class="ts-cart-v2-remove js-cart-remove" data-sku="${item.sku_id}">Xóa</button>
           </div>
-        </div>
+        </article>
+      `;
+    }).join("");
+  }
 
-        <!-- Bộ tăng giảm số lượng -->
-        <div class="tsport-qty-picker">
-          <button type="button" class="tsport-qty-btn js-cart-minus" data-sku="${item.sku_id}">−</button>
-          <input type="number" class="tsport-qty-input js-cart-input" value="${item.quantity}" min="1" max="${item.stock}" data-sku="${item.sku_id}" />
-          <button type="button" class="tsport-qty-btn js-cart-plus" data-sku="${item.sku_id}">+</button>
-        </div>
-
-        <div style="display:flex; align-items:center; gap:14px;">
-          <div class="tsport-cart-item-price">${formatMoney(item.price * item.quantity)}</div>
-          <button type="button" class="btn-cart-remove js-cart-remove" data-sku="${item.sku_id}" title="Xóa món này khỏi giỏ">🗑️</button>
-        </div>
-      </div>
-    `).join("");
-
-    // Render tóm tắt tiền
-    renderTotals(totals);
+  function formatCartMoney(amount) {
+    return (Number(amount) || 0).toLocaleString("vi-VN") + "đ";
   }
 
   function renderTotals(totals) {
@@ -175,8 +198,8 @@
     const grandTotalEl = document.getElementById("cartGrandTotal");
     const totalCountEl = document.getElementById("cartTotalCount");
 
-    if (subtotalEl) subtotalEl.textContent = formatMoney(totals.subtotal);
-    if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
+    if (subtotalEl) subtotalEl.textContent = formatCartMoney(totals.subtotal);
+    if (grandTotalEl) grandTotalEl.textContent = formatCartMoney(totals.grandTotal);
     if (totalCountEl) totalCountEl.textContent = `${totals.totalItems} sản phẩm`;
 
     if (typeof window.updateHeaderCartBadge === "function") {

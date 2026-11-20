@@ -253,3 +253,415 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   TSPORT — TRANG GIỎ HÀNG TỐI GIẢN (CART V2 CHUẨN FIGMA)
+   ========================================================================== */
+body.tsport-cart-body {
+  background: #FFFFFF;
+  color: #111827;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ts-cart-v2-main {
+  padding-top: 22px;
+  padding-bottom: 64px;
+}
+
+.ts-cart-v2-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: #9CA3AF;
+  margin-bottom: 14px;
+}
+
+.ts-cart-v2-breadcrumb a {
+  color: #6B7280;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.ts-cart-v2-breadcrumb a:hover {
+  color: #D94C26;
+}
+
+.ts-cart-v2-breadcrumb .is-current {
+  color: #6B7280;
+}
+
+.ts-cart-v2-head {
+  margin-bottom: 24px;
+}
+
+.ts-cart-v2-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px 0;
+}
+
+.ts-cart-v2-sub {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.ts-cart-v2-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.9fr) minmax(300px, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.ts-cart-v2-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* THẺ SẢN PHẨM TRONG GIỎ */
+.ts-cart-v2-item {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: stretch;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 16px 20px;
+  transition: border-color 0.15s ease;
+}
+
+.ts-cart-v2-item:hover {
+  border-color: #D1D5DB;
+}
+
+.ts-cart-v2-thumb {
+  width: 96px;
+  height: 96px;
+  background: #F3F4F6;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ts-cart-v2-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  display: block;
+}
+
+.ts-cart-v2-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.ts-cart-v2-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+  text-decoration: none;
+  line-height: 1.35;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.ts-cart-v2-name:hover {
+  color: #D94C26;
+}
+
+.ts-cart-v2-cond {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: #F3F4F6;
+  color: #4B5563;
+  margin-bottom: 8px;
+}
+
+.ts-cart-v2-cond.is-used {
+  background: #FFEDD5;
+  color: #D94C26;
+}
+
+.ts-cart-v2-variant {
+  font-size: 12.5px;
+  color: #6B7280;
+  margin-bottom: 4px;
+}
+
+.ts-cart-v2-stock {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+.ts-cart-v2-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.ts-cart-v2-right-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ts-cart-v2-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.ts-cart-v2-qty-btn {
+  width: 30px;
+  height: 32px;
+  border: none;
+  background: #FFFFFF;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ts-cart-v2-qty-btn:hover {
+  background: #F3F4F6;
+}
+
+.ts-cart-v2-qty-input {
+  width: 34px;
+  height: 32px;
+  border: none;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.ts-cart-v2-qty-input::-webkit-outer-spin-button,
+.ts-cart-v2-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ts-cart-v2-price {
+  min-width: 108px;
+  text-align: right;
+  font-size: 15px;
+  font-weight: 800;
+  color: #D94C26;
+}
+
+.ts-cart-v2-remove {
+  background: none;
+  border: none;
+  padding: 2px 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #6B7280;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.ts-cart-v2-remove:hover {
+  color: #D94C26;
+  text-decoration: underline;
+}
+
+/* NÚT TIẾP TỤC MUA SẮM & THÔNG BÁO TỒN KHO */
+.ts-cart-v2-footer-actions {
+  margin-top: 22px;
+  margin-bottom: 18px;
+}
+
+.ts-cart-v2-continue-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.ts-cart-v2-continue-btn:hover {
+  border-color: #D94C26;
+  color: #D94C26;
+}
+
+.ts-cart-v2-notice {
+  background: #FFF1EB;
+  border-left: 3px solid #D94C26;
+  border-radius: 6px;
+  padding: 13px 16px;
+  font-size: 12.5px;
+  color: #374151;
+}
+
+/* TRẠNG THÁI GIỎ HÀNG TRỐNG */
+.ts-cart-v2-empty {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 52px 24px;
+  text-align: center;
+}
+
+.ts-cart-v2-empty-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 8px 0;
+}
+
+.ts-cart-v2-empty-desc {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0 0 20px 0;
+}
+
+.ts-cart-v2-empty-btn {
+  display: inline-block;
+  background: #D94C26;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.ts-cart-v2-empty-btn:hover {
+  background: #BF3E1C;
+}
+
+/* CỘT PHẢI: TÓM TẮT ĐƠN HÀNG */
+.ts-cart-v2-summary {
+  background: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 22px;
+  position: sticky;
+  top: 24px;
+}
+
+.ts-cart-v2-summary-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 18px 0;
+}
+
+.ts-cart-v2-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  color: #4B5563;
+  margin-bottom: 12px;
+}
+
+.ts-cart-v2-summary-val {
+  font-weight: 800;
+  color: #D94C26;
+}
+
+.ts-cart-v2-summary-row.is-total {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #E5E7EB;
+  margin-bottom: 18px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.ts-cart-v2-summary-row.is-total .ts-cart-v2-summary-val {
+  font-size: 18px;
+}
+
+.ts-cart-v2-checkout-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: #D94C26;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ts-cart-v2-checkout-btn:hover {
+  background: #BF3E1C;
+}
+
+.ts-cart-v2-checkout-btn.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.ts-cart-v2-cod-caption {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .ts-cart-v2-layout {
+    grid-template-columns: 1fr;
+  }
+  .ts-cart-v2-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .ts-cart-v2-item {
+    grid-template-columns: 76px minmax(0, 1fr);
+    padding: 14px;
+  }
+  .ts-cart-v2-thumb {
+    width: 76px;
+    height: 76px;
+  }
+  .ts-cart-v2-right {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid #F3F4F6;
+  }
+}

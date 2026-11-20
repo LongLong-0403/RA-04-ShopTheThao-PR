@@ -3,127 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Giỏ hàng thể thao của bạn | Tsport Store</title>
-    <!-- Google Fonts: Roboto -->
+  <title>Giỏ hàng của bạn | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body data-root="../">
+<body class="tsport-cart-body" data-root="../">
 
-  <!-- HEADER & NAVIGATION -->
-  <header class="tsport-header">
-    <div class="tsport-topbar">
-      <div class="container">
-        <div class="tsport-topbar-left">
-          <span class="tsport-topbar-badge">GIỎ HÀNG</span>
-          <span>SỬA / XÓA DÒNG • KIỂM TRA TỒN KHO • TỔNG TIỀN THANH TOÁN VNĐ</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <a href="shop.html" style="color:#F8FAFC;">🛍️ Cửa Hàng</a>
-          <a href="orders.html" style="color:#F8FAFC;">📦 Đơn hàng của tôi</a>
-          <a href="checkout.html" style="color:#FF6B35; font-weight:700;">💳 Thanh toán ngay →</a>
-        </div>
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="cartSearchForm">
+          <input
+            type="text"
+            id="cartSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
       </div>
-    </div>
 
-    <div class="tsport-main-bar">
-      <div class="container">
-        <a href="shop.html" class="tsport-logo">
-          <span class="tsport-logo-text">Tsport</span>
-          <span class="tsport-logo-tag">SHOPPING CART</span>
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="auth.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
         </a>
-
-        <div class="tsport-actions">
-          <a href="shop.html" class="btn btn-secondary btn-sm">← Tiếp tục mua sắm</a>
-          <a href="checkout.html" class="btn btn-primary btn-sm">
-            <span>Tiến hành đặt hàng</span>
-            <span>→</span>
-          </a>
-        </div>
       </div>
     </div>
-
-    <!-- THANH MENU CHÍNH -->
-    <nav class="tsport-nav-bar">
-      <div class="container" style="display:flex; gap:24px; align-items:center; overflow-x:auto;">
-        <a href="../index.html" class="tsport-nav-link">Trang chủ</a>
-        <a href="shop.html" class="tsport-nav-link">Sản phẩm</a>
-        <a href="shop.html?condition=CU" class="tsport-nav-link">Đồ cũ</a>
-        <a href="courts.html" class="tsport-nav-link">Đặt sân</a>
-        <a href="community.html" class="tsport-nav-link">Ghép kèo</a>
-        <a href="admin-buyback.html" class="tsport-nav-link">Thu mua đồ cũ</a>
-      </div>
-    </nav>
   </header>
 
-  <!-- NỘI DUNG CHÍNH (GIỎ HÀNG) -->
-  <main class="container" style="padding-bottom:60px;">
-
-    <div class="tsport-page-header">
-      <div class="tsport-page-title-wrap">
-        <h1>
-          <span>🛒</span>
-          <span>Giỏ Hàng Của Bạn (<span id="cartTotalCount">0 sản phẩm</span>)</span>
-        </h1>
-        <div class="tsport-page-subtitle">
-          Kiểm tra các sản phẩm, cập nhật số lượng và chuẩn bị thanh toán an toàn.
-        </div>
-      </div>
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link is-active">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
     </div>
+  </nav>
 
-    <div class="tsport-cart-layout">
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: GIỎ HÀNG CỦA BẠN
+       ========================================== -->
+  <main class="container ts-cart-v2-main">
 
-      <!-- BẢNG DANH SÁCH SẢN PHẨM TRONG GIỎ -->
-      <div class="tsport-cart-card">
-        <div class="tsport-cart-header">
-          <h2 class="tsport-cart-title">
-            <span>📦</span>
-            <span>Danh sách sản phẩm đã chọn</span>
-          </h2>
-          <a href="shop.html" style="font-size:12px; color:#D94C26; font-weight:700;">+ Thêm món khác</a>
+    <!-- Breadcrumb -->
+    <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Trang chủ</a>
+      <span>/</span>
+      <span class="is-current">Giỏ hàng của bạn</span>
+    </nav>
+
+    <!-- Tiêu đề trang -->
+    <header class="ts-cart-v2-head">
+      <h1 class="ts-cart-v2-title">Giỏ hàng của bạn</h1>
+      <p class="ts-cart-v2-sub">
+        <span id="cartTotalCount">0 sản phẩm</span> • Kiểm tra đúng biến thể trước khi thanh toán.
+      </p>
+    </header>
+
+    <!-- Bố cục 2 cột: Danh sách sản phẩm (trái) | Tóm tắt đơn hàng (phải) -->
+    <div class="ts-cart-v2-layout">
+
+      <!-- CỘT TRÁI -->
+      <section class="ts-cart-v2-items-col">
+        <div class="ts-cart-v2-list" id="cartItemsList">
+          <!-- Render động từ cart.js -->
         </div>
 
-        <div id="cartItemsList">
-          <!-- Được render tự động qua cart.js -->
-        </div>
-      </div>
-
-      <!-- TỔNG TIỀN & NÚT THANH TOÁN (SUMMARY CARD) -->
-      <div class="tsport-summary-card" id="cartSummaryWrap">
-        <h2 class="tsport-summary-title">Tóm tắt đơn hàng</h2>
-
-        <div class="tsport-summary-row">
-          <span>Tạm tính tiền hàng:</span>
-          <span id="cartSubtotal" style="font-weight:700; color:#1E293B;">0 ₫</span>
+        <div class="ts-cart-v2-footer-actions">
+          <a href="shop.html" class="ts-cart-v2-continue-btn">← Tiếp tục mua sắm</a>
         </div>
 
-        <div class="tsport-summary-row">
-          <span>Phí giao hàng toàn quốc:</span>
-          <span style="color:#10B981; font-weight:700;">MIỄN PHÍ (0 ₫)</span>
+        <div class="ts-cart-v2-notice">
+          Số lượng mua không vượt quá tồn kho của biến thể đã chọn.
+        </div>
+      </section>
+
+      <!-- CỘT PHẢI: TÓM TẮT ĐƠN HÀNG -->
+      <aside class="ts-cart-v2-summary" id="cartSummaryWrap">
+        <h2 class="ts-cart-v2-summary-title">Tóm tắt đơn hàng</h2>
+
+        <div class="ts-cart-v2-summary-row">
+          <span>Tạm tính</span>
+          <strong class="ts-cart-v2-summary-val" id="cartSubtotal">0đ</strong>
         </div>
 
-        <div class="tsport-summary-row total">
-          <span>Tổng thanh toán:</span>
-          <span class="price" id="cartGrandTotal">0 ₫</span>
+        <div class="ts-cart-v2-summary-row">
+          <span>Phí vận chuyển</span>
+          <strong class="ts-cart-v2-summary-val">0đ</strong>
         </div>
 
-        <a href="checkout.html" class="btn-checkout" style="text-decoration:none;">
-          <span>Tiến hành Thanh toán (COD)</span>
-          <span>→</span>
+        <div class="ts-cart-v2-summary-row is-total">
+          <span>Tổng cộng</span>
+          <strong class="ts-cart-v2-summary-val" id="cartGrandTotal">0đ</strong>
+        </div>
+
+        <a href="checkout.html" class="ts-cart-v2-checkout-btn" id="cartCheckoutBtn">
+          Tiến hành thanh toán
         </a>
 
-        <div style="font-size:11px; color:#64748B; text-align:center; margin-top:14px; line-height:1.4;">
-          🛡️ Hỗ trợ đổi trả trong vòng 7 ngày nếu lỗi nhà sản xuất.<br/>
-          Thanh toán tiền mặt khi nhận hàng (COD).
-        </div>
-      </div>
+        <div class="ts-cart-v2-cod-caption">Thanh toán khi nhận hàng (COD)</div>
+      </aside>
 
     </div>
-
   </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="admin-buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
