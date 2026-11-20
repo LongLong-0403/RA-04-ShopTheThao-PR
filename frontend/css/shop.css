@@ -675,11 +675,13 @@
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 18px;
-  min-height: 176px;
+  aspect-ratio: 1920 / 680;
+  min-height: 180px;
+  max-height: 290px;
   background: #111827;
   border: 1px solid #1F2937;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .ts-shop-brand-banner-bg {
@@ -701,10 +703,10 @@
   inset: 0;
   z-index: 2;
   background: linear-gradient(
-    90deg,
-    rgba(17, 24, 39, 0.94) 0%,
-    rgba(17, 24, 39, 0.84) 55%,
-    rgba(217, 76, 38, 0.42) 100%
+    180deg,
+    rgba(17, 24, 39, 0.04) 0%,
+    rgba(17, 24, 39, 0.14) 55%,
+    rgba(17, 24, 39, 0.78) 100%
   );
 }
 
@@ -712,11 +714,11 @@
   position: relative;
   z-index: 3;
   width: 100%;
-  padding: 22px 26px;
+  padding: 16px 20px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 14px;
 }
 
 .ts-shop-brand-banner-copy {
