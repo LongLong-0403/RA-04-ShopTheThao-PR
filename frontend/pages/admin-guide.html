@@ -18,75 +18,7 @@
     <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
 
     <!-- SIDEBAR DÙNG CHUNG CHO CẢ NHÓM -->
-    <aside class="tsport-admin-sidebar" id="adminSidebar">
-      <div class="tsport-admin-sidebar-header">
-        <a href="../index.html" class="tsport-admin-brand">
-          <span class="tsport-admin-brand-logo">Tsport</span>
-          <span class="tsport-admin-brand-badge">ADMIN</span>
-        </a>
-        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
-      </div>
-
-      <nav class="tsport-admin-nav">
-        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
-        <a href="admin-dashboard.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📊</span>
-          <span>Bảng điều khiển (Chart.js)</span>
-        </a>
-
-        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
-        <a href="products.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📦</span>
-          <span>Sản phẩm &amp; Bảng SKU</span>
-        </a>
-        <a href="categories.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📁</span>
-          <span>Môn / Danh mục / Thương hiệu</span>
-        </a>
-                <a href="admin-discounts.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">🏷️</span>
-          <span>Mã giảm giá (Coupons)</span>
-        </a>
-        <a href="admin-orders.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📑</span>
-          <span>Đơn hàng &amp; In hóa đơn</span>
-        </a>
-
-        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
-        <a href="admin-buyback.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">♻️</span>
-          <span>Thu mua đồ cũ (Tạo SKU)</span>
-        </a>
-        <a href="admin-courts.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">🏸</span>
-          <span>Quản lý Đặt sân &amp; Ca</span>
-        </a>
-        <a href="admin-community.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">👥</span>
-          <span>Quản lý Kèo giao lưu</span>
-        </a>
-
-        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
-        <a href="admin-guide.html" class="tsport-admin-nav-item is-active">
-          <span class="tsport-admin-nav-icon">📖</span>
-          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
-        </a>
-        <a href="../index.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">🏠</span>
-          <span>Về trang chủ Storefront</span>
-        </a>
-      </nav>
-
-      <div class="tsport-admin-sidebar-footer">
-        <div class="tsport-admin-user-info">
-          <div class="tsport-admin-avatar">AD</div>
-          <div>
-            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
-            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
-          </div>
-        </div>
-      </div>
-    </aside>
+    <aside class="tsport-admin-sidebar" id="adminSidebar"></aside>
 
     <!-- NỘI DUNG CHÍNH -->
     <div class="tsport-admin-main">
@@ -113,7 +45,7 @@
             <h3 style="margin:0 0 6px; font-size:16px; font-weight:800;">Dịch Vụ Đặt Sân &amp; Ca Cố Định</h3>
             <p style="font-size:12px; color:#64748B; margin:0 0 14px;">Quản lý danh sách sân bóng/cầu lông, ca giờ cố định, chống xung đột lịch đặt và xử lý 2 admin duyệt đồng thời.</p>
             <div style="display:flex; gap:8px;">
-              <a href="courts.html" class="btn btn-primary btn-sm">Vào Quản lý Sân</a>
+              <a href="admin-courts.html" class="btn btn-primary btn-sm">Vào Quản lý Sân</a>
             </div>
           </div>
 
@@ -122,7 +54,7 @@
             <h3 style="margin:0 0 6px; font-size:16px; font-weight:800;">Cộng Đồng &amp; Tìm Bạn Thể Thao</h3>
             <p style="font-size:12px; color:#64748B; margin:0 0 14px;">Bộ lọc bài viết theo môn/ngày/địa điểm, kiểm duyệt bài viết, quyền đóng/xóa và quản trị viên ẩn bài vi phạm.</p>
             <div style="display:flex; gap:8px;">
-              <a href="community.html" class="btn btn-primary btn-sm">Vào Trang Cộng Đồng</a>
+              <a href="admin-community.html" class="btn btn-primary btn-sm">Vào Trang Cộng Đồng</a>
             </div>
           </div>
 
@@ -140,10 +72,6 @@
             <h3 style="margin:0 0 6px; font-size:16px; font-weight:800;">Đơn Hàng &amp; In Phiếu Xuất</h3>
             <p style="font-size:12px; color:#64748B; margin:0 0 14px;">Chuyển đổi trạng thái đơn hàng theo chu trình khép kín, hoàn trả tồn kho tự động và in hóa đơn chuẩn @media print.</p>
             <div style="display:flex; gap:8px;">
-                      <a href="admin-discounts.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">🏷️</span>
-          <span>Mã giảm giá (Coupons)</span>
-        </a>
         <a href="admin-orders.html" class="btn btn-primary btn-sm">Vào Quản Lý Đơn</a>
             </div>
           </div>

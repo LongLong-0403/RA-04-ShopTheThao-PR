@@ -1,5 +1,24 @@
 # Frontend base: HTML · CSS · JavaScript thuần + axios
 
+## Layout quản trị dùng chung
+
+Các trang quản trị dùng `css/admin-layout.css` (được nạp qua `style.css`) và
+`js/modules/admin-nav.js`. Để thêm hoặc sửa liên kết sidebar cho cả nhóm,
+chỉ sửa template trong `admin-nav.js`.
+
+Trang mới cần giữ các phần tử `adminSidebar`, `adminSidebarBackdrop`,
+`btnToggleAdminSidebar` và khung `.tsport-admin-main` như `pages/admin-guide.html`,
+rồi nạp `admin-nav.js` ở cuối body. Module tự đánh dấu trang hiện tại.
+
+Sidebar cố định trên desktop; ở chiều rộng tối đa 1024px, nút menu mở drawer.
+Đóng bằng nút đóng, nền mờ, Escape hoặc chọn liên kết. Tab được giữ trong menu
+khi mở; khi đổi sang desktop, trang được mở khóa cuộn trở lại.
+
+Kiểm tra từ thư mục gốc với Node.js, Playwright và Google Chrome đã cài:
+`node scripts/check-admin-layout.cjs`. Script kiểm tra 9 trang ở 390/768/1366px,
+tràn ngang, liên kết sidebar, trạng thái trang hiện tại, menu mobile và resize.
+Kiểm tra này chặn tài nguyên bên ngoài; không xác nhận API nghiệp vụ hay CDN.
+
 Khung frontend chung cho các nhóm thực tập lớp **HN-KS25-CNTT1**. Không dùng framework, không cần cài đặt hay build gì. Đã có sẵn:
 
 - Layout chung (header + menu + footer) cho mọi trang

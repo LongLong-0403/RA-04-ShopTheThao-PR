@@ -275,3 +275,22 @@
 .print-only {
   display: none;
 }
+
+/* Shared shell: allow controls and long headings to wrap on narrow screens. */
+.tsport-admin-topbar { flex-wrap: wrap; gap: 1rem; }
+.tsport-admin-topbar-left { min-width: 0; flex: 1; }
+.tsport-admin-topbar-left > div { min-width: 0; overflow-wrap: anywhere; }
+.tsport-admin-topbar > div { flex-wrap: wrap; }
+.tsport-hamburger-btn { flex-shrink: 0; }
+.tsport-admin-body > *, .tsport-admin-body .tsport-card { min-width: 0; }
+.tsport-admin-user-info > div:last-child { min-width: 0; overflow-wrap: anywhere; }
+.tsport-admin-sidebar-header, .tsport-admin-sidebar-footer { flex-shrink: 0; }
+.tsport-admin-sidebar-close, .tsport-hamburger-btn { min-width: 2.75rem; min-height: 2.75rem; }
+.tsport-admin-nav-item:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }
+@media (max-width: 1024px) {
+  .tsport-admin-sidebar { visibility: hidden; }
+  .tsport-admin-sidebar.is-open { visibility: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tsport-admin-sidebar { transition: none; }
+}

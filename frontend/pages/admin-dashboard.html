@@ -19,75 +19,7 @@
     <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
 
     <!-- SIDEBAR DÙNG CHUNG -->
-    <aside class="tsport-admin-sidebar" id="adminSidebar">
-      <div class="tsport-admin-sidebar-header">
-        <a href="../index.html" class="tsport-admin-brand">
-          <span class="tsport-admin-brand-logo">Tsport</span>
-          <span class="tsport-admin-brand-badge">ADMIN</span>
-        </a>
-        <button type="button" class="tsport-admin-sidebar-close" id="btnCloseAdminSidebar">✕</button>
-      </div>
-
-      <nav class="tsport-admin-nav">
-        <div class="tsport-admin-nav-group-title">Tổng quan &amp; Báo cáo</div>
-        <a href="admin-dashboard.html" class="tsport-admin-nav-item is-active">
-          <span class="tsport-admin-nav-icon">📊</span>
-          <span>Bảng điều khiển (Chart.js)</span>
-        </a>
-
-        <div class="tsport-admin-nav-group-title">Quản lý Cửa hàng</div>
-        <a href="products.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📦</span>
-          <span>Sản phẩm &amp; Bảng SKU</span>
-        </a>
-        <a href="categories.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📁</span>
-          <span>Môn / Danh mục / Thương hiệu</span>
-        </a>
-                <a href="admin-discounts.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">🏷️</span>
-          <span>Mã giảm giá (Coupons)</span>
-        </a>
-        <a href="admin-orders.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📑</span>
-          <span>Đơn hàng &amp; In hóa đơn</span>
-        </a>
-
-        <div class="tsport-admin-nav-group-title">Dịch vụ &amp; Cộng đồng</div>
-        <a href="admin-buyback.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">♻️</span>
-          <span>Thu mua đồ cũ (Tạo SKU)</span>
-        </a>
-        <a href="admin-courts.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">🏸</span>
-          <span>Quản lý Đặt sân &amp; Ca</span>
-        </a>
-        <a href="admin-community.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">👥</span>
-          <span>Quản lý Kèo giao lưu</span>
-        </a>
-
-        <div class="tsport-admin-nav-group-title">Hệ thống &amp; Tài liệu</div>
-        <a href="admin-guide.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">📖</span>
-          <span>Hướng dẫn &amp; Liên kết Dịch vụ</span>
-        </a>
-        <a href="../index.html" class="tsport-admin-nav-item">
-          <span class="tsport-admin-nav-icon">🏠</span>
-          <span>Về trang chủ Storefront</span>
-        </a>
-      </nav>
-
-      <div class="tsport-admin-sidebar-footer">
-        <div class="tsport-admin-user-info">
-          <div class="tsport-admin-avatar">AD</div>
-          <div>
-            <div style="font-weight:700; font-size:13px; color:#F8FAFC;" id="adminLoggedName">Quản Trị Viên</div>
-            <div style="font-size:11px; color:#94A3B8;" id="adminLoggedEmail">admin@tsport.vn</div>
-          </div>
-        </div>
-      </div>
-    </aside>
+    <aside class="tsport-admin-sidebar" id="adminSidebar"></aside>
 
     <!-- NỘI DUNG CHÍNH -->
     <div class="tsport-admin-main">
@@ -147,7 +79,7 @@
         </div>
 
         <!-- KHU VỰC BIỂU ĐỒ CHART.JS -->
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(420px, 1fr)); gap:20px; margin-bottom:24px;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap:20px; margin-bottom:24px;">
           
           <!-- BIỂU ĐỒ 1: DOANH THU THEO NGÀY -->
           <div class="tsport-card" style="margin:0;">
@@ -177,7 +109,7 @@
         </div>
 
         <!-- BIỂU ĐỒ TRẠNG THÁI & BẢNG TOP SẢN PHẨM BÁN CHẠY -->
-        <div style="display:grid; grid-template-columns:360px 1fr; gap:20px;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap:20px;">
           
           <!-- DOUGHNUT CHART -->
           <div class="tsport-card" style="margin:0;">
