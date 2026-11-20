@@ -12,9 +12,10 @@
 
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <!-- GSAP 3 + ScrollTrigger (greensock/gsap-skills) -->
+  <!-- GSAP 3 + ScrollTrigger + Three.js cho Triển lãm Cầu Lông 3D -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body class="tsport-home-body" data-root="">
 
@@ -229,6 +230,36 @@
         <button type="button" class="ts-hero-dot" data-index="1" aria-label="Ảnh 2"></button>
         <button type="button" class="ts-hero-dot" data-index="2" aria-label="Ảnh 3"></button>
       </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       TRIỂN LÃM SẢN PHẨM CẦU LÔNG 3D (TƯỜNG CONG WEBGL + CHUYỂN CẢNH GSAP)
+       ========================================== -->
+  <section class="ts-bg3d-section" id="sectionBadmintonGallery3D" aria-label="Triển lãm sản phẩm cầu lông 3D">
+    <div class="ts-bg3d-stage" id="bg3dStage">
+      <canvas class="ts-bg3d-canvas" id="bg3dCanvas" aria-label="Không gian triển lãm tường cong 3D sản phẩm cầu lông"></canvas>
+
+      <div class="ts-bg3d-top-hud">
+        <div class="ts-bg3d-hud-label">TSPORT EXHIBITION / 20 SẢN PHẨM CẦU LÔNG</div>
+        <div class="ts-bg3d-hud-nav">
+          <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dPrev" aria-label="Sản phẩm trước">←</button>
+          <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dOpenCenter" aria-label="Xem chi tiết sản phẩm ở giữa">Xem chi tiết</button>
+          <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dNext" aria-label="Sản phẩm kế tiếp">→</button>
+        </div>
+      </div>
+
+      <div class="ts-bg3d-bottom-hud">
+        <div class="ts-bg3d-coll-eyebrow">YONEX • LINING • VICTOR • MIZUNO</div>
+        <h2 class="ts-bg3d-coll-title">BỘ SƯU TẬP CẦU LÔNG</h2>
+        <div class="ts-bg3d-coll-sub" id="bg3dCollSub">Kéo hoặc cuộn ngang để khám phá • Nhấn vào sản phẩm để xem chi tiết</div>
+      </div>
+    </div>
+
+    <!-- Fallback HTML nếu trình duyệt không hỗ trợ WebGL -->
+    <div class="ts-bg3d-fallback" id="bg3dFallback">
+      <h2 class="ts-bg3d-coll-title" style="margin-bottom:20px;">BỘ SƯU TẬP CẦU LÔNG</h2>
+      <div class="ts-bg3d-fallback-grid" id="bg3dFallbackGrid"></div>
     </div>
   </section>
 
@@ -567,6 +598,84 @@
     </a>
   </nav>
 
+  <!-- LỚP ẢNH BAY CHUYỂN TIẾP LIỀN MẠCH WEBGL -> CHI TIẾT -->
+  <div class="ts-bg3d-fly-wrap" id="bg3dFlyWrap" aria-hidden="true">
+    <img id="bg3dFlyImg" src="" alt="" />
+  </div>
+
+  <!-- LỚP PHỦ CHI TIẾT SẢN PHẨM CẦU LÔNG (2 CỘT DESKTOP / 1 CỘT MOBILE) -->
+  <div class="ts-bg3d-detail-overlay" id="bg3dDetailOverlay" role="dialog" aria-modal="true" aria-label="Chi tiết sản phẩm cầu lông">
+    <header class="ts-bg3d-detail-topbar">
+      <button type="button" class="ts-bg3d-back-btn" id="btnBg3dBack">← Quay lại triển lãm</button>
+      <div class="ts-bg3d-detail-top-right">
+        <a href="pages/shop.html?sport_id=1" class="ts-bg3d-detail-top-link">Tất cả Cầu lông</a>
+        <a href="pages/cart.html" class="ts-bg3d-detail-top-link">Giỏ hàng (<span class="js-cart-count">0</span>)</a>
+      </div>
+    </header>
+
+    <div class="ts-bg3d-detail-inner">
+      <div class="ts-bg3d-detail-grid">
+        <div class="ts-bg3d-detail-media-col">
+          <div class="ts-bg3d-detail-img-slot" id="bg3dDetailImgSlot">
+            <img id="bg3dDetailHeroImg" src="" alt="Ảnh sản phẩm cầu lông" />
+          </div>
+        </div>
+
+        <div class="ts-bg3d-detail-info-col" id="bg3dDetailInfoCol">
+          <div class="ts-bg3d-detail-brand" id="bg3dDetailBrand">YONEX • VỢT CẦU LÔNG</div>
+          <h1 class="ts-bg3d-detail-title" id="bg3dDetailTitle">Tên sản phẩm</h1>
+          <div class="ts-bg3d-detail-price" id="bg3dDetailPrice">0đ</div>
+          <p class="ts-bg3d-detail-desc" id="bg3dDetailDesc"></p>
+
+          <div class="ts-bg3d-opt-group">
+            <div class="ts-bg3d-opt-label">Trọng lượng / Kích cỡ</div>
+            <div class="ts-bg3d-opt-pills" id="bg3dSizePills"></div>
+          </div>
+
+          <div class="ts-bg3d-opt-group">
+            <div class="ts-bg3d-opt-label">Phiên bản màu</div>
+            <div class="ts-bg3d-opt-pills" id="bg3dColorPills"></div>
+          </div>
+
+          <div class="ts-bg3d-buy-row">
+            <div class="ts-bg3d-qty-box">
+              <button type="button" class="ts-bg3d-qty-btn" id="bg3dQtyMinus" aria-label="Giảm số lượng">−</button>
+              <span class="ts-bg3d-qty-val" id="bg3dQtyVal">1</span>
+              <button type="button" class="ts-bg3d-qty-btn" id="bg3dQtyPlus" aria-label="Tăng số lượng">+</button>
+            </div>
+            <button type="button" class="ts-bg3d-add-btn" id="btnBg3dAddToBag">Thêm vào giỏ hàng</button>
+          </div>
+
+          <a href="pages/product-detail.html?id=1" class="ts-bg3d-fullpage-link" id="bg3dFullPageLink">Mở trang chi tiết đầy đủ →</a>
+
+          <div class="ts-bg3d-accordions">
+            <div class="ts-bg3d-acc-item is-open">
+              <button type="button" class="ts-bg3d-acc-trigger">
+                <span>Thông số kỹ thuật</span>
+                <span class="js-acc-sign">−</span>
+              </button>
+              <div class="ts-bg3d-acc-body" id="bg3dAccSpecs"></div>
+            </div>
+            <div class="ts-bg3d-acc-item">
+              <button type="button" class="ts-bg3d-acc-trigger">
+                <span>Giao hàng &amp; Bảo hành chính hãng</span>
+                <span class="js-acc-sign">+</span>
+              </button>
+              <div class="ts-bg3d-acc-body">
+                Miễn phí giao hàng toàn quốc cho đơn từ 1.000.000đ. Bảo hành khung vợt chính hãng 90 ngày theo tiêu chuẩn hãng Yonex / Lining / Victor / Mizuno.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="ts-bg3d-related" id="bg3dRelatedSection">
+        <h2 class="ts-bg3d-related-title">Cùng bộ sưu tập cầu lông</h2>
+        <div class="ts-bg3d-related-grid" id="bg3dRelatedGrid"></div>
+      </section>
+    </div>
+  </div>
+
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- SCRIPTS -->
@@ -574,5 +683,6 @@
   <script src="js/api.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/modules/home.js"></script>
+  <script src="js/modules/badminton-gallery-3d.js"></script>
 </body>
 </html>
