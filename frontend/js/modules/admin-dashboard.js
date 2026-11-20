@@ -1,207 +1,183 @@
 /**
- * TSPORT — MODULE DASHBOARD & THỐNG KÊ (CHART.JS)
- * Tính năng:
- * - Thống kê KPI: Doanh thu tổng, Đơn hàng theo trạng thái, Số booking sân
- * - Bộ lọc khoảng thời gian: Hôm nay, 7 ngày qua, 30 ngày qua
- * - 3 Biểu đồ Chart.js trực quan:
- *   1. Doanh thu theo ngày (Bar / Line)
- *   2. Số booking sân theo ngày (Line)
- *   3. Phân bổ trạng thái đơn hàng (Doughnut)
- * - Bảng Top sản phẩm bán chạy nhất
+ * TSPORT — MODULE TỔNG QUAN QUẢN TRỊ (ADMIN DASHBOARD V2 FIGMA)
+ * - Nạp 4 chỉ số KPI live từ tsportStore (Đơn cần xử lý, Lịch sân chờ duyệt, Yêu cầu thu mua, SKU hết hàng)
+ * - Tổng hợp bảng "Công việc cần xử lý" từ Đặt sân, Đơn hàng và Thu mua đồ cũ
  */
 
 (function () {
-  let revenueChart = null;
-  let bookingChart = null;
-  let statusChart = null;
-
-  function initDashboard() {
-    renderDashboard("7days");
-    bindDashboardEvents();
+  function pad2(n) {
+    return String(Number(n) || 0).padStart(2, "0");
   }
 
-  function renderDashboard(period = "7days") {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    const data = store.getAnalytics(period);
-
-    // 1. Cập nhật các thẻ KPI
-    const totalRevEl = document.getElementById("kpiTotalRevenue");
-    const totalOrdersEl = document.getElementById("kpiTotalOrders");
-    const totalBookingsEl = document.getElementById("kpiTotalBookings");
-    const completedOrdersEl = document.getElementById("kpiCompletedOrders");
-
-    if (totalRevEl) totalRevEl.textContent = formatMoney(data.totalRevenue);
-    if (totalOrdersEl) totalOrdersEl.textContent = `${data.totalOrders} đơn`;
-    if (totalBookingsEl) totalBookingsEl.textContent = `${data.totalBookings} lượt`;
-    if (completedOrdersEl) completedOrdersEl.textContent = `${data.ordersByStatus.COMPLETED} đơn`;
-
-    // Cập nhật breakdown trạng thái
-    const statusPendingEl = document.getElementById("countPending");
-    const statusConfirmedEl = document.getElementById("countConfirmed");
-    const statusShippingEl = document.getElementById("countShipping");
-    const statusCompletedEl = document.getElementById("countCompleted");
-    const statusCancelledEl = document.getElementById("countCancelled");
-
-    if (statusPendingEl) statusPendingEl.textContent = data.ordersByStatus.PENDING;
-    if (statusConfirmedEl) statusConfirmedEl.textContent = data.ordersByStatus.CONFIRMED;
-    if (statusShippingEl) statusShippingEl.textContent = data.ordersByStatus.SHIPPING;
-    if (statusCompletedEl) statusCompletedEl.textContent = data.ordersByStatus.COMPLETED;
-    if (statusCancelledEl) statusCancelledEl.textContent = data.ordersByStatus.CANCELLED;
-
-    // 2. Render Biểu đồ Chart.js
-    renderCharts(data);
-
-    // 3. Render Top sản phẩm bán chạy
-    renderTopProducts(data.topProducts);
+  function formatShortDate(str) {
+    if (!str) return "";
+    const parts = String(str).split(" ")[0].split("-");
+    if (parts.length === 3) return `${parts[2]}/${parts[1]}`;
+    return str;
   }
 
-  function renderCharts(data) {
-    if (typeof Chart === "undefined") {
-      console.warn("Chart.js chưa được nạp CDN!");
-      return;
-    }
-
-    // A. BIỂU ĐỒ DOANH THU THEO NGÀY
-    const revCtx = document.getElementById("chartRevenue")?.getContext("2d");
-    if (revCtx) {
-      if (revenueChart) revenueChart.destroy();
-      revenueChart = new Chart(revCtx, {
-        type: "bar",
-        data: {
-          labels: data.dateLabels,
-          datasets: [{
-            label: "Doanh thu (VNĐ)",
-            data: data.revenueData,
-            backgroundColor: "rgba(217, 76, 38, 0.75)",
-            borderColor: "#D94C26",
-            borderWidth: 1.5,
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: (ctx) => `Doanh thu: ${formatMoney(ctx.raw)}`
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: (val) => val >= 1000000 ? (val / 1000000) + " tr" : val
-              }
-            }
-          }
-        }
-      });
-    }
-
-    // B. BIỂU ĐỒ SỐ BOOKING SÂN THEO NGÀY
-    const bookCtx = document.getElementById("chartBookings")?.getContext("2d");
-    if (bookCtx) {
-      if (bookingChart) bookingChart.destroy();
-      bookingChart = new Chart(bookCtx, {
-        type: "line",
-        data: {
-          labels: data.dateLabels,
-          datasets: [{
-            label: "Số lượt đặt sân",
-            data: data.bookingData,
-            borderColor: "#2563EB",
-            backgroundColor: "rgba(37, 99, 235, 0.15)",
-            fill: true,
-            tension: 0.35,
-            pointBackgroundColor: "#2563EB",
-            pointRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: { stepSize: 1 }
-            }
-          }
-        }
-      });
-    }
-
-    // C. BIỂU ĐỒ TRẠNG THÁI ĐƠN HÀNG (DOUGHNUT)
-    const stCtx = document.getElementById("chartOrderStatus")?.getContext("2d");
-    if (stCtx) {
-      if (statusChart) statusChart.destroy();
-      statusChart = new Chart(stCtx, {
-        type: "doughnut",
-        data: {
-          labels: ["Chờ duyệt", "Đã xác nhận", "Đang giao", "Hoàn thành", "Đã hủy"],
-          datasets: [{
-            data: [
-              data.ordersByStatus.PENDING,
-              data.ordersByStatus.CONFIRMED,
-              data.ordersByStatus.SHIPPING,
-              data.ordersByStatus.COMPLETED,
-              data.ordersByStatus.CANCELLED
-            ],
-            backgroundColor: ["#F59E0B", "#3B82F6", "#6366F1", "#10B981", "#EF4444"],
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { position: "bottom" }
-          }
-        }
-      });
-    }
+  function initAdminDashboard() {
+    initTopbarControls();
+    renderKpisAndTasks();
   }
 
-  function renderTopProducts(products) {
-    const tbody = document.getElementById("topProductsTbody");
-    if (!tbody) return;
-
-    if (!products || products.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94A3B8;">Chưa có dữ liệu bán hàng.</td></tr>';
-      return;
+  function initTopbarControls() {
+    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+    const nameEl = document.getElementById("adminTopName");
+    if (nameEl && user && user.role === "ADMIN" && user.full_name) {
+      nameEl.textContent = "Admin";
     }
 
-    tbody.innerHTML = products.map((p, idx) => `
-      <tr>
-        <td><strong>#${idx + 1}</strong></td>
-        <td>
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${escapeHtml(p.image_url)}" style="width:40px; height:40px; border-radius:6px; object-fit:cover; border:1px solid #E2E8F0;" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
-            <div>
-              <strong style="color:#0F172A; font-size:13px;">${escapeHtml(p.name)}</strong>
-              <div style="font-size:11px; color:#64748B;">SKU: <code>${escapeHtml(p.sku_code)}</code></div>
-            </div>
-          </div>
-        </td>
-        <td style="font-weight:700; color:#2563EB;">${p.quantity_sold} món</td>
-        <td style="font-weight:800; color:#D94C26;">${formatMoney(p.total_revenue)}</td>
-        <td>
-          <a href="product-detail.html?id=${p.product_id}" class="btn btn-secondary btn-sm" target="_blank">Xem SP</a>
-        </td>
-      </tr>
-    `).join("");
-  }
+    const userBtn = document.getElementById("btnAdminUserMenu");
+    const dropdown = document.getElementById("adminUserDropdown");
+    userBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown?.classList.toggle("is-open");
+    });
 
-  function bindDashboardEvents() {
-    // Chọn khoảng thời gian
-    document.getElementById("analyticsPeriodSelect")?.addEventListener("change", (e) => {
-      renderDashboard(e.target.value);
-      showToast(`Đã cập nhật dữ liệu thống kê: ${e.target.options[e.target.selectedIndex].text}`, "info");
+    document.addEventListener("click", () => {
+      dropdown?.classList.remove("is-open");
+    });
+
+    document.getElementById("btnAdminLogout")?.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("tsport_token");
+      localStorage.removeItem("tsport_current_user");
+      window.location.href = "auth.html";
+    });
+
+    const sidebar = document.getElementById("adminSidebar");
+    document.getElementById("btnToggleAdminSidebar")?.addEventListener("click", () => {
+      sidebar?.classList.toggle("is-open");
     });
   }
 
-  document.addEventListener("DOMContentLoaded", initDashboard);
+  function renderKpisAndTasks() {
+    const store = window.tsportStore;
+    if (!store) return;
+
+    const orders = store.getOrders() || [];
+    const bookings = store.getBookings() || [];
+    const buybacks = store.getBuybacks() || [];
+    const products = store.getProducts({ status: "ACTIVE" }) || [];
+
+    const pendingOrders = orders.filter((o) => o.status === "PENDING");
+    const pendingBookings = bookings.filter((b) => b.status === "PENDING");
+    const pendingBuybacks = buybacks.filter((b) => b.status === "PENDING" || b.status === "CHO_DUYET");
+
+    let outOfStockSkus = 0;
+    products.forEach((p) => {
+      (p.skus || []).forEach((s) => {
+        if (Number(s.stock) <= 0) outOfStockSkus++;
+      });
+    });
+
+    const elOrders = document.getElementById("kpiPendingOrders");
+    const elBookings = document.getElementById("kpiPendingBookings");
+    const elBuybacks = document.getElementById("kpiPendingBuybacks");
+    const elSkus = document.getElementById("kpiOutOfStockSkus");
+
+    if (elOrders) elOrders.textContent = pad2(pendingOrders.length);
+    if (elBookings) elBookings.textContent = pad2(pendingBookings.length);
+    if (elBuybacks) elBuybacks.textContent = pad2(pendingBuybacks.length);
+    if (elSkus) elSkus.textContent = pad2(outOfStockSkus);
+
+    // Tổng hợp danh sách "Công việc cần xử lý"
+    const tasks = [];
+
+    pendingBookings.slice(0, 3).forEach((b) => {
+      tasks.push({
+        type: "Đặt sân",
+        customer: b.customer_name || "Khách hàng",
+        content: `${b.court_name} • ${formatShortDate(b.booking_date)}`,
+        statusLabel: "Chờ xác nhận",
+        statusCls: "is-pending",
+        href: "admin-courts.html"
+      });
+    });
+
+    pendingOrders.slice(0, 3).forEach((o) => {
+      tasks.push({
+        type: "Đơn hàng",
+        customer: o.customer_name || "Khách hàng",
+        content: o.order_code,
+        statusLabel: "Chờ xác nhận",
+        statusCls: "is-pending",
+        href: "admin-orders.html"
+      });
+    });
+
+    pendingBuybacks.slice(0, 3).forEach((bb) => {
+      tasks.push({
+        type: "Thu mua",
+        customer: bb.customer_name || "Khách hàng",
+        content: bb.product_name,
+        statusLabel: "Chờ thẩm định",
+        statusCls: "",
+        href: "admin-buyback.html"
+      });
+    });
+
+    // Nếu chưa có công việc chờ nào, hiển thị các mục gần nhất
+    if (tasks.length === 0) {
+      if (bookings[0]) {
+        tasks.push({
+          type: "Đặt sân",
+          customer: bookings[0].customer_name || "Nguyễn Minh Anh",
+          content: `${bookings[0].court_name} • ${formatShortDate(bookings[0].booking_date)}`,
+          statusLabel: "Chờ xác nhận",
+          statusCls: "is-pending",
+          href: "admin-courts.html"
+        });
+      }
+      if (orders[0]) {
+        tasks.push({
+          type: "Đơn hàng",
+          customer: orders[0].customer_name || "Trần Hoàng",
+          content: orders[0].order_code,
+          statusLabel: "Chờ xác nhận",
+          statusCls: "is-pending",
+          href: "admin-orders.html"
+        });
+      }
+      if (buybacks[0]) {
+        tasks.push({
+          type: "Thu mua",
+          customer: buybacks[0].customer_name || "Lê Linh",
+          content: buybacks[0].product_name,
+          statusLabel: "Chờ thẩm định",
+          statusCls: "",
+          href: "admin-buyback.html"
+        });
+      }
+    }
+
+    const tbody = document.getElementById("adminPendingTasksTbody");
+    if (!tbody) return;
+
+    tbody.innerHTML = tasks
+      .map(
+        (t) => `
+        <tr onclick="window.location.href='${t.href}'">
+          <td>${escapeHtml(t.type)}</td>
+          <td>${escapeHtml(t.customer)}</td>
+          <td>${escapeHtml(t.content)}</td>
+          <td><span class="ts-orders-v2-status ${t.statusCls}">${escapeHtml(t.statusLabel)}</span></td>
+        </tr>
+      `
+      )
+      .join("");
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  document.addEventListener("DOMContentLoaded", initAdminDashboard);
 })();
