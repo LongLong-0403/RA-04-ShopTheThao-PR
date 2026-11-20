@@ -132,32 +132,46 @@
           </div>
         </div>
 
-        <!-- VIEW 2: CHI TIẾT & XỬ LÝ ĐƠN HÀNG -->
+        <!-- VIEW 2: CHI TIẾT & XỬ LÝ ĐƠN HÀNG (CHUẨN FIGMA) -->
         <div id="admOrderDetailView" style="display:none;">
           <header class="ts-adm-page-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
             <div>
-              <h1 class="ts-adm-page-title" id="admDetOrderCode">Đơn ORD-...</h1>
-              <p class="ts-adm-page-sub" id="admDetOrderMeta">Ngày đặt • COD • Vận chuyển 0đ</p>
+              <h1 class="ts-adm-page-title" id="admDetOrderCode">Chi tiết đơn ORD-20261107-001</h1>
+              <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
             </div>
             <button type="button" class="ts-adm-btn-secondary" id="btnBackToAdmOrders" style="min-width:140px;">
-              ← Quay lại danh sách
+              ← Quay lại
             </button>
           </header>
 
-          <!-- Thanh tiến trình 4 bước -->
-          <section class="ts-ord-det-stepper" id="admDetOrderStepper"></section>
-
-          <!-- Bảng sản phẩm trong đơn -->
+          <!-- THẺ THÔNG TIN NGƯỜI NHẬN & TRẠNG THÁI ĐƠN -->
           <section class="ts-adm-card">
-            <h2 class="ts-adm-card-title">Sản phẩm trong đơn</h2>
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+              <div>
+                <div style="font-size:17px; font-weight:800; color:#111827; margin-bottom:8px;" id="admDetReceiverLine">
+                  Nguyễn Minh Anh • 0901234567
+                </div>
+                <div style="font-size:13px; color:#6B7280; margin-bottom:10px;" id="admDetReceiverAddr">
+                  Số 12, Nguyễn Trãi, Thanh Xuân, Hà Nội
+                </div>
+                <div style="font-size:13px; color:#6B7280;" id="admDetOrderMeta">
+                  COD • Phí vận chuyển 0đ • Tổng cộng 0đ
+                </div>
+              </div>
+              <span class="ts-orders-v2-status is-pending" id="admDetStatusPill">Chờ xác nhận</span>
+            </div>
+          </section>
+
+          <!-- BẢNG 5 CỘT SẢN PHẨM TRONG ĐƠN -->
+          <section class="ts-adm-table-section">
             <div class="ts-orders-v2-table-wrap">
               <table class="ts-orders-v2-table">
                 <thead>
                   <tr>
-                    <th>Sản phẩm / Biến thể</th>
-                    <th>Tình trạng</th>
+                    <th>SKU / Sản phẩm</th>
+                    <th>Tình trạng lúc đặt</th>
                     <th>Số lượng</th>
-                    <th>Đơn giá</th>
+                    <th>Giá lúc đặt</th>
                     <th>Thành tiền</th>
                   </tr>
                 </thead>
@@ -166,28 +180,28 @@
             </div>
           </section>
 
-          <!-- Thông tin người nhận & Thao tác xử lý trạng thái -->
+          <!-- KHUNG CẬP NHẬT XỬ LÝ ĐƠN HÀNG -->
           <section class="ts-adm-card">
-            <div class="ts-ord-det-footer-grid">
-              <div class="ts-ord-det-receiver-card" style="min-height:auto;">
-                <h3 class="ts-ord-det-receiver-title">Người nhận hàng</h3>
-                <div class="ts-ord-det-receiver-line" id="admDetReceiverLine"></div>
-                <div class="ts-ord-det-receiver-addr" id="admDetReceiverAddr"></div>
-              </div>
+            <h2 class="ts-adm-card-title" style="margin-bottom:12px;">Cập nhật xử lý đơn hàng</h2>
+            <div id="admDetFlowLine" style="font-size:13.5px; color:#6B7280; margin-bottom:22px;">
+              Chờ xử lý → Đã xác nhận → Đang giao → Hoàn tất
+            </div>
 
-              <div>
-                <div class="ts-ord-det-total-row" style="margin-bottom:18px;">
-                  <span>Tổng thanh toán</span>
-                  <strong class="ts-ord-det-total-val" id="admDetGrandTotal">0đ</strong>
-                </div>
+            <div class="ts-adm-quick-actions">
+              <button type="button" class="ts-adm-btn-primary" id="btnAdmConfirmOrder">Xác nhận đơn</button>
+              <button type="button" class="ts-adm-btn-secondary" id="btnAdmNextOrderStatus">Chuyển trạng thái tiếp</button>
+              <button type="button" class="ts-adm-btn-secondary" id="btnAdmCancelOrder">Hủy đơn / Hoàn kho</button>
+            </div>
 
-                <div class="ts-adm-form-stack-btns" style="margin-top:0;">
-                  <button type="button" class="ts-adm-btn-primary" id="btnAdmAdvanceOrder">Xác nhận đơn hàng</button>
-                  <button type="button" class="ts-adm-btn-secondary" id="btnAdmCancelOrder">Hủy đơn &amp; Hoàn tồn kho</button>
-                </div>
-              </div>
+            <div class="ts-adm-edit-hint" style="margin-top:16px;">
+              Chỉ chọn bước kế tiếp hợp lệ của trạng thái hiện tại.
             </div>
           </section>
+
+          <!-- THANH LƯU Ý GIỮ GIÁ & TÌNH TRẠNG LÚC ĐẶT -->
+          <div class="ts-court-det-notice" style="margin-top:20px;">
+            Giá bán và tình trạng sản phẩm trong đơn giữ nguyên theo thời điểm đặt, kể cả khi sản phẩm được sửa.
+          </div>
         </div>
 
       </main>

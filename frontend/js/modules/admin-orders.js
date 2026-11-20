@@ -144,35 +144,39 @@
     document.getElementById("admOrderDetailView").style.display = "block";
 
     const bc = document.getElementById("admOrdersBreadcrumb");
-    if (bc) bc.textContent = `Đơn ${order.order_code}`;
+    if (bc) bc.textContent = `Chi tiết đơn ${order.order_code}`;
 
-    document.getElementById("admDetOrderCode").textContent = `Đơn ${order.order_code}`;
-    document.getElementById("admDetOrderMeta").textContent = `Đặt ngày ${formatDMY(order.created_at)} • ${getPayLabel(order.payment_method)} • Vận chuyển 0đ`;
+    document.getElementById("admDetOrderCode").textContent = `Chi tiết đơn ${order.order_code}`;
+    document.getElementById("admDetReceiverLine").textContent = `${order.customer_name || "Khách hàng"} • ${order.phone || ""}`;
+    document.getElementById("admDetReceiverAddr").textContent = order.address || "Chưa cập nhật địa chỉ";
+    document.getElementById("admDetOrderMeta").textContent = `${getPayLabel(order.payment_method)} • Phí vận chuyển 0đ • Tổng cộng ${formatMoneyVN(order.total_amount)}`;
 
-    // Thanh tiến trình 4 bước
-    const stepper = document.getElementById("admDetOrderStepper");
-    if (stepper) {
+    const st = getStatusMeta(order.status);
+    const pillEl = document.getElementById("admDetStatusPill");
+    if (pillEl) {
+      pillEl.textContent = order.status === "PENDING" ? "Chờ xác nhận" : st.label;
+      pillEl.className = `ts-orders-v2-status ${st.cls}`;
+    }
+
+    // Dòng vòng đời trạng thái
+    const flowLine = document.getElementById("admDetFlowLine");
+    if (flowLine) {
+      const steps = [
+        { key: "PENDING", label: "Chờ xử lý" },
+        { key: "CONFIRMED", label: "Đã xác nhận" },
+        { key: "SHIPPING", label: "Đang giao" },
+        { key: "COMPLETED", label: "Hoàn tất" }
+      ];
       if (order.status === "CANCELLED") {
-        stepper.innerHTML = `<div class="ts-ord-det-cancelled-bar">Đơn hàng đã bị hủy${order.restocked ? " và đã hoàn tồn kho (1 lần)." : "."}</div>`;
+        flowLine.innerHTML = `<strong style="color:#DC2626;">Đơn hàng đã hủy${order.restocked ? " • Đã hoàn kho (1 lần)" : ""}</strong>`;
       } else {
-        const steps = [
-          { key: "PENDING", label: "Chờ xử lý" },
-          { key: "CONFIRMED", label: "Đã xác nhận" },
-          { key: "SHIPPING", label: "Đang giao" },
-          { key: "COMPLETED", label: "Hoàn tất" }
-        ];
-        const currIdx = Math.max(0, steps.findIndex((s) => s.key === order.status));
-        stepper.innerHTML = steps
-          .map((s, idx) => {
-            const cls = idx < currIdx ? "is-done" : idx === currIdx ? "is-current" : "";
-            return `
-              <div class="ts-ord-det-step ${cls}">
-                <span class="ts-ord-det-step-dot">${idx < currIdx ? "✓" : ""}</span>
-                <span class="ts-ord-det-step-label">${s.label}</span>
-              </div>
-            `;
-          })
-          .join("");
+        flowLine.innerHTML = steps
+          .map((s) =>
+            s.key === order.status
+              ? `<strong style="color:#D94C26;">${s.label}</strong>`
+              : `<span>${s.label}</span>`
+          )
+          .join(' <span style="margin:0 8px; color:#9CA3AF;">→</span> ');
       }
     }
 
@@ -184,11 +188,12 @@
           const cond = item.condition_type === "CU" ? "Cũ" : "Mới";
           const unitPrice = Number(item.price_at_order || item.price || 0);
           const qty = Number(item.quantity || 1);
+          const skuCode = item.sku_code || `SKU-${item.sku_id || 1}`;
           return `
             <tr>
               <td>
-                <div class="ts-ord-det-prod-name">${escapeHtml(item.product_name)}</div>
-                <div class="ts-ord-det-prod-var">${escapeHtml([item.size, item.color].filter(Boolean).join(" • "))}</div>
+                <div class="ts-ord-det-prod-name">${escapeHtml(skuCode)}</div>
+                <div class="ts-ord-det-prod-var">${escapeHtml(item.product_name)}</div>
               </td>
               <td>${cond}</td>
               <td>${qty}</td>
@@ -200,17 +205,21 @@
         .join("");
     }
 
-    document.getElementById("admDetReceiverLine").textContent = `${order.customer_name || ""} • ${order.phone || ""}`;
-    document.getElementById("admDetReceiverAddr").textContent = order.address || "";
-    document.getElementById("admDetGrandTotal").textContent = formatMoneyVN(order.total_amount);
-
-    const st = getStatusMeta(order.status);
-    const btnAdvance = document.getElementById("btnAdmAdvanceOrder");
+    const btnConfirm = document.getElementById("btnAdmConfirmOrder");
+    const btnNext = document.getElementById("btnAdmNextOrderStatus");
     const btnCancel = document.getElementById("btnAdmCancelOrder");
 
-    if (btnAdvance) {
-      btnAdvance.textContent = st.nextLabel;
-      btnAdvance.disabled = !st.next;
+    if (btnConfirm) {
+      btnConfirm.disabled = order.status !== "PENDING";
+    }
+    if (btnNext) {
+      btnNext.disabled = order.status !== "CONFIRMED" && order.status !== "SHIPPING";
+      btnNext.textContent =
+        order.status === "CONFIRMED"
+          ? "Chuyển trạng thái tiếp (Đang giao)"
+          : order.status === "SHIPPING"
+          ? "Chuyển trạng thái tiếp (Hoàn tất)"
+          : "Chuyển trạng thái tiếp";
     }
     if (btnCancel) {
       btnCancel.disabled = order.status === "COMPLETED" || order.status === "CANCELLED";
@@ -246,28 +255,32 @@
 
     document.getElementById("btnBackToAdmOrders")?.addEventListener("click", showListView);
 
-    document.getElementById("btnAdmAdvanceOrder")?.addEventListener("click", () => {
+    function advanceCurrentOrder(expectedNext) {
       const store = window.tsportStore;
       if (!store || !currentOrderId) return;
       const order = (store.getOrders() || []).find((o) => Number(o.id) === Number(currentOrderId));
       if (!order) return;
 
       const st = getStatusMeta(order.status);
-      if (!st.next) return;
+      const nextStatus = expectedNext || st.next;
+      if (!nextStatus) return;
 
       try {
         if (typeof store.updateOrderStatus === "function") {
-          store.updateOrderStatus(order.id, st.next);
+          store.updateOrderStatus(order.id, nextStatus);
         } else {
-          order.status = st.next;
+          order.status = nextStatus;
           store.save();
         }
-        showToast(`Đã chuyển đơn ${order.order_code} sang ${st.next}!`, "success");
+        showToast(`Đã chuyển đơn ${order.order_code} sang ${nextStatus}!`, "success");
         openOrderDetail(order.id);
       } catch (err) {
         showToast(err.message || "Không thể cập nhật trạng thái đơn.", "error");
       }
-    });
+    }
+
+    document.getElementById("btnAdmConfirmOrder")?.addEventListener("click", () => advanceCurrentOrder("CONFIRMED"));
+    document.getElementById("btnAdmNextOrderStatus")?.addEventListener("click", () => advanceCurrentOrder(null));
 
     document.getElementById("btnAdmCancelOrder")?.addEventListener("click", () => {
       const store = window.tsportStore;
