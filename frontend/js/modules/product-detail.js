@@ -1,12 +1,9 @@
 /**
- * TSPORT — MODULE CHI TIẾT SẢN PHẨM & BIẾN THỂ SKU (PDP)
- * Tính năng:
- * - Ảnh lớn + Gallery thumbnails ảnh nhỏ (bấm thumbnail chuyển ảnh lớn)
- * - Thương hiệu, Thông số kỹ thuật (Specs)
- * - Chọn Size - Màu -> Tự động đổi giá / tồn kho theo SKU
- * - Chọn ĐỦ biến thể mới cho "Thêm vào giỏ" (chặn bấm khi chưa chọn đủ)
- * - Gọi module Giỏ hàng (Store cart), cập nhật badge giỏ trên Header
- * - Nhãn Mới / Cũ, Khối minh bạch mô tả hao mòn, số lượng/quả theo lô
+ * TSPORT — MODULE CHI TIẾT SẢN PHẨM TỐI GIẢN + XEM 3D 360°
+ * - Trình xem 3D Three.js xoay mượt bằng chuột (damping 60fps) + thu phóng + đổi màu theo biến thể
+ * - Chuyển đổi linh hoạt giữa chế độ Xem 3D 360° và Ảnh sản phẩm 2D
+ * - Chọn biến thể Màu sắc & Trọng lượng/Size -> cập nhật giá, tồn kho, nút Thêm vào giỏ & Mua ngay
+ * - Hiển thị phân biệt sản phẩm Mới (THÔNG TIN BIẾN THỂ) và Đã qua sử dụng (TÌNH TRẠNG THỰC TẾ)
  */
 
 (function () {
@@ -15,11 +12,26 @@
   let selectedColor = null;
   let matchingSku = null;
   let currentQuantity = 1;
+  let viewer3D = null;
+  let currentViewMode = "3d"; // "3d" | "2d"
 
   function initProductDetailModule() {
     const params = getUrlParams();
     const prodId = Number(params.id) || 1;
+    initPdpHeaderSearch();
     loadProduct(prodId);
+  }
+
+  function initPdpHeaderSearch() {
+    const form = document.getElementById("pdpSearchForm");
+    const input = document.getElementById("pdpSearchInput");
+    if (!form || !input) return;
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      window.location.href = q ? `shop.html?q=${encodeURIComponent(q)}` : "shop.html";
+    });
   }
 
   function loadProduct(id) {
@@ -28,458 +40,449 @@
 
     currentProduct = store.getProductById(id);
     if (!currentProduct) {
-      alert("⚠️ Không tìm thấy sản phẩm này!");
       window.location.href = "shop.html";
       return;
     }
 
     renderProductInfo(currentProduct);
-    renderGallery(currentProduct);
+    renderGalleryAnd3D(currentProduct);
     renderSkuVariants(currentProduct);
     renderSpecifications(currentProduct);
+    renderSideInfoCard(currentProduct);
     trackRecentView(currentProduct.id);
-    renderRatingAndReviews(currentProduct.id);
     bindEvents();
   }
 
-  // THEO DÕI SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)
   function trackRecentView(productId) {
     try {
       let recent = JSON.parse(localStorage.getItem("tsport_recent_views") || "[]");
       if (!Array.isArray(recent)) recent = [];
-      recent = recent.filter(id => id !== productId);
+      recent = recent.filter((id) => id !== productId);
       recent.unshift(productId);
       if (recent.length > 8) recent = recent.slice(0, 8);
       localStorage.setItem("tsport_recent_views", JSON.stringify(recent));
     } catch (_) {}
   }
 
-  // RENDER ĐÁNH GIÁ & NHẬN XÉT (SRS)
-  function renderRatingAndReviews(productId) {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    const ratingInfo = store.getProductRating(productId);
-    const reviews = store.getReviews(productId);
-
-    // Cập nhật điểm trên thanh tiêu đề
-    const scoreEl = document.getElementById("pdpRatingScore");
-    const countLink = document.getElementById("pdpReviewCountLink");
-    if (scoreEl) scoreEl.textContent = ratingInfo.avgRating;
-    if (countLink) countLink.textContent = `${ratingInfo.count} đánh giá từ khách mua hàng`;
-
-    // Cập nhật tóm tắt lớn
-    const bigScore = document.getElementById("pdpReviewBigScore");
-    const bigStars = document.getElementById("pdpReviewBigStars");
-    const bigSub = document.getElementById("pdpReviewBigSub");
-    const countBadge = document.getElementById("pdpReviewCountBadge");
-
-    if (bigScore) bigScore.textContent = ratingInfo.avgRating;
-    if (bigStars) {
-      const fullStars = Math.round(Number(ratingInfo.avgRating) || 5);
-      bigStars.innerHTML = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
-    }
-    if (bigSub) bigSub.textContent = `Dựa trên ${ratingInfo.count} nhận xét thực tế`;
-    if (countBadge) countBadge.textContent = `${ratingInfo.count} đánh giá`;
-
-    // Kiểm tra quyền gửi đánh giá (chỉ khách có đơn hàng COMPLETED)
-    const currentUser = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || { id: 2, full_name: "Nguyễn Văn An" };
-    const canReview = store.canUserReviewProduct(productId, currentUser.id);
-
-    const formWrap = document.getElementById("pdpReviewFormWrap");
-    const permBox = document.getElementById("pdpReviewPermissionBox");
-
-    if (canReview) {
-      if (formWrap) formWrap.style.display = "block";
-      if (permBox) {
-        permBox.innerHTML = `
-          <div style="color:#16A34A; font-weight:700; font-size:13px; margin-bottom:4px;">
-            ✓ BẠN ĐỦ ĐIỀU KIỆN ĐÁNH GIÁ:
-          </div>
-          <div style="font-size:12px; color:#14532D;">
-            Hệ thống xác nhận bạn đã hoàn tất đơn hàng chứa sản phẩm này. Hãy để lại đánh giá để chia sẻ với cộng đồng!
-          </div>
-        `;
-        permBox.style.background = "#F0FDF4";
-        permBox.style.borderColor = "#BBF7D0";
-      }
-    } else {
-      if (formWrap) formWrap.style.display = "none";
-      if (permBox) {
-        permBox.innerHTML = `
-          <strong style="color:#C2410C; font-size:13px; display:block; margin-bottom:4px;">🛡️ QUY ĐỊNH ĐÁNH GIÁ SẢN PHẨM:</strong>
-          <p style="font-size:12px; color:#7C2D12; margin:0; line-height:1.5;">
-            Chỉ những khách hàng đã mua và có đơn hàng ở trạng thái <strong>"Đã hoàn thành" (COMPLETED)</strong> mới được gửi đánh giá sao và nhận xét thực tế.
-          </p>
-        `;
-        permBox.style.background = "#FFF7ED";
-        permBox.style.borderColor = "#FED7AA";
-      }
-    }
-
-    // Danh sách nhận xét
-    const listWrap = document.getElementById("pdpReviewsListWrap");
-    if (listWrap) {
-      if (reviews.length === 0) {
-        listWrap.innerHTML = `
-          <div style="text-align:center; padding:30px; color:#94A3B8; background:#F8FAFC; border-radius:6px;">
-            Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên trải nghiệm và chia sẻ!
-          </div>
-        `;
-      } else {
-        listWrap.innerHTML = reviews.map((r) => `
-          <div style="border-bottom:1px solid #E2E8F0; padding-bottom:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-              <div style="display:flex; align-items:center; gap:8px;">
-                <strong style="font-size:14px; color:#0F172A;">${escapeHtml(r.user_name)}</strong>
-                <span class="badge" style="background:#DCFCE7; color:#15803D; font-size:10px;">✓ Đã mua hàng</span>
-              </div>
-              <span style="font-size:11px; color:#94A3B8;">${escapeHtml(r.created_at)}</span>
-            </div>
-            <div style="color:#F59E0B; font-size:14px; margin-bottom:6px;">
-              ${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}
-            </div>
-            <p style="margin:0; font-size:13px; color:#334155; line-height:1.5;">
-              ${escapeHtml(r.comment)}
-            </p>
-          </div>
-        `).join("");
-      }
-    }
-  }
-
-  // 1. RENDER THÔNG TIN TỔNG QUAN & HÀNG CŨ
+  // 1. THÔNG TIN CƠ BẢN, BREADCRUMB & TRẠNG THÁI NAVBAR
   function renderProductInfo(prod) {
     const store = window.tsportStore;
-    const brand = store ? store.getBrandById(prod.brand_id) : null;
-    const sport = store ? store.getSportById(prod.sport_id) : null;
+    const isUsed = prod.condition_type === "CU";
 
-    document.title = `${prod.name} | Tsport Store`;
+    document.title = `${prod.name} | Tsport`;
 
-    // Breadcrumb & Thương hiệu
-    const brandLabel = document.getElementById("pdpBrandName");
-    if (brandLabel) brandLabel.textContent = brand ? brand.name : "Tsport Official";
+    const sportObj = store.getSports().find((s) => Number(s.id) === Number(prod.sport_id));
+    const catObj = store.getCategories().find((c) => Number(c.id) === Number(prod.category_id));
+    const brandObj = store.getBrands().find((b) => Number(b.id) === Number(prod.brand_id));
 
+    const sportName = sportObj ? sportObj.name : "Thể thao";
+    const catName = catObj ? catObj.name : "Sản phẩm";
+    const brandName = brandObj ? brandObj.name : "Tsport";
+
+    // Highlight nav link theo Mới / Đồ cũ
+    const navShop = document.getElementById("pdpNavShopLink");
+    const navUsed = document.getElementById("pdpNavUsedLink");
+    if (navShop && navUsed) {
+      navShop.classList.toggle("is-active", !isUsed);
+      navUsed.classList.toggle("is-active", isUsed);
+    }
+
+    // Breadcrumb
+    const bcSport = document.getElementById("pdpBreadcrumbSport");
+    const bcCat = document.getElementById("pdpBreadcrumbCat");
+    const bcName = document.getElementById("pdpBreadcrumbName");
+    if (bcSport) {
+      bcSport.textContent = sportName;
+      bcSport.href = sportObj ? `shop.html?sport=${sportObj.id}` : "shop.html";
+    }
+    if (bcCat) {
+      bcCat.textContent = catName;
+      bcCat.href = catObj ? `shop.html?cat=${catObj.id}` : "shop.html";
+    }
+    if (bcName) bcName.textContent = prod.name;
+
+    // Condition pill
+    const badgeWrap = document.getElementById("pdpConditionBadgeWrap");
+    if (badgeWrap) {
+      badgeWrap.innerHTML = `<span class="ts-pdp-cond-pill ${isUsed ? "is-used" : ""}">${isUsed ? "Đã qua sử dụng" : "Mới"}</span>`;
+    }
+
+    // Title, meta, description
     const titleEl = document.getElementById("pdpTitle");
     if (titleEl) titleEl.textContent = prod.name;
 
+    const metaEl = document.getElementById("pdpMetaPath");
+    if (metaEl) metaEl.textContent = `${brandName} / ${sportName} / ${catName}`;
+
     const descEl = document.getElementById("pdpDesc");
-    if (descEl) descEl.textContent = prod.description || "Sản phẩm thể thao chính hãng phân phối bởi Tsport.";
-
-    // Badge Mới / Cũ
-    const badgeWrap = document.getElementById("pdpConditionBadgeWrap");
-    const isUsed = prod.condition_type === "CU";
-    if (badgeWrap) {
-      badgeWrap.innerHTML = `
-        <span class="tsport-badge-condition ${isUsed ? 'cu' : 'moi'}">
-          ${isUsed ? 'ĐỒ CŨ MINH BẠCH' : 'HÀNG MỚI CHÍNH HÃNG 100%'}
-        </span>
-        ${sport ? `<span class="badge badge-sport" style="margin-left:8px;">${escapeHtml(sport.name)}</span>` : ''}
-        ${prod.status === 'INACTIVE' ? `<span class="badge badge-inactive" style="margin-left:8px; font-size:12px; padding:4px 8px;">○ TẠM ẨN / NGỪNG KINH DOANH</span>` : ''}
-      `;
-    }
-
-    // Khối Hàng Cũ (Độ hao mòn, mô tả chi tiết, số lượng/lô)
-    const usedBox = document.getElementById("pdpUsedGoodsBox");
-    if (usedBox) {
-      if (isUsed) {
-        usedBox.style.display = "block";
-        const lotInfo = prod.skus && prod.skus.length && prod.skus[0].unit === "LO"
-          ? `<div class="tsport-lot-info">📦 Đóng gói: ${prod.skus[0].quantity_per_lot} quả / lô (hộp)</div>`
-          : "";
-
-        usedBox.innerHTML = `
-          <div class="tsport-used-title">
-            <span>🛡️</span>
-            <span>CHỨNG NHẬN ĐỒ CŨ MINH BẠCH TSPORT (ĐÃ KIỂM ĐỊNH)</span>
-          </div>
-          <div class="tsport-used-desc">
-            <strong>Mô tả hao mòn thực tế:</strong> ${escapeHtml(prod.wear_description || 'Đã qua sử dụng, khung và bề mặt còn nguyên bản.')}
-          </div>
-          ${lotInfo}
-        `;
-      } else {
-        usedBox.style.display = "none";
-      }
+    if (descEl) {
+      descEl.textContent =
+        prod.description ||
+        "Sản phẩm thể thao chính hãng tại Tsport; vui lòng chọn đúng màu sắc và trọng lượng/kích cỡ trước khi thêm vào giỏ.";
     }
   }
 
-  // 2. RENDER GALLERY: ẢNH LỚN + THUMBNAILS
-  function renderGallery(prod) {
+  // 2. KHỞI TẠO TRÌNH XEM 3D 360° & GALLERY ẢNH
+  function renderGalleryAnd3D(prod) {
+    const stage3D = document.getElementById("pdp3DStage");
     const mainImg = document.getElementById("pdpMainImage");
     const thumbsWrap = document.getElementById("pdpThumbsWrap");
-    if (!mainImg || !thumbsWrap) return;
+    const captionEl = document.getElementById("pdpImageCaption");
+    const isUsed = prod.condition_type === "CU";
 
-    const images = (prod.images && prod.images.length > 0)
-      ? prod.images
-      : [{ id: 1, image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600", is_primary: true }];
+    const fallbackImg = "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800";
+    const images = prod.images && prod.images.length ? prod.images : [{ image_url: fallbackImg, is_primary: true }];
+    const primary = images.find((i) => i.is_primary) || images[0];
 
-    const primaryImg = images.find((i) => i.is_primary) || images[0];
-    mainImg.src = primaryImg.image_url;
+    if (mainImg) {
+      mainImg.src = primary.image_url;
+      mainImg.alt = prod.name;
+      mainImg.onerror = () => {
+        mainImg.src = fallbackImg;
+      };
+    }
 
-    thumbsWrap.innerHTML = images.map((img, idx) => `
-      <div class="tsport-pdp-thumb-item ${img.image_url === primaryImg.image_url ? 'is-active' : ''}" data-src="${escapeHtml(img.image_url)}">
-        <img src="${escapeHtml(img.image_url)}" alt="Ảnh thumbnail ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
-      </div>
-    `).join("");
+    if (captionEl) {
+      captionEl.textContent = `${isUsed ? "ẢNH THỰC TẾ" : "ẢNH SẢN PHẨM"} / 01`;
+    }
 
-    // Bắt sự kiện click thumbnail đổi ảnh lớn
-    thumbsWrap.querySelectorAll(".tsport-pdp-thumb-item").forEach((thumb) => {
-      thumb.addEventListener("click", () => {
-        thumbsWrap.querySelectorAll(".tsport-pdp-thumb-item").forEach(t => t.classList.remove("is-active"));
-        thumb.classList.add("is-active");
-        mainImg.style.opacity = "0.4";
-        setTimeout(() => {
-          mainImg.src = thumb.dataset.src;
-          mainImg.style.opacity = "1";
-        }, 120);
+    // Khởi tạo Three.js 3D Viewer
+    if (stage3D && typeof window.TsportProduct3DViewer === "function") {
+      viewer3D = new window.TsportProduct3DViewer(stage3D);
+      const initialColor = prod.skus && prod.skus[0] ? prod.skus[0].color : "";
+      viewer3D.loadProductModel(prod, initialColor);
+    }
+
+    // Render thumbnails: ô đầu tiên là 3D 360°, tiếp theo là các ảnh sản phẩm
+    if (thumbsWrap) {
+      const thumbItems = [];
+      thumbItems.push(`
+        <button type="button" class="ts-pdp-thumb ts-pdp-thumb-3d is-active" data-thumb-mode="3d" aria-label="Xem mô hình 3D 360 độ">
+          <span class="ts-pdp-thumb-3d-main">3D</span>
+          <span class="ts-pdp-thumb-3d-sub">Xoay 360°</span>
+        </button>
+      `);
+
+      images.slice(0, 4).forEach((img, idx) => {
+        const num = String(idx + 1).padStart(2, "0");
+        thumbItems.push(`
+          <button type="button" class="ts-pdp-thumb" data-thumb-mode="2d" data-img-url="${escapeHtml(img.image_url)}" data-img-index="${num}" aria-label="Xem ảnh ${idx + 1}">
+            <img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(prod.name)} - Ảnh ${idx + 1}" onerror="this.src='${fallbackImg}'" />
+            <span class="ts-pdp-thumb-label">Ảnh ${idx + 1}</span>
+          </button>
+        `);
       });
-    });
+
+      thumbsWrap.innerHTML = thumbItems.join("");
+    }
+
+    setMediaMode("3d");
   }
 
-  // 3. RENDER BIẾN THỂ SKU (SIZE & MÀU SẮC)
-  function renderSkuVariants(prod) {
-    const sizeWrap = document.getElementById("pdpSizeOptions");
-    const colorWrap = document.getElementById("pdpColorOptions");
-    if (!sizeWrap || !colorWrap) return;
+  function setMediaMode(mode, imgUrl, imgIndexStr) {
+    currentViewMode = mode;
+    const stage3D = document.getElementById("pdp3DStage");
+    const mainImg = document.getElementById("pdpMainImage");
+    const bar3D = document.getElementById("pdp3DBar");
+    const captionEl = document.getElementById("pdpImageCaption");
+    const btn3D = document.getElementById("btnMode3D");
+    const btn2D = document.getElementById("btnMode2D");
+    const isUsed = currentProduct && currentProduct.condition_type === "CU";
 
-    const skus = prod.skus || [];
-
-    // Danh sách Size và Màu duy nhất
-    const uniqueSizes = [...new Set(skus.map((s) => s.size).filter(Boolean))];
-    const uniqueColors = [...new Set(skus.map((s) => s.color).filter(Boolean))];
-
-    // Render Size pills
-    if (uniqueSizes.length > 0) {
-      document.getElementById("pdpSizeSection").style.display = "block";
-      sizeWrap.innerHTML = uniqueSizes.map((size) => `
-        <button type="button" class="tsport-variant-pill js-size-pill" data-size="${escapeHtml(size)}">
-          ${escapeHtml(size)}
-        </button>
-      `).join("");
+    if (mode === "3d") {
+      stage3D?.classList.remove("is-hidden");
+      bar3D?.classList.remove("is-hidden");
+      mainImg?.classList.add("is-hidden");
+      captionEl?.classList.add("is-hidden");
+      btn3D?.classList.add("is-active");
+      btn3D?.setAttribute("aria-selected", "true");
+      btn2D?.classList.remove("is-active");
+      btn2D?.setAttribute("aria-selected", "false");
+      viewer3D?.resize();
     } else {
-      document.getElementById("pdpSizeSection").style.display = "none";
-      selectedSize = "-"; // Mặc định không cần chọn size
-    }
+      stage3D?.classList.add("is-hidden");
+      bar3D?.classList.add("is-hidden");
+      mainImg?.classList.remove("is-hidden");
+      captionEl?.classList.remove("is-hidden");
+      btn3D?.classList.remove("is-active");
+      btn3D?.setAttribute("aria-selected", "false");
+      btn2D?.classList.add("is-active");
+      btn2D?.setAttribute("aria-selected", "true");
 
-    // Render Color pills
-    if (uniqueColors.length > 0) {
-      document.getElementById("pdpColorSection").style.display = "block";
-      colorWrap.innerHTML = uniqueColors.map((color) => `
-        <button type="button" class="tsport-variant-pill js-color-pill" data-color="${escapeHtml(color)}">
-          ${escapeHtml(color)}
-        </button>
-      `).join("");
-    } else {
-      document.getElementById("pdpColorSection").style.display = "none";
-      selectedColor = "-"; // Mặc định không cần chọn màu
-    }
-
-    // Nếu chỉ có 1 SKU duy nhất, tự động chọn sẵn
-    if (skus.length === 1) {
-      if (uniqueSizes.length > 0) {
-        selectedSize = uniqueSizes[0];
-        sizeWrap.querySelector(".js-size-pill")?.classList.add("is-active");
+      if (imgUrl && mainImg) mainImg.src = imgUrl;
+      if (captionEl) {
+        captionEl.textContent = `${isUsed ? "ẢNH THỰC TẾ" : "ẢNH SẢN PHẨM"} / ${imgIndexStr || "01"}`;
       }
-      if (uniqueColors.length > 0) {
-        selectedColor = uniqueColors[0];
-        colorWrap.querySelector(".js-color-pill")?.classList.add("is-active");
+    }
+  }
+
+  // 3. BIẾN THỂ MÀU SẮC & TRỌNG LƯỢNG / SIZE
+  function renderSkuVariants(prod) {
+    const skus = prod.skus || [];
+    const colorWrap = document.getElementById("pdpColorOptions");
+    const sizeWrap = document.getElementById("pdpSizeOptions");
+
+    const colors = [...new Set(skus.map((s) => s.color).filter(Boolean))];
+    const sizes = [...new Set(skus.map((s) => s.size).filter(Boolean))];
+
+    if (colorWrap) {
+      if (colors.length) {
+        colorWrap.innerHTML = colors
+          .map(
+            (color, idx) => `
+          <button type="button" class="ts-pdp-var-btn js-color-pill ${idx === 0 ? "is-active" : ""}" data-color="${escapeHtml(color)}">
+            ${escapeHtml(color)}
+          </button>
+        `
+          )
+          .join("");
+        selectedColor = colors[0];
+      } else {
+        document.getElementById("pdpColorSection").style.display = "none";
+      }
+    }
+
+    if (sizeWrap) {
+      if (sizes.length) {
+        sizeWrap.innerHTML = sizes
+          .map((size) => {
+            const anyInStock = skus.some((s) => s.size === size && Number(s.stock) > 0);
+            return `
+              <button
+                type="button"
+                class="ts-pdp-var-btn js-size-pill ${!anyInStock ? "is-out" : ""}"
+                data-size="${escapeHtml(size)}"
+                ${!anyInStock ? "disabled" : ""}
+              >
+                ${escapeHtml(size)}${!anyInStock ? " • hết" : ""}
+              </button>
+            `;
+          })
+          .join("");
+
+        // Chọn sẵn size đầu tiên còn hàng
+        const firstAvailable = sizes.find((sz) => skus.some((s) => s.size === sz && Number(s.stock) > 0)) || sizes[0];
+        selectedSize = firstAvailable;
+        const activeBtn = sizeWrap.querySelector(`.js-size-pill[data-size="${CSS.escape(firstAvailable)}"]`);
+        if (activeBtn) activeBtn.classList.add("is-active");
+      } else {
+        document.getElementById("pdpSizeSection").style.display = "none";
       }
     }
 
     updateSkuDisplay();
   }
 
-  // CẬP NHẬT GIÁ & TỒN THEO SKU ĐÃ CHỌN
   function updateSkuDisplay() {
+    if (!currentProduct) return;
+    const skus = currentProduct.skus || [];
+
+    // Đồng bộ màu mô hình 3D
+    if (viewer3D && selectedColor) {
+      viewer3D.setColorVariant(selectedColor);
+    }
+
+    matchingSku =
+      skus.find((s) => (!selectedSize || s.size === selectedSize) && (!selectedColor || s.color === selectedColor)) ||
+      skus.find((s) => !selectedColor || s.color === selectedColor) ||
+      skus[0] ||
+      null;
+
     const priceEl = document.getElementById("pdpPrice");
-    const stockStatusEl = document.getElementById("pdpStockStatus");
-    const btnAddCart = document.getElementById("btnAddToCart");
+    const oldPriceEl = document.getElementById("pdpOldPrice");
+    const stockEl = document.getElementById("pdpStockStatus");
     const hintEl = document.getElementById("pdpVariantHint");
+    const addBtn = document.getElementById("btnAddToCart");
+    const buyBtn = document.getElementById("btnBuyNow");
     const qtyInput = document.getElementById("pdpQuantity");
 
-    const skus = currentProduct ? currentProduct.skus : [];
-
-    // Tìm SKU khớp với size và màu đã chọn
-    matchingSku = skus.find((s) => {
-      const matchSize = !selectedSize || selectedSize === "-" || s.size === selectedSize;
-      const matchColor = !selectedColor || selectedColor === "-" || s.color === selectedColor;
-      return matchSize && matchColor;
-    });
-
-    // Trường hợp CHƯA CHỌN ĐỦ BIẾN THỂ
-    const needsSize = skus.some(s => s.size) && !selectedSize;
-    const needsColor = skus.some(s => s.color) && !selectedColor;
-
-    if (needsSize || needsColor || !matchingSku) {
-      const effectivePrices = skus.map(s => (s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)) ? Number(s.sale_price) : Number(s.price));
-      const minEffective = effectivePrices.length ? Math.min(...effectivePrices) : 0;
-      const minRegular = skus.length ? Math.min(...skus.map(s => Number(s.price))) : 0;
-      const hasAnySale = skus.some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
-
-      if (priceEl) {
-        if (hasAnySale) {
-          priceEl.innerHTML = `${formatMoney(minEffective)} <del style="font-size:16px; color:#94A3B8; font-weight:normal; margin-left:8px;">${formatMoney(minRegular)}</del>`;
-        } else {
-          priceEl.textContent = formatMoney(minEffective);
-        }
-      }
-      if (stockStatusEl) {
-        stockStatusEl.textContent = "Chưa chọn đủ biến thể";
-        stockStatusEl.className = "tsport-pdp-stock-status";
-      }
-      if (btnAddCart) {
-        btnAddCart.disabled = true;
-      }
-      if (hintEl) {
-        hintEl.style.display = "block";
-        hintEl.textContent = `👉 Vui lòng chọn ${needsSize && needsColor ? 'Kích thước và Màu sắc' : needsSize ? 'Kích thước' : 'Màu sắc'} trước khi thêm vào giỏ!`;
-      }
+    if (!matchingSku) {
+      if (priceEl) priceEl.textContent = "Liên hệ";
+      if (addBtn) addBtn.disabled = true;
+      if (buyBtn) buyBtn.disabled = true;
       return;
     }
 
-    // Kiểm tra sản phẩm tạm ẩn
-    if (currentProduct && currentProduct.status === 'INACTIVE') {
-      if (stockStatusEl) {
-        stockStatusEl.textContent = "○ Sản phẩm đang tạm ẩn bởi ban quản trị";
-        stockStatusEl.className = "tsport-pdp-stock-status out-stock";
-      }
-      if (btnAddCart) {
-        btnAddCart.disabled = true;
-        btnAddCart.textContent = "Sản phẩm tạm ẩn";
-        btnAddCart.style.opacity = "0.6";
-        btnAddCart.style.cursor = "not-allowed";
-      }
-      if (hintEl) {
-        hintEl.style.display = "block";
-        hintEl.textContent = "⚠️ Sản phẩm này hiện đang tạm ẩn / ngừng kinh doanh, không thể đặt hàng lúc này.";
-      }
-      return;
-    }
+    const origPrice = Number(matchingSku.price) || 0;
+    const salePrice = Number(matchingSku.sale_price) || 0;
+    const hasSale = salePrice > 0 && salePrice < origPrice;
+    const effPrice = hasSale ? salePrice : origPrice;
 
-    // Trường hợp ĐÃ CHỌN ĐỦ BIẾN THỂ
-    if (priceEl) {
-      const hasSale = matchingSku.sale_price && Number(matchingSku.sale_price) > 0 && Number(matchingSku.sale_price) < Number(matchingSku.price);
+    if (priceEl) priceEl.textContent = formatMoney(effPrice);
+    if (oldPriceEl) {
       if (hasSale) {
-        const discountPct = Math.round((1 - matchingSku.sale_price / matchingSku.price) * 100);
-        priceEl.innerHTML = `
-          <span>${formatMoney(matchingSku.sale_price)}</span>
-          <del style="font-size:16px; color:#94A3B8; font-weight:normal; margin-left:8px;">${formatMoney(matchingSku.price)}</del>
-          <span style="font-size:12px; background:#FEE2E2; color:#DC2626; padding:2px 8px; border-radius:12px; font-weight:800; margin-left:8px;">-${discountPct}% SALE</span>
-        `;
+        oldPriceEl.textContent = formatMoney(origPrice);
+        oldPriceEl.style.display = "inline";
       } else {
-        priceEl.textContent = formatMoney(matchingSku.price);
+        oldPriceEl.style.display = "none";
       }
     }
-    if (hintEl) hintEl.style.display = "none";
 
-    // Kiểm tra SKU riêng lẻ bị tạm ẩn
-    if (matchingSku.status === 'INACTIVE') {
-      if (stockStatusEl) {
-        stockStatusEl.textContent = "○ Biến thể SKU này đang tạm ngưng kinh doanh";
-        stockStatusEl.className = "tsport-pdp-stock-status out-stock";
-      }
-      if (btnAddCart) {
-        btnAddCart.disabled = true;
-        btnAddCart.textContent = "Biến thể tạm ngưng";
-        btnAddCart.style.opacity = "0.6";
-        btnAddCart.style.cursor = "not-allowed";
-      }
-      if (hintEl) {
-        hintEl.style.display = "block";
-        hintEl.textContent = "⚠️ Biến thể SKU này đang tạm ngưng kinh doanh, quý khách vui lòng chọn phân loại khác.";
-      }
-      return;
+    const unitLabel = currentProduct.unit || (matchingSku.pack_qty ? `Ống (${matchingSku.pack_qty} quả)` : "Chiếc");
+    const stock = Number(matchingSku.stock) || 0;
+    if (stockEl) {
+      stockEl.textContent = `Đơn vị: ${unitLabel} • Tồn kho biến thể: ${stock}`;
     }
 
-    if (matchingSku.stock > 0) {
-      if (stockStatusEl) {
-        stockStatusEl.textContent = `✓ Còn hàng (${matchingSku.stock} ${matchingSku.unit === 'LO' ? 'lô' : 'sản phẩm'})`;
-        stockStatusEl.className = "tsport-pdp-stock-status in-stock";
-      }
-      if (btnAddCart) {
-        btnAddCart.disabled = false;
-        btnAddCart.textContent = "Thêm vào giỏ hàng";
-        btnAddCart.style.opacity = "1";
-        btnAddCart.style.cursor = "pointer";
-      }
-      if (qtyInput) {
-        qtyInput.max = matchingSku.stock;
-        if (Number(qtyInput.value) > matchingSku.stock) qtyInput.value = matchingSku.stock;
+    if (stock > 0) {
+      if (addBtn) addBtn.disabled = false;
+      if (buyBtn) buyBtn.disabled = false;
+      if (hintEl) hintEl.style.display = "none";
+      if (qtyInput && Number(qtyInput.value) > stock) {
+        qtyInput.value = stock;
+        currentQuantity = stock;
       }
     } else {
-      if (stockStatusEl) {
-        stockStatusEl.textContent = "✕ Tạm hết hàng trong kho";
-        stockStatusEl.className = "tsport-pdp-stock-status out-stock";
-      }
-      if (btnAddCart) {
-        btnAddCart.disabled = true;
-        btnAddCart.textContent = "Tạm hết hàng";
-        btnAddCart.style.opacity = "0.6";
-        btnAddCart.style.cursor = "not-allowed";
+      if (addBtn) addBtn.disabled = true;
+      if (buyBtn) buyBtn.disabled = true;
+      if (hintEl) {
+        hintEl.textContent = "Biến thể bạn chọn hiện đã hết hàng. Vui lòng chọn màu hoặc size khác.";
+        hintEl.style.display = "block";
       }
     }
   }
 
-  // 4. BẢNG THÔNG SỐ KỸ THUẬT (SPECS)
+  // 4. BẢNG THÔNG SỐ KỸ THUẬT
   function renderSpecifications(prod) {
-    const specsTbody = document.getElementById("pdpSpecsTbody");
-    if (!specsTbody) return;
+    const tbody = document.getElementById("pdpSpecsTbody");
+    if (!tbody) return;
 
     const specs = prod.specifications || {};
     const entries = Object.entries(specs);
 
-    if (entries.length === 0) {
-      specsTbody.innerHTML = '<tr><td colspan="2" style="color:#94A3B8;">Đang cập nhật thông số chi tiết.</td></tr>';
-      return;
-    }
-
     const labelsMap = {
       weight: "Trọng lượng",
-      grip: "Chu vi cán vợt",
-      tension: "Sức căng cước tối đa",
+      grip: "Chu vi cán",
+      tension: "Mức căng khuyến nghị",
       balance: "Điểm cân bằng",
       material: "Chất liệu",
-      size: "Kích thước tiêu chuẩn",
-      width: "Độ rộng form chân",
-      usage_time: "Thời gian đã dùng",
-      condition_grade: "Tỷ lệ mới còn lại"
+      stiffness: "Độ cứng",
+      size: "Kích thước",
+      width: "Độ rộng form",
+      usage_time: "Thời gian đã sử dụng",
+      condition_grade: "Độ mới thực tế"
     };
 
-    specsTbody.innerHTML = entries.map(([key, val]) => `
-      <tr>
-        <td>${escapeHtml(labelsMap[key] || key)}</td>
-        <td>${escapeHtml(val)}</td>
-      </tr>
-    `).join("");
+    const rows = entries.length
+      ? entries.map(([k, v]) => [labelsMap[k] || k, v])
+      : [
+          ["Trọng lượng", "3U / 4U"],
+          ["Chất liệu", "Graphite"],
+          ["Độ cứng", "Trung bình - Cứng"]
+        ];
+
+    tbody.innerHTML = rows
+      .map(
+        ([label, val]) => `
+        <tr>
+          <td>${escapeHtml(label)}</td>
+          <td>${escapeHtml(val)}</td>
+        </tr>
+      `
+      )
+      .join("");
   }
 
-  // 5. GẮN SỰ KIỆN TƯƠNG TÁC
+  // 5. THẺ THÔNG TIN BÊN PHẢI (MỚI -> THÔNG TIN BIẾN THỂ | ĐỒ CŨ -> TÌNH TRẠNG THỰC TẾ)
+  function renderSideInfoCard(prod) {
+    const card = document.getElementById("pdpSideInfoCard");
+    if (!card) return;
+
+    const isUsed = prod.condition_type === "CU";
+    if (isUsed) {
+      const wearNote =
+        prod.condition_note ||
+        "Trầy nhẹ ở viền khung; không nứt, không cong. Cán còn nguyên, sử dụng tốt. Xem ảnh cận cảnh 2 và 3.";
+      card.innerHTML = `
+        <h3 class="ts-pdp-info-card-title">TÌNH TRẠNG THỰC TẾ</h3>
+        <p class="ts-pdp-info-card-text">${escapeHtml(wearNote)}</p>
+        <span class="ts-pdp-wear-badge">Có mô tả hao mòn</span>
+      `;
+    } else {
+      card.innerHTML = `
+        <h3 class="ts-pdp-info-card-title">THÔNG TIN BIẾN THỂ</h3>
+        <p class="ts-pdp-info-card-text">
+          Giá và số lượng có sẵn thay đổi theo màu và size bạn chọn.
+          Phụ kiện dạng lô/ống hiển thị số quả trong mỗi lô.
+        </p>
+      `;
+    }
+  }
+
+  // 6. GẮN SỰ KIỆN TƯƠNG TÁC
   function bindEvents() {
-    // Chọn Size
-    document.getElementById("pdpSizeOptions")?.addEventListener("click", (e) => {
-      const pill = e.target.closest(".js-size-pill");
-      if (!pill) return;
-      document.querySelectorAll(".js-size-pill").forEach(p => p.classList.remove("is-active"));
-      pill.classList.add("is-active");
-      selectedSize = pill.dataset.size;
-      updateSkuDisplay();
+    // Chuyển chế độ 3D / 2D
+    document.getElementById("btnMode3D")?.addEventListener("click", () => {
+      setMediaMode("3d");
+      document.querySelectorAll(".ts-pdp-thumb").forEach((t) => {
+        t.classList.toggle("is-active", t.dataset.thumbMode === "3d");
+      });
+    });
+
+    document.getElementById("btnMode2D")?.addEventListener("click", () => {
+      const first2D = document.querySelector('.ts-pdp-thumb[data-thumb-mode="2d"]');
+      setMediaMode("2d", first2D?.dataset.imgUrl, first2D?.dataset.imgIndex || "01");
+      document.querySelectorAll(".ts-pdp-thumb").forEach((t) => {
+        t.classList.toggle("is-active", t === first2D);
+      });
+    });
+
+    // Bấm vào thumbnail
+    document.getElementById("pdpThumbsWrap")?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".ts-pdp-thumb");
+      if (!btn) return;
+      document.querySelectorAll(".ts-pdp-thumb").forEach((t) => t.classList.remove("is-active"));
+      btn.classList.add("is-active");
+
+      if (btn.dataset.thumbMode === "3d") {
+        setMediaMode("3d");
+      } else {
+        setMediaMode("2d", btn.dataset.imgUrl, btn.dataset.imgIndex);
+      }
+    });
+
+    // Nút điều khiển 3D: Tự xoay & Đặt lại
+    const autoBtn = document.getElementById("btnToggleAutoRotate");
+    autoBtn?.addEventListener("click", () => {
+      const nextState = !autoBtn.classList.contains("is-active");
+      autoBtn.classList.toggle("is-active", nextState);
+      viewer3D?.setAutoRotate(nextState);
+    });
+
+    window.addEventListener("tsport-3d-autorotate-change", (e) => {
+      if (autoBtn && e.detail) {
+        autoBtn.classList.toggle("is-active", Boolean(e.detail.autoRotate));
+      }
+    });
+
+    document.getElementById("btnReset3DView")?.addEventListener("click", () => {
+      viewer3D?.resetView();
     });
 
     // Chọn Màu
     document.getElementById("pdpColorOptions")?.addEventListener("click", (e) => {
       const pill = e.target.closest(".js-color-pill");
-      if (!pill) return;
-      document.querySelectorAll(".js-color-pill").forEach(p => p.classList.remove("is-active"));
+      if (!pill || pill.disabled) return;
+      document.querySelectorAll(".js-color-pill").forEach((p) => p.classList.remove("is-active"));
       pill.classList.add("is-active");
       selectedColor = pill.dataset.color;
+      updateSkuDisplay();
+    });
+
+    // Chọn Size / Trọng lượng
+    document.getElementById("pdpSizeOptions")?.addEventListener("click", (e) => {
+      const pill = e.target.closest(".js-size-pill");
+      if (!pill || pill.disabled) return;
+      document.querySelectorAll(".js-size-pill").forEach((p) => p.classList.remove("is-active"));
+      pill.classList.add("is-active");
+      selectedSize = pill.dataset.size;
       updateSkuDisplay();
     });
 
     // Tăng / Giảm số lượng
     const qtyInput = document.getElementById("pdpQuantity");
     document.getElementById("btnQtyMinus")?.addEventListener("click", () => {
-      let val = Number(qtyInput.value) || 1;
+      const val = Number(qtyInput.value) || 1;
       if (val > 1) {
         qtyInput.value = val - 1;
         currentQuantity = val - 1;
@@ -487,101 +490,57 @@
     });
 
     document.getElementById("btnQtyPlus")?.addEventListener("click", () => {
-      let val = Number(qtyInput.value) || 1;
-      const max = matchingSku ? matchingSku.stock : 999;
+      const val = Number(qtyInput.value) || 1;
+      const max = matchingSku ? Number(matchingSku.stock) : 99;
       if (val < max) {
         qtyInput.value = val + 1;
         currentQuantity = val + 1;
       } else {
-        showToast(`Kho chỉ còn tối đa ${max} sản phẩm!`, "error");
+        showToast(`Kho chỉ còn tối đa ${max} sản phẩm.`, "error");
       }
     });
 
-    // NÚT THÊM VÀO GIỎ HÀNG
+    // Thêm vào giỏ
     document.getElementById("btnAddToCart")?.addEventListener("click", () => {
-      if (!matchingSku) {
-        alert("⚠️ Vui lòng chọn đầy đủ biến thể kích cỡ và màu sắc!");
-        return;
-      }
-
-      const qty = Number(document.getElementById("pdpQuantity")?.value) || 1;
-      try {
-        const store = window.tsportStore;
-        store.addToCart(currentProduct.id, matchingSku.id, qty);
-
-        // Hiển thị toast và cập nhật badge
-        showToast(`Đã thêm ${qty} x "${currentProduct.name}" vào giỏ hàng!`, "success");
-        if (typeof window.updateHeaderCartBadge === "function") {
-          window.updateHeaderCartBadge();
-        }
-      } catch (err) {
-        alert("⚠️ " + err.message);
-      }
+      addCurrentSelectionToCart(false);
     });
 
-    // CHỌN SỐ SAO ĐÁNH GIÁ (1 - 5 SAO)
-    const starPicker = document.getElementById("starPickerGroup");
-    const starValueInput = document.getElementById("reviewStarValue");
-    const starLabel = document.getElementById("reviewStarLabel");
-    const starLabelsMap = {
-      1: "1 / 5 sao (Rất tệ)",
-      2: "2 / 5 sao (Chưa hài lòng)",
-      3: "3 / 5 sao (Bình thường)",
-      4: "4 / 5 sao (Tốt)",
-      5: "5 / 5 sao (Rất hài lòng)"
-    };
+    // Mua ngay
+    document.getElementById("btnBuyNow")?.addEventListener("click", () => {
+      addCurrentSelectionToCart(true);
+    });
+  }
 
-    function highlightStars(val) {
-      if (!starPicker) return;
-      starPicker.querySelectorAll(".js-star").forEach(s => {
-        const starVal = Number(s.dataset.val);
-        s.style.color = starVal <= val ? "#F59E0B" : "#CBD5E1";
-      });
-      if (starLabel) starLabel.textContent = starLabelsMap[val] || `${val} sao`;
+  function addCurrentSelectionToCart(redirectToCheckout) {
+    if (!matchingSku || !currentProduct) return;
+    const qty = Number(document.getElementById("pdpQuantity")?.value) || 1;
+    try {
+      window.tsportStore.addToCart(currentProduct.id, matchingSku.id, qty);
+      if (typeof window.updateHeaderCartBadge === "function") {
+        window.updateHeaderCartBadge();
+      }
+      if (redirectToCheckout) {
+        window.location.href = "cart.html";
+      } else {
+        showToast(`Đã thêm ${qty} × "${currentProduct.name}" vào giỏ hàng.`, "success");
+      }
+    } catch (err) {
+      showToast(err.message || "Không thể thêm vào giỏ hàng.", "error");
     }
+  }
 
-    // Khởi tạo 5 sao
-    highlightStars(5);
+  function formatMoney(amount) {
+    return (Number(amount) || 0).toLocaleString("vi-VN") + "đ";
+  }
 
-    starPicker?.addEventListener("click", (e) => {
-      const star = e.target.closest(".js-star");
-      if (!star) return;
-      const val = Number(star.dataset.val);
-      if (starValueInput) starValueInput.value = val;
-      highlightStars(val);
-    });
-
-    // GỬI ĐÁNH GIÁ SẢN PHẨM
-    document.getElementById("formSubmitReview")?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const store = window.tsportStore;
-      if (!store || !currentProduct) return;
-
-      const rating = Number(document.getElementById("reviewStarValue")?.value) || 5;
-      const comment = document.getElementById("reviewCommentText")?.value.trim();
-      const currentUser = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || { id: 2, full_name: "Nguyễn Văn An" };
-
-      if (!comment) {
-        alert("⚠️ Vui lòng nhập nội dung nhận xét!");
-        return;
-      }
-
-      try {
-        store.addReview({
-          product_id: currentProduct.id,
-          user_id: currentUser.id,
-          user_name: currentUser.full_name || "Khách hàng Tsport",
-          rating,
-          comment
-        });
-
-        document.getElementById("reviewCommentText").value = "";
-        renderRatingAndReviews(currentProduct.id);
-        showToast("Cảm ơn bạn! Đánh giá đã được ghi nhận thành công.", "success");
-      } catch (err) {
-        alert("⚠️ " + err.message);
-      }
-    });
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   document.addEventListener("DOMContentLoaded", initProductDetailModule);
