@@ -169,7 +169,14 @@
       document.getElementById("matchDate").value = d.toISOString().split("T")[0];
     }
 
-    openModal("modalMatchForm");
+const modal = document.getElementById("modalMatchForm");
+    if (modal) {
+      modal.style.display = "flex";
+      modal.style.opacity = "1";
+      modal.style.visibility = "visible";
+      modal.style.pointerEvents = "auto";
+    }
+
   }
 
   function handleMatchSubmit(e) {
@@ -194,7 +201,8 @@
 
     try {
       store.saveMatch(data);
-      closeModal("modalMatchForm");
+      const modal = document.getElementById("modalMatchForm");
+      if (modal) modal.style.display = "none";
       renderMatchesList();
       showToast(currentEditingMatchId ? "Đã cập nhật bài đăng thành công!" : "Đăng bài giao lưu mới thành công!", "success");
     } catch (err) {
@@ -220,7 +228,13 @@
       renderMatchesList();
       showToast(`Chế độ xem: ${isAdminView ? 'Quản trị viên (Có quyền Ẩn bài vi phạm)' : 'Khách hàng cá nhân'}`, "info");
     });
-
+    // Xử lý nút X và nút Hủy bỏ đóng modal
+    document.querySelectorAll('[data-dismiss="modal"]').forEach(btn => {
+      btn.addEventListener("click", () => {
+        const modal = document.getElementById("modalMatchForm");
+        if (modal) modal.style.display = "none";
+      });
+    });
     // Thao tác trên thẻ bài viết
     document.addEventListener("click", (e) => {
       const store = window.tsportStore;
