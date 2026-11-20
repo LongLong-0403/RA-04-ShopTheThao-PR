@@ -1247,3 +1247,55 @@ body.tsport-courts-body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   TRANG ĐĂNG BÀI TÌM ĐỐI (FULL-PAGE VIEW 2 CHUẨN FIGMA)
+   ========================================================================== */
+.ts-comm-create-head {
+  margin-bottom: 24px;
+}
+
+.ts-comm-create-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(260px, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.ts-comm-create-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 26px 28px 30px;
+}
+
+.ts-comm-create-note-card {
+  background: #F8F9FA;
+  border-radius: 10px;
+  padding: 24px 26px;
+  min-height: 220px;
+}
+
+.ts-comm-create-note-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 16px 0;
+}
+
+.ts-comm-create-note-line {
+  font-size: 13px;
+  color: #6B7280;
+  line-height: 1.65;
+  margin: 0 0 12px 0;
+}
+
+@media (max-width: 900px) {
+  .ts-comm-create-layout {
+    grid-template-columns: 1fr;
+  }
+  .ts-comm-create-note-card {
+    min-height: auto;
+  }
+}

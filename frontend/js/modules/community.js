@@ -13,6 +13,48 @@
     renderSportFilterOptions();
     renderMatchesList();
     bindEvents();
+
+    const params = typeof getUrlParams === "function" ? getUrlParams() : {};
+    if (params.create === "1") {
+      showCreateView();
+    }
+  }
+
+  function showListView() {
+    const listView = document.getElementById("communityListView");
+    const createView = document.getElementById("communityCreateView");
+    if (listView) listView.style.display = "block";
+    if (createView) createView.style.display = "none";
+    document.title = "Ghép kèo thể thao | Tsport";
+    renderMatchesList();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function showCreateView() {
+    currentEditingMatchId = null;
+    const form = document.getElementById("formMatch");
+    if (form) form.reset();
+
+    const dtInput = document.getElementById("matchDateTime");
+    if (dtInput && !dtInput.value) {
+      const today = new Date();
+      const d = String(today.getDate()).padStart(2, "0");
+      const m = String(today.getMonth() + 1).padStart(2, "0");
+      dtInput.value = `${d}/${m}/${today.getFullYear()} 18:00`;
+    }
+
+    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+    const phoneEl = document.getElementById("matchContactPhone");
+    if (phoneEl && !phoneEl.value && user && user.phone) {
+      phoneEl.value = `${user.phone} / Zalo`;
+    }
+
+    const listView = document.getElementById("communityListView");
+    const createView = document.getElementById("communityCreateView");
+    if (listView) listView.style.display = "none";
+    if (createView) createView.style.display = "block";
+    document.title = "Đăng bài tìm đối | Tsport";
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function initHeaderSearch() {
@@ -117,25 +159,22 @@
       .join("");
   }
 
-  function openCreateModal() {
-    currentEditingMatchId = null;
-    const form = document.getElementById("formMatch");
-    if (form) form.reset();
+  function parseDateTimeInput(raw) {
+    const text = String(raw || "").trim();
+    const parts = text.split(/\s+/);
+    let isoDate = new Date().toISOString().split("T")[0];
+    let timeStr = "18:00";
 
-    const dateInput = document.getElementById("matchDate");
-    if (dateInput) {
-      dateInput.value = new Date().toISOString().split("T")[0];
+    if (parts[0]) {
+      const dmy = parts[0].split("/");
+      if (dmy.length === 3) {
+        isoDate = `${dmy[2]}-${dmy[1].padStart(2, "0")}-${dmy[0].padStart(2, "0")}`;
+      } else if (parts[0].includes("-")) {
+        isoDate = parts[0];
+      }
     }
-
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
-    if (user) {
-      const nameEl = document.getElementById("matchContactName");
-      const phoneEl = document.getElementById("matchContactPhone");
-      if (nameEl) nameEl.value = user.full_name || "";
-      if (phoneEl) phoneEl.value = user.phone || "";
-    }
-
-    openModal("modalMatchForm");
+    if (parts[1]) timeStr = parts[1];
+    return { match_date: isoDate, match_time: timeStr };
   }
 
   function handleMatchSubmit(e) {
@@ -143,26 +182,34 @@
     const store = window.tsportStore;
     if (!store) return;
 
+    const sportId = Number(document.getElementById("matchSportId").value);
+    const sportObj = store.getSports().find((s) => Number(s.id) === sportId);
+    const sportName = sportObj ? sportObj.name : "Thể thao";
+    const dt = parseDateTimeInput(document.getElementById("matchDateTime")?.value);
+    const location = document.getElementById("matchLocation").value.trim();
+    const level = document.getElementById("matchLevel").value;
+    const contactRaw = document.getElementById("matchContactPhone").value.trim();
+    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+
     const data = {
       id: currentEditingMatchId,
-      title: document.getElementById("matchTitle").value.trim(),
-      sport_id: Number(document.getElementById("matchSportId").value),
-      match_date: document.getElementById("matchDate").value,
-      match_time: document.getElementById("matchTime").value.trim(),
-      location: document.getElementById("matchLocation").value.trim(),
-      slots_needed: Number(document.getElementById("matchSlots")?.value) || 2,
-      level: document.getElementById("matchLevel").value,
-      price_share: document.getElementById("matchPriceShare")?.value || "Chia đều sân",
-      contact_name: document.getElementById("matchContactName").value.trim(),
-      contact_phone: document.getElementById("matchContactPhone").value.trim(),
-      description: document.getElementById("matchDesc")?.value || ""
+      title: `Giao lưu ${sportName} - ${location.split(",")[0]}`,
+      sport_id: sportId,
+      match_date: dt.match_date,
+      match_time: dt.match_time,
+      location,
+      slots_needed: 2,
+      level,
+      price_share: "Chia đều sân",
+      contact_name: (user && user.full_name) || "Thành viên Tsport",
+      contact_phone: contactRaw.replace(/\s*\/\s*zalo/i, "").trim(),
+      description: ""
     };
 
     try {
       store.saveMatch(data);
-      closeModal("modalMatchForm");
-      renderMatchesList();
-      showToast("Đã đăng bài tìm kèo thành công!", "success");
+      showToast("Đã đăng bài ghép kèo thành công!", "success");
+      showListView();
     } catch (err) {
       showToast(err.message || "Không thể đăng bài lúc này.", "error");
     }
@@ -174,7 +221,11 @@
     document.getElementById("filterMatchLevel")?.addEventListener("change", renderMatchesList);
     document.getElementById("btnApplyMatchFilter")?.addEventListener("click", renderMatchesList);
 
-    document.getElementById("btnOpenCreateMatch")?.addEventListener("click", openCreateModal);
+    document.getElementById("btnOpenCreateMatch")?.addEventListener("click", showCreateView);
+    document.getElementById("btnBackToMatchesList")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      showListView();
+    });
     document.getElementById("formMatch")?.addEventListener("submit", handleMatchSubmit);
 
     document.getElementById("matchesGrid")?.addEventListener("click", (e) => {

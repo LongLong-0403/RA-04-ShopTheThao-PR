@@ -59,61 +59,146 @@
   </nav>
 
   <!-- ==========================================
-       2. NỘI DUNG CHÍNH: GHÉP KÈO THỂ THAO
+       2. NỘI DUNG CHÍNH: GHÉP KÈO & ĐĂNG BÀI TÌM ĐỐI
        ========================================== -->
   <main class="container ts-comm-v2-main">
 
-    <!-- Breadcrumb -->
-    <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
-      <a href="../index.html">Trang chủ</a>
-      <span>/</span>
-      <span class="is-current">Có sân rồi. Tìm đồng đội thôi.</span>
-    </nav>
+    <!-- VIEW 1: DANH SÁCH BÀI ĐĂNG TÌM ĐỐI -->
+    <div id="communityListView">
+      <!-- Breadcrumb -->
+      <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <span class="is-current">Có sân rồi. Tìm đồng đội thôi.</span>
+      </nav>
 
-    <!-- Hàng tiêu đề + Nút Đăng bài tìm kèo -->
-    <div class="ts-comm-v2-head-row">
-      <div>
-        <h1 class="ts-comm-v2-title">Có sân rồi. Tìm đồng đội thôi.</h1>
-        <p class="ts-comm-v2-sub">Tìm đối giao lưu theo môn thể thao, thời gian và trình độ.</p>
+      <!-- Hàng tiêu đề + Nút Đăng bài tìm kèo -->
+      <div class="ts-comm-v2-head-row">
+        <div>
+          <h1 class="ts-comm-v2-title">Có sân rồi. Tìm đồng đội thôi.</h1>
+          <p class="ts-comm-v2-sub">Tìm đối giao lưu theo môn thể thao, thời gian và trình độ.</p>
+        </div>
+
+        <button type="button" class="ts-comm-v2-create-btn" id="btnOpenCreateMatch">
+          + Đăng bài tìm kèo
+        </button>
       </div>
 
-      <button type="button" class="ts-comm-v2-create-btn" id="btnOpenCreateMatch">
-        + Đăng bài tìm kèo
-      </button>
+      <!-- Thanh lọc 4 cột: Môn thể thao | Thời gian | Trình độ | Tìm bài đăng -->
+      <section class="ts-comm-v2-filter-bar" aria-label="Lọc bài đăng tìm kèo">
+        <div class="ts-comm-v2-filter-item">
+          <label for="filterMatchSport" class="ts-comm-v2-filter-label">Môn thể thao</label>
+          <select id="filterMatchSport" class="ts-comm-v2-filter-control"></select>
+        </div>
+
+        <div class="ts-comm-v2-filter-item">
+          <label for="filterMatchDate" class="ts-comm-v2-filter-label">Thời gian</label>
+          <input type="date" id="filterMatchDate" class="ts-comm-v2-filter-control" />
+        </div>
+
+        <div class="ts-comm-v2-filter-item">
+          <label for="filterMatchLevel" class="ts-comm-v2-filter-label">Trình độ</label>
+          <select id="filterMatchLevel" class="ts-comm-v2-filter-control">
+            <option value="ALL">Tất cả</option>
+            <option value="Mới chơi">Mới chơi</option>
+            <option value="Trung bình">Trung bình</option>
+            <option value="Khá">Khá</option>
+            <option value="Chuyên nghiệp">Chuyên nghiệp</option>
+          </select>
+        </div>
+
+        <div class="ts-comm-v2-filter-item">
+          <button type="button" class="ts-comm-v2-search-btn" id="btnApplyMatchFilter">Tìm bài đăng</button>
+        </div>
+      </section>
+
+      <!-- Lưới 2 cột các bài đăng tìm đối -->
+      <section class="ts-comm-v2-grid" id="matchesGrid">
+        <!-- Render động từ community.js -->
+      </section>
     </div>
 
-    <!-- Thanh lọc 4 cột: Môn thể thao | Thời gian | Trình độ | Tìm bài đăng -->
-    <section class="ts-comm-v2-filter-bar" aria-label="Lọc bài đăng tìm kèo">
-      <div class="ts-comm-v2-filter-item">
-        <label for="filterMatchSport" class="ts-comm-v2-filter-label">Môn thể thao</label>
-        <select id="filterMatchSport" class="ts-comm-v2-filter-control"></select>
-      </div>
+    <!-- VIEW 2: ĐĂNG BÀI TÌM ĐỐI (FULL-PAGE CHUẨN FIGMA) -->
+    <div id="communityCreateView" style="display:none;">
+      <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <a href="community.html" id="btnBackToMatchesList">Ghép kèo</a>
+        <span>/</span>
+        <span class="is-current">Đăng bài tìm đối</span>
+      </nav>
 
-      <div class="ts-comm-v2-filter-item">
-        <label for="filterMatchDate" class="ts-comm-v2-filter-label">Thời gian</label>
-        <input type="date" id="filterMatchDate" class="ts-comm-v2-filter-control" />
-      </div>
+      <header class="ts-comm-create-head">
+        <h1 class="ts-comm-v2-title">Đăng bài tìm đối</h1>
+        <p class="ts-comm-v2-sub">Thông tin liên hệ được hiển thị trong bài đăng.</p>
+      </header>
 
-      <div class="ts-comm-v2-filter-item">
-        <label for="filterMatchLevel" class="ts-comm-v2-filter-label">Trình độ</label>
-        <select id="filterMatchLevel" class="ts-comm-v2-filter-control">
-          <option value="ALL">Tất cả</option>
-          <option value="Mới chơi">Mới chơi</option>
-          <option value="Trung bình">Trung bình</option>
-          <option value="Khá">Khá</option>
-          <option value="Chuyên nghiệp">Chuyên nghiệp</option>
-        </select>
-      </div>
+      <div class="ts-comm-create-layout">
+        <!-- Cột trái: Form đăng bài -->
+        <section class="ts-comm-create-card">
+          <form id="formMatch">
+            <div class="ts-courts-v2-field">
+              <label for="matchSportId" class="ts-courts-v2-label">Môn thể thao *</label>
+              <select id="matchSportId" class="ts-courts-v2-input" required></select>
+            </div>
 
-      <div class="ts-comm-v2-filter-item">
-        <button type="button" class="ts-comm-v2-search-btn" id="btnApplyMatchFilter">Tìm bài đăng</button>
-      </div>
-    </section>
+            <div class="ts-courts-v2-field">
+              <label for="matchDateTime" class="ts-courts-v2-label">Ngày và giờ thi đấu *</label>
+              <input
+                type="text"
+                id="matchDateTime"
+                class="ts-courts-v2-input"
+                placeholder="08/11/2026 18:00"
+                required
+              />
+            </div>
 
-    <!-- Lưới 2 cột các bài đăng tìm đối -->
-    <section class="ts-comm-v2-grid" id="matchesGrid">
-      <!-- Render động từ community.js -->
-    </section>
+            <div class="ts-courts-v2-field">
+              <label for="matchLocation" class="ts-courts-v2-label">Địa điểm *</label>
+              <input
+                type="text"
+                id="matchLocation"
+                class="ts-courts-v2-input"
+                placeholder="Sân cầu lông số 1, Thanh Xuân, Hà Nội"
+                required
+              />
+            </div>
+
+            <div class="ts-courts-v2-field">
+              <label for="matchLevel" class="ts-courts-v2-label">Trình độ yêu cầu *</label>
+              <select id="matchLevel" class="ts-courts-v2-input">
+                <option value="Mới chơi">Mới chơi</option>
+                <option value="Trung bình" selected>Trung bình</option>
+                <option value="Khá">Khá</option>
+                <option value="Chuyên nghiệp">Chuyên nghiệp</option>
+              </select>
+            </div>
+
+            <div class="ts-courts-v2-field">
+              <label for="matchContactPhone" class="ts-courts-v2-label">Thông tin liên hệ *</label>
+              <input
+                type="text"
+                id="matchContactPhone"
+                class="ts-courts-v2-input"
+                placeholder="0901234567 / Zalo"
+                required
+              />
+            </div>
+
+            <button type="submit" class="ts-courts-v2-submit" style="margin-top:12px;">
+              Đăng bài ghép kèo
+            </button>
+          </form>
+        </section>
+
+        <!-- Cột phải: Trước khi đăng -->
+        <aside class="ts-comm-create-note-card">
+          <h2 class="ts-comm-create-note-title">Trước khi đăng</h2>
+          <p class="ts-comm-create-note-line">Chọn đúng môn, giờ và địa điểm.</p>
+          <p class="ts-comm-create-note-line">Bạn có thể đóng bài khi đã tìm đủ người hoặc hủy bài trong tài khoản.</p>
+        </aside>
+      </div>
+    </div>
 
   </main>
 
@@ -148,77 +233,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- MODAL ĐĂNG / SỬA BÀI TÌM KÈO -->
-  <div class="modal-backdrop" id="modalMatchForm">
-    <div class="modal" style="max-width:560px;">
-      <div class="modal-header">
-        <h3 class="modal-title" id="modalMatchTitle">Đăng bài tìm kèo giao lưu</h3>
-        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
-      </div>
-
-      <form id="formMatch">
-        <div class="modal-body">
-          <div class="ts-courts-v2-field">
-            <label for="matchTitle" class="ts-courts-v2-label">Tiêu đề bài đăng *</label>
-            <input type="text" id="matchTitle" class="ts-courts-v2-input" placeholder="Ví dụ: Giao lưu cầu lông tối Chủ nhật" required />
-          </div>
-
-          <div class="ts-courts-v2-row-2">
-            <div class="ts-courts-v2-field">
-              <label for="matchSportId" class="ts-courts-v2-label">Môn thể thao *</label>
-              <select id="matchSportId" class="ts-courts-v2-input" required></select>
-            </div>
-            <div class="ts-courts-v2-field">
-              <label for="matchLevel" class="ts-courts-v2-label">Trình độ *</label>
-              <select id="matchLevel" class="ts-courts-v2-input">
-                <option value="Mới chơi">Mới chơi</option>
-                <option value="Trung bình" selected>Trung bình</option>
-                <option value="Khá">Khá</option>
-                <option value="Chuyên nghiệp">Chuyên nghiệp</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="ts-courts-v2-row-2">
-            <div class="ts-courts-v2-field">
-              <label for="matchDate" class="ts-courts-v2-label">Ngày chơi *</label>
-              <input type="date" id="matchDate" class="ts-courts-v2-input" required />
-            </div>
-            <div class="ts-courts-v2-field">
-              <label for="matchTime" class="ts-courts-v2-label">Giờ chơi *</label>
-              <input type="text" id="matchTime" class="ts-courts-v2-input" placeholder="18:00" required />
-            </div>
-          </div>
-
-          <div class="ts-courts-v2-field">
-            <label for="matchLocation" class="ts-courts-v2-label">Địa điểm / Khu vực *</label>
-            <input type="text" id="matchLocation" class="ts-courts-v2-input" placeholder="Thanh Xuân, Hà Nội" required />
-          </div>
-
-          <div class="ts-courts-v2-row-2">
-            <div class="ts-courts-v2-field">
-              <label for="matchContactName" class="ts-courts-v2-label">Tên liên hệ *</label>
-              <input type="text" id="matchContactName" class="ts-courts-v2-input" placeholder="Nguyễn Minh Anh" required />
-            </div>
-            <div class="ts-courts-v2-field">
-              <label for="matchContactPhone" class="ts-courts-v2-label">Số điện thoại / Zalo *</label>
-              <input type="tel" id="matchContactPhone" class="ts-courts-v2-input" placeholder="0901234567" required />
-            </div>
-          </div>
-
-          <input type="hidden" id="matchSlots" value="2" />
-          <input type="hidden" id="matchPriceShare" value="Chia đều sân" />
-          <input type="hidden" id="matchDesc" value="" />
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-primary">Đăng bài ngay</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
