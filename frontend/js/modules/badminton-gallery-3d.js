@@ -788,9 +788,9 @@
       const dZoom = REDUCED_MOTION ? 0.22 : BADMINTON_GALLERY_CONFIG.zoomDuration;
       const dDetail = REDUCED_MOTION ? 0.2 : BADMINTON_GALLERY_CONFIG.detailDuration;
 
-      // Tính góc xoay ngắn nhất đưa sản phẩm về chính giữa (theta_world = 0)
-      const currentWorldTheta = normalizeAngle(artwork.theta + this.controls.angle);
-      const targetAngle = this.controls.angle - currentWorldTheta;
+      // Tính góc xoay ngắn nhất đưa sản phẩm về chính giữa (worldAngle = theta - controls.angle = 0)
+      const currentWorldTheta = normalizeAngle(artwork.theta - this.controls.angle);
+      const targetAngle = this.controls.angle + currentWorldTheta;
 
       // Khoảng cách camera tiến gần để sản phẩm chiếm ~56% chiều cao khung hình
       const R = BADMINTON_GALLERY_CONFIG.wallRadius - BADMINTON_GALLERY_CONFIG.artworkInset;
@@ -1060,7 +1060,7 @@
       let best = artworks[0];
       let bestDist = Infinity;
       artworks.forEach((a) => {
-        const d = Math.abs(normalizeAngle(a.theta + controls.angle));
+        const d = Math.abs(normalizeAngle(a.theta - controls.angle));
         if (d < bestDist) {
           bestDist = d;
           best = a;
@@ -1186,8 +1186,8 @@
       if (transitionCtrl.state === "gallery") {
         artworks.forEach((a) => {
           const isHov = a === hoveredArtwork;
-          const distFromCenter = Math.abs(normalizeAngle(a.theta + controls.angle));
-          const focusFactor = Math.exp(-Math.pow(distFromCenter / (stepAngle * 0.72), 2));
+          const distFromCenter = Math.abs(normalizeAngle(a.theta - controls.angle));
+          const focusFactor = Math.exp(-Math.pow(distFromCenter / (stepAngle * 0.68), 2));
 
           // Sản phẩm chính giữa tự động phát sáng (hào quang trắng + sáng 100%) không cần hover; hai bên tối mờ dịu
           a.setHover(isHov || focusFactor > 0.65);
