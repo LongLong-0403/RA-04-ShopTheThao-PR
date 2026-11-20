@@ -259,3 +259,87 @@ def menu(db: Session = Depends(get_db)):
         return {'id': c.id, 'name': c.name, 'brands': brands,
                 'children': [node(child, seen | {c.id}) for child in categories if child.parent_id == c.id]}
     return [node(c, set()) for c in categories if c.parent_id is None]
+
+
+@router.get('/catalog/bootstrap', tags=['catalog-products'])
+def catalog_bootstrap(db: Session = Depends(get_db)):
+    """Trả về toàn bộ danh mục & 160 sản phẩm kèm SKU và ảnh để Frontend đồng bộ trực tiếp từ MySQL."""
+    sports = list(db.scalars(select(Sport).order_by(Sport.id)))
+    categories = list(db.scalars(select(Category).order_by(Category.id)))
+    brands = list(db.scalars(select(Brand).order_by(Brand.id)))
+    all_products = list(db.scalars(select(Product).order_by(Product.id)))
+    all_skus = list(db.scalars(select(ProductSku).order_by(ProductSku.id)))
+    all_images = list(db.scalars(select(ProductImage).order_by(ProductImage.sort_order, ProductImage.id)))
+
+    skus_by_pid: dict[int, list[dict]] = {}
+    for s in all_skus:
+        skus_by_pid.setdefault(s.product_id, []).append({
+            'id': s.id,
+            'sku_code': s.sku_code,
+            'size': s.size,
+            'color': s.color,
+            'price': float(s.price),
+            'stock': s.stock,
+            'unit': s.unit.value if hasattr(s.unit, 'value') else str(s.unit),
+            'quantity_per_lot': s.quantity_per_lot,
+            'status': 'ACTIVE',
+        })
+
+    imgs_by_pid: dict[int, list[dict]] = {}
+    for im in all_images:
+        imgs_by_pid.setdefault(im.product_id, []).append({
+            'id': im.id,
+            'image_url': im.image_url,
+            'is_primary': bool(im.is_primary),
+            'sort_order': im.sort_order,
+        })
+
+    return {
+        'sports': [
+            {
+                'id': sp.id,
+                'name': sp.name,
+                'slug': sp.slug,
+                'description': sp.description,
+                'status': sp.status.value if hasattr(sp.status, 'value') else str(sp.status),
+            }
+            for sp in sports
+        ],
+        'categories': [
+            {
+                'id': c.id,
+                'parent_id': c.parent_id,
+                'name': c.name,
+                'slug': c.slug,
+                'status': c.status.value if hasattr(c.status, 'value') else str(c.status),
+            }
+            for c in categories
+        ],
+        'brands': [
+            {
+                'id': b.id,
+                'name': b.name,
+                'slug': b.slug,
+                'logo_url': b.logo_url,
+                'status': b.status.value if hasattr(b.status, 'value') else str(b.status),
+            }
+            for b in brands
+        ],
+        'products': [
+            {
+                'id': p.id,
+                'sport_id': p.sport_id,
+                'category_id': p.category_id,
+                'brand_id': p.brand_id,
+                'name': p.name,
+                'description': p.description,
+                'condition_type': p.condition_type.value if hasattr(p.condition_type, 'value') else str(p.condition_type),
+                'wear_description': p.wear_description,
+                'status': p.status.value if hasattr(p.status, 'value') else str(p.status),
+                'specifications': p.specifications or {},
+                'images': imgs_by_pid.get(p.id, []),
+                'skus': skus_by_pid.get(p.id, []),
+            }
+            for p in all_products
+        ],
+    }

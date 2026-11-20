@@ -8476,7 +8476,55 @@
         message: `Áp dụng thành công mã "${coupon.code}": Giảm ${this.formatMoney(discount)}!`
       };
     }
+    async syncFromBackend() {
+      const apiBase =
+        (typeof window !== "undefined" && window.TSPORT_API_BASE) ||
+        (typeof CONFIG !== "undefined" && CONFIG && CONFIG.API_BASE_URL) ||
+        "http://127.0.0.1:8000/api";
+      try {
+        const res = await fetch(`${apiBase}/catalog/bootstrap`, {
+          method: "GET",
+          headers: { Accept: "application/json" }
+        });
+        if (!res.ok) return false;
+        const payload = await res.json();
+        if (!payload || !Array.isArray(payload.products) || !payload.products.length) return false;
+
+        // Giữ lại sale_price nội bộ cho mục Flash Sale nếu backend chưa có cột sale_price
+        const saleMap = new Map();
+        (this.data.products || []).forEach((p) => {
+          (p.skus || []).forEach((s) => {
+            if (s.sale_price) saleMap.set(s.sku_code, s.sale_price);
+          });
+        });
+
+        payload.products.forEach((p) => {
+          (p.skus || []).forEach((s) => {
+            if (!s.sale_price && saleMap.has(s.sku_code)) {
+              s.sale_price = saleMap.get(s.sku_code);
+            }
+          });
+        });
+
+        if (Array.isArray(payload.sports) && payload.sports.length) this.data.sports = payload.sports;
+        if (Array.isArray(payload.categories) && payload.categories.length) this.data.categories = payload.categories;
+        if (Array.isArray(payload.brands) && payload.brands.length) this.data.brands = payload.brands;
+        this.data.products = payload.products;
+        this.save();
+
+        window.TSPORT_BACKEND_ONLINE = true;
+        window.dispatchEvent(new CustomEvent("tsport-backend-synced", { detail: { products: payload.products.length } }));
+        return true;
+      } catch (_err) {
+        window.TSPORT_BACKEND_ONLINE = false;
+        return false;
+      }
+    }
 }
 
   window.tsportStore = new TsportStore();
+  // Tự động đồng bộ dữ liệu thực từ FastAPI + MySQL ở nền ngay khi tải trang
+  if (typeof window !== "undefined" && typeof fetch === "function") {
+    window.tsportStore.syncFromBackend();
+  }
 })();

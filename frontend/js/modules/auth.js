@@ -18,7 +18,7 @@
     monitor.prepend(item);
   }
 
-  function handleLoginSubmit(e) {
+  async function handleLoginSubmit(e) {
     e.preventDefault();
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
@@ -44,21 +44,43 @@
 
     if (hasError) return;
 
-    // Giả lập token JWT
-    const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
-    const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
-    const fullName = isSpecialAdmin ? "Quản Trị Viên (admin123)" : email.split("@")[0];
+    let token = "";
+    let userObj = null;
 
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role, exp: Date.now() + 86400000 })) + ".sig_verified_tsport";
+    // Ưu tiên đăng nhập trực tiếp qua FastAPI Backend (POST /api/auth/login)
+    if (window.api) {
+      try {
+        const res = await window.api.post("/auth/login", { email, password });
+        token = res.access_token;
+        userObj = res.user;
+        logAxiosInterceptor("POST", "/api/auth/login", token);
+      } catch (err) {
+        if (err && err.status && err.status !== 0) {
+          document.getElementById("errLoginPassword").textContent = err.message || "Email hoặc mật khẩu không đúng";
+          showToast(err.message || "Đăng nhập thất bại", "error");
+          return;
+        }
+      }
+    }
+
+    // Fallback cục bộ khi backend chưa bật
+    if (!token || !userObj) {
+      const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
+      const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
+      const fullName = isSpecialAdmin ? "Quản Trị Viên (admin123)" : email.split("@")[0];
+      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role, exp: Date.now() + 86400000 })) + ".sig_verified_tsport";
+      userObj = { email, full_name: fullName, role };
+    }
+
     localStorage.setItem("token", token);
     localStorage.setItem("tsport_token", token);
-    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: fullName, role }));
+    localStorage.setItem("tsport_current_user", JSON.stringify(userObj));
 
-    logAxiosInterceptor("POST", "/api/users/login", token);
+    const role = userObj.role || "CUSTOMER";
     showToast(`Đăng nhập thành công (${role})! Đang chuyển hướng...`, "success");
 
     const userLabel = document.querySelector(".js-header-user-label");
-    if (userLabel) userLabel.textContent = fullName;
+    if (userLabel) userLabel.textContent = userObj.full_name || userObj.email;
 
     setTimeout(() => {
       if (role === "ADMIN") {
@@ -66,10 +88,10 @@
       } else {
         window.location.href = "account.html";
       }
-    }, 800);
+    }, 650);
   }
 
-  function handleRegisterSubmit(e) {
+  async function handleRegisterSubmit(e) {
     e.preventDefault();
     const fullName = document.getElementById("regFullName").value.trim();
     const phone = document.getElementById("regPhone").value.trim();
@@ -110,14 +132,42 @@
       return;
     }
 
-    const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
-    const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role })) + ".sig_verified_tsport";
+    let token = "";
+    let userObj = null;
+
+    if (window.api) {
+      try {
+        await window.api.post("/auth/register", {
+          email,
+          password: pass,
+          full_name: fullName,
+          phone,
+          address
+        });
+        const loginRes = await window.api.post("/auth/login", { email, password: pass });
+        token = loginRes.access_token;
+        userObj = loginRes.user;
+        logAxiosInterceptor("POST", "/api/auth/register", token);
+      } catch (err) {
+        if (err && err.status && err.status !== 0) {
+          showToast(err.message || "Đăng ký tài khoản thất bại", "error");
+          return;
+        }
+      }
+    }
+
+    if (!token || !userObj) {
+      const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
+      const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
+      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role })) + ".sig_verified_tsport";
+      userObj = { email, full_name: fullName, phone, address, role };
+    }
+
     localStorage.setItem("token", token);
     localStorage.setItem("tsport_token", token);
-    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: fullName, phone, address, role }));
+    localStorage.setItem("tsport_current_user", JSON.stringify(userObj));
 
-    logAxiosInterceptor("POST", "/api/users/register", token);
+    const role = userObj.role || "CUSTOMER";
     showToast(`Đăng ký tài khoản ${email} (${role}) thành công! Đang chuyển hướng...`, "success");
 
     setTimeout(() => {
@@ -126,7 +176,7 @@
       } else {
         window.location.href = "account.html";
       }
-    }, 800);
+    }, 650);
   }
 
   document.addEventListener("DOMContentLoaded", () => {

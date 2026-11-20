@@ -1,0 +1,6571 @@
+[
+  {
+    "id": 1,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 1,
+    "name": "Vợt cầu lông Yonex Astrox 88D Pro 2024",
+    "description": "Dòng vợt tấn công đỉnh cao thế hệ 3 dành cho người chơi cầu sau, trợ lực đập smash cực uy lực.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G5",
+      "tension": "28 lbs",
+      "balance": "Head Heavy",
+      "material": "HM Graphite + 2G-Namd Flex Force"
+    },
+    "images": [
+      {
+        "id": 1,
+        "image_url": "/frontend/assets/products/catalog/p001.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 1,
+        "sku_code": "TS-C02-P001-A",
+        "size": "4U/G5",
+        "color": "Đen Bạc",
+        "price": 4250000,
+        "sale_price": 3890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 2,
+        "sku_code": "TS-C02-P001-B",
+        "size": "3U/G5",
+        "color": "Đen Bạc",
+        "price": 4250000,
+        "sale_price": 3890000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 1,
+    "name": "Vợt cầu lông Yonex Nanoflare 1000Z",
+    "description": "Siêu phẩm tốc độ với hệ thống Sonic Flare System giúp vung vợt chớp nhoáng và phản tạt cực nhanh.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G5",
+      "tension": "28 lbs",
+      "balance": "Head Light",
+      "material": "HM Graphite + NANOMETRIC DR"
+    },
+    "images": [
+      {
+        "id": 2,
+        "image_url": "/frontend/assets/products/catalog/p002.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 3,
+        "sku_code": "TS-C02-P002-A",
+        "size": "4U/G5",
+        "color": "Vàng Đen",
+        "price": 4350000,
+        "sale_price": 3950000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 4,
+        "sku_code": "TS-C02-P002-B",
+        "size": "3U/G5",
+        "color": "Vàng Đen",
+        "price": 4350000,
+        "sale_price": 3950000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 1,
+    "name": "Vợt cầu lông Yonex Astrox 100ZZ Kurenai",
+    "description": "Cây vợt huyền thoại đồng hành cùng Viktor Axelsen với đũa vợt siêu mảnh, đập cầu cắm sân mạnh mẽ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G5",
+      "tension": "28 lbs",
+      "balance": "Head Heavy",
+      "material": "Hyper Slim Shaft + Namd"
+    },
+    "images": [
+      {
+        "id": 3,
+        "image_url": "/frontend/assets/products/catalog/p003.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 5,
+        "sku_code": "TS-C02-P003-A",
+        "size": "4U/G5",
+        "color": "Đỏ Kurenai",
+        "price": 4650000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 6,
+        "sku_code": "TS-C02-P003-B",
+        "size": "3U/G5",
+        "color": "Đỏ Kurenai",
+        "price": 4650000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 1,
+    "name": "Vợt cầu lông Yonex Arcsaber 11 Pro",
+    "description": "Vợt công thủ toàn diện kiểm soát cầu tuyệt đối, giữ cầu trên mặt vợt lâu hơn để điều cầu chuẩn xác.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G5",
+      "tension": "27 lbs",
+      "balance": "Even Balance",
+      "material": "HM Graphite + POCKETING BOOSTER"
+    },
+    "images": [
+      {
+        "id": 4,
+        "image_url": "/frontend/assets/products/catalog/p004.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 7,
+        "sku_code": "TS-C02-P004-A",
+        "size": "4U/G5",
+        "color": "Xám Đỏ",
+        "price": 4150000,
+        "sale_price": 3790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 8,
+        "sku_code": "TS-C02-P004-B",
+        "size": "3U/G5",
+        "color": "Xám Đỏ",
+        "price": 4150000,
+        "sale_price": 3790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 2,
+    "name": "Vợt cầu lông Lining Axforce 90 Max Tiger",
+    "description": "Vợt tấn công uy lực mạnh mẽ với thiết kế họa tiết hổ vằn sắc sảo, thân vợt đàn hồi cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G5",
+      "tension": "30 lbs",
+      "balance": "Head Heavy",
+      "material": "TB Nano + M50 Super Carbon"
+    },
+    "images": [
+      {
+        "id": 5,
+        "image_url": "/frontend/assets/products/catalog/p005.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 9,
+        "sku_code": "TS-C02-P005-A",
+        "size": "4U/G5",
+        "color": "Đỏ Hổ",
+        "price": 3950000,
+        "sale_price": 3590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 10,
+        "sku_code": "TS-C02-P005-B",
+        "size": "3U/G5",
+        "color": "Đỏ Hổ",
+        "price": 3950000,
+        "sale_price": 3590000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 2,
+    "name": "Vợt cầu lông Lining Halbertec 8000",
+    "description": "Phối màu bất đối xứng nổi bật, tối ưu khả năng kiểm soát và điều cầu toàn diện trên sân.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G5",
+      "tension": "29 lbs",
+      "balance": "Even Balance",
+      "material": "T1100 + ACC-RIF TECH"
+    },
+    "images": [
+      {
+        "id": 6,
+        "image_url": "/frontend/assets/products/catalog/p006.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 11,
+        "sku_code": "TS-C02-P006-A",
+        "size": "4U/G5",
+        "color": "Xanh Hồng",
+        "price": 3800000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 12,
+        "sku_code": "TS-C02-P006-B",
+        "size": "3U/G5",
+        "color": "Xanh Hồng",
+        "price": 3800000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 2,
+    "name": "Vợt cầu lông Lining Bladex 900 Moon Max",
+    "description": "Dòng vợt tốc độ cao dành cho đánh đôi chuyên nghiệp, vung vợt thoát gió cực nhanh.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G6",
+      "tension": "30 lbs",
+      "balance": "Head Light",
+      "material": "M46 + ULTRA Carbon"
+    },
+    "images": [
+      {
+        "id": 7,
+        "image_url": "/frontend/assets/products/catalog/p007.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 13,
+        "sku_code": "TS-C02-P007-A",
+        "size": "4U/G6",
+        "color": "Xanh Dương",
+        "price": 4100000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 14,
+        "sku_code": "TS-C02-P007-B",
+        "size": "3U/G5",
+        "color": "Xanh Dương",
+        "price": 4100000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 3,
+    "name": "Vợt cầu lông Victor Thruster Ryuga II Pro",
+    "description": "Cây vợt rồng lửa đồng hành cùng Lee Zii Jia, công nghệ WES 2.0 tạo cú smash bộc phá.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G5",
+      "tension": "31 lbs",
+      "balance": "Head Heavy",
+      "material": "High Resilience Modulus Graphite + PYROFIL"
+    },
+    "images": [
+      {
+        "id": 8,
+        "image_url": "/frontend/assets/products/catalog/p008.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 15,
+        "sku_code": "TS-C02-P008-A",
+        "size": "4U/G5",
+        "color": "Tím Đen",
+        "price": 3750000,
+        "sale_price": 3450000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 16,
+        "sku_code": "TS-C02-P008-B",
+        "size": "3U/G5",
+        "color": "Tím Đen",
+        "price": 3750000,
+        "sale_price": 3450000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 10,
+    "name": "Vợt cầu lông Mizuno Fortius 11 Quick",
+    "description": "Sản xuất tại Nhật Bản với công nghệ Torque Technology T5 truyền lực tối đa trong từng pha cầu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "4U",
+      "grip": "G6",
+      "tension": "29 lbs",
+      "balance": "Head Heavy",
+      "material": "High Elasticity Graphite + MFUSION"
+    },
+    "images": [
+      {
+        "id": 9,
+        "image_url": "/frontend/assets/products/catalog/p009.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 17,
+        "sku_code": "TS-C02-P009-A",
+        "size": "4U/G6",
+        "color": "Đen Vàng",
+        "price": 3850000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 18,
+        "sku_code": "TS-C02-P009-B",
+        "size": "3U/G5",
+        "color": "Đen Vàng",
+        "price": 3850000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "sport_id": 1,
+    "category_id": 2,
+    "brand_id": 3,
+    "name": "Vợt cầu lông Victor Auraspeed 90K II (Cũ 95%)",
+    "description": "Vợt tốc độ phản tạt đôi nam cực thoát tay, đã qua kiểm định kỹ thuật tại Tsport.",
+    "condition_type": "CU",
+    "wear_description": "Ngoại hình như mới 95%, chỉ xước dăm li ti ở nắp chụp cán vợt, khung carbon nguyên bản chưa từng va chạm.",
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "3U",
+      "grip": "G5",
+      "tension": "27 lbs",
+      "balance": "Even Balance",
+      "condition_grade": "95%"
+    },
+    "images": [
+      {
+        "id": 10,
+        "image_url": "/frontend/assets/products/victor-auraspeed-90k-ii.png",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 19,
+        "sku_code": "TS-C02-P010-A",
+        "size": "3U/G5",
+        "color": "Đen Xanh",
+        "price": 2450000,
+        "stock": 1,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 6,
+    "name": "Vợt Tennis Wilson Pro Staff 97 V14",
+    "description": "Cây vợt huyền thoại chuẩn kiểm soát với công nghệ Paradigm Bending cho cảm giác bóng chân thực.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "97 sq in",
+      "weight": "315g",
+      "string_pattern": "16x19",
+      "balance": "31cm"
+    },
+    "images": [
+      {
+        "id": 11,
+        "image_url": "/frontend/assets/products/catalog/p011.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 20,
+        "sku_code": "TS-C03-P011-A",
+        "size": "Grip 2",
+        "color": "Đồng Đen",
+        "price": 5600000,
+        "sale_price": 5190000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 6,
+    "name": "Vợt Tennis Wilson Blade 98 16x19 V9",
+    "description": "Dòng vợt được ưa chuộng nhất trên ATP/WTA Tour với độ ổn định và cảm giác kết nối bóng vượt trội.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "98 sq in",
+      "weight": "305g",
+      "string_pattern": "16x19",
+      "tech": "StableFeel"
+    },
+    "images": [
+      {
+        "id": 12,
+        "image_url": "/frontend/assets/products/catalog/p012.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 21,
+        "sku_code": "TS-C03-P012-A",
+        "size": "Grip 2",
+        "color": "Xanh Ngọc Lục Bảo",
+        "price": 5450000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 6,
+    "name": "Vợt Tennis Wilson Clash 100 V2",
+    "description": "Cây vợt thân thiện bậc nhất cho cánh tay nhờ độ uốn dẻo linh hoạt và điểm ngọt mở rộng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "100 sq in",
+      "weight": "295g",
+      "string_pattern": "16x19",
+      "tech": "FORTYFIVE"
+    },
+    "images": [
+      {
+        "id": 13,
+        "image_url": "/frontend/assets/products/catalog/p013.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 22,
+        "sku_code": "TS-C03-P013-A",
+        "size": "Grip 2",
+        "color": "Đỏ Đen",
+        "price": 4950000,
+        "sale_price": 4590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 6,
+    "name": "Vợt Tennis Wilson Shift 99 V1",
+    "description": "Thiết kế uốn ngang độc quyền tạo độ xoáy topspin hiện đại cùng độ kiểm soát cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "99 sq in",
+      "weight": "300g",
+      "string_pattern": "16x20",
+      "tech": "ARC 3D"
+    },
+    "images": [
+      {
+        "id": 14,
+        "image_url": "/frontend/assets/products/catalog/p014.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 23,
+        "sku_code": "TS-C03-P014-A",
+        "size": "Grip 2",
+        "color": "Trắng Bạc",
+        "price": 5250000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 7,
+    "name": "Vợt Tennis Babolat Pure Aero 2023",
+    "description": "Cỗ máy tạo xoáy topspin cực đại đồng hành cùng Carlos Alcaraz và Rafael Nadal.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "100 sq in",
+      "weight": "300g",
+      "string_pattern": "16x19",
+      "tech": "NF2-Tech"
+    },
+    "images": [
+      {
+        "id": 15,
+        "image_url": "/frontend/assets/products/catalog/p015.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 24,
+        "sku_code": "TS-C03-P015-A",
+        "size": "Grip 2",
+        "color": "Vàng Đen",
+        "price": 5200000,
+        "sale_price": 4850000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 7,
+    "name": "Vợt Tennis Babolat Pure Drive 2021",
+    "description": "Biểu tượng sức mạnh bùng nổ và dễ chơi cho cả người chơi phong trào lẫn bán chuyên.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "100 sq in",
+      "weight": "300g",
+      "string_pattern": "16x19",
+      "tech": "HTR System"
+    },
+    "images": [
+      {
+        "id": 16,
+        "image_url": "/frontend/assets/products/catalog/p016.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 25,
+        "sku_code": "TS-C03-P016-A",
+        "size": "Grip 2",
+        "color": "Xanh Navy",
+        "price": 4890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 7,
+    "name": "Vợt Tennis Babolat Pure Strike 100 16x19",
+    "description": "Kết hợp hoàn hảo giữa kiểm soát sắc bén và lực đánh linh hoạt cho lối chơi tấn công sớm.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "100 sq in",
+      "weight": "300g",
+      "string_pattern": "16x19",
+      "tech": "Control Frame"
+    },
+    "images": [
+      {
+        "id": 17,
+        "image_url": "/frontend/assets/products/catalog/p017.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 26,
+        "sku_code": "TS-C03-P017-A",
+        "size": "Grip 2",
+        "color": "Trắng Đỏ Cam",
+        "price": 5100000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 1,
+    "name": "Vợt Tennis Yonex EZONE 100 2022",
+    "description": "Khung đầu vợt ISOMETRIC mở rộng vùng điểm ngọt 7%, trợ lực êm ái sản xuất tại Nhật Bản.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "100 sq in",
+      "weight": "300g",
+      "string_pattern": "16x19",
+      "tech": "ISOMETRIC + 2G-Namd Speed"
+    },
+    "images": [
+      {
+        "id": 18,
+        "image_url": "/frontend/assets/products/catalog/p018.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 27,
+        "sku_code": "TS-C03-P018-A",
+        "size": "Grip 2",
+        "color": "Xanh Biển",
+        "price": 4990000,
+        "sale_price": 4650000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 1,
+    "name": "Vợt Tennis Yonex VCORE 98 2023",
+    "description": "Dòng vợt xoáy đỉnh cao của Yonex giúp dây cước bật nảy nhanh và tạo quỹ đạo bóng khó chịu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "98 sq in",
+      "weight": "305g",
+      "string_pattern": "16x19",
+      "tech": "Silicone Oil Infused Grommet"
+    },
+    "images": [
+      {
+        "id": 19,
+        "image_url": "/frontend/assets/products/catalog/p019.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 28,
+        "sku_code": "TS-C03-P019-A",
+        "size": "Grip 2",
+        "color": "Đỏ Tươi",
+        "price": 5150000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "sport_id": 3,
+    "category_id": 3,
+    "brand_id": 6,
+    "name": "Vợt Tennis Wilson Ultra 100 V4 (Cũ 90%)",
+    "description": "Dòng vợt trợ lực mạnh mẽ với thiết kế khung FORTYFIVE bóng bẩy đổi màu theo góc nhìn.",
+    "condition_type": "CU",
+    "wear_description": "Vành bảo vệ đầu vợt có vài vết xước nhẹ khi cứu bóng, thân khung đẹp nguyên bản không rạn nứt.",
+    "status": "ACTIVE",
+    "specifications": {
+      "head_size": "100 sq in",
+      "weight": "300g",
+      "string_pattern": "16x19",
+      "condition_grade": "90%"
+    },
+    "images": [
+      {
+        "id": 20,
+        "image_url": "/frontend/assets/products/catalog/p020.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 29,
+        "sku_code": "TS-C03-P020-A",
+        "size": "Grip 2",
+        "color": "Xanh Ánh Tím",
+        "price": 2950000,
+        "stock": 1,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 9,
+    "name": "Vợt Pickleball Joola Ben Johns Perseus 3S 16mm",
+    "description": "Vợt thi đấu chuyên nghiệp của tay vợt số 1 thế giới Ben Johns, tối ưu cả lực đập lẫn độ xoáy.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "Propulsion Core 16mm",
+      "face": "Charged Carbon Surface",
+      "weight": "8.0 oz",
+      "length": "16.5 in"
+    },
+    "images": [
+      {
+        "id": 21,
+        "image_url": "/frontend/assets/products/catalog/p021.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 30,
+        "sku_code": "TS-C04-P021-A",
+        "size": "16mm",
+        "color": "Đen Xanh",
+        "price": 6490000,
+        "sale_price": 5990000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 9,
+    "name": "Vợt Pickleball Joola Collin Johns Scorpeus 16mm",
+    "description": "Mặt vợt bản rộng tối ưu điểm ngọt cho lối chơi phòng thủ chắc chắn và bỏ nhỏ dink chuẩn xác.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "Reactive Honeycomb 16mm",
+      "face": "Charged Carbon Surface",
+      "weight": "8.0 oz"
+    },
+    "images": [
+      {
+        "id": 22,
+        "image_url": "/frontend/assets/products/catalog/p022.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 31,
+        "sku_code": "TS-C04-P022-A",
+        "size": "16mm",
+        "color": "Đen Xanh Dương",
+        "price": 5800000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 9,
+    "name": "Vợt Pickleball Joola Anna Bright Scorpeus 14mm",
+    "description": "Phiên bản 14mm phản hồi bóng nhanh, linh hoạt tuyệt đối trong các pha đôi công trên lưới.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "Reactive Honeycomb 14mm",
+      "face": "Charged Carbon",
+      "weight": "7.8 oz"
+    },
+    "images": [
+      {
+        "id": 23,
+        "image_url": "/frontend/assets/products/catalog/p023.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 32,
+        "sku_code": "TS-C04-P023-A",
+        "size": "14mm",
+        "color": "Đen Đỏ",
+        "price": 5750000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 9,
+    "name": "Vợt Pickleball Joola Ben Johns Hyperion CFS 16",
+    "description": "Đầu vợt khí động học Aero-Curve giảm sức cản gió, tạo cú drive sâu và xoáy mạnh.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "Reactive Honeycomb 16mm",
+      "face": "Carbon Friction Surface",
+      "weight": "8.4 oz"
+    },
+    "images": [
+      {
+        "id": 24,
+        "image_url": "/frontend/assets/products/catalog/p024.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 33,
+        "sku_code": "TS-C04-P024-A",
+        "size": "16mm",
+        "color": "Đen Viền Xám",
+        "price": 5490000,
+        "sale_price": 4990000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 8,
+    "name": "Vợt Pickleball Selkirk Vanguard Power Air Invikta",
+    "description": "Vợt không viền khí động học có lỗ thoát gió Air Dynamic Throat cho tốc độ vung vợt cực cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "SuperCore Polymer 13mm",
+      "face": "QuadFlex 4 Layer Hybrid",
+      "weight": "7.9 oz"
+    },
+    "images": [
+      {
+        "id": 25,
+        "image_url": "/frontend/assets/products/catalog/p025.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 34,
+        "sku_code": "TS-C04-P025-A",
+        "size": "13mm",
+        "color": "Đỏ Đen",
+        "price": 5900000,
+        "sale_price": 5490000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 8,
+    "name": "Vợt Pickleball Selkirk Luxx Control Air Invikta",
+    "description": "Độ dày lõi 20mm mang lại cảm giác kiểm soát mềm mại hàng đầu thế giới cho người chơi kỹ thuật.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "X7 Thikset Honeycomb 20mm",
+      "face": "Florek Carbon Fiber",
+      "weight": "7.9 oz"
+    },
+    "images": [
+      {
+        "id": 26,
+        "image_url": "/frontend/assets/products/catalog/p026.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 35,
+        "sku_code": "TS-C04-P026-A",
+        "size": "20mm",
+        "color": "Xanh Dương Trắng",
+        "price": 6150000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 8,
+    "name": "Vợt Pickleball Selkirk SLK Halo Control XL",
+    "description": "Mặt sợi carbon thô T700 bám bóng tốt, mức giá hợp lý cho người chơi từ phong trào đến nâng cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "Rev-Core Control 16mm",
+      "face": "T700 Raw Carbon Fiber",
+      "weight": "7.8 oz"
+    },
+    "images": [
+      {
+        "id": 27,
+        "image_url": "/frontend/assets/products/catalog/p027.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 36,
+        "sku_code": "TS-C04-P027-A",
+        "size": "16mm",
+        "color": "Đen Vàng",
+        "price": 3490000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 8,
+    "name": "Vợt Pickleball Selkirk SLK Latitude Max",
+    "description": "Lựa chọn lý tưởng cho người mới bắt đầu với mặt vợt rộng dễ làm quen và kiểm soát.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "SX4 Polymer Core",
+      "face": "GraphiFlex",
+      "weight": "7.7 oz"
+    },
+    "images": [
+      {
+        "id": 28,
+        "image_url": "/frontend/assets/products/catalog/p028.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 37,
+        "sku_code": "TS-C04-P028-A",
+        "size": "13mm",
+        "color": "Xanh Trắng",
+        "price": 2150000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 11,
+    "name": "Vợt Pickleball Kamito Alpha Pro 16mm",
+    "description": "Thiết kế dành riêng cho người chơi Việt Nam, mặt carbon nhám T700 cân bằng công thủ tốt.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "PP Honeycomb 16mm",
+      "face": "Toray T700 Carbon",
+      "weight": "8.0 oz"
+    },
+    "images": [
+      {
+        "id": 29,
+        "image_url": "/frontend/assets/products/catalog/p029.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 38,
+        "sku_code": "TS-C04-P029-A",
+        "size": "16mm",
+        "color": "Đen Cam",
+        "price": 2490000,
+        "sale_price": 2190000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "sport_id": 4,
+    "category_id": 4,
+    "brand_id": 8,
+    "name": "Vợt Pickleball Selkirk SLK Halo Power Max (Cũ 90%)",
+    "description": "Vợt kiểm định chính hãng, mặt carbon còn độ nhám tốt cho các cú đánh xoáy.",
+    "condition_type": "CU",
+    "wear_description": "Viền bảo vệ có xước dăm nhẹ khi cứu bóng thấp, mặt T700 nguyên vẹn không lún lõi.",
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "Rev-Core Power 13mm",
+      "face": "T700 Raw Carbon",
+      "weight": "8.0 oz",
+      "condition_grade": "90%"
+    },
+    "images": [
+      {
+        "id": 30,
+        "image_url": "/frontend/assets/products/catalog/p030.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 39,
+        "sku_code": "TS-C04-P030-A",
+        "size": "13mm",
+        "color": "Đen Đỏ",
+        "price": 2050000,
+        "stock": 1,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 12,
+    "name": "Cốt vợt bóng bàn Butterfly Viscaria FL",
+    "description": "Cốt vợt huyền thoại số 1 thế giới với cấu trúc ALC cân bằng hoàn hảo giữa tốc độ và cảm giác.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 Gỗ + 2 Arylate-Carbon",
+      "weight": "87g",
+      "thickness": "5.8mm",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 31,
+        "image_url": "/frontend/assets/products/catalog/p031.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 40,
+        "sku_code": "TS-C17-P031-A",
+        "size": "FL",
+        "color": "Gỗ / Xanh",
+        "price": 4150000,
+        "sale_price": 3890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 12,
+    "name": "Cốt vợt bóng bàn Butterfly Timo Boll ALC",
+    "description": "Mẫu cốt vợt gắn liền với huyền thoại Timo Boll, lý tưởng cho lối đánh giật xoáy hai càng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 Gỗ + 2 Arylate-Carbon",
+      "weight": "86g",
+      "thickness": "5.8mm",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 32,
+        "image_url": "/frontend/assets/products/catalog/p032.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 41,
+        "sku_code": "TS-C17-P032-A",
+        "size": "FL",
+        "color": "Gỗ / Xanh Tím",
+        "price": 3950000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 12,
+    "name": "Cốt vợt bóng bàn Butterfly Fan Zhendong ALC",
+    "description": "Phiên bản đặc biệt của nhà vô địch Olympic Fan Zhendong, tốc độ bùng nổ và kiểm soát ổn định.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 Gỗ + 2 Arylate-Carbon",
+      "weight": "87g",
+      "thickness": "5.8mm",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 33,
+        "image_url": "/frontend/assets/products/catalog/p033.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 42,
+        "sku_code": "TS-C17-P033-A",
+        "size": "FL",
+        "color": "Gỗ / Xanh Đen",
+        "price": 4250000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 12,
+    "name": "Cốt vợt bóng bàn Butterfly Harimoto Innerforce ALC",
+    "description": "Cấu trúc sợi carbon đặt sát lõi gỗ giúp giữ bóng lâu hơn, cực kỳ dễ điều khiển bóng ngắn.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 Gỗ + 2 Inner ALC",
+      "weight": "88g",
+      "thickness": "6.0mm",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 34,
+        "image_url": "/frontend/assets/products/catalog/p034.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 43,
+        "sku_code": "TS-C17-P034-A",
+        "size": "FL",
+        "color": "Gỗ / Đen Vàng",
+        "price": 4100000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 12,
+    "name": "Cốt vợt bóng bàn Butterfly Sardius TAMCA 5000",
+    "description": "Siêu tốc độ bạt bóng đầy uy lực với lớp gỗ Hinoki dày đặc trưng của dòng tấn công cổ điển.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "3 Gỗ Hinoki + 2 Carbon T5000",
+      "weight": "92g",
+      "thickness": "7.0mm",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 35,
+        "image_url": "/frontend/assets/products/catalog/p035.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 44,
+        "sku_code": "TS-C17-P035-A",
+        "size": "FL",
+        "color": "Gỗ Hinoki",
+        "price": 3850000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 13,
+    "name": "Cốt vợt bóng bàn DHS Hurricane Long 5",
+    "description": "Cốt vợt của nhà vô địch Grand Slam Ma Long, nổi tiếng với cú giật thuận tay cực mạnh.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 Gỗ + 2 Arylate-Carbon",
+      "weight": "89g",
+      "thickness": "5.9mm",
+      "origin": "Trung Quốc"
+    },
+    "images": [
+      {
+        "id": 36,
+        "image_url": "/frontend/assets/products/catalog/p036.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 45,
+        "sku_code": "TS-C17-P036-A",
+        "size": "FL",
+        "color": "Gỗ / Vàng Đỏ",
+        "price": 4350000,
+        "sale_price": 3990000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 13,
+    "name": "Cốt vợt bóng bàn DHS Hurricane 301",
+    "description": "Cốt vợt quốc dân hiệu năng vượt tầm giá với lớp mặt Koto sắc bén và cảm giác bóng rõ nét.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 Gỗ + 2 Inner ALC",
+      "weight": "88g",
+      "thickness": "5.8mm"
+    },
+    "images": [
+      {
+        "id": 37,
+        "image_url": "/frontend/assets/products/catalog/p037.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 46,
+        "sku_code": "TS-C17-P037-A",
+        "size": "FL",
+        "color": "Gỗ / Xanh Đỏ",
+        "price": 1950000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 13,
+    "name": "Cốt vợt bóng bàn DHS Fang Bo B2X",
+    "description": "Phiên bản nâng cấp lõi dày hỗ trợ lực đánh mạnh mẽ khi chơi bóng nhựa 40+.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 Gỗ + 2 Arylate-Carbon",
+      "weight": "88g",
+      "thickness": "5.9mm"
+    },
+    "images": [
+      {
+        "id": 38,
+        "image_url": "/frontend/assets/products/catalog/p038.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 47,
+        "sku_code": "TS-C17-P038-A",
+        "size": "FL",
+        "color": "Gỗ / Xanh Dương",
+        "price": 1650000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 13,
+    "name": "Vợt bóng bàn dán sẵn DHS 4002",
+    "description": "Vợt dán sẵn chính hãng DHS sử dụng mặt Hurricane bám xoáy, tặng kèm bao đựng tiện lợi.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "rubbers": "Hurricane 3 + Tin Arc",
+      "weight": "178g",
+      "level": "Phong trào / Bán chuyên"
+    },
+    "images": [
+      {
+        "id": 39,
+        "image_url": "/frontend/assets/products/catalog/p039.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 48,
+        "sku_code": "TS-C17-P039-A",
+        "size": "FL",
+        "color": "Đỏ Đen",
+        "price": 650000,
+        "sale_price": 550000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "sport_id": 6,
+    "category_id": 17,
+    "brand_id": 12,
+    "name": "Cốt vợt bóng bàn Butterfly Primorac OFF- (Cũ 92%)",
+    "description": "Cốt vợt 5 lớp gỗ thuần kinh điển dành cho người tập kỹ thuật cơ bản và kiểm soát bóng.",
+    "condition_type": "CU",
+    "wear_description": "Cán vợt hơi sẫm màu mồ hôi tay, cạnh gỗ nguyên vẹn không sứt mẻ, mặt vợt phẳng đẹp.",
+    "status": "ACTIVE",
+    "specifications": {
+      "plies": "5 lớp gỗ thuần",
+      "weight": "85g",
+      "thickness": "5.5mm",
+      "condition_grade": "92%"
+    },
+    "images": [
+      {
+        "id": 40,
+        "image_url": "/frontend/assets/products/catalog/p040.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 49,
+        "sku_code": "TS-C17-P040-A",
+        "size": "FL",
+        "color": "Gỗ Tự Nhiên",
+        "price": 1250000,
+        "stock": 1,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 12,
+    "name": "Mặt vợt bóng bàn Butterfly Tenergy 05",
+    "description": "Mặt vợt bán chạy nhất mọi thời đại với công nghệ High Tension cho khả năng giật xoáy vượt trội.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Spring Sponge 36°",
+      "speed": "13.0",
+      "spin": "11.5",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 41,
+        "image_url": "/frontend/assets/products/catalog/p041.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 50,
+        "sku_code": "TS-C18-P041-A",
+        "size": "2.1mm",
+        "color": "Đỏ / Đen",
+        "price": 1650000,
+        "sale_price": 1550000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 12,
+    "name": "Mặt vợt bóng bàn Butterfly Dignics 09C",
+    "description": "Siêu phẩm mặt vợt lai Tàu - Nhật độ bám xoáy cực đại, kiểm soát giao bóng và cắt bóng sắc lẹm.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Spring Sponge X 44°",
+      "surface": "Tacky (Hơi dính)",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 42,
+        "image_url": "/frontend/assets/products/catalog/p042.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 51,
+        "sku_code": "TS-C18-P042-A",
+        "size": "2.1mm",
+        "color": "Đỏ / Đen",
+        "price": 2150000,
+        "sale_price": 1990000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 12,
+    "name": "Mặt vợt bóng bàn Butterfly Dignics 05",
+    "description": "Nâng cấp toàn diện từ Tenergy 05 với độ đàn hồi Spring Sponge X tạo vòng cung bóng uy lực.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Spring Sponge X 40°",
+      "speed": "13.5",
+      "spin": "12.0",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 43,
+        "image_url": "/frontend/assets/products/catalog/p043.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 52,
+        "sku_code": "TS-C18-P043-A",
+        "size": "2.1mm",
+        "color": "Đỏ / Đen",
+        "price": 2100000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 12,
+    "name": "Mặt vợt bóng bàn Butterfly Rozena",
+    "description": "Mặt vợt thân thiện dễ kiểm soát, hỗ trợ sửa lỗi góc vợt cực tốt cho người chơi phong trào.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Spring Sponge 35°",
+      "level": "Trung cấp - Nâng cao",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 44,
+        "image_url": "/frontend/assets/products/catalog/p044.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 53,
+        "sku_code": "TS-C18-P044-A",
+        "size": "2.1mm",
+        "color": "Đỏ / Đen",
+        "price": 980000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 12,
+    "name": "Mặt vợt bóng bàn Butterfly Tenergy 64",
+    "description": "Tốc độ nhanh nhất dòng Tenergy, cực kỳ thích hợp đánh trái tay hoặc giật xa bàn.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Spring Sponge 36°",
+      "speed": "13.5",
+      "spin": "10.5",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 45,
+        "image_url": "/frontend/assets/products/catalog/p045.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 54,
+        "sku_code": "TS-C18-P045-A",
+        "size": "2.1mm",
+        "color": "Đỏ / Đen",
+        "price": 1650000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 12,
+    "name": "Mặt vợt bóng bàn Butterfly Glayzer",
+    "description": "Trang bị lót Spring Sponge X cao cấp với mức giá mềm hơn dòng Dignics.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Spring Sponge X 38°",
+      "origin": "Nhật Bản"
+    },
+    "images": [
+      {
+        "id": 46,
+        "image_url": "/frontend/assets/products/catalog/p046.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 55,
+        "sku_code": "TS-C18-P046-A",
+        "size": "2.1mm",
+        "color": "Đỏ / Đen",
+        "price": 1050000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 13,
+    "name": "Mặt vợt bóng bàn DHS Hurricane 3 Neo",
+    "description": "Mặt vợt huyền thoại của tuyển Trung Quốc với độ dính cao tạo quỹ đạo giật bóng cắm và xoáy sâu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Neo Orange Sponge 39°",
+      "surface": "Tacky Dính",
+      "origin": "Trung Quốc"
+    },
+    "images": [
+      {
+        "id": 47,
+        "image_url": "/frontend/assets/products/catalog/p047.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 56,
+        "sku_code": "TS-C18-P047-A",
+        "size": "2.15mm",
+        "color": "Đen 39°",
+        "price": 680000,
+        "sale_price": 620000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 13,
+    "name": "Mặt vợt bóng bàn DHS Hurricane 3 National Blue Sponge",
+    "description": "Phiên bản lót xanh cấp độ đội tuyển quốc gia cho độ nén và lực bật vượt trội.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Blue Sponge 40°",
+      "grade": "National Tuyển Quốc Gia"
+    },
+    "images": [
+      {
+        "id": 48,
+        "image_url": "/frontend/assets/products/catalog/p048.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 57,
+        "sku_code": "TS-C18-P048-A",
+        "size": "2.15mm",
+        "color": "Đen Lót Xanh",
+        "price": 1950000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 13,
+    "name": "Mặt vợt bóng bàn DHS Hurricane 8-80",
+    "description": "Lót đàn hồi mềm hơn giúp dễ phát lực đánh trái tay mà vẫn giữ độ xoáy đặc trưng dòng Hurricane.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "Elastic 80# Sponge 37°",
+      "use": "Trái tay / Thuận tay"
+    },
+    "images": [
+      {
+        "id": 49,
+        "image_url": "/frontend/assets/products/catalog/p049.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 58,
+        "sku_code": "TS-C18-P049-A",
+        "size": "2.1mm",
+        "color": "Đỏ 37°",
+        "price": 790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "sport_id": 6,
+    "category_id": 18,
+    "brand_id": 13,
+    "name": "Mặt vợt bóng bàn DHS Gold Arc 8",
+    "description": "Mặt vợt công nghệ bọt khí Đức hợp tác cùng DHS, phát tiếng nổ giòn và tốc độ cực cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "sponge": "German Tensor 47.5°",
+      "origin": "Sản xuất tại Đức"
+    },
+    "images": [
+      {
+        "id": 50,
+        "image_url": "/frontend/assets/products/catalog/p050.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 59,
+        "sku_code": "TS-C18-P050-A",
+        "size": "2.1mm",
+        "color": "Đỏ / Đen",
+        "price": 890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 1,
+    "name": "Giày cầu lông Yonex Power Cushion 65Z3",
+    "description": "Đôi giày quốc dân êm ái toàn diện, bám sân cực tốt và giảm chấn gót chân hiệu quả.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "outsole": "Radial Blade Sole",
+      "midsole": "Power Cushion+",
+      "weight": "310g"
+    },
+    "images": [
+      {
+        "id": 51,
+        "image_url": "/frontend/assets/products/catalog/p051.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 60,
+        "sku_code": "TS-C06-P051-A",
+        "size": "41",
+        "color": "Trắng Đỏ",
+        "price": 2650000,
+        "sale_price": 2390000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 61,
+        "sku_code": "TS-C06-P051-B",
+        "size": "42",
+        "color": "Trắng Đỏ",
+        "price": 2650000,
+        "sale_price": 2390000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 1,
+    "name": "Giày cầu lông Yonex Power Cushion Aerus Z2",
+    "description": "Dòng giày siêu nhẹ chỉ 240g giúp tăng tốc độ di chuyển và bật nhảy thanh thoát trên sân.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "240g (Siêu nhẹ)",
+      "midsole": "Feather Light X",
+      "upper": "Double Raschel Mesh"
+    },
+    "images": [
+      {
+        "id": 52,
+        "image_url": "/frontend/assets/products/catalog/p052.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 62,
+        "sku_code": "TS-C06-P052-A",
+        "size": "41",
+        "color": "Xanh Mint",
+        "price": 2950000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 63,
+        "sku_code": "TS-C06-P052-B",
+        "size": "42",
+        "color": "Xanh Mint",
+        "price": 2950000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 1,
+    "name": "Giày cầu lông Yonex Power Cushion Eclipsion Z3",
+    "description": "Tối ưu sự ổn định tối đa cho các bước di chuyển ngang gắt và tiếp đất sau cú đập nhảy.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "stability": "3D Power Graphite",
+      "midsole": "Power Cushion+",
+      "fit": "Ôm cổ chân chống lật"
+    },
+    "images": [
+      {
+        "id": 53,
+        "image_url": "/frontend/assets/products/catalog/p053.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 64,
+        "sku_code": "TS-C06-P053-A",
+        "size": "42",
+        "color": "Trắng Vàng",
+        "price": 2850000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 65,
+        "sku_code": "TS-C06-P053-B",
+        "size": "40",
+        "color": "Trắng Vàng",
+        "price": 2850000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 1,
+    "name": "Giày cầu lông Yonex Power Cushion Comfort Z3",
+    "description": "Đệm khí Power Cushion+ trải dài toàn bàn chân giúp bảo vệ đầu gối tối ưu khi chơi cường độ cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "cushion": "Full-length Power Cushion+",
+      "fit": "Wide 4E"
+    },
+    "images": [
+      {
+        "id": 54,
+        "image_url": "/frontend/assets/products/catalog/p054.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 66,
+        "sku_code": "TS-C06-P054-A",
+        "size": "41",
+        "color": "Đen Đỏ",
+        "price": 2790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 67,
+        "sku_code": "TS-C06-P054-B",
+        "size": "42",
+        "color": "Đen Đỏ",
+        "price": 2790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 2,
+    "name": "Giày cầu lông Lining Blade Pro",
+    "description": "Trang bị đế BOOM siêu đàn hồi kết hợp tấm carbon chống xoắn giữa bàn chân.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "BOOM Technology",
+      "plate": "Carbon Fiber Plate"
+    },
+    "images": [
+      {
+        "id": 55,
+        "image_url": "/frontend/assets/products/catalog/p055.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 68,
+        "sku_code": "TS-C06-P055-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 2450000,
+        "sale_price": 2190000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 69,
+        "sku_code": "TS-C06-P055-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 2450000,
+        "sale_price": 2190000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 2,
+    "name": "Giày cầu lông Lining Saga II Pro",
+    "description": "Form giày vững chãi bảo vệ cổ chân tốt, thiết kế thể thao hiện đại.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "Light Foam + BOOM",
+      "upper": "Mesh thoáng khí + TPU"
+    },
+    "images": [
+      {
+        "id": 56,
+        "image_url": "/frontend/assets/products/catalog/p056.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 70,
+        "sku_code": "TS-C06-P056-A",
+        "size": "41",
+        "color": "Trắng Đen",
+        "price": 2350000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 71,
+        "sku_code": "TS-C06-P056-B",
+        "size": "42",
+        "color": "Trắng Đen",
+        "price": 2350000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 3,
+    "name": "Giày cầu lông Victor P9200III",
+    "description": "Dòng giày bảo vệ mắt cá chân trứ danh của Victor với độ bền đế vượt trội.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "NEO DUPLEX + HYPEREVA",
+      "stability": "LS-S chống lật cổ chân"
+    },
+    "images": [
+      {
+        "id": 57,
+        "image_url": "/frontend/assets/products/catalog/p057.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 72,
+        "sku_code": "TS-C06-P057-A",
+        "size": "41",
+        "color": "Trắng Xanh Navy",
+        "price": 2590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 73,
+        "sku_code": "TS-C06-P057-B",
+        "size": "42",
+        "color": "Trắng Xanh Navy",
+        "price": 2590000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 3,
+    "name": "Giày cầu lông Victor A970NitroLite",
+    "description": "Công nghệ bọt khí NitroLite siêu nhẹ đàn hồi giúp khởi phát bước chạy bùng nổ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "NitroLite Foam",
+      "upper": "Microfiber PU Leather"
+    },
+    "images": [
+      {
+        "id": 58,
+        "image_url": "/frontend/assets/products/catalog/p058.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 74,
+        "sku_code": "TS-C06-P058-A",
+        "size": "42",
+        "color": "Trắng Tím",
+        "price": 2890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 75,
+        "sku_code": "TS-C06-P058-B",
+        "size": "40",
+        "color": "Trắng Tím",
+        "price": 2890000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 10,
+    "name": "Giày cầu lông Mizuno Wave Claw 3",
+    "description": "Form giày cực kỳ vừa vặn cho bàn chân bè người Việt, đệm Wave êm ái ổn định.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "MIZUNO ENERZY + Wave",
+      "fit": "Chân bè châu Á"
+    },
+    "images": [
+      {
+        "id": 59,
+        "image_url": "/frontend/assets/products/catalog/p059.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 76,
+        "sku_code": "TS-C06-P059-A",
+        "size": "41",
+        "color": "Trắng Xanh Dương",
+        "price": 2550000,
+        "sale_price": 2290000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 77,
+        "sku_code": "TS-C06-P059-B",
+        "size": "42",
+        "color": "Trắng Xanh Dương",
+        "price": 2550000,
+        "sale_price": 2290000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "sport_id": 1,
+    "category_id": 6,
+    "brand_id": 10,
+    "name": "Giày cầu lông Mizuno Wave Fang 2 (Cũ 90%)",
+    "description": "Dòng giày bền bỉ chắc chắn với đế cao su XG bám sàn cực tốt.",
+    "condition_type": "CU",
+    "wear_description": "Đế cao su mòn nhẹ khoảng 10% ở gót ngoài, da mũi giày nguyên vẹn, lót trong sạch đẹp.",
+    "status": "ACTIVE",
+    "specifications": {
+      "outsole": "XG Rubber",
+      "midsole": "Mizuno Wave",
+      "condition_grade": "90%"
+    },
+    "images": [
+      {
+        "id": 60,
+        "image_url": "/frontend/assets/products/catalog/p060.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 78,
+        "sku_code": "TS-C06-P060-A",
+        "size": "41",
+        "color": "Trắng Đỏ",
+        "price": 1390000,
+        "stock": 1,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 4,
+    "name": "Giày bóng đá Nike Zoom Mercurial Vapor 15 Pro TF",
+    "description": "Siêu phẩm tốc độ sân cỏ nhân tạo với túi khí Air Zoom hoàn trả năng lượng cực nhạy.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "cushion": "Air Zoom",
+      "upper": "NikeSkin"
+    },
+    "images": [
+      {
+        "id": 61,
+        "image_url": "/frontend/assets/products/catalog/p061.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 79,
+        "sku_code": "TS-C07-P061-A",
+        "size": "41",
+        "color": "Đỏ Cam",
+        "price": 2850000,
+        "sale_price": 2490000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 80,
+        "sku_code": "TS-C07-P061-B",
+        "size": "42",
+        "color": "Đỏ Cam",
+        "price": 2850000,
+        "sale_price": 2490000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 4,
+    "name": "Giày bóng đá Nike Tiempo Legend 10 Pro TF",
+    "description": "Cảm giác chạm bóng êm ái thật chân nhất phân khúc với chất liệu da tổng hợp FlyTouch Pro.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "upper": "FlyTouch Pro siêu mềm"
+    },
+    "images": [
+      {
+        "id": 62,
+        "image_url": "/frontend/assets/products/catalog/p062.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 81,
+        "sku_code": "TS-C07-P062-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 2790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 82,
+        "sku_code": "TS-C07-P062-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 2790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 4,
+    "name": "Giày bóng đá Nike Phantom GX 2 Pro TF",
+    "description": "Bề mặt vân nổi Gripknit hỗ trợ kiểm soát bóng dính chân và chuyền sút chuẩn xác.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "upper": "Flyknit + Gripknit"
+    },
+    "images": [
+      {
+        "id": 63,
+        "image_url": "/frontend/assets/products/catalog/p063.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 83,
+        "sku_code": "TS-C07-P063-A",
+        "size": "41",
+        "color": "Đen Trắng",
+        "price": 2890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 84,
+        "sku_code": "TS-C07-P063-B",
+        "size": "42",
+        "color": "Đen Trắng",
+        "price": 2890000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 5,
+    "name": "Giày bóng đá Adidas Predator Elite TF",
+    "description": "Dòng giày sút xoáy huyền thoại trang bị vây cao su Strikeskin tăng độ bám bóng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "upper": "HybridTouch 2.0 + Strikeskin",
+      "cushion": "Lightstrike"
+    },
+    "images": [
+      {
+        "id": 64,
+        "image_url": "/frontend/assets/products/catalog/p064.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 85,
+        "sku_code": "TS-C07-P064-A",
+        "size": "41",
+        "color": "Đen Đỏ Trắng",
+        "price": 3100000,
+        "sale_price": 2790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 86,
+        "sku_code": "TS-C07-P064-B",
+        "size": "42",
+        "color": "Đen Đỏ Trắng",
+        "price": 3100000,
+        "sale_price": 2790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 5,
+    "name": "Giày bóng đá Adidas F50 Pro TF",
+    "description": "Sự trở lại của huyền thoại tốc độ F50 với trọng lượng nhẹ và bộ đế bám sân sắc bén.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "upper": "Fibertouch",
+      "cushion": "Lightstrike"
+    },
+    "images": [
+      {
+        "id": 65,
+        "image_url": "/frontend/assets/products/catalog/p065.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 87,
+        "sku_code": "TS-C07-P065-A",
+        "size": "41",
+        "color": "Trắng Đỏ Xanh",
+        "price": 2950000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 88,
+        "sku_code": "TS-C07-P065-B",
+        "size": "42",
+        "color": "Trắng Đỏ Xanh",
+        "price": 2950000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 5,
+    "name": "Giày bóng đá Adidas Copa Pure 2 Pro TF",
+    "description": "Mũi giày da bò thật mềm mại cho cảm giác khống chế bóng cổ điển đầy tinh tế.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "upper": "Fusionskin Da Bò"
+    },
+    "images": [
+      {
+        "id": 66,
+        "image_url": "/frontend/assets/products/catalog/p066.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 89,
+        "sku_code": "TS-C07-P066-A",
+        "size": "41",
+        "color": "Trắng Xanh Navy",
+        "price": 2690000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 90,
+        "sku_code": "TS-C07-P066-B",
+        "size": "42",
+        "color": "Trắng Xanh Navy",
+        "price": 2690000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 10,
+    "name": "Giày bóng đá Mizuno Morelia Neo IV Pro AS TF",
+    "description": "Da Kangaroo mềm như bơ ôm gọn chân bè, đinh chữ L siêu bám sân cỏ nhân tạo.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "upper": "Da Kangaroo thật",
+      "weight": "235g"
+    },
+    "images": [
+      {
+        "id": 67,
+        "image_url": "/frontend/assets/products/catalog/p067.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 91,
+        "sku_code": "TS-C07-P067-A",
+        "size": "41",
+        "color": "Trắng Đỏ",
+        "price": 2990000,
+        "sale_price": 2690000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 92,
+        "sku_code": "TS-C07-P067-B",
+        "size": "42",
+        "color": "Trắng Đỏ",
+        "price": 2990000,
+        "sale_price": 2690000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 10,
+    "name": "Giày bóng đá Mizuno Alpha Pro AS TF",
+    "description": "Mẫu giày tốc độ nhẹ nhất lịch sử Mizuno, cực êm gót với lớp đệm Enerzy Foam.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "cushion": "MIZUNO ENERZY",
+      "weight": "225g"
+    },
+    "images": [
+      {
+        "id": 68,
+        "image_url": "/frontend/assets/products/catalog/p068.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 93,
+        "sku_code": "TS-C07-P068-A",
+        "size": "41",
+        "color": "Trắng Vàng",
+        "price": 2850000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 94,
+        "sku_code": "TS-C07-P068-B",
+        "size": "42",
+        "color": "Trắng Vàng",
+        "price": 2850000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 11,
+    "name": "Giày bóng đá Kamito TA11 Pro TF",
+    "description": "Đồng sáng tạo cùng tuyển thủ Nguyễn Tuấn Anh, form giày êm chân bền bỉ cực hợp sân 7.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "upper": "KA-FIBER",
+      "fit": "Form chân bè Việt Nam"
+    },
+    "images": [
+      {
+        "id": 69,
+        "image_url": "/frontend/assets/products/catalog/p069.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 95,
+        "sku_code": "TS-C07-P069-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 850000,
+        "sale_price": 790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 96,
+        "sku_code": "TS-C07-P069-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 850000,
+        "sale_price": 790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "sport_id": 2,
+    "category_id": 7,
+    "brand_id": 4,
+    "name": "Giày bóng đá Nike Phantom GX Pro TF (Cũ 88%)",
+    "description": "Hàng chính hãng đã qua sử dụng khoảng 10 trận sân 7, đinh còn rất sắc.",
+    "condition_type": "CU",
+    "wear_description": "Đinh dăm mòn nhẹ ~12%, mũi giày có vết xước nhỏ do sút bóng, keo đế nguyên zin chưa hở.",
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Sân cỏ nhân tạo TF",
+      "condition_grade": "88%"
+    },
+    "images": [
+      {
+        "id": 70,
+        "image_url": "/frontend/assets/products/catalog/p070.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 97,
+        "sku_code": "TS-C07-P070-A",
+        "size": "41",
+        "color": "Xanh Hồng",
+        "price": 1350000,
+        "stock": 1,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 4,
+    "name": "Giày Tennis Nike Court Air Zoom Vapor 11",
+    "description": "Thiết kế thấp sát mặt sân giúp chuyển hướng gắt và bứt tốc cực nhanh trên sân cứng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Hard Court",
+      "cushion": "Forefoot Air Zoom",
+      "profile": "Low-to-court"
+    },
+    "images": [
+      {
+        "id": 71,
+        "image_url": "/frontend/assets/products/catalog/p071.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 98,
+        "sku_code": "TS-C08-P071-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 3650000,
+        "sale_price": 3290000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 99,
+        "sku_code": "TS-C08-P071-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 3650000,
+        "sale_price": 3290000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 4,
+    "name": "Giày Tennis Nike Court Air Zoom GP Challenge Pro",
+    "description": "Khung đế rộng vững chãi chống lật cổ chân tuyệt vời cho cả Tennis lẫn Pickleball.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Hard Court / Pickleball",
+      "stability": "Midfoot Plastic Plate"
+    },
+    "images": [
+      {
+        "id": 72,
+        "image_url": "/frontend/assets/products/catalog/p072.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 100,
+        "sku_code": "TS-C08-P072-A",
+        "size": "41",
+        "color": "Trắng Cam",
+        "price": 3200000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 101,
+        "sku_code": "TS-C08-P072-B",
+        "size": "42",
+        "color": "Trắng Cam",
+        "price": 3200000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 4,
+    "name": "Giày Tennis Nike Court Vapor Pro 2",
+    "description": "Thoáng khí tối đa và bền bỉ cho những trận đấu kéo dài dưới trời nắng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Hard Court",
+      "upper": "Reinforced Mesh",
+      "cushion": "Air Zoom"
+    },
+    "images": [
+      {
+        "id": 73,
+        "image_url": "/frontend/assets/products/catalog/p073.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 102,
+        "sku_code": "TS-C08-P073-A",
+        "size": "41",
+        "color": "Trắng Đen",
+        "price": 3150000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 103,
+        "sku_code": "TS-C08-P073-B",
+        "size": "42",
+        "color": "Trắng Đen",
+        "price": 3150000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 5,
+    "name": "Giày Tennis Adidas Barricade 13",
+    "description": "Biểu tượng độ bền và sự ổn định hàng đầu thế giới cho những tay vợt trượt cứu bóng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Hard Court",
+      "midsole": "REPETITOR",
+      "outsole": "Adiwear siêu bền"
+    },
+    "images": [
+      {
+        "id": 74,
+        "image_url": "/frontend/assets/products/catalog/p074.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 104,
+        "sku_code": "TS-C08-P074-A",
+        "size": "42",
+        "color": "Trắng Đen Đỏ",
+        "price": 3690000,
+        "sale_price": 3350000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 105,
+        "sku_code": "TS-C08-P074-B",
+        "size": "40",
+        "color": "Trắng Đen Đỏ",
+        "price": 3690000,
+        "sale_price": 3350000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 5,
+    "name": "Giày Tennis Adidas Adizero Ubersonic 4.1",
+    "description": "Tối ưu tốc độ di chuyển nhẹ như bay với phần thân dệt ôm chân như tất.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Hard Court",
+      "midsole": "Lightstrike",
+      "weight": "Siêu nhẹ"
+    },
+    "images": [
+      {
+        "id": 75,
+        "image_url": "/frontend/assets/products/catalog/p075.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 106,
+        "sku_code": "TS-C08-P075-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 3490000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 107,
+        "sku_code": "TS-C08-P075-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 3490000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 5,
+    "name": "Giày Tennis Adidas CourtJam Control 3",
+    "description": "Mức giá dễ tiếp cận với đệm Bounce êm ái và khả năng chống xoắn bàn chân tốt.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Hard Court",
+      "midsole": "Bounce",
+      "torsion": "Torsion System"
+    },
+    "images": [
+      {
+        "id": 76,
+        "image_url": "/frontend/assets/products/catalog/p076.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 108,
+        "sku_code": "TS-C08-P076-A",
+        "size": "41",
+        "color": "Trắng Navy",
+        "price": 2350000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 109,
+        "sku_code": "TS-C08-P076-B",
+        "size": "42",
+        "color": "Trắng Navy",
+        "price": 2350000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 7,
+    "name": "Giày Tennis Babolat Jet Mach 3 All Court",
+    "description": "Đế cao su hợp tác cùng Michelin siêu bám sân kết hợp vải sợi Kevlar siêu nhẹ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "outsole": "Michelin Premium Rubber",
+      "upper": "Matryx EVO"
+    },
+    "images": [
+      {
+        "id": 77,
+        "image_url": "/frontend/assets/products/catalog/p077.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 110,
+        "sku_code": "TS-C08-P077-A",
+        "size": "41",
+        "color": "Xanh Đen",
+        "price": 3550000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 111,
+        "sku_code": "TS-C08-P077-B",
+        "size": "42",
+        "color": "Xanh Đen",
+        "price": 3550000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 7,
+    "name": "Giày Tennis Babolat Propulse Fury 3",
+    "description": "Khóa chặt cổ chân chắc chắn cho lối chơi di chuyển mạnh mẽ và bùng nổ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "outsole": "Michelin",
+      "stability": "Power Belt ôm cổ chân"
+    },
+    "images": [
+      {
+        "id": 78,
+        "image_url": "/frontend/assets/products/catalog/p078.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 112,
+        "sku_code": "TS-C08-P078-A",
+        "size": "42",
+        "color": "Trắng Đỏ",
+        "price": 3390000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 113,
+        "sku_code": "TS-C08-P078-B",
+        "size": "40",
+        "color": "Trắng Đỏ",
+        "price": 3390000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 6,
+    "name": "Giày Tennis Wilson Rush Pro 4.0",
+    "description": "Khung nâng đỡ 4D giảm xoắn bàn chân và tăng lực đẩy khi bật bước đầu tiên.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "chassis": "4D Support Chassis 2.0",
+      "cushion": "Energy Cell EVA"
+    },
+    "images": [
+      {
+        "id": 79,
+        "image_url": "/frontend/assets/products/catalog/p079.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 114,
+        "sku_code": "TS-C08-P079-A",
+        "size": "41",
+        "color": "Trắng Đỏ Đen",
+        "price": 3290000,
+        "sale_price": 2990000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 115,
+        "sku_code": "TS-C08-P079-B",
+        "size": "42",
+        "color": "Trắng Đỏ Đen",
+        "price": 3290000,
+        "sale_price": 2990000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "sport_id": 3,
+    "category_id": 8,
+    "brand_id": 6,
+    "name": "Giày Pickleball Wilson Viper Court Pro (Cũ 92%)",
+    "description": "Form mũi rộng thoải mái, đế cao su Duralast chuyên sân ngoài trời.",
+    "condition_type": "CU",
+    "wear_description": "Mới đi 4 buổi tập Pickleball, đế còn mới 92%, thân giày sạch đẹp không rách.",
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "Hard Court / Pickleball",
+      "fit": "Wide Toe Box",
+      "condition_grade": "92%"
+    },
+    "images": [
+      {
+        "id": 80,
+        "image_url": "/frontend/assets/products/catalog/p080.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 116,
+        "sku_code": "TS-C08-P080-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 1850000,
+        "stock": 1,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 10,
+    "name": "Giày bóng bàn Mizuno Wave Drive 9",
+    "description": "Mẫu giày bóng bàn huyền thoại được giới vận động viên tin dùng nhờ độ bám sàn gỗ tuyệt đối.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "outsole": "XG Rubber",
+      "midsole": "Mizuno Wave",
+      "weight": "255g"
+    },
+    "images": [
+      {
+        "id": 81,
+        "image_url": "/frontend/assets/products/catalog/p081.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 117,
+        "sku_code": "TS-C19-P081-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 2490000,
+        "sale_price": 2250000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 118,
+        "sku_code": "TS-C19-P081-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 2490000,
+        "sale_price": 2250000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 10,
+    "name": "Giày bóng bàn Mizuno Wave Medal 7",
+    "description": "Cải tiến đệm Enerzy êm ái hơn, hỗ trợ các bước di chuyển ngang tốc độ cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "MIZUNO ENERZY",
+      "stability": "Ổn định bước ngang"
+    },
+    "images": [
+      {
+        "id": 82,
+        "image_url": "/frontend/assets/products/catalog/p082.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 119,
+        "sku_code": "TS-C19-P082-A",
+        "size": "41",
+        "color": "Trắng Đỏ",
+        "price": 2590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 120,
+        "sku_code": "TS-C19-P082-B",
+        "size": "42",
+        "color": "Trắng Đỏ",
+        "price": 2590000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 10,
+    "name": "Giày bóng bàn Mizuno Wave Drive Neo 3",
+    "description": "Cảm giác chân trần nhạy bén nhất trong dòng giày bóng bàn Mizuno cao cấp.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "Siêu nhẹ",
+      "fit": "Sock-like Prime Fit"
+    },
+    "images": [
+      {
+        "id": 83,
+        "image_url": "/frontend/assets/products/catalog/p083.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 121,
+        "sku_code": "TS-C19-P083-A",
+        "size": "41",
+        "color": "Trắng Đen",
+        "price": 2790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 122,
+        "sku_code": "TS-C19-P083-B",
+        "size": "42",
+        "color": "Trắng Đen",
+        "price": 2790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 10,
+    "name": "Giày bóng bàn Mizuno Crossmatch Sword",
+    "description": "Đế phẳng chống trượt bền bỉ, lựa chọn kinh tế cho người chơi bóng bàn thường xuyên.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "outsole": "Non-marking Rubber",
+      "level": "Phong trào / Tập luyện"
+    },
+    "images": [
+      {
+        "id": 84,
+        "image_url": "/frontend/assets/products/catalog/p084.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 123,
+        "sku_code": "TS-C19-P084-A",
+        "size": "41",
+        "color": "Trắng Navy",
+        "price": 1650000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 124,
+        "sku_code": "TS-C19-P084-B",
+        "size": "42",
+        "color": "Trắng Navy",
+        "price": 1650000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 12,
+    "name": "Giày bóng bàn Butterfly Lezoline Rifones",
+    "description": "Flagship của Butterfly trang bị đầy đủ công nghệ giảm chấn và bám sàn thi đấu chuyên nghiệp.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "cushion": "B-Absorber",
+      "outsole": "Wingrip",
+      "stability": "STB chống xoắn"
+    },
+    "images": [
+      {
+        "id": 85,
+        "image_url": "/frontend/assets/products/catalog/p085.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 125,
+        "sku_code": "TS-C19-P085-A",
+        "size": "41",
+        "color": "Đen Trắng",
+        "price": 2650000,
+        "sale_price": 2390000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 126,
+        "sku_code": "TS-C19-P085-B",
+        "size": "42",
+        "color": "Đen Trắng",
+        "price": 2650000,
+        "sale_price": 2390000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 12,
+    "name": "Giày bóng bàn Butterfly Lezoline Gigu",
+    "description": "Đế dày êm hơn giúp giảm áp lực lên đầu gối và cổ chân trong các buổi tập dài.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "cushion": "Thick B-Absorber",
+      "outsole": "Wingrip"
+    },
+    "images": [
+      {
+        "id": 86,
+        "image_url": "/frontend/assets/products/catalog/p086.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 127,
+        "sku_code": "TS-C19-P086-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 2350000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 128,
+        "sku_code": "TS-C19-P086-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 2350000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 12,
+    "name": "Giày bóng bàn Butterfly Lezoline Vilata",
+    "description": "Thiết kế thanh lịch, nhẹ nhàng và cực kỳ thoáng khí cho người chơi câu lạc bộ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "weight": "Nhẹ linh hoạt",
+      "upper": "Mesh thoáng khí"
+    },
+    "images": [
+      {
+        "id": 87,
+        "image_url": "/frontend/assets/products/catalog/p087.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 129,
+        "sku_code": "TS-C19-P087-A",
+        "size": "41",
+        "color": "Trắng Bạc",
+        "price": 1790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 130,
+        "sku_code": "TS-C19-P087-B",
+        "size": "42",
+        "color": "Trắng Bạc",
+        "price": 1790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 2,
+    "name": "Giày bóng bàn Lining APPU011",
+    "description": "Đế cao su sống bám sàn tốt, form ôm gọn hỗ trợ đổi hướng nhanh.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "outsole": "Non-marking Gum",
+      "upper": "Mesh + TPU"
+    },
+    "images": [
+      {
+        "id": 88,
+        "image_url": "/frontend/assets/products/catalog/p088.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 131,
+        "sku_code": "TS-C19-P088-A",
+        "size": "41",
+        "color": "Trắng Đỏ",
+        "price": 1590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 132,
+        "sku_code": "TS-C19-P088-B",
+        "size": "42",
+        "color": "Trắng Đỏ",
+        "price": 1590000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 2,
+    "name": "Giày bóng bàn Lining APPT001 Pro",
+    "description": "Tích hợp thanh chống xoắn vòm bàn chân PROBAR LOC cùng đệm BOUNSE+ đàn hồi.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "BOUNSE+",
+      "stability": "PROBAR LOC"
+    },
+    "images": [
+      {
+        "id": 89,
+        "image_url": "/frontend/assets/products/catalog/p089.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 133,
+        "sku_code": "TS-C19-P089-A",
+        "size": "41",
+        "color": "Trắng Xanh Dương",
+        "price": 1950000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 134,
+        "sku_code": "TS-C19-P089-B",
+        "size": "42",
+        "color": "Trắng Xanh Dương",
+        "price": 1950000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "sport_id": 6,
+    "category_id": 19,
+    "brand_id": 1,
+    "name": "Giày trong nhà đa năng Yonex Strider Flow",
+    "description": "Đôi giày đa năng êm ái dùng tốt cho cả bóng bàn, cầu lông và tập luyện trong nhà.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "midsole": "Power Cushion",
+      "outsole": "Radial Blade"
+    },
+    "images": [
+      {
+        "id": 90,
+        "image_url": "/frontend/assets/products/catalog/p090.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 135,
+        "sku_code": "TS-C19-P090-A",
+        "size": "41",
+        "color": "Trắng Xanh",
+        "price": 1690000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 136,
+        "sku_code": "TS-C19-P090-B",
+        "size": "42",
+        "color": "Trắng Xanh",
+        "price": 1690000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 1,
+    "name": "Ống quả cầu lông Yonex Aerosensa 50 (AS50)",
+    "description": "Chuẩn thi đấu Olympic và các giải BWF World Tour, quỹ đạo bay cực kỳ ổn định.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông ngỗng cao cấp",
+      "speed": "77",
+      "standard": "BWF Approved"
+    },
+    "images": [
+      {
+        "id": 91,
+        "image_url": "/frontend/assets/products/catalog/p091.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 137,
+        "sku_code": "TS-C10-P091-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 890000,
+        "sale_price": 840000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 1,
+    "name": "Ống quả cầu lông Yonex Aerosensa 40 (AS40)",
+    "description": "Độ bền lông cao, cảm giác cầu đầm tay cho các trận đấu phong trào trình độ khá.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông ngỗng chọn lọc",
+      "speed": "77"
+    },
+    "images": [
+      {
+        "id": 92,
+        "image_url": "/frontend/assets/products/catalog/p092.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 138,
+        "sku_code": "TS-C10-P092-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 790000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 1,
+    "name": "Ống quả cầu lông Yonex Aerosensa 30 (AS30)",
+    "description": "Lựa chọn bán chạy hàng đầu tại các câu lạc bộ cầu lông chuyên nghiệp.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông ngỗng tự nhiên",
+      "speed": "77"
+    },
+    "images": [
+      {
+        "id": 93,
+        "image_url": "/frontend/assets/products/catalog/p093.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 139,
+        "sku_code": "TS-C10-P093-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 720000,
+        "sale_price": 680000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 1,
+    "name": "Ống quả cầu lông Yonex Aerosensa 20 (AS20)",
+    "description": "Bay đều, ít tưa lông khi đánh đôi cường độ cao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông vũ tự nhiên",
+      "speed": "77"
+    },
+    "images": [
+      {
+        "id": 94,
+        "image_url": "/frontend/assets/products/catalog/p094.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 140,
+        "sku_code": "TS-C10-P094-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 650000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 1,
+    "name": "Ống quả cầu lông Yonex Mavis 350 (Cầu nhựa)",
+    "description": "Cầu nhựa siêu bền với tốc độ phục hồi tương đương cầu lông vũ, lý tưởng cho tập luyện.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Nylon cao cấp",
+      "speed": "Medium (Xanh dương)"
+    },
+    "images": [
+      {
+        "id": 95,
+        "image_url": "/frontend/assets/products/catalog/p095.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 141,
+        "sku_code": "TS-C10-P095-A",
+        "size": "Ống 6 quả",
+        "color": "Vàng",
+        "price": 350000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 6,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 3,
+    "name": "Ống quả cầu lông Victor Master Ace",
+    "description": "Dòng cầu cao cấp nhất của Victor dùng tại nhiều giải đấu quốc tế.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông ngỗng loại 1",
+      "standard": "BWF Approved"
+    },
+    "images": [
+      {
+        "id": 96,
+        "image_url": "/frontend/assets/products/catalog/p096.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 142,
+        "sku_code": "TS-C10-P096-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 760000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 3,
+    "name": "Ống quả cầu lông Victor Champion No.1",
+    "description": "Cân bằng tuyệt vời giữa độ bền và cảm giác cầu, rất phổ biến tại Việt Nam.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông vịt tuyển chọn",
+      "speed": "77"
+    },
+    "images": [
+      {
+        "id": 97,
+        "image_url": "/frontend/assets/products/catalog/p097.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 143,
+        "sku_code": "TS-C10-P097-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 560000,
+        "sale_price": 520000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 3,
+    "name": "Ống quả cầu lông Victor Lark 5",
+    "description": "Đế bần ghép chắc chắn, chịu đập tốt phù hợp cho giao lưu câu lạc bộ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông vịt bền bỉ",
+      "speed": "77"
+    },
+    "images": [
+      {
+        "id": 98,
+        "image_url": "/frontend/assets/products/catalog/p098.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 144,
+        "sku_code": "TS-C10-P098-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 460000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 2,
+    "name": "Ống quả cầu lông Lining A+300",
+    "description": "Cầu thi đấu cao cấp của Li-Ning với độ ổn định quỹ đạo và độ bền vượt trội.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông ngỗng cao cấp",
+      "standard": "BWF Approved"
+    },
+    "images": [
+      {
+        "id": 99,
+        "image_url": "/frontend/assets/products/catalog/p099.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 145,
+        "sku_code": "TS-C10-P099-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 750000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "sport_id": 1,
+    "category_id": 10,
+    "brand_id": 2,
+    "name": "Ống quả cầu lông Lining A+90",
+    "description": "Đường cầu đầm chắc, thích hợp chơi trong nhà thi đấu có gió nhẹ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Lông vịt chọn lọc",
+      "speed": "77"
+    },
+    "images": [
+      {
+        "id": 100,
+        "image_url": "/frontend/assets/products/catalog/p100.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 146,
+        "sku_code": "TS-C10-P100-A",
+        "size": "Ống 12 quả",
+        "color": "Trắng",
+        "price": 590000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 101,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 4,
+    "name": "Quả bóng đá Nike Flight Premier League Match Ball",
+    "description": "Bóng thi đấu chính thức giải Ngoại Hạng Anh với rãnh khí động học giảm liệng gió 30%.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "tech": "Aerowsculpt",
+      "standard": "FIFA Quality Pro"
+    },
+    "images": [
+      {
+        "id": 101,
+        "image_url": "/frontend/assets/products/catalog/p101.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 147,
+        "sku_code": "TS-C11-P101-A",
+        "size": "Size 5",
+        "color": "Trắng Vàng Tím",
+        "price": 3200000,
+        "sale_price": 2890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 4,
+    "name": "Quả bóng đá Nike Academy Premier League",
+    "description": "Vỏ bóng có rãnh định hướng ổn định cùng ruột cao su giữ hơi cực lâu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "tech": "Nike Aerowsculpt",
+      "use": "Tập luyện & Thi đấu"
+    },
+    "images": [
+      {
+        "id": 102,
+        "image_url": "/frontend/assets/products/catalog/p102.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 148,
+        "sku_code": "TS-C11-P102-A",
+        "size": "Size 5",
+        "color": "Trắng Cam",
+        "price": 890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 4,
+    "name": "Quả bóng đá Nike Pitch Training",
+    "description": "Thiết kế họa tiết tương phản cao dễ quan sát bóng khi đá buổi tối trên sân nhân tạo.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "construction": "12 miếng khâu máy"
+    },
+    "images": [
+      {
+        "id": 103,
+        "image_url": "/frontend/assets/products/catalog/p103.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 149,
+        "sku_code": "TS-C11-P103-A",
+        "size": "Size 5",
+        "color": "Trắng Xanh",
+        "price": 590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 5,
+    "name": "Quả bóng đá Adidas UCL Pro Match Ball",
+    "description": "Bóng thi đấu chính thức UEFA Champions League với hoa văn ngôi sao kinh điển.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "construction": "Ép nhiệt không đường may",
+      "standard": "FIFA Quality Pro"
+    },
+    "images": [
+      {
+        "id": 104,
+        "image_url": "/frontend/assets/products/catalog/p104.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 150,
+        "sku_code": "TS-C11-P104-A",
+        "size": "Size 5",
+        "color": "Trắng Ngôi Sao",
+        "price": 3450000,
+        "sale_price": 3150000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 105,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 5,
+    "name": "Quả bóng đá Adidas Al Rihla Pro World Cup",
+    "description": "Cấu trúc 20 miếng ép nhiệt cho quỹ đạo bay cực nhanh và chính xác.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "tech": "CRT-CORE + Speedshell",
+      "standard": "FIFA Quality Pro"
+    },
+    "images": [
+      {
+        "id": 105,
+        "image_url": "/frontend/assets/products/catalog/p105.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 151,
+        "sku_code": "TS-C11-P105-A",
+        "size": "Size 5",
+        "color": "Trắng Đa Sắc",
+        "price": 3290000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 5,
+    "name": "Quả bóng đá Adidas Fussballliebe Euro 2024 Pro",
+    "description": "Bóng thi đấu chính thức Euro 2024 với bề mặt vân nổi tăng độ kiểm soát.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "tech": "PRECISIONSHELL",
+      "standard": "FIFA Quality Pro"
+    },
+    "images": [
+      {
+        "id": 106,
+        "image_url": "/frontend/assets/products/catalog/p106.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 152,
+        "sku_code": "TS-C11-P106-A",
+        "size": "Size 5",
+        "color": "Trắng Đen Đa Sắc",
+        "price": 3390000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 107,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 5,
+    "name": "Quả bóng đá Adidas Tiro League Thermally Bonded",
+    "description": "Bóng ép nhiệt không ngấm nước khi trời mưa, độ nảy cực kỳ chuẩn xác.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "construction": "Ép nhiệt chống thấm nước",
+      "standard": "IMS Certified"
+    },
+    "images": [
+      {
+        "id": 107,
+        "image_url": "/frontend/assets/products/catalog/p107.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 153,
+        "sku_code": "TS-C11-P107-A",
+        "size": "Size 5",
+        "color": "Trắng Đen",
+        "price": 1050000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 108,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 11,
+    "name": "Quả bóng đá Kamito KMB Pro Size 5",
+    "description": "Da PU mềm êm chân, chịu mài mòn tốt trên mặt cỏ nhân tạo và sân 7.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "material": "Da PU cao cấp",
+      "use": "Sân cỏ nhân tạo"
+    },
+    "images": [
+      {
+        "id": 108,
+        "image_url": "/frontend/assets/products/catalog/p108.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 154,
+        "sku_code": "TS-C11-P108-A",
+        "size": "Size 5",
+        "color": "Trắng Xanh Đỏ",
+        "price": 520000,
+        "sale_price": 470000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 11,
+    "name": "Quả bóng đá Kamito Futsal Size 4",
+    "description": "Chuyên dụng cho sân 5 và sàn gỗ Futsal với độ nảy đầm dễ xử lý kỹ thuật.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 4 (Futsal)",
+      "bounce": "Độ nảy thấp chuẩn Futsal"
+    },
+    "images": [
+      {
+        "id": 109,
+        "image_url": "/frontend/assets/products/catalog/p109.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 155,
+        "sku_code": "TS-C11-P109-A",
+        "size": "Size 4",
+        "color": "Trắng Cam",
+        "price": 490000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 110,
+    "sport_id": 2,
+    "category_id": 11,
+    "brand_id": 5,
+    "name": "Quả bóng đá Adidas Conext 24 League",
+    "description": "Cấu trúc không đường may TSBE giúp chạm bóng mượt và hạn chế thấm nước.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "size": "Size 5",
+      "construction": "TSBE Seamless",
+      "standard": "FIFA Quality"
+    },
+    "images": [
+      {
+        "id": 110,
+        "image_url": "/frontend/assets/products/catalog/p110.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 156,
+        "sku_code": "TS-C11-P110-A",
+        "size": "Size 5",
+        "color": "Trắng Đỏ Đen",
+        "price": 980000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 111,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 6,
+    "name": "Lon bóng Tennis Wilson US Open Extra Duty (3 quả)",
+    "description": "Bóng thi đấu chính thức giải Grand Slam US Open, nỉ dày cực bền trên sân cứng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "felt": "Tex/Tech Extra Duty",
+      "standard": "ITF & USTA Approved"
+    },
+    "images": [
+      {
+        "id": 111,
+        "image_url": "/frontend/assets/products/catalog/p111.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 157,
+        "sku_code": "TS-C12-P111-A",
+        "size": "Lon 3 quả",
+        "color": "Vàng Chanh",
+        "price": 195000,
+        "sale_price": 179000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 112,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 6,
+    "name": "Lon bóng Tennis Wilson Roland Garros All Court (4 quả)",
+    "description": "Bóng thi đấu giải Pháp Mở Rộng với lõi giữ áp suất cao và độ nảy đồng đều.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "felt": "All Court Felt",
+      "standard": "ITF Approved"
+    },
+    "images": [
+      {
+        "id": 112,
+        "image_url": "/frontend/assets/products/catalog/p112.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 158,
+        "sku_code": "TS-C12-P112-A",
+        "size": "Lon 4 quả",
+        "color": "Vàng Chanh",
+        "price": 245000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 4,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 113,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 6,
+    "name": "Lon bóng Tennis Wilson Championship Extra Duty (3 quả)",
+    "description": "Dòng bóng phổ thông bán chạy nhất của Wilson, giữ hơi tốt và giá hợp lý.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "felt": "Dura-Weave Felt",
+      "use": "Tập luyện & Thi đấu phong trào"
+    },
+    "images": [
+      {
+        "id": 113,
+        "image_url": "/frontend/assets/products/catalog/p113.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 159,
+        "sku_code": "TS-C12-P113-A",
+        "size": "Lon 3 quả",
+        "color": "Vàng Chanh",
+        "price": 165000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 114,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 6,
+    "name": "Lon bóng Tennis Wilson Triniti Pro (4 quả)",
+    "description": "Lõi đàn hồi tiên tiến giúp bóng tươi mới lâu gấp 4 lần bóng nén khí thông thường.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "core": "Engage Core (Hộp giấy sinh thái)",
+      "durability": "Giữ độ nảy lâu gấp 4 lần"
+    },
+    "images": [
+      {
+        "id": 114,
+        "image_url": "/frontend/assets/products/catalog/p114.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 160,
+        "sku_code": "TS-C12-P114-A",
+        "size": "Lon 4 quả",
+        "color": "Vàng Chanh",
+        "price": 255000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 4,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 115,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 7,
+    "name": "Lon bóng Tennis Babolat Gold Championship (4 quả)",
+    "description": "Cảm giác đánh êm tay, lớp nỉ dệt chặt hạn chế xù lông nhanh.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "All Court",
+      "standard": "ITF Approved"
+    },
+    "images": [
+      {
+        "id": 115,
+        "image_url": "/frontend/assets/products/catalog/p115.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 161,
+        "sku_code": "TS-C12-P115-A",
+        "size": "Lon 4 quả",
+        "color": "Vàng Chanh",
+        "price": 220000,
+        "sale_price": 199000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 4,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 116,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 7,
+    "name": "Lon bóng Tennis Babolat Team All Court (4 quả)",
+    "description": "Bóng nén áp suất cao kết hợp độ bền ấn tượng cho các trận đánh đơn kéo dài.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "felt": "Extra Feel Felt",
+      "standard": "ITF Approved"
+    },
+    "images": [
+      {
+        "id": 116,
+        "image_url": "/frontend/assets/products/catalog/p116.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 162,
+        "sku_code": "TS-C12-P116-A",
+        "size": "Lon 4 quả",
+        "color": "Vàng Chanh",
+        "price": 235000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 4,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 117,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 7,
+    "name": "Lon bóng Tennis Babolat Gold Academy (3 quả)",
+    "description": "Lý tưởng cho huấn luyện viên và học viên tập luyện nhiều giờ liên tục.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "type": "Bóng không áp suất bền bỉ",
+      "use": "Luyện tập giỏ bóng"
+    },
+    "images": [
+      {
+        "id": 117,
+        "image_url": "/frontend/assets/products/catalog/p117.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 163,
+        "sku_code": "TS-C12-P117-A",
+        "size": "Lon 3 quả",
+        "color": "Vàng Chanh",
+        "price": 155000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 118,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 1,
+    "name": "Lon bóng Tennis Yonex Tour Platinum (4 quả)",
+    "description": "Bóng cao cấp nhất của Yonex với nỉ len dệt dày cho cảm giác bóng êm và chính xác.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "felt": "Woven Wool Felt",
+      "standard": "ITF Approved"
+    },
+    "images": [
+      {
+        "id": 118,
+        "image_url": "/frontend/assets/products/catalog/p118.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 164,
+        "sku_code": "TS-C12-P118-A",
+        "size": "Lon 4 quả",
+        "color": "Vàng Chanh",
+        "price": 260000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 4,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 119,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 1,
+    "name": "Lon bóng Tennis Yonex Championship (3 quả)",
+    "description": "Độ nảy ổn định, dễ kiểm soát trên nhiều loại mặt sân khác nhau.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "surface": "All Court",
+      "standard": "ITF Approved"
+    },
+    "images": [
+      {
+        "id": 119,
+        "image_url": "/frontend/assets/products/catalog/p119.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 165,
+        "sku_code": "TS-C12-P119-A",
+        "size": "Lon 3 quả",
+        "color": "Vàng Chanh",
+        "price": 175000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 120,
+    "sport_id": 3,
+    "category_id": 12,
+    "brand_id": 6,
+    "name": "Lon bóng Tennis Wilson Starter Red (3 quả - Trẻ em)",
+    "description": "Bóng xốp nhẹ tốc độ chậm giúp trẻ em dễ dàng làm quen kỹ thuật đánh bóng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "speed": "Chậm hơn 75%",
+      "use": "Trẻ em & Người mới tập"
+    },
+    "images": [
+      {
+        "id": 120,
+        "image_url": "/frontend/assets/products/catalog/p120.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 166,
+        "sku_code": "TS-C12-P120-A",
+        "size": "Lon 3 quả",
+        "color": "Đỏ Vàng",
+        "price": 160000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 121,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 9,
+    "name": "Hộp 3 quả bóng Pickleball Joola Primo Outdoor",
+    "description": "Bóng thi đấu ngoài trời 40 lỗ chuẩn xác, bay ổn định trước gió.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "40 lỗ khoan",
+      "standard": "USAPA Approved",
+      "use": "Ngoài trời"
+    },
+    "images": [
+      {
+        "id": 121,
+        "image_url": "/frontend/assets/products/catalog/p121.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 167,
+        "sku_code": "TS-C13-P121-A",
+        "size": "Hộp 3 quả",
+        "color": "Vàng Neon",
+        "price": 250000,
+        "sale_price": 229000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 122,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 9,
+    "name": "Hộp 4 quả bóng Pickleball Joola Heleus Outdoor",
+    "description": "Công nghệ đúc nguyên khối hạn chế nứt vỡ khi đánh mạnh liên tục.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "40 lỗ đúc nguyên khối",
+      "standard": "USAPA Approved"
+    },
+    "images": [
+      {
+        "id": 122,
+        "image_url": "/frontend/assets/products/catalog/p122.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 168,
+        "sku_code": "TS-C13-P122-A",
+        "size": "Hộp 4 quả",
+        "color": "Vàng Chanh",
+        "price": 340000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 4,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 123,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 9,
+    "name": "Hộp 12 quả bóng Pickleball Joola Primo Pack",
+    "description": "Gói tiết kiệm 12 quả chính hãng Joola cho câu lạc bộ và nhóm chơi thường xuyên.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "40 lỗ",
+      "quantity": "12 quả / hộp"
+    },
+    "images": [
+      {
+        "id": 123,
+        "image_url": "/frontend/assets/products/catalog/p123.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 169,
+        "sku_code": "TS-C13-P123-A",
+        "size": "Hộp 12 quả",
+        "color": "Vàng Neon",
+        "price": 890000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 124,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 9,
+    "name": "Hộp 3 quả bóng Pickleball Joola Indoor 26 lỗ",
+    "description": "Thiết kế 26 lỗ lớn hơn giúp kiểm soát bóng tốt trên mặt sàn gỗ/nhựa trong nhà.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "26 lỗ",
+      "use": "Sân trong nhà"
+    },
+    "images": [
+      {
+        "id": 124,
+        "image_url": "/frontend/assets/products/catalog/p124.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 170,
+        "sku_code": "TS-C13-P124-A",
+        "size": "Hộp 3 quả",
+        "color": "Cam Neon",
+        "price": 230000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 125,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 8,
+    "name": "Hộp 4 quả bóng Pickleball Selkirk Pro S1",
+    "description": "Nổi tiếng với độ bền hàng đầu thị trường và quỹ đạo bay nhất quán.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "38 lỗ chuẩn lực",
+      "durability": "Chống nứt vượt trội"
+    },
+    "images": [
+      {
+        "id": 125,
+        "image_url": "/frontend/assets/products/catalog/p125.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 171,
+        "sku_code": "TS-C13-P125-A",
+        "size": "Hộp 4 quả",
+        "color": "Vàng Chanh",
+        "price": 350000,
+        "sale_price": 319000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 4,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 126,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 8,
+    "name": "Hộp 12 quả bóng Pickleball Selkirk Pro S1",
+    "description": "Quy cách 12 quả tiết kiệm dành cho các buổi luyện tập và giải đấu phong trào.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "38 lỗ",
+      "quantity": "12 quả / hộp"
+    },
+    "images": [
+      {
+        "id": 126,
+        "image_url": "/frontend/assets/products/catalog/p126.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 172,
+        "sku_code": "TS-C13-P126-A",
+        "size": "Hộp 12 quả",
+        "color": "Vàng Chanh",
+        "price": 950000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 127,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 8,
+    "name": "Hộp 3 quả bóng Pickleball Selkirk SLK Hybrid+",
+    "description": "Dòng bóng đa năng chơi ổn định cả trên sân ngoài trời lẫn nhà thi đấu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "40 lỗ",
+      "use": "Trong nhà & Ngoài trời"
+    },
+    "images": [
+      {
+        "id": 127,
+        "image_url": "/frontend/assets/products/catalog/p127.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 173,
+        "sku_code": "TS-C13-P127-A",
+        "size": "Hộp 3 quả",
+        "color": "Xanh Vàng",
+        "price": 240000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 128,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 8,
+    "name": "Túi 100 quả bóng Pickleball Selkirk Pro S1 Bucket",
+    "description": "Giải pháp tối ưu cho học viện và cụm sân Pickleball chuyên nghiệp.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "38 lỗ",
+      "quantity": "100 quả / thùng"
+    },
+    "images": [
+      {
+        "id": 128,
+        "image_url": "/frontend/assets/products/catalog/p128.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 174,
+        "sku_code": "TS-C13-P128-A",
+        "size": "Thùng 100 quả",
+        "color": "Vàng Chanh",
+        "price": 6800000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 100,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 129,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 11,
+    "name": "Hộp 3 quả bóng Pickleball Kamito Outdoor 40 lỗ",
+    "description": "Đạt chuẩn kích thước và trọng lượng thi đấu với mức giá cực kỳ kinh tế.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "40 lỗ",
+      "diameter": "74mm",
+      "weight": "26g"
+    },
+    "images": [
+      {
+        "id": 129,
+        "image_url": "/frontend/assets/products/catalog/p129.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 175,
+        "sku_code": "TS-C13-P129-A",
+        "size": "Hộp 3 quả",
+        "color": "Vàng Neon",
+        "price": 180000,
+        "sale_price": 159000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 130,
+    "sport_id": 4,
+    "category_id": 13,
+    "brand_id": 11,
+    "name": "Hộp 6 quả bóng Pickleball Kamito Pro Training",
+    "description": "Nhựa TPE đàn hồi dẻo dai, ít biến dạng khi thi đấu dưới nắng nóng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "holes": "40 lỗ",
+      "quantity": "6 quả / hộp"
+    },
+    "images": [
+      {
+        "id": 130,
+        "image_url": "/frontend/assets/products/catalog/p130.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 176,
+        "sku_code": "TS-C13-P130-A",
+        "size": "Hộp 6 quả",
+        "color": "Vàng Cam",
+        "price": 330000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 6,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 131,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 13,
+    "name": "Hộp 10 quả bóng bàn DHS D40+ 3 sao ITTF",
+    "description": "Bóng thi đấu phổ biến nhất thế giới với độ tròn chuẩn xác và độ nảy đồng nhất.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "grade": "3 Sao ITTF Approved"
+    },
+    "images": [
+      {
+        "id": 131,
+        "image_url": "/frontend/assets/products/catalog/p131.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 177,
+        "sku_code": "TS-C20-P131-A",
+        "size": "Hộp 10 quả",
+        "color": "Trắng",
+        "price": 195000,
+        "sale_price": 179000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 10,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 132,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 13,
+    "name": "Hộp 6 quả bóng bàn DHS DJ40+ WTT 3 sao",
+    "description": "Phiên bản bóng thi đấu chính thức tại các giải World Table Tennis (WTT).",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS cao cấp",
+      "standard": "WTT Official Match Ball"
+    },
+    "images": [
+      {
+        "id": 132,
+        "image_url": "/frontend/assets/products/catalog/p132.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 178,
+        "sku_code": "TS-C20-P132-A",
+        "size": "Hộp 6 quả",
+        "color": "Trắng",
+        "price": 240000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 6,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 133,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 13,
+    "name": "Hộp 6 quả bóng bàn DHS RS40+ 3 sao",
+    "description": "Vỏ bóng dày dặn chống móp méo tốt, âm thanh chạm vợt giòn rõ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "grade": "3 Sao ITTF"
+    },
+    "images": [
+      {
+        "id": 133,
+        "image_url": "/frontend/assets/products/catalog/p133.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 179,
+        "sku_code": "TS-C20-P133-A",
+        "size": "Hộp 6 quả",
+        "color": "Trắng",
+        "price": 165000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 6,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 134,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 13,
+    "name": "Hộp 100 quả bóng bàn tập luyện DHS 1 sao 40+",
+    "description": "Chuyên dụng cho tập nhiều bóng và máy bắn bóng tại các câu lạc bộ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "quantity": "100 quả / hộp"
+    },
+    "images": [
+      {
+        "id": 134,
+        "image_url": "/frontend/assets/products/catalog/p134.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 180,
+        "sku_code": "TS-C20-P134-A",
+        "size": "Hộp 100 quả",
+        "color": "Trắng",
+        "price": 690000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 100,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 135,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 12,
+    "name": "Hộp 3 quả bóng bàn Butterfly R40+ 3 sao ITTF",
+    "description": "Độ cân bằng tuyệt hảo và độ nảy ổn định cao chuẩn giải đấu chuyên nghiệp.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "origin": "Trung Quốc (Chuẩn Nhật)",
+      "grade": "3 Sao ITTF"
+    },
+    "images": [
+      {
+        "id": 135,
+        "image_url": "/frontend/assets/products/catalog/p135.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 181,
+        "sku_code": "TS-C20-P135-A",
+        "size": "Hộp 3 quả",
+        "color": "Trắng",
+        "price": 135000,
+        "sale_price": 120000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 136,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 12,
+    "name": "Hộp 12 quả bóng bàn Butterfly R40+ 3 sao",
+    "description": "Hộp 12 quả chính hãng Butterfly giúp tiết kiệm chi phí cho đội tuyển.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "quantity": "12 quả / hộp"
+    },
+    "images": [
+      {
+        "id": 136,
+        "image_url": "/frontend/assets/products/catalog/p136.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 182,
+        "sku_code": "TS-C20-P136-A",
+        "size": "Hộp 12 quả",
+        "color": "Trắng",
+        "price": 490000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 12,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 137,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 12,
+    "name": "Hộp 3 quả bóng bàn Butterfly A40+ 3 sao",
+    "description": "Bề mặt bóng mịn đều giúp tạo xoáy chuẩn xác trong từng pha giao bóng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "grade": "3 Sao ITTF"
+    },
+    "images": [
+      {
+        "id": 137,
+        "image_url": "/frontend/assets/products/catalog/p137.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 183,
+        "sku_code": "TS-C20-P137-A",
+        "size": "Hộp 3 quả",
+        "color": "Trắng",
+        "price": 145000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 3,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 138,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 12,
+    "name": "Hộp 6 quả bóng bàn tập luyện Butterfly Training 40+",
+    "description": "Độ bền cao và cảm giác gần sát bóng thi đấu 3 sao.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "use": "Tập luyện câu lạc bộ"
+    },
+    "images": [
+      {
+        "id": 138,
+        "image_url": "/frontend/assets/products/catalog/p138.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 184,
+        "sku_code": "TS-C20-P138-A",
+        "size": "Hộp 6 quả",
+        "color": "Trắng",
+        "price": 110000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 6,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 139,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 2,
+    "name": "Hộp 6 quả bóng bàn Lining 3 sao 40+ ITTF",
+    "description": "Bóng nhựa ABS không đường may cho quỹ đạo bay mượt mà ổn định.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "grade": "3 Sao ITTF"
+    },
+    "images": [
+      {
+        "id": 139,
+        "image_url": "/frontend/assets/products/catalog/p139.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 185,
+        "sku_code": "TS-C20-P139-A",
+        "size": "Hộp 6 quả",
+        "color": "Trắng",
+        "price": 155000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 6,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 140,
+    "sport_id": 6,
+    "category_id": 20,
+    "brand_id": 13,
+    "name": "Hộp 10 quả bóng bàn DHS D40+ 3 sao màu Cam",
+    "description": "Màu cam dễ nhìn hơn trong phòng tập ánh sáng trắng hoặc tường sáng màu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "diameter": "40+ ABS",
+      "color": "Cam nổi bật"
+    },
+    "images": [
+      {
+        "id": 140,
+        "image_url": "/frontend/assets/products/catalog/p140.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 186,
+        "sku_code": "TS-C20-P140-A",
+        "size": "Hộp 10 quả",
+        "color": "Cam",
+        "price": 205000,
+        "stock": 18,
+        "unit": "LO",
+        "quantity_per_lot": 10,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 141,
+    "sport_id": 1,
+    "category_id": 15,
+    "brand_id": 1,
+    "name": "Áo cầu lông Yonex Tournament Pro 10519",
+    "description": "Công nghệ VeryCOOL chứa Xylitol tự nhiên giúp làm mát cơ thể tức thì khi thi đấu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "100% Polyester",
+      "tech": "VeryCOOL Dry giảm 3°C"
+    },
+    "images": [
+      {
+        "id": 141,
+        "image_url": "/frontend/assets/products/catalog/p141.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 187,
+        "sku_code": "TS-C15-P141-A",
+        "size": "L",
+        "color": "Trắng Đỏ",
+        "price": 690000,
+        "sale_price": 590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 188,
+        "sku_code": "TS-C15-P141-B",
+        "size": "XL",
+        "color": "Trắng Đỏ",
+        "price": 690000,
+        "sale_price": 590000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 142,
+    "sport_id": 1,
+    "category_id": 15,
+    "brand_id": 1,
+    "name": "Áo cầu lông Yonex National Team 2024",
+    "description": "Form áo thi đấu đội tuyển thoáng khí, đường may raglan hỗ trợ vung tay linh hoạt.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Polyester co giãn 4 chiều",
+      "tech": "UV Reduction + Sweat Absorbent"
+    },
+    "images": [
+      {
+        "id": 142,
+        "image_url": "/frontend/assets/products/catalog/p142.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 189,
+        "sku_code": "TS-C15-P142-A",
+        "size": "L",
+        "color": "Xanh Navy",
+        "price": 750000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 190,
+        "sku_code": "TS-C15-P142-B",
+        "size": "XL",
+        "color": "Xanh Navy",
+        "price": 750000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 143,
+    "sport_id": 1,
+    "category_id": 15,
+    "brand_id": 2,
+    "name": "Áo cầu lông Lining AAYT015 Dry-Fit",
+    "description": "Vải siêu nhẹ nhanh khô giúp cơ thể luôn thoải mái trong suốt set đấu căng thẳng.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Polyester",
+      "tech": "AT DRY thấm hút nhanh"
+    },
+    "images": [
+      {
+        "id": 143,
+        "image_url": "/frontend/assets/products/catalog/p143.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 191,
+        "sku_code": "TS-C15-P143-A",
+        "size": "L",
+        "color": "Đỏ Đen",
+        "price": 550000,
+        "sale_price": 490000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 192,
+        "sku_code": "TS-C15-P143-B",
+        "size": "XL",
+        "color": "Đỏ Đen",
+        "price": 550000,
+        "sale_price": 490000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 144,
+    "sport_id": 1,
+    "category_id": 15,
+    "brand_id": 3,
+    "name": "Áo cầu lông Victor T-40005 Competition",
+    "description": "Họa tiết hình học năng động, thấm hút mồ hôi nhanh và không bết dính da.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "100% Recycled Polyester",
+      "tech": "PerfectDRY"
+    },
+    "images": [
+      {
+        "id": 144,
+        "image_url": "/frontend/assets/products/catalog/p144.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 193,
+        "sku_code": "TS-C15-P144-A",
+        "size": "L",
+        "color": "Trắng Xanh",
+        "price": 590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 194,
+        "sku_code": "TS-C15-P144-B",
+        "size": "XL",
+        "color": "Trắng Xanh",
+        "price": 590000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 145,
+    "sport_id": 2,
+    "category_id": 15,
+    "brand_id": 4,
+    "name": "Áo đấu bóng đá Nike Dri-FIT Strike Jersey",
+    "description": "Áo tập luyện và thi đấu bóng đá chính hãng Nike với lưới thoát khí dọc hai bên sườn.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "100% Polyester",
+      "tech": "Nike Dri-FIT"
+    },
+    "images": [
+      {
+        "id": 145,
+        "image_url": "/frontend/assets/products/catalog/p145.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 195,
+        "sku_code": "TS-C15-P145-A",
+        "size": "L",
+        "color": "Xanh Đen",
+        "price": 950000,
+        "sale_price": 850000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 196,
+        "sku_code": "TS-C15-P145-B",
+        "size": "XL",
+        "color": "Xanh Đen",
+        "price": 950000,
+        "sale_price": 850000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 146,
+    "sport_id": 2,
+    "category_id": 15,
+    "brand_id": 4,
+    "name": "Áo bóng đá Nike Chelsea Home 2024/25",
+    "description": "Phiên bản sân nhà chính hãng với họa tiết sóng nước đặc trưng và vải thoáng khí.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Dri-FIT ADV",
+      "fit": "Stadium Fit"
+    },
+    "images": [
+      {
+        "id": 146,
+        "image_url": "/frontend/assets/products/catalog/p146.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 197,
+        "sku_code": "TS-C15-P146-A",
+        "size": "L",
+        "color": "Xanh Dương",
+        "price": 1890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 198,
+        "sku_code": "TS-C15-P146-B",
+        "size": "XL",
+        "color": "Xanh Dương",
+        "price": 1890000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 147,
+    "sport_id": 2,
+    "category_id": 15,
+    "brand_id": 5,
+    "name": "Áo đấu bóng đá Adidas Real Madrid Home 2024/25",
+    "description": "Thiết kế trắng cổ điển thanh lịch của đội bóng Hoàng Gia với công nghệ hút ẩm AEROREADY.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "100% Recycled Polyester",
+      "tech": "AEROREADY"
+    },
+    "images": [
+      {
+        "id": 147,
+        "image_url": "/frontend/assets/products/catalog/p147.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 199,
+        "sku_code": "TS-C15-P147-A",
+        "size": "L",
+        "color": "Trắng Đen",
+        "price": 1950000,
+        "sale_price": 1790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 200,
+        "sku_code": "TS-C15-P147-B",
+        "size": "XL",
+        "color": "Trắng Đen",
+        "price": 1950000,
+        "sale_price": 1790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 148,
+    "sport_id": 2,
+    "category_id": 15,
+    "brand_id": 5,
+    "name": "Áo thể thao Adidas Tiro 24 Training Jersey",
+    "description": "3 sọc đặc trưng dọc vai, form dáng thể thao hiện đại phù hợp mọi môn vận động.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Polyester Interlock",
+      "tech": "AEROREADY"
+    },
+    "images": [
+      {
+        "id": 148,
+        "image_url": "/frontend/assets/products/catalog/p148.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 201,
+        "sku_code": "TS-C15-P148-A",
+        "size": "L",
+        "color": "Đen Trắng",
+        "price": 790000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 202,
+        "sku_code": "TS-C15-P148-B",
+        "size": "XL",
+        "color": "Đen Trắng",
+        "price": 790000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 149,
+    "sport_id": 2,
+    "category_id": 15,
+    "brand_id": 11,
+    "name": "Bộ quần áo bóng đá Kamito Galaxy",
+    "description": "Vải mè kim thoáng mát, in chuyển nhiệt sắc nét không bong tróc khi giặt máy.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Vải mè thể thao cao cấp",
+      "fit": "Form Việt Nam"
+    },
+    "images": [
+      {
+        "id": 149,
+        "image_url": "/frontend/assets/products/catalog/p149.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 203,
+        "sku_code": "TS-C15-P149-A",
+        "size": "L",
+        "color": "Xanh Ngọc",
+        "price": 320000,
+        "sale_price": 279000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 204,
+        "sku_code": "TS-C15-P149-B",
+        "size": "XL",
+        "color": "Xanh Ngọc",
+        "price": 320000,
+        "sale_price": 279000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 150,
+    "sport_id": 1,
+    "category_id": 15,
+    "brand_id": 1,
+    "name": "Quần short cầu lông Yonex 15140 Pro",
+    "description": "Cạp chun êm ái, túi quần sâu giữ bóng chắc chắn cho cả cầu lông và tennis.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "material": "Polyester co giãn",
+      "tech": "VeryCOOL + Túi sâu"
+    },
+    "images": [
+      {
+        "id": 150,
+        "image_url": "/frontend/assets/products/catalog/p150.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 205,
+        "sku_code": "TS-C15-P150-A",
+        "size": "L",
+        "color": "Đen",
+        "price": 480000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      },
+      {
+        "id": 206,
+        "sku_code": "TS-C15-P150-B",
+        "size": "XL",
+        "color": "Đen",
+        "price": 480000,
+        "stock": 12,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 151,
+    "sport_id": 1,
+    "category_id": 16,
+    "brand_id": 1,
+    "name": "Túi vợt cầu lông Yonex Pro Tournament 92431W",
+    "description": "Dáng túi chữ nhật cứng cáp chuyên nghiệp với lớp lót cách nhiệt bảo vệ cước vợt.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "6-9 cây vợt",
+      "material": "Polyester + PU chống nước",
+      "compartments": "2 ngăn lớn + ngăn giày"
+    },
+    "images": [
+      {
+        "id": 151,
+        "image_url": "/frontend/assets/products/catalog/p151.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 207,
+        "sku_code": "TS-C16-P151-A",
+        "size": "6-9 vợt",
+        "color": "Xanh Đen",
+        "price": 1650000,
+        "sale_price": 1490000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 152,
+    "sport_id": 1,
+    "category_id": 16,
+    "brand_id": 1,
+    "name": "Balo cầu lông Yonex Pro Backpack B 92412",
+    "description": "Balo đa năng gọn nhẹ có ngăn đựng giày thông gió dưới đáy và quai đeo êm vai.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "2-3 cây vợt + ngăn giày riêng",
+      "dimensions": "31 x 20 x 47 cm"
+    },
+    "images": [
+      {
+        "id": 152,
+        "image_url": "/frontend/assets/products/catalog/p152.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 208,
+        "sku_code": "TS-C16-P152-A",
+        "size": "2-3 vợt",
+        "color": "Đen Xanh",
+        "price": 1450000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 153,
+    "sport_id": 1,
+    "category_id": 16,
+    "brand_id": 2,
+    "name": "Túi vợt cầu lông Lining ABJT059 6 ngăn",
+    "description": "Chất liệu da PU trượt nước dễ vệ sinh, ngăn chứa rộng rãi cho cả ống cầu và quần áo.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "6 cây vợt",
+      "lining": "Lớp bạc cách nhiệt Thermo"
+    },
+    "images": [
+      {
+        "id": 153,
+        "image_url": "/frontend/assets/products/catalog/p153.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 209,
+        "sku_code": "TS-C16-P153-A",
+        "size": "6 vợt",
+        "color": "Đen Vàng",
+        "price": 1390000,
+        "sale_price": 1250000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 154,
+    "sport_id": 1,
+    "category_id": 16,
+    "brand_id": 2,
+    "name": "Balo cầu lông Lining ABSU387",
+    "description": "Phong cách tối giản thanh lịch, dùng linh hoạt từ văn phòng ra thẳng sân cầu.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "2 cây vợt + ngăn laptop 15.6 inch"
+    },
+    "images": [
+      {
+        "id": 154,
+        "image_url": "/frontend/assets/products/catalog/p154.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 210,
+        "sku_code": "TS-C16-P154-A",
+        "size": "2 vợt",
+        "color": "Trắng Đen",
+        "price": 1190000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 155,
+    "sport_id": 1,
+    "category_id": 16,
+    "brand_id": 3,
+    "name": "Túi vợt cầu lông Victor BR9613 Rectangular",
+    "description": "Form hộp vuông vắn giữ phom túi cực đẹp, khóa kéo kim loại bền bỉ.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "6 cây vợt",
+      "material": "PU + Polyester cao cấp"
+    },
+    "images": [
+      {
+        "id": 155,
+        "image_url": "/frontend/assets/products/catalog/p155.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 211,
+        "sku_code": "TS-C16-P155-A",
+        "size": "6 vợt",
+        "color": "Trắng Xanh",
+        "price": 1590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 156,
+    "sport_id": 3,
+    "category_id": 16,
+    "brand_id": 6,
+    "name": "Balo Tennis Wilson Tour Backpack",
+    "description": "Balo thiết kế chuyên biệt cho người chơi Tennis với ngăn vợt đệm êm và ngăn phụ kiện.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "2 cây vợt Tennis",
+      "compartments": "Ngăn vợt khóa chống trượt + ngăn giày"
+    },
+    "images": [
+      {
+        "id": 156,
+        "image_url": "/frontend/assets/products/catalog/p156.jpg",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 212,
+        "sku_code": "TS-C16-P156-A",
+        "size": "2 vợt",
+        "color": "Đỏ Đen",
+        "price": 1490000,
+        "sale_price": 1350000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 157,
+    "sport_id": 3,
+    "category_id": 16,
+    "brand_id": 6,
+    "name": "Túi Tennis Wilson Super Tour 9 Pack",
+    "description": "Lớp lót Thermoguard bảo vệ khung và dây cước trước nhiệt độ nắng nóng ngoài sân.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "9 cây vợt",
+      "tech": "Thermoguard 2.0"
+    },
+    "images": [
+      {
+        "id": 157,
+        "image_url": "/frontend/assets/products/catalog/p157.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 213,
+        "sku_code": "TS-C16-P157-A",
+        "size": "9 vợt",
+        "color": "Đỏ Wilson",
+        "price": 2850000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 158,
+    "sport_id": 3,
+    "category_id": 16,
+    "brand_id": 7,
+    "name": "Balo Tennis Babolat Pure Aero Backpack",
+    "description": "Ngăn chứa vợt cách nhiệt thông minh có thể gập gọn khi không mang vợt.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "3 cây vợt",
+      "volume": "32L"
+    },
+    "images": [
+      {
+        "id": 158,
+        "image_url": "/frontend/assets/products/catalog/p158.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 214,
+        "sku_code": "TS-C16-P158-A",
+        "size": "3 vợt",
+        "color": "Vàng Đen",
+        "price": 1890000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 159,
+    "sport_id": 4,
+    "category_id": 16,
+    "brand_id": 9,
+    "name": "Balo Pickleball Joola Vision II Deluxe",
+    "description": "Tích hợp sẵn móc treo hàng rào tiện lợi cùng hơn 10 ngăn nhỏ đựng bóng và phụ kiện.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "capacity": "4 vợt Pickleball + ngăn giày thông khí",
+      "hook": "Móc treo hàng rào sân"
+    },
+    "images": [
+      {
+        "id": 159,
+        "image_url": "/frontend/assets/products/catalog/p159.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 215,
+        "sku_code": "TS-C16-P159-A",
+        "size": "4 vợt",
+        "color": "Đen Xanh",
+        "price": 1750000,
+        "sale_price": 1590000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  },
+  {
+    "id": 160,
+    "sport_id": 2,
+    "category_id": 16,
+    "brand_id": 4,
+    "name": "Túi trống thể thao Nike Brasilia 9.5 Medium (60L)",
+    "description": "Túi trống rộng rãi đựng trọn bộ giày bóng đá, bóng, quần áo và bình nước.",
+    "condition_type": "MOI",
+    "wear_description": null,
+    "status": "ACTIVE",
+    "specifications": {
+      "volume": "60L",
+      "material": "Polyester chống nước đáy túi"
+    },
+    "images": [
+      {
+        "id": 160,
+        "image_url": "/frontend/assets/products/catalog/p160.webp",
+        "is_primary": true,
+        "sort_order": 1
+      }
+    ],
+    "skus": [
+      {
+        "id": 216,
+        "sku_code": "TS-C16-P160-A",
+        "size": "60L",
+        "color": "Đen Trắng",
+        "price": 1150000,
+        "stock": 18,
+        "unit": "CHIEC",
+        "quantity_per_lot": 1,
+        "status": "ACTIVE"
+      }
+    ]
+  }
+]

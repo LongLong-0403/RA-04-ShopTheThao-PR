@@ -14,6 +14,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from app import models  # noqa: F401 - import để SQLAlchemy biết các bảng
 from app.core.config import settings
 from app.db.session import Base, SessionLocal, engine
+from app.db.seed_catalog import seed_catalog
 from app.routers import auth, courts, health, items, users, commerce, catalog, activities
 from app.services import court_service, item_service, user_service
 from app.services.exceptions import ServiceError
@@ -42,6 +43,7 @@ def init_database() -> None:
         item_service.seed_items(db)
         user_service.seed_users(db)  # 1 Admin + 5 Khách hàng
         court_service.seed_courts(db)
+        seed_catalog(db)  # 6 môn, 20 danh mục, 13 hãng, 160 sản phẩm chuẩn hãng
 
 
 @asynccontextmanager

@@ -20,8 +20,14 @@ class ApiError extends Error {
 }
 
 // Instance axios dùng chung: mọi request tự nối thêm baseURL phía trước
+const TSPORT_API_BASE =
+  typeof CONFIG !== "undefined" && CONFIG && CONFIG.API_BASE_URL
+    ? CONFIG.API_BASE_URL
+    : "http://127.0.0.1:8000/api";
+window.TSPORT_API_BASE = TSPORT_API_BASE;
+
 const http = axios.create({
-  baseURL: CONFIG.API_BASE_URL,
+  baseURL: TSPORT_API_BASE,
   timeout: 10000, // quá 10 giây không phản hồi thì báo lỗi
   headers: { "Content-Type": "application/json" },
 });
@@ -68,3 +74,4 @@ const api = {
   patch: (path, body) => http.patch(path, body).then((res) => res.data),
   delete: (path) => http.delete(path).then((res) => res.data),
 };
+window.api = api;
