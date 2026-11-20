@@ -1,7 +1,6 @@
 /**
- * TSPORT — MODULE CHI TIẾT SẢN PHẨM TỐI GIẢN + XEM 3D 360°
- * - Trình xem 3D Three.js xoay mượt bằng chuột (damping 60fps) + thu phóng + đổi màu theo biến thể
- * - Chuyển đổi linh hoạt giữa chế độ Xem 3D 360° và Ảnh sản phẩm 2D
+ * TSPORT — MODULE CHI TIẾT SẢN PHẨM TỐI GIẢN
+ * - Hiển thị ảnh sản phẩm thật sắc nét + bộ sưu tập thumbnail
  * - Chọn biến thể Màu sắc & Trọng lượng/Size -> cập nhật giá, tồn kho, nút Thêm vào giỏ & Mua ngay
  * - Hiển thị phân biệt sản phẩm Mới (THÔNG TIN BIẾN THỂ) và Đã qua sử dụng (TÌNH TRẠNG THỰC TẾ)
  */
@@ -12,8 +11,6 @@
   let selectedColor = null;
   let matchingSku = null;
   let currentQuantity = 1;
-  let viewer3D = null;
-  let currentViewMode = "3d"; // "3d" | "2d"
 
   function initProductDetailModule() {
     const params = getUrlParams();
@@ -45,7 +42,7 @@
     }
 
     renderProductInfo(currentProduct);
-    renderGalleryAnd3D(currentProduct);
+    renderGallery(currentProduct);
     renderSkuVariants(currentProduct);
     renderSpecifications(currentProduct);
     renderSideInfoCard(currentProduct);
@@ -122,21 +119,21 @@
     }
   }
 
-  // 2. KHỞI TẠO TRÌNH XEM 3D 360° & GALLERY ẢNH
-  function renderGalleryAnd3D(prod) {
-    const stage3D = document.getElementById("pdp3DStage");
+  // 2. GALLERY ẢNH SẢN PHẨM
+  function renderGallery(prod) {
     const mainImg = document.getElementById("pdpMainImage");
     const thumbsWrap = document.getElementById("pdpThumbsWrap");
     const captionEl = document.getElementById("pdpImageCaption");
     const isUsed = prod.condition_type === "CU";
 
-    const fallbackImg = "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800";
+    const fallbackImg = "/frontend/assets/products/catalog/p001.webp";
     const images = prod.images && prod.images.length ? prod.images : [{ image_url: fallbackImg, is_primary: true }];
     const primary = images.find((i) => i.is_primary) || images[0];
 
     if (mainImg) {
       mainImg.src = primary.image_url;
       mainImg.alt = prod.name;
+      mainImg.classList.remove("is-hidden");
       mainImg.onerror = () => {
         mainImg.src = fallbackImg;
       };
@@ -144,75 +141,31 @@
 
     if (captionEl) {
       captionEl.textContent = `${isUsed ? "ẢNH THỰC TẾ" : "ẢNH SẢN PHẨM"} / 01`;
+      captionEl.classList.remove("is-hidden");
     }
 
-    // Khởi tạo Three.js 3D Viewer
-    if (stage3D && typeof window.TsportProduct3DViewer === "function") {
-      viewer3D = new window.TsportProduct3DViewer(stage3D);
-      const initialColor = prod.skus && prod.skus[0] ? prod.skus[0].color : "";
-      viewer3D.loadProductModel(prod, initialColor);
-    }
-
-    // Render thumbnails: ô đầu tiên là 3D 360°, tiếp theo là các ảnh sản phẩm
     if (thumbsWrap) {
-      const thumbItems = [];
-      thumbItems.push(`
-        <button type="button" class="ts-pdp-thumb ts-pdp-thumb-3d is-active" data-thumb-mode="3d" aria-label="Xem mô hình 3D 360 độ">
-          <span class="ts-pdp-thumb-3d-main">3D</span>
-          <span class="ts-pdp-thumb-3d-sub">Xoay 360°</span>
-        </button>
-      `);
-
-      images.slice(0, 4).forEach((img, idx) => {
+      const thumbItems = images.slice(0, 4).map((img, idx) => {
         const num = String(idx + 1).padStart(2, "0");
-        thumbItems.push(`
-          <button type="button" class="ts-pdp-thumb" data-thumb-mode="2d" data-img-url="${escapeHtml(img.image_url)}" data-img-index="${num}" aria-label="Xem ảnh ${idx + 1}">
+        return `
+          <button type="button" class="ts-pdp-thumb ${idx === 0 ? "is-active" : ""}" data-img-url="${escapeHtml(img.image_url)}" data-img-index="${num}" aria-label="Xem ảnh ${idx + 1}">
             <img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(prod.name)} - Ảnh ${idx + 1}" onerror="this.src='${fallbackImg}'" />
             <span class="ts-pdp-thumb-label">Ảnh ${idx + 1}</span>
           </button>
-        `);
+        `;
       });
 
       thumbsWrap.innerHTML = thumbItems.join("");
     }
-
-    setMediaMode("3d");
   }
 
-  function setMediaMode(mode, imgUrl, imgIndexStr) {
-    currentViewMode = mode;
-    const stage3D = document.getElementById("pdp3DStage");
+  function showGalleryImage(imgUrl, imgIndexStr) {
     const mainImg = document.getElementById("pdpMainImage");
-    const bar3D = document.getElementById("pdp3DBar");
     const captionEl = document.getElementById("pdpImageCaption");
-    const btn3D = document.getElementById("btnMode3D");
-    const btn2D = document.getElementById("btnMode2D");
     const isUsed = currentProduct && currentProduct.condition_type === "CU";
-
-    if (mode === "3d") {
-      stage3D?.classList.remove("is-hidden");
-      bar3D?.classList.remove("is-hidden");
-      mainImg?.classList.add("is-hidden");
-      captionEl?.classList.add("is-hidden");
-      btn3D?.classList.add("is-active");
-      btn3D?.setAttribute("aria-selected", "true");
-      btn2D?.classList.remove("is-active");
-      btn2D?.setAttribute("aria-selected", "false");
-      viewer3D?.resize();
-    } else {
-      stage3D?.classList.add("is-hidden");
-      bar3D?.classList.add("is-hidden");
-      mainImg?.classList.remove("is-hidden");
-      captionEl?.classList.remove("is-hidden");
-      btn3D?.classList.remove("is-active");
-      btn3D?.setAttribute("aria-selected", "false");
-      btn2D?.classList.add("is-active");
-      btn2D?.setAttribute("aria-selected", "true");
-
-      if (imgUrl && mainImg) mainImg.src = imgUrl;
-      if (captionEl) {
-        captionEl.textContent = `${isUsed ? "ẢNH THỰC TẾ" : "ẢNH SẢN PHẨM"} / ${imgIndexStr || "01"}`;
-      }
+    if (imgUrl && mainImg) mainImg.src = imgUrl;
+    if (captionEl) {
+      captionEl.textContent = `${isUsed ? "ẢNH THỰC TẾ" : "ẢNH SẢN PHẨM"} / ${imgIndexStr || "01"}`;
     }
   }
 
@@ -276,11 +229,6 @@
   function updateSkuDisplay() {
     if (!currentProduct) return;
     const skus = currentProduct.skus || [];
-
-    // Đồng bộ màu mô hình 3D
-    if (viewer3D && selectedColor) {
-      viewer3D.setColorVariant(selectedColor);
-    }
 
     matchingSku =
       skus.find((s) => (!selectedSize || s.size === selectedSize) && (!selectedColor || s.color === selectedColor)) ||
@@ -412,52 +360,13 @@
 
   // 6. GẮN SỰ KIỆN TƯƠNG TÁC
   function bindEvents() {
-    // Chuyển chế độ 3D / 2D
-    document.getElementById("btnMode3D")?.addEventListener("click", () => {
-      setMediaMode("3d");
-      document.querySelectorAll(".ts-pdp-thumb").forEach((t) => {
-        t.classList.toggle("is-active", t.dataset.thumbMode === "3d");
-      });
-    });
-
-    document.getElementById("btnMode2D")?.addEventListener("click", () => {
-      const first2D = document.querySelector('.ts-pdp-thumb[data-thumb-mode="2d"]');
-      setMediaMode("2d", first2D?.dataset.imgUrl, first2D?.dataset.imgIndex || "01");
-      document.querySelectorAll(".ts-pdp-thumb").forEach((t) => {
-        t.classList.toggle("is-active", t === first2D);
-      });
-    });
-
     // Bấm vào thumbnail
     document.getElementById("pdpThumbsWrap")?.addEventListener("click", (e) => {
       const btn = e.target.closest(".ts-pdp-thumb");
       if (!btn) return;
       document.querySelectorAll(".ts-pdp-thumb").forEach((t) => t.classList.remove("is-active"));
       btn.classList.add("is-active");
-
-      if (btn.dataset.thumbMode === "3d") {
-        setMediaMode("3d");
-      } else {
-        setMediaMode("2d", btn.dataset.imgUrl, btn.dataset.imgIndex);
-      }
-    });
-
-    // Nút điều khiển 3D: Tự xoay & Đặt lại
-    const autoBtn = document.getElementById("btnToggleAutoRotate");
-    autoBtn?.addEventListener("click", () => {
-      const nextState = !autoBtn.classList.contains("is-active");
-      autoBtn.classList.toggle("is-active", nextState);
-      viewer3D?.setAutoRotate(nextState);
-    });
-
-    window.addEventListener("tsport-3d-autorotate-change", (e) => {
-      if (autoBtn && e.detail) {
-        autoBtn.classList.toggle("is-active", Boolean(e.detail.autoRotate));
-      }
-    });
-
-    document.getElementById("btnReset3DView")?.addEventListener("click", () => {
-      viewer3D?.resetView();
+      showGalleryImage(btn.dataset.imgUrl, btn.dataset.imgIndex);
     });
 
     // Chọn Màu

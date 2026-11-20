@@ -12,8 +12,6 @@
 
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <!-- Three.js WebGL cho trình xem sản phẩm 3D 360° -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body class="tsport-pdp-body" data-root="../">
 
@@ -79,32 +77,14 @@
     <!-- PHẦN TRÊN: 2 CỘT (TRÌNH XEM 3D & ẢNH | THÔNG TIN MUA HÀNG) -->
     <section class="ts-pdp-top-grid">
 
-      <!-- CỘT TRÁI: TRÌNH XEM 3D 360° + GALLERY ẢNH -->
+      <!-- CỘT TRÁI: ẢNH SẢN PHẨM + GALLERY -->
       <div class="ts-pdp-media-col">
         <div class="ts-pdp-stage" id="pdpMediaStage">
-          <!-- Nút chuyển đổi chế độ 3D / Ảnh 2D -->
-          <div class="ts-pdp-mode-switch" role="tablist" aria-label="Chế độ xem sản phẩm">
-            <button type="button" class="ts-pdp-mode-btn is-active" id="btnMode3D" role="tab" aria-selected="true">Xem 3D 360°</button>
-            <button type="button" class="ts-pdp-mode-btn" id="btnMode2D" role="tab" aria-selected="false">Ảnh sản phẩm</button>
-          </div>
+          <!-- Ảnh sản phẩm chính -->
+          <img id="pdpMainImage" class="ts-pdp-main-img" src="" alt="Ảnh sản phẩm" />
 
-          <!-- Khung Canvas 3D Three.js -->
-          <div class="ts-pdp-3d-canvas" id="pdp3DStage" aria-label="Mô hình 3D sản phẩm có thể xoay bằng chuột"></div>
-
-          <!-- Ảnh 2D -->
-          <img id="pdpMainImage" class="ts-pdp-main-img is-hidden" src="" alt="Ảnh sản phẩm" />
-
-          <!-- Thanh điều khiển & hướng dẫn tương tác 3D -->
-          <div class="ts-pdp-3d-bar" id="pdp3DBar">
-            <span class="ts-pdp-3d-hint">Kéo chuột để xoay 360° • Cuộn để thu phóng</span>
-            <div class="ts-pdp-3d-controls">
-              <button type="button" class="ts-pdp-3d-ctrl-btn is-active" id="btnToggleAutoRotate">Tự xoay</button>
-              <button type="button" class="ts-pdp-3d-ctrl-btn" id="btnReset3DView">Đặt lại</button>
-            </div>
-          </div>
-
-          <!-- Nhãn góc dưới trái khi xem ảnh 2D -->
-          <span class="ts-pdp-img-caption is-hidden" id="pdpImageCaption">ẢNH SẢN PHẨM / 01</span>
+          <!-- Nhãn góc dưới trái -->
+          <span class="ts-pdp-img-caption" id="pdpImageCaption">ẢNH SẢN PHẨM / 01</span>
         </div>
 
         <!-- Hàng ảnh thu nhỏ bên dưới -->
@@ -247,7 +227,6 @@
   <script src="../js/utils.js"></script>
   <script src="../js/data/store.js"></script>
   <script src="../js/modules/header.js"></script>
-  <script src="../js/modules/product-3d.js"></script>
   <script src="../js/modules/product-detail.js"></script>
 </body>
 </html>
