@@ -424,10 +424,50 @@
     }
   }
 
+  function showCheckoutSuccessView(order) {
+    const formView = document.getElementById("checkoutFormView");
+    const successView = document.getElementById("checkoutSuccessView");
+    const codeEl = document.getElementById("successOrderCode");
+    const totalEl = document.getElementById("successOrderTotal");
+    const payEl = document.getElementById("successOrderPayment");
+    const detailBtn = document.getElementById("btnViewOrderDetail");
+
+    const payMap = {
+      COD: "COD",
+      BANK: "Chuyển khoản ngân hàng",
+      EWALLET_MOMO: "Ví MoMo",
+      EWALLET_ZALOPAY: "Ví ZaloPay",
+      EWALLET_VNPAY: "Ví VNPay"
+    };
+
+    if (codeEl) codeEl.textContent = order.order_code || "ORD-20261107-001";
+    if (totalEl) totalEl.textContent = formatCartMoney(order.total_amount || 0);
+    if (payEl) payEl.textContent = payMap[order.payment_method] || order.payment_method || "COD";
+    if (detailBtn) detailBtn.href = `orders.html?code=${encodeURIComponent(order.order_code || "")}`;
+
+    if (formView) formView.style.display = "none";
+    if (successView) successView.style.display = "block";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   // 2. KHỞI TẠO TRANG CHECKOUT
   function initCheckoutPage() {
     const checkoutForm = document.getElementById("formCheckout");
     if (!checkoutForm) return;
+
+    const urlParams = typeof getUrlParams === "function" ? getUrlParams() : {};
+    if (urlParams.success === "1" || urlParams.order) {
+      const store = window.tsportStore;
+      const latestOrder =
+        (store && store.getOrders && store.getOrders().find((o) => o.order_code === urlParams.order)) ||
+        (store && store.getOrders && store.getOrders()[0]) || {
+          order_code: urlParams.order || "ORD-20261107-001",
+          total_amount: 2850000,
+          payment_method: "COD"
+        };
+      showCheckoutSuccessView(latestOrder);
+      return;
+    }
 
     const store = window.tsportStore;
     if (!store) return;
@@ -597,15 +637,8 @@
           coupon_code: appliedCoupon ? appliedCoupon.code : ""
         });
 
-        // HIỂN THỊ POPUP ĐẶT HÀNG THÀNH CÔNG
-        const successModal = document.getElementById("modalOrderSuccess");
-        const codeEl = document.getElementById("successOrderCode");
-        const totalEl = document.getElementById("successOrderTotal");
-
-        if (codeEl) codeEl.textContent = order.order_code;
-        if (totalEl) totalEl.textContent = formatMoney(order.total_amount);
-
-        openModal("modalOrderSuccess");
+        // CHUYỂN SANG MÀN HÌNH ĐẶT HÀNG THÀNH CÔNG (FULL-PAGE CARD)
+        showCheckoutSuccessView(order);
         showToast(`Đặt hàng thành công! Mã đơn: ${order.order_code}`, "success");
 
         if (typeof window.updateHeaderCartBadge === "function") {
@@ -618,13 +651,13 @@
           errorBanner.style.display = "flex";
           errorText.textContent = err.message;
         } else {
-          alert("⚠️ " + err.message);
+          alert(err.message);
         }
       } finally {
         isSubmitting = false;
         if (btnSubmit) {
           btnSubmit.disabled = false;
-          btnSubmit.innerHTML = `<span>✓</span><span>Xác nhận Đặt hàng (COD)</span>`;
+          btnSubmit.textContent = "Đặt hàng COD";
         }
       }
     }, 300);

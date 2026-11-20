@@ -1192,3 +1192,120 @@ body.tsport-checkout-body {
     padding: 18px;
   }
 }
+
+
+/* ==========================================================================
+   TRẠNG THÁI ĐẶT HÀNG THÀNH CÔNG (FULL-PAGE CENTERED CARD CHUẨN FIGMA)
+   ========================================================================== */
+.ts-order-success-v2 {
+  max-width: 780px;
+  margin: 28px auto 48px;
+}
+
+.ts-order-success-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 52px 32px 56px;
+  text-align: center;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+.ts-order-success-check {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: #FFF1EB;
+  color: #D94C26;
+  font-size: 26px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts-order-success-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.2px;
+}
+
+.ts-order-success-code {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+.ts-order-success-status {
+  display: inline-block;
+  background: #FFF1EB;
+  color: #D94C26;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 5px;
+  margin-bottom: 18px;
+}
+
+.ts-order-success-meta {
+  font-size: 13.5px;
+  color: #6B7280;
+  margin: 0 0 28px 0;
+}
+
+.ts-order-success-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.ts-order-success-btn-primary {
+  min-width: 196px;
+  padding: 12px 24px;
+  background: #D94C26;
+  color: #FFFFFF;
+  border: 1px solid #D94C26;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.ts-order-success-btn-primary:hover {
+  background: #BF3E1C;
+}
+
+.ts-order-success-btn-secondary {
+  min-width: 196px;
+  padding: 12px 24px;
+  background: #FFFFFF;
+  color: #111827;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.ts-order-success-btn-secondary:hover {
+  border-color: #D94C26;
+  color: #D94C26;
+}
+
+@media (max-width: 640px) {
+  .ts-order-success-card {
+    padding: 36px 20px;
+  }
+  .ts-order-success-btn-primary,
+  .ts-order-success-btn-secondary {
+    width: 100%;
+  }
+}
