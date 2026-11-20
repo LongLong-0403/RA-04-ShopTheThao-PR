@@ -8023,6 +8023,19 @@
       const court = this.getCourtById(court_id);
       const slot = this.getSlots().find((s) => s.id === Number(slot_id));
 
+      // Không cho phép trùng lịch cùng sân, ca và ngày khi đang chờ xác nhận hoặc đã xác nhận
+      const activeStatuses = ["PENDING", "CONFIRMED", "CHO_XAC_NHAN", "XAC_NHAN", "DA_XAC_NHAN"];
+      const conflict = (this.data.bookings || []).find(
+        (b) =>
+          Number(b.court_id) === Number(court_id) &&
+          Number(b.slot_id) === Number(slot_id) &&
+          b.booking_date === booking_date &&
+          activeStatuses.includes(b.status)
+      );
+      if (conflict) {
+        throw new Error("Ca giờ này đã có người đặt hoặc đang chờ xác nhận. Vui lòng chọn ca khác!");
+      }
+
       const now = new Date();
       const code = `BKG-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}-${String(Math.floor(100+Math.random()*900))}`;
 
