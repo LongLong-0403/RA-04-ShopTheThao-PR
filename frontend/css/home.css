@@ -346,7 +346,7 @@ body.tsport-home-body {
 }
 
 .ts-mega-col-title:hover {
-  color: #B83B19;
+  color: #1F2937;
 }
 
 .ts-mega-list {
@@ -384,7 +384,7 @@ body.tsport-home-body {
 }
 
 .ts-mega-more:hover {
-  color: #B83B19;
+  color: #1F2937;
   text-decoration: underline;
 }
 
@@ -673,7 +673,7 @@ body.tsport-home-body {
 .ts-tabbox-title {
   font-size: 24px;
   font-weight: 700;
-  color: #E95211;
+  color: #111827;
   margin: 0 0 10px 0;
 }
 
@@ -694,7 +694,7 @@ body.tsport-home-body {
   transform: translateX(-50%);
   width: 42px;
   height: 4px;
-  background: #E95211;
+  background: #111827;
   border-radius: 999px;
 }
 
@@ -732,17 +732,17 @@ body.tsport-home-body {
 }
 
 .ts-tabbox-tab:hover {
-  color: #E95211;
-  background: #FFFBF8;
+  color: #111827;
+  background: #F8F9FA;
 }
 
 .ts-tabbox-tab.is-active {
-  background: #E95211;
+  background: #111827;
   color: #FFFFFF;
 }
 
 .ts-tabbox-golden-stage {
-  background: #FCAF17;
+  background: #111827;
   padding: 16px;
   position: relative;
 }
@@ -856,7 +856,7 @@ body.tsport-home-body {
 
 .ts-tabbox-arrow:hover {
   background: #FFFFFF;
-  color: #E95211;
+  color: #111827;
 }
 
 .ts-tabbox-arrow.prev {
@@ -1127,7 +1127,7 @@ body.tsport-home-body {
 
 .ts-sale-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #E95211, #E11D48);
+  background: linear-gradient(90deg, #111827, #E11D48);
   border-radius: 999px;
 }
 

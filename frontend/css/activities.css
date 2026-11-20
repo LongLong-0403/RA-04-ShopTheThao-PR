@@ -363,7 +363,7 @@
   text-transform: uppercase;
 }
 .tsport-btn-book-court {
-  background: #E58A1F;
+  background: #111827;
   color: #FFFFFF;
   border: none;
   font-weight: 800;
@@ -376,7 +376,7 @@
   white-space: nowrap;
 }
 .tsport-btn-book-court:hover {
-  background: #D97706;
+  background: #374151;
   transform: translateY(-1px);
 }
 
@@ -1364,7 +1364,7 @@ body.tsport-courts-body {
 
 .ts-bb-v2-upload-box:hover {
   border-color: #111827;
-  background: #FFF9F6;
+  background: #F8F9FA;
 }
 
 .ts-bb-v2-upload-title {

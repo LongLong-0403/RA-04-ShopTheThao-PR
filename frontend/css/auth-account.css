@@ -67,7 +67,7 @@
   color: #64748B;
 }
 .tsport-log-method {
-  color: #F59E0B;
+  color: #374151;
   font-weight: 700;
 }
 .tsport-log-url {
@@ -365,7 +365,7 @@ body.tsport-auth-body {
 }
 
 .ts-auth-v2-contact-trigger:hover {
-  color: #B83B19;
+  color: #1F2937;
 }
 
 .ts-admin-contact-backdrop {

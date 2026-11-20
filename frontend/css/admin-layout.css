@@ -742,7 +742,7 @@ body.ts-adm-body {
 }
 
 .ts-adm-table tbody tr.is-selected-row {
-  background: #FFF9F6;
+  background: #F8F9FA;
 }
 
 .ts-adm-edit-grid-2 {
@@ -930,7 +930,7 @@ body.ts-adm-body {
 .ts-adm-cat-node.is-active {
   color: #111827;
   font-weight: 800;
-  background: #FFF9F6;
+  background: #F8F9FA;
 }
 
 .ts-adm-cat-actions {

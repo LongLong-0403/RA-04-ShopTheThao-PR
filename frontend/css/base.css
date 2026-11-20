@@ -9,9 +9,9 @@
   /* Bảng màu chuẩn Cam – Trắng Tsport */
   --tsport-orange: #111827;
   --tsport-orange-hover: #27272A;
-  --tsport-orange-light: #FF6B35;
+  --tsport-orange-light: #111827;
   --tsport-orange-tint: #F3F4F6;
-  --tsport-orange-border: #F5C4B2;
+  --tsport-orange-border: #D1D5DB;
 
   --tsport-bg: #F8FAFC;
   --tsport-card: #FFFFFF;
@@ -29,7 +29,7 @@
   --tsport-danger-bg: #FEE2E2;
   --tsport-danger-border: #FCA5A5;
 
-  --tsport-warning: #D97706;
+  --tsport-warning: #374151;
   --tsport-warning-bg: #F3F4F6;
 
   --tsport-blue: #2563EB;
