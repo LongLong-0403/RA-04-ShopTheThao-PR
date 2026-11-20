@@ -247,6 +247,7 @@ body.tsport-home-body {
   padding: 12px 22px;
   margin: 14px 0 14px 0;
   box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  justify-content: center;
 }
 
 .ts-inline-nav::-webkit-scrollbar {
@@ -350,6 +351,7 @@ body.tsport-home-body {
   border: none;
   border-radius: 0;
   padding: 2px 4px;
+  text-align: center;
 }
 
 .ts-usp-title {
