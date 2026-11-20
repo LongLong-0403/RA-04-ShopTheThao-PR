@@ -333,11 +333,13 @@ body.tsport-cart-body {
   border: 1px solid #E5E7EB;
   border-radius: 10px;
   padding: 16px 20px;
-  transition: border-color 0.15s ease;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+  transition: border-color 0.15s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .ts-cart-v2-item:hover {
   border-color: #D1D5DB;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.1);
 }
 
 .ts-cart-v2-thumb {
@@ -696,6 +698,7 @@ body.tsport-cart-body {
 .ts-cart-rec-track {
   display: flex;
   gap: 18px;
+  padding: 8px 4px 12px;
   overflow-x: auto;
   scrollbar-width: none;
   cursor: grab;
@@ -718,11 +721,15 @@ body.tsport-cart-body {
   text-decoration: none;
   color: inherit;
   background: #FFFFFF;
-  transition: transform 0.2s ease;
+  border: 1px solid #F1F5F9;
+  padding: 10px 10px 12px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ts-cart-rec-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.14);
 }
 
 .ts-cart-rec-media {
