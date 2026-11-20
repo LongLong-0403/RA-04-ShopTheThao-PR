@@ -74,6 +74,7 @@
     const fullName = document.getElementById("regFullName").value.trim();
     const phone = document.getElementById("regPhone").value.trim();
     const email = document.getElementById("regEmail").value.trim();
+    const address = document.getElementById("regAddress")?.value.trim() || "";
     const pass = document.getElementById("regPassword").value;
     const confirmPass = document.getElementById("regConfirmPassword").value;
 
@@ -114,7 +115,7 @@
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role })) + ".sig_verified_tsport";
     localStorage.setItem("token", token);
     localStorage.setItem("tsport_token", token);
-    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: fullName, phone, role }));
+    localStorage.setItem("tsport_current_user", JSON.stringify({ email, full_name: fullName, phone, address, role }));
 
     logAxiosInterceptor("POST", "/api/users/register", token);
     showToast(`Đăng ký tài khoản ${email} (${role}) thành công! Đang chuyển hướng...`, "success");
@@ -142,16 +143,21 @@
     // Chuyển đổi qua lại giữa Đăng nhập & Đăng ký
     const loginPanel = document.getElementById("authLoginPanel");
     const regPanel = document.getElementById("authRegisterPanel");
-    document.getElementById("btnShowRegister")?.addEventListener("click", () => {
+    const showRegister = () => {
       if (loginPanel) loginPanel.style.display = "none";
       if (regPanel) regPanel.style.display = "block";
-      document.title = "Đăng ký tài khoản | Tsport";
-    });
-    document.getElementById("btnShowLogin")?.addEventListener("click", () => {
+      document.title = "Tạo tài khoản | Tsport";
+    };
+    const showLogin = () => {
       if (regPanel) regPanel.style.display = "none";
       if (loginPanel) loginPanel.style.display = "block";
       document.title = "Đăng nhập | Tsport";
-    });
+    };
+    document.getElementById("btnShowRegister")?.addEventListener("click", showRegister);
+    document.getElementById("btnShowLogin")?.addEventListener("click", showLogin);
+
+    const params = typeof getUrlParams === "function" ? getUrlParams() : {};
+    if (params.mode === "register") showRegister();
 
     // Modal Liên hệ quản trị viên
     const contactModal = document.getElementById("modalContactAdmin");
