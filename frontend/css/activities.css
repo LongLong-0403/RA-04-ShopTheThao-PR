@@ -1469,3 +1469,204 @@ body.tsport-courts-body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   TRANG YÊU CẦU THU MUA CỦA TÔI (MY BUYBACKS FIGMA)
+   ========================================================================== */
+.ts-mybb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ts-mybb-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 26px 28px;
+}
+
+.ts-mybb-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.ts-mybb-title {
+  font-size: 21px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 6px 0;
+}
+
+.ts-mybb-meta {
+  font-size: 12.5px;
+  color: #6B7280;
+}
+
+.ts-mybb-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 136px);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.ts-mybb-photo-box {
+  position: relative;
+  width: 136px;
+  height: 136px;
+  background: #ECEEF1;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+}
+
+.ts-mybb-photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+  display: block;
+}
+
+.ts-mybb-photo-tag {
+  position: absolute;
+  left: 8px;
+  bottom: 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #6B7280;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.ts-mybb-desc-block {
+  margin-bottom: 22px;
+}
+
+.ts-mybb-desc-label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.ts-mybb-desc-text {
+  font-size: 13px;
+  color: #6B7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* KHUNG SO SÁNH GIÁ & PHẢN HỒI ĐỀ NGHỊ */
+.ts-mybb-offer-box {
+  background: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.ts-mybb-price-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.ts-mybb-price-label {
+  font-size: 12px;
+  color: #6B7280;
+  margin-bottom: 6px;
+}
+
+.ts-mybb-price-expected {
+  font-size: 22px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.ts-mybb-price-offered {
+  font-size: 22px;
+  font-weight: 900;
+  color: #D94C26;
+}
+
+.ts-mybb-offer-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.ts-mybb-btn-accept {
+  padding: 12px 16px;
+  background: #D94C26;
+  color: #FFFFFF;
+  border: 1px solid #D94C26;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ts-mybb-btn-accept:hover {
+  background: #BF3E1C;
+}
+
+.ts-mybb-btn-reject {
+  padding: 12px 16px;
+  background: #FFFFFF;
+  color: #111827;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.ts-mybb-btn-reject:hover {
+  border-color: #DC2626;
+  color: #DC2626;
+}
+
+.ts-mybb-flow-note {
+  font-size: 12px;
+  color: #6B7280;
+  margin-bottom: 18px;
+}
+
+.ts-mybb-cancel-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #6B7280;
+  cursor: pointer;
+}
+
+.ts-mybb-cancel-btn:hover {
+  color: #DC2626;
+}
+
+@media (max-width: 640px) {
+  .ts-mybb-photos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .ts-mybb-photo-box {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+  .ts-mybb-price-grid,
+  .ts-mybb-offer-actions {
+    grid-template-columns: 1fr;
+  }
+}
