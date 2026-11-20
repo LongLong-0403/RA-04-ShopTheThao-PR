@@ -860,46 +860,117 @@
     tickCountdown();
     setInterval(tickCountdown, 1000);
 
-    // 2. Lấy toàn bộ sản phẩm đang có giá Sale từ store.js
+    // 2. Lấy toàn bộ sản phẩm đang có giá Sale từ store.js + bổ sung sản phẩm sale tạm thời để lấp đầy khung
     const allProds = (store.getProducts() || []).filter(p => p.status !== "INACTIVE");
-    const saleProds = allProds.filter(p =>
-      (p.skus || []).some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price))
-    );
+    const realSaleItems = allProds
+      .filter(p => (p.skus || []).some(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price)))
+      .map(p => {
+        const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
+        const skus = p.skus || [];
+        const saleSkus = skus.filter(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
+        const minSale = Math.min(...saleSkus.map(s => Number(s.sale_price)));
+        const minOrig = Math.min(...saleSkus.map(s => Number(s.price)));
+        const maxPct = Math.max(...saleSkus.map(s => Math.round((1 - Number(s.sale_price) / Number(s.price)) * 100)));
+        const totalStock = skus.reduce((sum, s) => sum + (Number(s.stock) || 0), 0);
+        return {
+          id: p.id,
+          name: p.name,
+          image: primaryImg.image_url,
+          salePrice: minSale,
+          origPrice: minOrig,
+          pct: maxPct,
+          stock: totalStock
+        };
+      });
 
-    if (saleProds.length === 0) {
-      track.innerHTML = `<div style="width:100%; background:#fff; border-radius:4px; padding:28px; text-align:center; color:#6B7280; font-size:13.5px;">Hiện chưa có sản phẩm đang giảm giá.</div>`;
-      return;
-    }
+    // Danh sách sản phẩm sale tạm thời bổ sung (không trùng tên với sản phẩm đã có sale thật)
+    const tempSaleItems = [
+      {
+        id: 2,
+        name: "Vợt cầu lông Yonex Nanoflare 1000Z",
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
+        salePrice: 3590000,
+        origPrice: 4100000,
+        pct: 12,
+        stock: 18
+      },
+      {
+        id: 3,
+        name: "Vợt cầu lông Lining Axforce 90 Max Tiger",
+        image: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=600",
+        salePrice: 3250000,
+        origPrice: 3950000,
+        pct: 18,
+        stock: 14
+      },
+      {
+        id: 4,
+        name: "Giày cầu lông Yonex Power Cushion 65Z3",
+        image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600",
+        salePrice: 2250000,
+        origPrice: 2650000,
+        pct: 15,
+        stock: 22
+      },
+      {
+        id: 5,
+        name: "Giày đá bóng Nike Mercurial Vapor 15 Pro TF",
+        image: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=600",
+        salePrice: 2390000,
+        origPrice: 2850000,
+        pct: 16,
+        stock: 15
+      },
+      {
+        id: 18,
+        name: "Túi đựng vợt cầu lông Yonex Pro 92429",
+        image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600",
+        salePrice: 1290000,
+        origPrice: 1650000,
+        pct: 22,
+        stock: 11
+      },
+      {
+        id: 7,
+        name: "Ống 12 quả cầu lông Yonex Aerosensa 50",
+        image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600",
+        salePrice: 640000,
+        origPrice: 750000,
+        pct: 15,
+        stock: 30
+      }
+    ];
+
+    const existingIds = new Set(realSaleItems.map(i => i.id));
+    const saleItems = [...realSaleItems];
+    tempSaleItems.forEach(item => {
+      if (!existingIds.has(item.id)) {
+        saleItems.push(item);
+      }
+    });
 
     const endDateObj = new Date(saleEndTime);
     const deadlineStr = `${String(endDateObj.getDate()).padStart(2, "0")}/${String(endDateObj.getMonth() + 1).padStart(2, "0")}/${endDateObj.getFullYear()}`;
 
-    track.innerHTML = saleProds.map((p, idx) => {
-      const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
-      const skus = p.skus || [];
-      const saleSkus = skus.filter(s => s.sale_price && Number(s.sale_price) > 0 && Number(s.sale_price) < Number(s.price));
-      const minSale = Math.min(...saleSkus.map(s => Number(s.sale_price)));
-      const minOrig = Math.min(...saleSkus.map(s => Number(s.price)));
-      const maxPct = Math.max(...saleSkus.map(s => Math.round((1 - Number(s.sale_price) / Number(s.price)) * 100)));
-      const totalStock = skus.reduce((sum, s) => sum + (Number(s.stock) || 0), 0);
-      const soldPercent = Math.min(92, Math.max(35, 85 - idx * 7));
+    track.innerHTML = saleItems.map((item, idx) => {
+      const soldPercent = Math.min(92, Math.max(35, 86 - idx * 6));
 
       return `
-        <a href="pages/product-detail.html?id=${p.id}" class="ts-tabbox-card" draggable="false">
+        <a href="pages/product-detail.html?id=${item.id}" class="ts-tabbox-card" draggable="false">
           <div class="ts-tabbox-img-wrap">
-            <span class="ts-sale-discount-badge">-${maxPct}%</span>
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+            <span class="ts-sale-discount-badge">-${item.pct}%</span>
+            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
           </div>
-          <h3 class="ts-tabbox-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
+          <h3 class="ts-tabbox-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</h3>
           <div class="ts-sale-deadline-meta">Hạn ưu đãi: ${deadlineStr}</div>
           <div class="ts-tabbox-price-row">
-            <span class="ts-tabbox-price">${formatMoney(minSale)}</span>
-            <span class="ts-tabbox-oldprice">${formatMoney(minOrig)}</span>
+            <span class="ts-tabbox-price">${formatMoney(item.salePrice)}</span>
+            <span class="ts-tabbox-oldprice">${formatMoney(item.origPrice)}</span>
           </div>
           <div class="ts-sale-progress-track">
             <div class="ts-sale-progress-fill" style="width:${soldPercent}%;"></div>
           </div>
-          <div class="ts-sale-stock-label">Còn lại ${totalStock} sản phẩm giá sale</div>
+          <div class="ts-sale-stock-label">Còn lại ${item.stock} sản phẩm giá sale</div>
         </a>
       `;
     }).join("");
