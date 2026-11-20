@@ -242,10 +242,10 @@ body.tsport-home-body {
 
 .ts-inline-nav.ts-nav-full-orange {
   width: 100%;
-  background: #FFEDD5;
-  border-top: 2px solid #D94C26;
-  border-bottom: 2px solid #D94C26;
-  padding: 12px 0;
+  background: #D94C26;
+  border-top: 1px solid #B83B19;
+  border-bottom: 2px solid #B83B19;
+  padding: 0;
   margin: 0;
 }
 
@@ -253,7 +253,7 @@ body.tsport-home-body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: 8px;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -263,33 +263,40 @@ body.tsport-home-body {
 }
 
 .ts-inline-nav-link {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 0.15s ease;
+  padding: 13px 18px;
+  border-bottom: 3px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .ts-inline-nav-link:hover,
 .ts-inline-nav-link.is-active {
-  color: #D94C26;
-  font-weight: 700;
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.14);
+  border-bottom-color: #FFFFFF;
 }
 
-/* Hero Banner Full Màn Hình Chỉ Chứa Ảnh + Chuyển Mượt 2s */
+/* Hero Banner Khớp Đúng Tỷ Lệ 16:9 & Nét Chuẩn 1:1 (Chuyển Mượt 2s) */
 .ts-hero-full-wrap {
   width: 100%;
+  background: #0F172A;
   margin: 0 0 18px 0;
 }
 
 .ts-min-hero-banner.ts-hero-slider-only.ts-hero-fullscreen {
   width: 100%;
-  background: #111827;
+  max-width: 1120px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 0;
+  margin: 0 auto;
+  background: #0F172A;
   border-radius: 0;
   padding: 0;
-  min-height: 480px;
-  height: 480px;
   position: relative;
   overflow: hidden;
   display: block;
@@ -317,7 +324,8 @@ body.tsport-home-body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center center;
+  image-rendering: -webkit-optimize-contrast;
   display: block;
 }
 
@@ -1160,8 +1168,9 @@ body.tsport-home-body {
   }
   .ts-min-hero-banner.ts-hero-slider-only.ts-hero-fullscreen {
     padding: 0;
-    height: 250px;
-    min-height: 250px;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 0;
   }
   .ts-tabbox-tabs {
     grid-template-columns: repeat(2, 1fr);
