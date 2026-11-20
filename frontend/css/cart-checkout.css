@@ -687,7 +687,7 @@ body.tsport-cart-body {
 .ts-cart-rec-frame {
   background: #FFFFFF;
   border: 2px solid #D94C26;
-  border-radius: 10px;
+  border-radius: 0;
   padding: 18px 16px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(217, 76, 38, 0.08);
