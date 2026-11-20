@@ -701,9 +701,9 @@ body.tsport-home-body {
 .ts-tabbox-shell {
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
-  border-radius: 6px;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  box-shadow: none;
 }
 
 .ts-tabbox-tabs {
@@ -742,7 +742,7 @@ body.tsport-home-body {
 }
 
 .ts-tabbox-golden-stage {
-  background: #111827;
+  background: #FFFFFF;
   padding: 16px;
   position: relative;
 }
@@ -762,19 +762,21 @@ body.tsport-home-body {
   flex: 0 0 calc((100% - 48px) / 5);
   min-width: 0;
   background: #FFFFFF;
-  border-radius: 4px;
+  border: 1px solid #E5E7EB;
+  border-radius: 0;
   padding: 12px;
   display: flex;
   flex-direction: column;
   text-decoration: none;
   color: inherit;
   min-height: 270px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .ts-tabbox-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  border-color: #111827;
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.08);
 }
 
 .ts-tabbox-img-wrap {
@@ -793,7 +795,7 @@ body.tsport-home-body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 0;
   transition: transform 0.3s ease;
 }
 
@@ -825,7 +827,7 @@ body.tsport-home-body {
 .ts-tabbox-price {
   font-size: 14px;
   font-weight: 800;
-  color: #E11D48;
+  color: #111827;
 }
 
 .ts-tabbox-oldprice {
