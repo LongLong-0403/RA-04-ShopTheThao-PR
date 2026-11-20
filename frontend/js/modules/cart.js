@@ -495,9 +495,59 @@
       });
     });
     updateCheckoutTotals();
+    initCheckoutPaymentSelector();
 
     // XỬ LÝ SUBMIT ĐẶT HÀNG (KÈM CHỐNG BẤM LẶP & CHECK TỒN KHO)
     checkoutForm.addEventListener("submit", handleCheckoutSubmit);
+  }
+
+  function initCheckoutPaymentSelector() {
+    const payList = document.getElementById("checkoutPayList");
+    if (!payList) return;
+
+    const bankDetail = document.getElementById("payDetailBank");
+    const walletDetail = document.getElementById("payDetailWallet");
+    const submitBtn = document.getElementById("btnPlaceOrder");
+    const walletHidden = document.getElementById("selectedWalletProvider");
+
+    function updatePayUI(method) {
+      payList.querySelectorAll(".ts-checkout-v2-cod-box").forEach((box) => {
+        const isMatch = box.dataset.pay === method;
+        box.classList.toggle("is-selected", isMatch);
+        const radio = box.querySelector('input[name="paymentMethod"]');
+        if (radio) radio.checked = isMatch;
+      });
+
+      if (bankDetail) bankDetail.style.display = method === "BANK" ? "block" : "none";
+      if (walletDetail) walletDetail.style.display = method === "EWALLET" ? "block" : "none";
+
+      if (submitBtn && !submitBtn.disabled) {
+        if (method === "BANK") {
+          submitBtn.textContent = "Đặt hàng & Chuyển khoản";
+        } else if (method === "EWALLET") {
+          const w = walletHidden?.value || "MoMo";
+          submitBtn.textContent = `Thanh toán qua ${w}`;
+        } else {
+          submitBtn.textContent = "Đặt hàng COD";
+        }
+      }
+    }
+
+    payList.querySelectorAll('input[name="paymentMethod"]').forEach((radio) => {
+      radio.addEventListener("change", () => {
+        updatePayUI(radio.value);
+      });
+    });
+
+    document.getElementById("checkoutWalletPills")?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".ts-checkout-v2-wallet-btn");
+      if (!btn) return;
+      document.querySelectorAll(".ts-checkout-v2-wallet-btn").forEach((b) => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      if (walletHidden) walletHidden.value = btn.dataset.wallet || "MoMo";
+      const checkedMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || "COD";
+      if (checkedMethod === "EWALLET") updatePayUI("EWALLET");
+    });
   }
 
   // 3. XỬ LÝ ĐẶT HÀNG VỚI CƠ CHẾ CHỐNG LẶP & LỖI TỒN KHO
@@ -517,7 +567,9 @@
     const phone = document.getElementById("checkoutPhone")?.value.trim();
     const addr = document.getElementById("checkoutAddress")?.value.trim();
     const note = document.getElementById("checkoutNote")?.value.trim() || "";
-    const payment = "COD"; // Phương thức COD theo yêu cầu
+    const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || "COD";
+    const walletProvider = document.getElementById("selectedWalletProvider")?.value || "MoMo";
+    const payment = selectedMethod === "EWALLET" ? `EWALLET_${walletProvider.toUpperCase()}` : selectedMethod;
 
     if (!name || !phone || !addr) {
       alert("⚠️ Vui lòng nhập đầy đủ Tên người nhận, SĐT và Địa chỉ giao hàng!");

@@ -927,15 +927,31 @@ body.tsport-checkout-body {
   margin: 0 0 12px 0;
 }
 
+.ts-checkout-v2-pay-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .ts-checkout-v2-cod-box {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #F8F9FA;
+  background: #FFFFFF;
   border: 1px solid #E5E7EB;
   border-radius: 8px;
   padding: 14px 16px;
   cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ts-checkout-v2-cod-box:hover {
+  border-color: #D94C26;
+}
+
+.ts-checkout-v2-cod-box.is-selected {
+  background: #FFF9F6;
+  border-color: #D94C26;
 }
 
 .ts-checkout-v2-cod-box input {
@@ -946,19 +962,89 @@ body.tsport-checkout-body {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid #D94C26;
+  border: 2px solid #D1D5DB;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: border-color 0.15s ease;
 }
 
-.ts-checkout-v2-radio-ui::after {
+.ts-checkout-v2-cod-box.is-selected .ts-checkout-v2-radio-ui {
+  border-color: #D94C26;
+}
+
+.ts-checkout-v2-cod-box.is-selected .ts-checkout-v2-radio-ui::after {
   content: "";
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: #D94C26;
+}
+
+.ts-checkout-v2-pay-detail {
+  background: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 13px;
+}
+
+.ts-checkout-v2-bank-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 5px 0;
+  border-bottom: 1px dashed #E5E7EB;
+  color: #4B5563;
+}
+
+.ts-checkout-v2-bank-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ts-checkout-v2-bank-row strong {
+  color: #111827;
+  font-weight: 700;
+  text-align: right;
+}
+
+.ts-checkout-v2-wallet-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4B5563;
+  margin-bottom: 10px;
+}
+
+.ts-checkout-v2-wallet-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ts-checkout-v2-wallet-btn {
+  padding: 8px 16px;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #111827;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ts-checkout-v2-wallet-btn:hover {
+  border-color: #D94C26;
+  color: #D94C26;
+}
+
+.ts-checkout-v2-wallet-btn.is-active {
+  background: #D94C26;
+  border-color: #D94C26;
+  color: #FFFFFF;
 }
 
 .ts-checkout-v2-cod-name {
