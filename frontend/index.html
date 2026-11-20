@@ -57,7 +57,17 @@
        ========================================== -->
   <main class="container">
 
-    <!-- 2. BỐ CỤC 2 CỘT ĐẦU TRANG: SIDEBAR DANH MỤC + NAV NGANG & BANNER CHÍNH -->
+    <!-- THANH ĐIỀU HƯỚNG CÓ KHUNG NẰM TRÊN DANH MỤC SẢN PHẨM VÀ BANNER -->
+    <nav class="ts-inline-nav ts-nav-framed" aria-label="Điều hướng chính">
+      <a href="index.html" class="ts-inline-nav-link is-active">Trang chủ</a>
+      <a href="pages/shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="pages/shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="pages/courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="pages/community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="pages/admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+    </nav>
+
+    <!-- 2. BỐ CỤC 2 CỘT ĐẦU TRANG: SIDEBAR DANH MỤC + BANNER CHÍNH -->
     <section class="ts-hero-grid">
       <!-- Cột trái: Danh mục sản phẩm -->
       <aside class="ts-cat-sidebar">
@@ -107,17 +117,8 @@
         </ul>
       </aside>
 
-      <!-- Cột phải: Thanh điều hướng ngang + Banner chính -->
+      <!-- Cột phải: Banner chính -->
       <div class="ts-hero-right-col">
-        <nav class="ts-inline-nav" aria-label="Điều hướng chính">
-          <a href="index.html" class="ts-inline-nav-link is-active">Trang chủ</a>
-          <a href="pages/shop.html" class="ts-inline-nav-link">Sản phẩm</a>
-          <a href="pages/shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
-          <a href="pages/courts.html" class="ts-inline-nav-link">Đặt sân</a>
-          <a href="pages/community.html" class="ts-inline-nav-link">Ghép kèo</a>
-          <a href="pages/admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
-        </nav>
-
         <div class="ts-min-hero-banner ts-hero-slider-only js-gsap-hero" id="heroBannerSlider">
           <a href="pages/shop.html" class="ts-hero-slide is-active">
             <img src="assets/banner/banner-1.jpg" alt="Tsport Banner 1" />

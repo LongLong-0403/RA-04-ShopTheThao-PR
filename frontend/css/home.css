@@ -240,6 +240,15 @@ body.tsport-home-body {
   scrollbar-width: none;
 }
 
+.ts-inline-nav.ts-nav-framed {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 12px 22px;
+  margin: 14px 0 14px 0;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
 .ts-inline-nav::-webkit-scrollbar {
   display: none;
 }
