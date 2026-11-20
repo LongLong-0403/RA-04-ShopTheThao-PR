@@ -52,92 +52,43 @@
     </div>
   </header>
 
-  <!-- ==========================================
-       NỘI DUNG CHÍNH TRANG CHỦ
-       ========================================== -->
-  <main class="container">
-
-    <!-- THANH ĐIỀU HƯỚNG CÓ KHUNG NẰM TRÊN DANH MỤC SẢN PHẨM VÀ BANNER -->
-    <nav class="ts-inline-nav ts-nav-framed" aria-label="Điều hướng chính">
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH KHUNG CAM, CHỮ ĐEN HOVER CAM -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
       <a href="index.html" class="ts-inline-nav-link is-active">Trang chủ</a>
       <a href="pages/shop.html" class="ts-inline-nav-link">Sản phẩm</a>
       <a href="pages/shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
       <a href="pages/courts.html" class="ts-inline-nav-link">Đặt sân</a>
       <a href="pages/community.html" class="ts-inline-nav-link">Ghép kèo</a>
       <a href="pages/admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
-    </nav>
+    </div>
+  </nav>
 
-    <!-- 2. BỐ CỤC 2 CỘT ĐẦU TRANG: SIDEBAR DANH MỤC + BANNER CHÍNH -->
-    <section class="ts-hero-grid">
-      <!-- Cột trái: Danh mục sản phẩm -->
-      <aside class="ts-cat-sidebar">
-        <div class="ts-cat-sidebar-head">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M2 4H14M2 8H14M2 12H14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          <span>DANH MỤC SẢN PHẨM</span>
-        </div>
-        <ul class="ts-cat-sidebar-list">
-          <li>
-            <a href="pages/shop.html?sport=1" class="ts-cat-sidebar-link">
-              <span>Cầu lông</span>
-              <span class="ts-cat-sidebar-chevron">›</span>
-            </a>
-          </li>
-          <li>
-            <a href="pages/shop.html?sport=2" class="ts-cat-sidebar-link">
-              <span>Bóng đá</span>
-              <span class="ts-cat-sidebar-chevron">›</span>
-            </a>
-          </li>
-          <li>
-            <a href="pages/shop.html?sport=3" class="ts-cat-sidebar-link">
-              <span>Tennis</span>
-              <span class="ts-cat-sidebar-chevron">›</span>
-            </a>
-          </li>
-          <li>
-            <a href="pages/shop.html?sport=4" class="ts-cat-sidebar-link">
-              <span>Pickleball</span>
-              <span class="ts-cat-sidebar-chevron">›</span>
-            </a>
-          </li>
-          <li>
-            <a href="pages/shop.html?cat=15" class="ts-cat-sidebar-link">
-              <span>Quần áo thể thao</span>
-              <span class="ts-cat-sidebar-chevron">›</span>
-            </a>
-          </li>
-          <li>
-            <a href="pages/shop.html?cat=16" class="ts-cat-sidebar-link">
-              <span>Phụ kiện</span>
-              <span class="ts-cat-sidebar-chevron">›</span>
-            </a>
-          </li>
-        </ul>
-      </aside>
+  <!-- BANNER CHÍNH FULL MÀN HÌNH CHỈ CÓ ẢNH (CHUYỂN MƯỢT 2S) -->
+  <section class="ts-hero-full-wrap">
+    <div class="ts-min-hero-banner ts-hero-slider-only ts-hero-fullscreen js-gsap-hero" id="heroBannerSlider">
+      <a href="pages/shop.html" class="ts-hero-slide is-active">
+        <img src="assets/banner/banner-1.jpg" alt="Tsport Banner 1" />
+      </a>
+      <a href="pages/shop.html" class="ts-hero-slide">
+        <img src="assets/banner/banner-2.jpg" alt="Tsport Banner 2" />
+      </a>
+      <a href="pages/shop.html" class="ts-hero-slide">
+        <img src="assets/banner/banner-3.jpg" alt="Tsport Banner 3" />
+      </a>
 
-      <!-- Cột phải: Banner chính -->
-      <div class="ts-hero-right-col">
-        <div class="ts-min-hero-banner ts-hero-slider-only js-gsap-hero" id="heroBannerSlider">
-          <a href="pages/shop.html" class="ts-hero-slide is-active">
-            <img src="assets/banner/banner-1.jpg" alt="Tsport Banner 1" />
-          </a>
-          <a href="pages/shop.html" class="ts-hero-slide">
-            <img src="assets/banner/banner-2.jpg" alt="Tsport Banner 2" />
-          </a>
-          <a href="pages/shop.html" class="ts-hero-slide">
-            <img src="assets/banner/banner-3.jpg" alt="Tsport Banner 3" />
-          </a>
-
-          <div class="ts-hero-slider-dots" id="heroSliderDots">
-            <button type="button" class="ts-hero-dot is-active" data-index="0" aria-label="Ảnh 1"></button>
-            <button type="button" class="ts-hero-dot" data-index="1" aria-label="Ảnh 2"></button>
-            <button type="button" class="ts-hero-dot" data-index="2" aria-label="Ảnh 3"></button>
-          </div>
-        </div>
+      <div class="ts-hero-slider-dots" id="heroSliderDots">
+        <button type="button" class="ts-hero-dot is-active" data-index="0" aria-label="Ảnh 1"></button>
+        <button type="button" class="ts-hero-dot" data-index="1" aria-label="Ảnh 2"></button>
+        <button type="button" class="ts-hero-dot" data-index="2" aria-label="Ảnh 3"></button>
       </div>
-    </section>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       NỘI DUNG CHÍNH TRANG CHỦ
+       ========================================== -->
+  <main class="container">
 
     <!-- 3. 4 MỤC CAM KẾT NGANG NHỎ GỌN -->
     <section class="ts-usp-grid">

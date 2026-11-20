@@ -240,24 +240,32 @@ body.tsport-home-body {
   scrollbar-width: none;
 }
 
-.ts-inline-nav.ts-nav-framed {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 8px;
-  padding: 12px 22px;
-  margin: 14px 0 14px 0;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
-  justify-content: center;
+.ts-inline-nav.ts-nav-full-orange {
+  width: 100%;
+  background: #FFEDD5;
+  border-top: 2px solid #D94C26;
+  border-bottom: 2px solid #D94C26;
+  padding: 12px 0;
+  margin: 0;
 }
 
-.ts-inline-nav::-webkit-scrollbar {
+.ts-nav-full-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ts-nav-full-inner::-webkit-scrollbar {
   display: none;
 }
 
 .ts-inline-nav-link {
-  font-size: 13.5px;
-  font-weight: 500;
-  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.15s ease;
@@ -269,14 +277,19 @@ body.tsport-home-body {
   font-weight: 700;
 }
 
-/* Hero Banner Full Khung Chỉ Chứa Ảnh + Chuyển Mượt 2s */
-.ts-min-hero-banner.ts-hero-slider-only {
-  flex: 1;
+/* Hero Banner Full Màn Hình Chỉ Chứa Ảnh + Chuyển Mượt 2s */
+.ts-hero-full-wrap {
+  width: 100%;
+  margin: 0 0 18px 0;
+}
+
+.ts-min-hero-banner.ts-hero-slider-only.ts-hero-fullscreen {
+  width: 100%;
   background: #111827;
-  border-radius: 10px;
+  border-radius: 0;
   padding: 0;
-  min-height: 360px;
-  height: 360px;
+  min-height: 480px;
+  height: 480px;
   position: relative;
   overflow: hidden;
   display: block;
@@ -1145,10 +1158,10 @@ body.tsport-home-body {
   .ts-cat-sidebar-list {
     grid-template-columns: repeat(2, 1fr);
   }
-  .ts-min-hero-banner.ts-hero-slider-only {
+  .ts-min-hero-banner.ts-hero-slider-only.ts-hero-fullscreen {
     padding: 0;
-    height: 220px;
-    min-height: 220px;
+    height: 250px;
+    min-height: 250px;
   }
   .ts-tabbox-tabs {
     grid-template-columns: repeat(2, 1fr);
