@@ -16,6 +16,7 @@
     initHeroBannerSlider();
     renderFeaturedProducts();
     initTabbedShowcase();
+    initHomeCourtsShowcase();
     renderRecentlyViewed();
     initSearchDebounce();
     initGsapAnimations();
@@ -178,11 +179,11 @@
       `;
     }).join("");
 
-    initFeaturedMouseDrag();
+    bindMouseDragScroll(document.getElementById("homeFeaturedViewport"));
   }
 
-  function initFeaturedMouseDrag() {
-    const viewport = document.getElementById("homeFeaturedViewport");
+  // HELPER DÙNG CHUNG: KÉO CHUỘT TRÁI/PHẢI CÓ QUÁN TÍNH GSAP 3
+  function bindMouseDragScroll(viewport) {
     if (!viewport || viewport.dataset.dragBound === "true") return;
     viewport.dataset.dragBound = "true";
 
@@ -223,7 +224,6 @@
       isDown = false;
       viewport.classList.remove("is-dragging");
 
-      // Quán tính trượt mượt sau khi thả chuột bằng GSAP 3
       if (Math.abs(velocity) > 1.5 && typeof window.gsap !== "undefined") {
         const maxScroll = viewport.scrollWidth - viewport.clientWidth;
         const target = Math.max(0, Math.min(maxScroll, viewport.scrollLeft - velocity * 14));
@@ -238,7 +238,6 @@
     window.addEventListener("mouseup", endDrag);
     viewport.addEventListener("mouseleave", endDrag);
 
-    // Chặn mở link khi người dùng vừa kéo chuột trượt ngang
     viewport.addEventListener("click", (e) => {
       if (hasDragged) {
         e.preventDefault();
@@ -247,7 +246,6 @@
       }
     }, true);
 
-    // Hỗ trợ cuộn ngang bằng con lăn chuột (Shift + Wheel hoặc trackpad ngang)
     viewport.addEventListener("wheel", (e) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.shiftKey) {
         e.preventDefault();
@@ -471,6 +469,109 @@
     });
 
     renderTrack(false);
+  }
+
+  // 2C. MỤC 03 / RA SÂN — DANH SÁCH ẢNH CỤM SÂN CỤ THỂ LƯỚT BẰNG CHUỘT
+  function initHomeCourtsShowcase() {
+    const viewport = document.getElementById("homeCourtsViewport");
+    const track = document.getElementById("homeCourtsTrack");
+    const filtersWrap = document.getElementById("homeCourtSportFilters");
+    const store = window.tsportStore;
+    if (!viewport || !track || !store) return;
+
+    let currentSport = "ALL";
+
+    function renderCourts(animate = false) {
+      let courts = store.getCourts() || [];
+      if (currentSport !== "ALL") {
+        courts = courts.filter(c => c.sport_id === Number(currentSport));
+      }
+
+      if (courts.length === 0) {
+        track.innerHTML = `<div style="width:100%; padding:28px; text-align:center; color:#6B7280; font-size:13.5px; border:1px dashed #E5E7EB; border-radius:10px;">Chưa có cụm sân thuộc môn này.</div>`;
+        return;
+      }
+
+      track.innerHTML = courts.map((c) => {
+        const rating = c.rating ? Number(c.rating).toFixed(1) : "5.0";
+        const distance = c.distance || "150m";
+        const hours = c.opening_hours || "06:00 - 23:00";
+        const img = c.image_url || "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800";
+        const logo = c.logo_url || "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120";
+
+        return `
+          <div class="tsport-court-card" draggable="false">
+            <div class="tsport-court-media">
+              <img src="${escapeHtml(img)}" alt="${escapeHtml(c.name)}" loading="lazy" draggable="false" />
+              <div class="tsport-court-overlay-top-left">
+                <span class="tsport-court-badge-rating">★ ${rating}</span>
+                <span class="tsport-court-badge-type">Đơn ngày</span>
+                <span class="tsport-court-badge-event">Sự kiện</span>
+              </div>
+              <div class="tsport-court-overlay-top-right">
+                <button type="button" class="tsport-court-btn-round js-home-court-fav" title="Yêu thích">♡</button>
+                <a href="pages/courts.html?sport=${c.sport_id}" class="tsport-court-btn-round" title="Xem sân" style="text-decoration:none;">↗</a>
+              </div>
+            </div>
+            <div class="tsport-court-body">
+              <img class="tsport-court-avatar" src="${escapeHtml(logo)}" alt="Logo" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120'" />
+              <div class="tsport-court-info">
+                <h3 class="tsport-court-title" title="${escapeHtml(c.name)}">${escapeHtml(c.name)}</h3>
+                <div class="tsport-court-meta" title="${escapeHtml(c.address || '')}">
+                  <span class="tsport-court-distance">[${escapeHtml(distance)}]</span>
+                  <span>${escapeHtml(c.address || '')}</span>
+                </div>
+                <div class="tsport-court-hours">
+                  <span>${escapeHtml(hours)}</span>
+                </div>
+              </div>
+              <div class="tsport-court-action">
+                ${c.has_discount ? `<span class="tsport-court-promo-badge">${escapeHtml(c.discount_label || 'Ưu đãi')}</span>` : ''}
+                <a href="pages/courts.html?sport=${c.sport_id}" class="tsport-btn-book-court" style="text-decoration:none;">ĐẶT LỊCH</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      viewport.scrollLeft = 0;
+
+      if (animate && typeof window.gsap !== "undefined") {
+        window.gsap.from(track.querySelectorAll(".tsport-court-card"), {
+          x: 32,
+          opacity: 0,
+          duration: 0.4,
+          stagger: 0.05,
+          ease: "power2.out",
+          clearProps: "transform,opacity"
+        });
+      }
+    }
+
+    filtersWrap?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".ts-home-court-filter-btn");
+      if (!btn) return;
+      filtersWrap.querySelectorAll(".ts-home-court-filter-btn").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      currentSport = btn.dataset.sport || "ALL";
+      renderCourts(true);
+    });
+
+    track.addEventListener("click", (e) => {
+      const favBtn = e.target.closest(".js-home-court-fav");
+      if (!favBtn) return;
+      e.preventDefault();
+      if (favBtn.textContent === "♡") {
+        favBtn.textContent = "♥";
+        favBtn.style.color = "#E11D48";
+      } else {
+        favBtn.textContent = "♡";
+        favBtn.style.color = "#0F172A";
+      }
+    });
+
+    bindMouseDragScroll(viewport);
+    renderCourts(false);
   }
 
   // 3. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (LOCALSTORAGE)

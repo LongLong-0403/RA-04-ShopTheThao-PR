@@ -730,31 +730,59 @@ body.tsport-home-body {
 }
 
 /* ==========================================
-   7. 03 / RA SÂN — 4 Ô CHỌN MÔN ĐẶT SÂN
+   7. 03 / RA SÂN — LƯỚT CHUỘT CÁC CỤM SÂN CỤ THỂ THEO MÔN
    ========================================== */
-.ts-court-sport-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+.ts-home-court-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
-.ts-court-sport-pill {
-  background: #FFFFFF;
+.ts-home-court-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.ts-home-court-filter-btn {
   border: 1px solid #E5E7EB;
-  border-radius: 8px;
-  padding: 16px 18px;
-  text-align: center;
-  font-size: 14px;
+  background: #FFFFFF;
+  color: #374151;
+  font-size: 12.5px;
   font-weight: 700;
-  color: #111827;
-  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
   transition: all 0.15s ease;
 }
 
-.ts-court-sport-pill:hover {
+.ts-home-court-filter-btn:hover {
   border-color: #D94C26;
   color: #D94C26;
-  background: #FFFBF8;
+}
+
+.ts-home-court-filter-btn.is-active {
+  background: #D94C26;
+  border-color: #D94C26;
+  color: #FFFFFF;
+}
+
+.ts-home-courts-track {
+  display: flex;
+  gap: 20px;
+}
+
+.ts-home-courts-track .tsport-court-card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  min-width: 0;
+  -webkit-user-drag: none;
+}
+
+.ts-home-courts-track .tsport-court-card img {
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 /* SẢN PHẨM ĐÃ XEM GẦN ĐÂY */
@@ -862,6 +890,9 @@ body.tsport-home-body {
   .ts-tabbox-card {
     flex: 0 0 calc((100% - 24px) / 3);
   }
+  .ts-home-courts-track .tsport-court-card {
+    flex: 0 0 calc((100% - 20px) / 2);
+  }
   .ts-tabbox-tabs {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -909,5 +940,8 @@ body.tsport-home-body {
   }
   .ts-tabbox-card {
     flex: 0 0 calc((100% - 12px) / 2);
+  }
+  .ts-home-courts-track .tsport-court-card {
+    flex: 0 0 88%;
   }
 }
