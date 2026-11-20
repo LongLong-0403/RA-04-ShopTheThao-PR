@@ -173,39 +173,29 @@
       </div>
     </section>
 
-    <!-- 5. 02 / TÁI SỬ DỤNG — ĐỒ CŨ, THÊM MỘT CUỘC CHƠI (3 THẺ) -->
-    <section class="ts-min-section js-gsap-section">
-      <div class="ts-min-sec-head">
-        <div>
-          <div class="ts-min-sec-eyebrow">02 / TÁI SỬ DỤNG</div>
-          <h2 class="ts-min-sec-title">Đồ cũ, thêm một cuộc chơi</h2>
-        </div>
-        <a href="pages/shop.html?condition=CU" class="ts-min-sec-link">Khám phá →</a>
+    <!-- 5. KHỐI LỌC SẢN PHẨM THEO DANH MỤC (KHUNG CAM VÀNG CHUẨN ẢNH) -->
+    <section class="ts-min-section js-gsap-section" id="sectionTabbedShowcase">
+      <div class="ts-tabbox-header">
+        <h2 class="ts-tabbox-title">Sản phẩm nổi bật</h2>
+        <div class="ts-tabbox-underline"></div>
       </div>
 
-      <div class="ts-reuse-grid">
-        <div class="ts-reuse-card">
-          <div>
-            <h3 class="ts-reuse-title">Mua đồ cũ</h3>
-            <p class="ts-reuse-desc">Ảnh thật • Mô tả hao mòn</p>
-          </div>
-          <a href="pages/shop.html?condition=CU" class="ts-reuse-btn">Xem sản phẩm</a>
+      <div class="ts-tabbox-shell">
+        <div class="ts-tabbox-tabs" id="homeCategoryTabs" role="tablist">
+          <button type="button" class="ts-tabbox-tab is-active" data-filter="ALL" role="tab" aria-selected="true">Tất cả</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="VOT_CAULONG" role="tab" aria-selected="false">Vợt Cầu Lông</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="VOT_PICKLEBALL" role="tab" aria-selected="false">Vợt Pickleball</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="GIAY" role="tab" aria-selected="false">Giày Thể Thao</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="AO_BALO" role="tab" aria-selected="false">Áo &amp; Balo</button>
+          <button type="button" class="ts-tabbox-tab" data-filter="DO_CU" role="tab" aria-selected="false">Đồ Cũ Minh Bạch</button>
         </div>
 
-        <div class="ts-reuse-card">
-          <div>
-            <h3 class="ts-reuse-title">Bán lại dụng cụ</h3>
-            <p class="ts-reuse-desc">Gửi ảnh • Nhận giá đề nghị</p>
+        <div class="ts-tabbox-golden-stage">
+          <button type="button" class="ts-tabbox-arrow prev" id="btnTabBoxPrev" aria-label="Trước">‹</button>
+          <div class="ts-tabbox-grid" id="homeTabBoxGrid">
+            <!-- Render động theo tab đã chọn từ home.js -->
           </div>
-          <a href="pages/admin-buyback.html" class="ts-reuse-btn">Gửi yêu cầu</a>
-        </div>
-
-        <div class="ts-reuse-card">
-          <div>
-            <h3 class="ts-reuse-title">Tìm người cùng chơi</h3>
-            <p class="ts-reuse-desc">Tìm đối theo môn và trình độ</p>
-          </div>
-          <a href="pages/community.html" class="ts-reuse-btn">Tìm kèo ngay</a>
+          <button type="button" class="ts-tabbox-arrow next" id="btnTabBoxNext" aria-label="Tiếp">›</button>
         </div>
       </div>
     </section>
