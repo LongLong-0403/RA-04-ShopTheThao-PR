@@ -3,210 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quản Lý Đặt Sân & Cấu Hình Ca | Tsport Store Admin</title>
-    <!-- Google Fonts: Roboto -->
+  <title>Sân &amp; Ca giờ | Tsport Admin</title>
+
+  <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body data-root="../">
+<body class="ts-adm-body" data-root="../">
 
-  <div class="tsport-admin-wrapper">
-    <!-- BACKDROP MOBILE -->
-    <div class="tsport-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+  <div class="ts-adm-shell">
 
-    <!-- SIDEBAR DÙNG CHUNG CHO CẢ NHÓM -->
-    <aside class="tsport-admin-sidebar" id="adminSidebar"></aside>
+    <!-- SIDEBAR TRÁI NỀN TỐI -->
+    <aside class="ts-adm-sidebar" id="adminSidebar">
+      <div class="ts-adm-brand">
+        <a href="admin-dashboard.html" class="ts-adm-logo">Tsport</a>
+        <div class="ts-adm-logo-sub">QUẢN TRỊ HỆ THỐNG</div>
+      </div>
 
-    <!-- NỘI DUNG CHÍNH (MAIN) -->
-    <div class="tsport-admin-main">
-      <header class="tsport-admin-topbar">
-        <div class="tsport-admin-topbar-left">
-          <button type="button" class="tsport-hamburger-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
-          <div>
-            <h1 style="font-size:18px; font-weight:800; margin:0; color:#0F172A;">🏸 Quản Lý Đặt Sân &amp; Cấu Hình Ca Giờ Cố Định</h1>
-            <div style="font-size:12px; color:#64748B;">Kiểm soát chống xung đột lịch, 2 admin duyệt đồng thời, giải phóng ca và giá niêm yết</div>
+      <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
+        <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
+        <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
+        <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
+        <a href="categories.html" class="ts-adm-nav-link">Danh mục cha / con</a>
+        <a href="products.html" class="ts-adm-nav-link">Sản phẩm &amp; SKU</a>
+        <a href="admin-courts.html" class="ts-adm-nav-link is-active">Sân &amp; Ca giờ</a>
+        <a href="admin-bookings.html" class="ts-adm-nav-link">Lịch đặt sân</a>
+        <a href="admin-orders.html" class="ts-adm-nav-link">Đơn hàng</a>
+        <a href="admin-buyback.html" class="ts-adm-nav-link">Thu mua đồ cũ</a>
+      </nav>
+
+      <div class="ts-adm-sidebar-foot">
+        <a href="../index.html" class="ts-adm-back-shop">Quay về cửa hàng ↗</a>
+      </div>
+    </aside>
+
+    <!-- CỘT PHẢI -->
+    <div class="ts-adm-main-wrap">
+
+      <!-- TOP BAR -->
+      <header class="ts-adm-topbar">
+        <div class="ts-adm-topbar-left">
+          <button type="button" class="ts-adm-mobile-menu-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div class="ts-adm-breadcrumb">
+            <span>Quản trị</span>
+            <span>/</span>
+            <span class="is-current">Sân &amp; Ca giờ</span>
           </div>
         </div>
 
-        <div class="tsport-actions" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenAdminAddCourt">
-            ➕ Tạo Sân Mới
+        <div class="ts-adm-user-wrap">
+          <button type="button" class="ts-adm-user-btn" id="btnAdminUserMenu">
+            <span>Admin</span>
+            <span style="font-size:10px;">▾</span>
           </button>
-          <button type="button" class="btn btn-secondary btn-sm" id="btnOpenAdminAddSlot">
-            ⏰ Cấu Hình Ca &amp; Giá
-          </button>
-          <a href="courts.html" class="btn btn-secondary btn-sm" target="_blank">
-            👁️ Trang Khách Đặt Sân
-          </a>
-          <a href="../index.html" class="btn btn-secondary btn-sm">🏠 Cửa Hàng</a>
+          <div class="ts-adm-user-dropdown" id="adminUserDropdown">
+            <a href="../index.html">Về cửa hàng</a>
+            <button type="button" id="btnAdminLogout">Đăng xuất</button>
+          </div>
         </div>
       </header>
 
-      <div class="tsport-admin-body">
-        
-        <!-- CARD 1: DANH SÁCH YÊU CẦU ĐẶT SÂN TOÀN HỆ THỐNG -->
-        <div class="tsport-card" style="margin-bottom:24px;">
-          <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 style="font-size:16px; font-weight:800; margin:0; display:flex; align-items:center; gap:8px;">
-              <span>📋</span>
-              <span>Danh Sách Yêu Cầu Đặt Sân (Admin Duyệt &amp; Khóa Ca)</span>
-            </h2>
-            <div style="font-size:12px; color:#64748B;">
-              Hỗ trợ kiểm tra xung đột version (Dual-admin collision) &amp; Chống trùng ca
-            </div>
-          </div>
+      <!-- NỘI DUNG SÂN & CA GIỜ -->
+      <main class="ts-adm-content">
 
-          <div class="tsport-table-responsive">
-            <table class="tsport-table">
-              <thead>
-                <tr>
-                  <th>Mã Booking</th>
-                  <th>Khách hàng &amp; SĐT</th>
-                  <th>Sân &amp; Ngày chơi</th>
-                  <th>Khung giờ (Ca)</th>
-                  <th>Giá cố định</th>
-                  <th>Trạng thái</th>
-                  <th style="text-align:center; min-width:150px;">Thao tác Quản trị</th>
-                </tr>
-              </thead>
-              <tbody id="adminBookingRequestsTbody">
-                <tr><td colspan="7" style="text-align:center; padding:20px;">Đang tải danh sách yêu cầu...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <header class="ts-adm-page-head">
+          <h1 class="ts-adm-page-title">Sân &amp; Ca giờ</h1>
+          <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+        </header>
 
-        <!-- CARD 2 & 3: DANH SÁCH SÂN VÀ CA GIỜ -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-          
-          <div class="tsport-card" style="margin:0;">
-            <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
-              <h2 style="font-size:15px; font-weight:800; margin:0;">🏟️ Danh Sách Sân Con Theo Môn</h2>
-              <button type="button" class="btn btn-secondary btn-sm" onclick="openModal('modalAdminCourtForm')">+ Thêm sân</button>
+        <div class="ts-adm-courts-split">
+
+          <!-- CỘT TRÁI: DANH SÁCH SÂN & THÔNG TIN SÂN -->
+          <section class="ts-adm-card">
+            <h2 class="ts-adm-card-title">Danh sách sân</h2>
+
+            <div class="ts-adm-court-list" id="admCourtsList">
+              <!-- Render động từ admin-courts.js -->
             </div>
-            <div class="tsport-table-responsive" style="max-height:300px; overflow-y:auto;">
-              <table class="tsport-table">
+
+            <button type="button" class="ts-adm-btn-secondary" id="btnAdmAddCourt" style="width:100%; margin-top:16px;">
+              + Thêm sân
+            </button>
+
+            <div class="ts-adm-court-info-box">
+              <h3 class="ts-adm-court-info-title">Thông tin sân</h3>
+              <div class="ts-adm-court-info-line" id="admCourtMetaLine1">Tên • Môn thể thao • Địa chỉ</div>
+              <div class="ts-adm-court-info-line" id="admCourtMetaLine2">Mô tả • Trạng thái</div>
+
+              <button type="button" class="ts-adm-btn-secondary" id="btnAdmEditCourt" style="width:100%; margin-top:18px;">
+                Sửa thông tin sân
+              </button>
+            </div>
+          </section>
+
+          <!-- CỘT PHẢI: CA GIỜ & THÊM / SỬA CA CỐ ĐỊNH -->
+          <section class="ts-adm-card">
+            <div class="ts-adm-card-head-inline">
+              <h2 class="ts-adm-card-title" id="admSlotsHeading" style="margin:0;">Ca giờ - Cầu lông số 1</h2>
+              <button type="button" class="ts-adm-text-btn" id="btnAdmNewSlot">+ Thêm ca mới</button>
+            </div>
+
+            <div class="ts-orders-v2-table-wrap" style="margin-bottom:28px;">
+              <table class="ts-orders-v2-table ts-adm-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Tên sân</th>
-                    <th>Môn</th>
-                    <th>Mặt sân</th>
-                    <th>Địa chỉ</th>
+                    <th>Ca giờ</th>
+                    <th>Giá / ca</th>
+                    <th>Trạng thái</th>
                   </tr>
                 </thead>
-                <tbody id="adminCourtsListTbody">
-                  <tr><td colspan="5" style="text-align:center; padding:16px;">Đang tải danh sách sân...</td></tr>
+                <tbody id="admSlotsTbody">
+                  <!-- Render động từ admin-courts.js -->
                 </tbody>
               </table>
             </div>
-          </div>
 
-          <div class="tsport-card" style="margin:0;">
-            <div class="tsport-card-header" style="display:flex; justify-content:space-between; align-items:center;">
-              <h2 style="font-size:15px; font-weight:800; margin:0;">⏰ Ca Giờ &amp; Giá Cố Định</h2>
-              <button type="button" class="btn btn-secondary btn-sm" onclick="openModal('modalAdminSlotForm')">+ Thêm ca</button>
+            <div class="ts-adm-slot-form-wrap">
+              <h3 class="ts-adm-card-title" style="font-size:17px;">Thêm / Sửa ca cố định</h3>
+
+              <form id="formAdmSlot">
+                <div class="ts-courts-v2-field">
+                  <label for="slotNameInput" class="ts-adm-filter-label">Tên ca</label>
+                  <input type="text" id="slotNameInput" class="ts-adm-input" placeholder="Ca 3: 16:00 - 18:00" />
+                </div>
+
+                <div class="ts-adm-edit-grid-2">
+                  <div>
+                    <label for="slotStartInput" class="ts-adm-filter-label">Bắt đầu</label>
+                    <input type="text" id="slotStartInput" class="ts-adm-input" placeholder="16:00" required />
+                  </div>
+                  <div>
+                    <label for="slotEndInput" class="ts-adm-filter-label">Kết thúc</label>
+                    <input type="text" id="slotEndInput" class="ts-adm-input" placeholder="18:00" required />
+                  </div>
+                </div>
+
+                <div class="ts-courts-v2-field">
+                  <label for="slotPriceStatusInput" class="ts-adm-filter-label">Giá / Trạng thái</label>
+                  <input
+                    type="text"
+                    id="slotPriceStatusInput"
+                    class="ts-adm-input"
+                    placeholder="180.000đ / ACTIVE"
+                    required
+                  />
+                </div>
+
+                <button type="submit" class="ts-adm-btn-primary" style="width:100%; margin-top:8px;">
+                  Lưu ca giờ
+                </button>
+              </form>
             </div>
-            <div class="tsport-table-responsive" style="max-height:300px; overflow-y:auto;">
-              <table class="tsport-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Thuộc sân</th>
-                    <th>Khung giờ ca</th>
-                    <th>Giá niêm yết</th>
-                  </tr>
-                </thead>
-                <tbody id="adminSlotsListTbody">
-                  <tr><td colspan="4" style="text-align:center; padding:16px;">Đang tải ca giờ...</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          </section>
 
         </div>
 
-      </div>
+        <!-- THANH LƯU Ý TRẠNG THÁI SÂN -->
+        <div class="ts-court-det-notice" style="margin-top:24px;">
+          Trạng thái sân: ACTIVE / MAINTENANCE / INACTIVE. Giá thay đổi chỉ áp dụng cho lần đặt mới.
+        </div>
+
+      </main>
     </div>
   </div>
 
-  <!-- MODAL ADMIN TẠO SÂN MỚI -->
-  <div class="modal-backdrop" id="modalAdminCourtForm">
+  <!-- MODAL THÊM / SỬA THÔNG TIN SÂN -->
+  <div class="modal-backdrop" id="modalAdmCourt">
     <div class="modal" style="max-width:500px;">
       <div class="modal-header">
-        <h3 class="modal-title">➕ Tạo Sân Thể Thao Mới</h3>
+        <h3 class="modal-title" id="modalAdmCourtTitle">Thêm / Sửa thông tin sân</h3>
         <button type="button" class="modal-close" data-dismiss="modal">✕</button>
       </div>
-      <form id="formAdminCreateCourt">
+
+      <form id="formAdmCourt">
         <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="adminCourtSport">Môn thể thao <span class="required">*</span></label>
-            <select id="adminCourtSport" class="form-control" required></select>
+          <div class="ts-courts-v2-field">
+            <label for="admCourtName" class="ts-adm-filter-label">Tên sân *</label>
+            <input type="text" id="admCourtName" class="ts-adm-input" placeholder="Cầu lông số 1" required />
           </div>
-          <div class="form-group">
-            <label class="form-label" for="adminCourtName">Tên sân (Ví dụ: Sân Cầu Lông Số 1 - VIP) <span class="required">*</span></label>
-            <input type="text" id="adminCourtName" class="form-control" required placeholder="Nhập tên sân..." />
+
+          <div class="ts-adm-edit-grid-2">
+            <div>
+              <label for="admCourtSport" class="ts-adm-filter-label">Môn thể thao *</label>
+              <select id="admCourtSport" class="ts-adm-select"></select>
+            </div>
+            <div>
+              <label for="admCourtStatus" class="ts-adm-filter-label">Trạng thái</label>
+              <select id="admCourtStatus" class="ts-adm-select">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="MAINTENANCE">MAINTENANCE</option>
+                <option value="INACTIVE">INACTIVE</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="adminCourtSurface">Mặt sân / Chất liệu</label>
-            <input type="text" id="adminCourtSurface" class="form-control" value="Thảm cao su chống trượt PVC" />
+
+          <div class="ts-courts-v2-field">
+            <label for="admCourtAddress" class="ts-adm-filter-label">Địa chỉ</label>
+            <input type="text" id="admCourtAddress" class="ts-adm-input" placeholder="12 Nguyễn Trãi, Thanh Xuân, Hà Nội" />
           </div>
-          <div class="form-group">
-            <label class="form-label" for="adminCourtAddress">Địa chỉ / Cụm sân</label>
-            <input type="text" id="adminCourtAddress" class="form-control" value="Khu liên hợp thể thao Tsport, Q. Cầu Giấy, Hà Nội" />
+
+          <div class="ts-courts-v2-field">
+            <label for="admCourtSurface" class="ts-adm-filter-label">Mô tả mặt sân</label>
+            <input type="text" id="admCourtSurface" class="ts-adm-input" placeholder="Thảm PVC tiêu chuẩn trong nhà" />
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-primary">Xác nhận tạo sân</button>
+          <button type="submit" class="btn btn-primary">Lưu thông tin sân</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL ADMIN CẤU HÌNH CA & GIÁ CỐ ĐỊNH -->
-  <div class="modal-backdrop" id="modalAdminSlotForm">
-    <div class="modal" style="max-width:500px;">
-      <div class="modal-header">
-        <h3 class="modal-title">⏰ Cấu Hình Ca Giờ &amp; Giá Cố Định</h3>
-        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
-      </div>
-      <form id="formAdminCreateSlot">
-        <div class="modal-body">
-          <div class="form-group">
-            <label class="form-label" for="adminSlotCourt">Chọn sân áp dụng <span class="required">*</span></label>
-            <select id="adminSlotCourt" class="form-control" required></select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adminSlotTime">Khung giờ ca (Ví dụ: 17:30 - 19:00) <span class="required">*</span></label>
-            <input type="text" id="adminSlotTime" class="form-control" required placeholder="HH:MM - HH:MM" />
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="adminSlotPrice">Giá niêm yết cố định (VNĐ) <span class="required">*</span></label>
-            <input type="number" id="adminSlotPrice" class="form-control" required min="10000" step="10000" value="180000" />
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-primary">Lưu ca giờ</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- TOAST NOTIFICATIONS -->
+  <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- SCRIPTS -->
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/utils.js"></script>
-  <script src="../js/data/mock-data.js"></script>
   <script src="../js/data/store.js"></script>
-  <script src="../js/modules/admin-nav.js"></script>
-  <script src="../js/modules/courts.js"></script>
+  <script src="../js/modules/admin-courts.js"></script>
 </body>
 </html>

@@ -1108,3 +1108,78 @@ body.ts-adm-body {
     width: 100%;
   }
 }
+
+
+/* ==========================================================================
+   ADMIN COURTS & SLOTS (SÂN & CA GIỜ FIGMA)
+   ========================================================================== */
+.ts-adm-courts-split {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.88fr) minmax(0, 1.45fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.ts-adm-court-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ts-adm-court-item {
+  width: 100%;
+  text-align: left;
+  padding: 16px 18px;
+  background: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ts-adm-court-item:hover {
+  border-color: #D94C26;
+}
+
+.ts-adm-court-item.is-active {
+  background: #FFF1EB;
+  border-color: #FAD5C5;
+}
+
+.ts-adm-court-item-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.ts-adm-court-item-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.ts-adm-court-info-box {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.ts-adm-court-info-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 12px 0;
+}
+
+.ts-adm-court-info-line {
+  font-size: 12.5px;
+  color: #6B7280;
+  line-height: 1.65;
+}
+
+@media (max-width: 960px) {
+  .ts-adm-courts-split {
+    grid-template-columns: 1fr;
+  }
+}
