@@ -391,6 +391,7 @@
     const isUsed = prod.condition_type === "CU";
     if (isUsed) {
       const wearNote =
+        prod.wear_description ||
         prod.condition_note ||
         "Trầy nhẹ ở viền khung; không nứt, không cong. Cán còn nguyên, sử dụng tốt. Xem ảnh cận cảnh 2 và 3.";
       card.innerHTML = `

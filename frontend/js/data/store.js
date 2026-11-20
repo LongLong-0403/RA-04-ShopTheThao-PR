@@ -239,8 +239,9 @@
         wear_description: "Ngoại hình như mới 95%, chỉ xước dăm li ti ở nắp chụp cán vợt, khung chưa từng va chạm mạnh, tem phân phối chính hãng còn nguyên.",
         status: "ACTIVE",
         specifications: { weight: "3U", grip: "G5", tension_current: "27 lbs VBS-66N", condition_grade: "95%" },
+        model_3d_texture: "/frontend/assets/products/victor-auraspeed-90k-ii.png",
         images: [
-          { id: 16, image_url: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=600", is_primary: true, sort_order: 1 }
+          { id: 16, image_url: "/frontend/assets/products/victor-auraspeed-90k-ii.png", is_primary: true, sort_order: 1 }
         ],
         skus: [
           { id: 16, sku_code: "USED-ARS90K2-3U", size: "3U/G5", color: "Trắng Xanh Tím", price: 2450000, stock: 1, unit: "CHIEC", quantity_per_lot: 1 }
@@ -1171,6 +1172,16 @@
             if (idx !== -1) mergedProducts[idx] = { ...mergedProducts[idx], ...p };
             else mergedProducts.push(p);
           });
+
+          // Đồng bộ ảnh thực tế & texture 3D mới cho Victor Auraspeed 90K II (id = 10)
+          const victor90k = mergedProducts.find(p => Number(p.id) === 10);
+          if (victor90k) {
+            const localImg = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
+            victor90k.model_3d_texture = localImg;
+            if (!victor90k.images || !victor90k.images.length || String(victor90k.images[0].image_url || "").includes("unsplash.com")) {
+              victor90k.images = [{ id: 16, image_url: localImg, is_primary: true, sort_order: 1 }];
+            }
+          }
 
           const safeOrders = (parsed.orders || initialData.orders).map(o => ({
             ...o,

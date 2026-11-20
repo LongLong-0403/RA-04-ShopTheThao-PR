@@ -134,7 +134,9 @@
       const name = String(product?.name || "").toLowerCase();
       const palette = this._resolveColorPalette(colorName);
 
-      if (name.includes("pickleball") && name.includes("vợt")) {
+      if (product && product.model_3d_texture) {
+        this.productGroup = this._buildCutoutVolumetric3D(THREE, product.model_3d_texture);
+      } else if (name.includes("pickleball") && name.includes("vợt")) {
         this.productGroup = this._buildPickleballPaddle(THREE, palette);
       } else if (name.includes("giày")) {
         this.productGroup = this._buildSportShoe(THREE, palette);
@@ -149,6 +151,82 @@
 
       this.scene.add(this.productGroup);
       this.resetView();
+    }
+
+    // 0. DỰNG KHỐI 3D ĐA LỚP TỪ ẢNH TÁCH NỀN THỰC TẾ (VD: VICTOR AURASPEED 90K II)
+    _buildCutoutVolumetric3D(THREE, textureUrl) {
+      const group = new THREE.Group();
+      const loader = new THREE.TextureLoader();
+
+      loader.load(textureUrl, (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.anisotropy = this.renderer ? this.renderer.capabilities.getMaxAnisotropy() : 4;
+
+        const imgW = tex.image ? tex.image.width : 800;
+        const imgH = tex.image ? tex.image.height : 993;
+        const aspect = imgW / imgH;
+        const modelHeight = 3.15;
+        const modelWidth = modelHeight * aspect;
+
+        const planeGeo = new THREE.PlaneGeometry(modelWidth, modelHeight);
+        const depth = 0.088;
+        const slices = 18;
+
+        // Mặt trước (ảnh thực tế sắc nét)
+        const frontMat = new THREE.MeshStandardMaterial({
+          map: tex,
+          transparent: true,
+          alphaTest: 0.35,
+          roughness: 0.34,
+          metalness: 0.22,
+          side: THREE.FrontSide
+        });
+        const frontMesh = new THREE.Mesh(planeGeo, frontMat);
+        frontMesh.position.z = depth / 2 + 0.002;
+        group.add(frontMesh);
+
+        // Mặt sau (lật ngang khớp đối xứng vợt)
+        const backTex = tex.clone();
+        backTex.needsUpdate = true;
+        backTex.wrapS = THREE.RepeatWrapping;
+        backTex.repeat.x = -1;
+        backTex.colorSpace = THREE.SRGBColorSpace;
+
+        const backMat = new THREE.MeshStandardMaterial({
+          map: backTex,
+          transparent: true,
+          alphaTest: 0.35,
+          roughness: 0.34,
+          metalness: 0.22,
+          side: THREE.BackSide
+        });
+        const backMesh = new THREE.Mesh(planeGeo, backMat);
+        backMesh.position.z = -(depth / 2 + 0.002);
+        group.add(backMesh);
+
+        // 18 lớp carbon đùn khối ở giữa tạo độ dày 3D thật khi xoay ngang 90°
+        const coreMat = new THREE.MeshStandardMaterial({
+          map: tex,
+          color: 0x162238,
+          transparent: true,
+          alphaTest: 0.42,
+          roughness: 0.28,
+          metalness: 0.58,
+          side: THREE.DoubleSide
+        });
+
+        for (let i = 0; i < slices; i++) {
+          const t = slices > 1 ? i / (slices - 1) : 0.5;
+          const z = (t - 0.5) * depth;
+          const sliceMesh = new THREE.Mesh(planeGeo, coreMat);
+          sliceMesh.position.z = z;
+          group.add(sliceMesh);
+        }
+      });
+
+      group.position.y = 0.04;
+      group.rotation.z = -0.14;
+      return group;
     }
 
     setColorVariant(colorName) {
