@@ -182,6 +182,88 @@
     }).join("");
 
     bindMouseDragScroll(document.getElementById("homeFeaturedViewport"));
+    initFeaturedAutoLeftToRight();
+  }
+
+  // TỰ ĐỘNG CHUYỂN ĐỘNG TỪ TRÁI QUA PHẢI (1S) CHO MỤC SẢN PHẨM MỚI BẰNG GSAP 3
+  function initFeaturedAutoLeftToRight() {
+    const viewport = document.getElementById("homeFeaturedViewport");
+    const track = document.getElementById("homeFeaturedGrid");
+    if (!viewport || !track || track.dataset.autoLtrBound === "true") return;
+    track.dataset.autoLtrBound = "true";
+
+    let isHovered = false;
+    let isAnimating = false;
+    let timer = null;
+    const GAP_PX = 16;
+
+    function stopAuto() {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    }
+
+    function scheduleNext() {
+      stopAuto();
+      if (isHovered || track.children.length <= 1) return;
+      timer = setTimeout(() => {
+        slideLeftToRight();
+      }, 1000);
+    }
+
+    function slideLeftToRight() {
+      if (isAnimating || isHovered || track.children.length <= 1) return;
+      const firstCard = track.firstElementChild;
+      if (!firstCard) return;
+      const stepPx = firstCard.getBoundingClientRect().width + GAP_PX;
+      if (stepPx <= 0) return;
+
+      isAnimating = true;
+      if (typeof window.gsap !== "undefined") {
+        // Nếu người dùng đã kéo scrollLeft trước đó thì đưa nhẹ về 0 để vòng trượt mượt
+        if (viewport.scrollLeft > 0) {
+          viewport.scrollLeft = 0;
+        }
+        track.insertBefore(track.lastElementChild, track.firstElementChild);
+        window.gsap.set(track, { x: -stepPx });
+        window.gsap.to(track, {
+          x: 0,
+          duration: 1,
+          ease: "power2.inOut",
+          onComplete: () => {
+            isAnimating = false;
+            scheduleNext();
+          }
+        });
+      } else {
+        track.insertBefore(track.lastElementChild, track.firstElementChild);
+        isAnimating = false;
+        scheduleNext();
+      }
+    }
+
+    viewport.addEventListener("mouseenter", () => {
+      isHovered = true;
+      stopAuto();
+    });
+
+    viewport.addEventListener("mouseleave", () => {
+      isHovered = false;
+      scheduleNext();
+    });
+
+    viewport.addEventListener("mousedown", () => {
+      isHovered = true;
+      stopAuto();
+      if (typeof window.gsap !== "undefined") {
+        window.gsap.killTweensOf(track);
+        window.gsap.set(track, { x: 0 });
+      }
+      isAnimating = false;
+    });
+
+    scheduleNext();
   }
 
   // HELPER DÙNG CHUNG: KÉO CHUỘT TRÁI/PHẢI CÓ QUÁN TÍNH GSAP 3
