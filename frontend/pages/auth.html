@@ -117,7 +117,10 @@
           </div>
 
           <div class="ts-auth-v2-notice" id="authNoticeBox">
-            Tài khoản bị khóa? Vui lòng liên hệ quản trị viên
+            <span>Tài khoản bị khóa hoặc cần hỗ trợ?</span>
+            <button type="button" class="ts-auth-v2-contact-trigger" id="btnOpenContactAdmin">
+              Liên hệ quản trị viên
+            </button>
           </div>
         </div>
 
@@ -202,6 +205,73 @@
       </div>
     </div>
   </footer>
+
+  <!-- MODAL LIÊN HỆ QUẢN TRỊ VIÊN -->
+  <div class="ts-admin-contact-backdrop" id="modalContactAdmin" aria-hidden="true">
+    <div class="ts-admin-contact-modal" role="dialog" aria-modal="true" aria-labelledby="contactAdminTitle">
+      <div class="ts-admin-contact-head">
+        <div>
+          <h2 class="ts-admin-contact-title" id="contactAdminTitle">Liên hệ quản trị viên</h2>
+          <p class="ts-admin-contact-sub">Gửi yêu cầu mở khóa tài khoản, cấp lại mật khẩu hoặc hỗ trợ đơn hàng.</p>
+        </div>
+        <button type="button" class="ts-admin-contact-close" id="btnCloseContactAdmin" aria-label="Đóng">✕</button>
+      </div>
+
+      <div class="ts-admin-contact-channels">
+        <div class="ts-admin-channel-item">
+          <span class="ts-admin-channel-label">Hotline hỗ trợ</span>
+          <a href="tel:19006868" class="ts-admin-channel-val">1900 6868</a>
+        </div>
+        <div class="ts-admin-channel-item">
+          <span class="ts-admin-channel-label">Email quản trị</span>
+          <a href="mailto:admin@tsport.vn" class="ts-admin-channel-val">admin@tsport.vn</a>
+        </div>
+        <div class="ts-admin-channel-item">
+          <span class="ts-admin-channel-label">Giờ làm việc</span>
+          <span class="ts-admin-channel-val">08:00 – 22:00 (Hằng ngày)</span>
+        </div>
+      </div>
+
+      <form id="formContactAdmin">
+        <div class="ts-auth-v2-field">
+          <label for="contactAccount" class="ts-auth-v2-label">Email hoặc Số điện thoại tài khoản *</label>
+          <input
+            type="text"
+            id="contactAccount"
+            class="ts-auth-v2-input"
+            placeholder="Ví dụ: minhanh@example.com hoặc 0901234567"
+            required
+          />
+        </div>
+
+        <div class="ts-auth-v2-field">
+          <label for="contactReason" class="ts-auth-v2-label">Vấn đề cần hỗ trợ *</label>
+          <select id="contactReason" class="ts-auth-v2-input">
+            <option value="Tài khoản bị khóa">Tài khoản bị khóa</option>
+            <option value="Quên mật khẩu / Không đăng nhập được">Quên mật khẩu / Không đăng nhập được</option>
+            <option value="Hỗ trợ đơn hàng / Đặt sân">Hỗ trợ đơn hàng / Đặt sân</option>
+            <option value="Khác">Vấn đề khác</option>
+          </select>
+        </div>
+
+        <div class="ts-auth-v2-field">
+          <label for="contactMessage" class="ts-auth-v2-label">Nội dung chi tiết *</label>
+          <textarea
+            id="contactMessage"
+            class="ts-auth-v2-input ts-admin-contact-textarea"
+            rows="3"
+            placeholder="Mô tả ngắn gọn tình trạng tài khoản hoặc vấn đề bạn đang gặp..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="ts-admin-contact-actions">
+          <button type="button" class="ts-admin-contact-cancel" id="btnCancelContactAdmin">Hủy</button>
+          <button type="submit" class="ts-admin-contact-submit">Gửi yêu cầu hỗ trợ</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>

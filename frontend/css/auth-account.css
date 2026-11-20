@@ -340,3 +340,191 @@ body.tsport-auth-body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   LIÊN HỆ QUẢN TRỊ VIÊN (TRIGGER + MODAL HỖ TRỢ TỐI GIẢN)
+   ========================================================================== */
+.ts-auth-v2-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ts-auth-v2-contact-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #D94C26;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.ts-auth-v2-contact-trigger:hover {
+  color: #B83B19;
+}
+
+.ts-admin-contact-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(15, 23, 42, 0.52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.ts-admin-contact-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.ts-admin-contact-modal {
+  width: 100%;
+  max-width: 520px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 24px 26px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+  transform: translateY(10px);
+  transition: transform 0.2s ease;
+}
+
+.ts-admin-contact-backdrop.is-open .ts-admin-contact-modal {
+  transform: translateY(0);
+}
+
+.ts-admin-contact-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ts-admin-contact-title {
+  font-size: 19px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.ts-admin-contact-sub {
+  font-size: 12.5px;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.ts-admin-contact-close {
+  border: none;
+  background: #F3F4F6;
+  color: #374151;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ts-admin-contact-close:hover {
+  background: #E5E7EB;
+  color: #111827;
+}
+
+.ts-admin-contact-channels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+
+.ts-admin-channel-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ts-admin-channel-label {
+  font-size: 11px;
+  color: #6B7280;
+}
+
+.ts-admin-channel-val {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #111827;
+  text-decoration: none;
+}
+
+a.ts-admin-channel-val:hover {
+  color: #D94C26;
+}
+
+.ts-admin-contact-textarea {
+  resize: vertical;
+  min-height: 82px;
+  line-height: 1.5;
+}
+
+.ts-admin-contact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.ts-admin-contact-cancel {
+  padding: 10px 18px;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+  cursor: pointer;
+}
+
+.ts-admin-contact-cancel:hover {
+  border-color: #9CA3AF;
+}
+
+.ts-admin-contact-submit {
+  padding: 10px 20px;
+  background: #D94C26;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ts-admin-contact-submit:hover {
+  background: #BF3E1C;
+}
+
+@media (max-width: 640px) {
+  .ts-admin-contact-channels {
+    grid-template-columns: 1fr;
+  }
+}

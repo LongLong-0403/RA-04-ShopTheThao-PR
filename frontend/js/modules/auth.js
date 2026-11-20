@@ -153,6 +153,68 @@
       document.title = "Đăng nhập | Tsport";
     });
 
+    // Modal Liên hệ quản trị viên
+    const contactModal = document.getElementById("modalContactAdmin");
+    const openContact = () => {
+      if (!contactModal) return;
+      const loginEmailVal = document.getElementById("loginEmail")?.value.trim();
+      const contactAccount = document.getElementById("contactAccount");
+      if (contactAccount && !contactAccount.value && loginEmailVal) {
+        contactAccount.value = loginEmailVal;
+      }
+      contactModal.classList.add("is-open");
+      contactModal.setAttribute("aria-hidden", "false");
+    };
+    const closeContact = () => {
+      if (!contactModal) return;
+      contactModal.classList.remove("is-open");
+      contactModal.setAttribute("aria-hidden", "true");
+    };
+
+    document.getElementById("btnOpenContactAdmin")?.addEventListener("click", openContact);
+    document.getElementById("btnCloseContactAdmin")?.addEventListener("click", closeContact);
+    document.getElementById("btnCancelContactAdmin")?.addEventListener("click", closeContact);
+    contactModal?.addEventListener("click", (e) => {
+      if (e.target === contactModal) closeContact();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && contactModal?.classList.contains("is-open")) {
+        closeContact();
+      }
+    });
+
+    document.getElementById("formContactAdmin")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const account = document.getElementById("contactAccount")?.value.trim();
+      const reason = document.getElementById("contactReason")?.value || "Tài khoản bị khóa";
+      const message = document.getElementById("contactMessage")?.value.trim();
+
+      if (!account || !message) {
+        showToast("Vui lòng nhập đầy đủ thông tin tài khoản và nội dung cần hỗ trợ.", "error");
+        return;
+      }
+
+      try {
+        const tickets = JSON.parse(localStorage.getItem("tsport_support_tickets") || "[]");
+        const ticketCode = "SUP-" + String(Date.now()).slice(-6);
+        tickets.unshift({
+          code: ticketCode,
+          account,
+          reason,
+          message,
+          status: "PENDING",
+          created_at: new Date().toLocaleString("vi-VN")
+        });
+        localStorage.setItem("tsport_support_tickets", JSON.stringify(tickets));
+        document.getElementById("contactMessage").value = "";
+        closeContact();
+        showToast(`Đã gửi yêu cầu hỗ trợ (${ticketCode}) tới quản trị viên!`, "success");
+      } catch (_) {
+        closeContact();
+        showToast("Đã gửi yêu cầu hỗ trợ tới quản trị viên!", "success");
+      }
+    });
+
     // Nút test lỗi validate
     document.getElementById("btnTestValidationError")?.addEventListener("click", () => {
       document.getElementById("loginEmail").value = "email-sai-dinh-dang";
