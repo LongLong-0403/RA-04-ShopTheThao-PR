@@ -142,14 +142,14 @@
     });
   }
 
-  // 2. RENDER 5 SẢN PHẨM MỚI (LƯỚI 5 CỘT CHUẨN ẢNH)
+  // 2. RENDER SẢN PHẨM MỚI (KÉO CHUỘT TRÁI / PHẢI MƯỢT MÀ VỚI QUÁN TÍNH GSAP)
   function renderFeaturedProducts() {
     const store = window.tsportStore;
     const grid = document.getElementById("homeFeaturedGrid");
     if (!grid || !store) return;
 
     const products = (store.getProducts() || []).filter(p => p.status !== "INACTIVE");
-    const newProducts = products.filter(p => p.condition_type !== "CU").slice(0, 5);
+    const newProducts = products.filter(p => p.condition_type !== "CU");
 
     grid.innerHTML = newProducts.map((p) => {
       const primaryImg = (p.images && p.images.find(i => i.is_primary)) || (p.images && p.images[0]) || { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" };
@@ -163,10 +163,10 @@
       const metaText = sizes ? `Màu / Size ${sizes} / Chiếc` : "Màu / Size / Đơn vị";
 
       return `
-        <a href="pages/product-detail.html?id=${p.id}" class="ts-min-product-card js-gsap-card">
+        <a href="pages/product-detail.html?id=${p.id}" class="ts-min-product-card js-gsap-card" draggable="false">
           <div class="ts-min-product-media">
             <span class="ts-min-product-badge">Mới</span>
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
           </div>
           <h3 class="ts-min-product-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
           <div class="ts-min-product-meta">${escapeHtml(metaText)}</div>
@@ -177,6 +177,83 @@
         </a>
       `;
     }).join("");
+
+    initFeaturedMouseDrag();
+  }
+
+  function initFeaturedMouseDrag() {
+    const viewport = document.getElementById("homeFeaturedViewport");
+    if (!viewport || viewport.dataset.dragBound === "true") return;
+    viewport.dataset.dragBound = "true";
+
+    let isDown = false;
+    let hasDragged = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+    let lastPageX = 0;
+    let velocity = 0;
+
+    viewport.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      isDown = true;
+      hasDragged = false;
+      startX = e.pageX;
+      lastPageX = e.pageX;
+      startScrollLeft = viewport.scrollLeft;
+      velocity = 0;
+      if (typeof window.gsap !== "undefined") {
+        window.gsap.killTweensOf(viewport);
+      }
+      viewport.classList.add("is-dragging");
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      if (Math.abs(dx) > 5) {
+        hasDragged = true;
+      }
+      velocity = e.pageX - lastPageX;
+      lastPageX = e.pageX;
+      viewport.scrollLeft = startScrollLeft - dx * 1.15;
+    });
+
+    function endDrag() {
+      if (!isDown) return;
+      isDown = false;
+      viewport.classList.remove("is-dragging");
+
+      // Quán tính trượt mượt sau khi thả chuột bằng GSAP 3
+      if (Math.abs(velocity) > 1.5 && typeof window.gsap !== "undefined") {
+        const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+        const target = Math.max(0, Math.min(maxScroll, viewport.scrollLeft - velocity * 14));
+        window.gsap.to(viewport, {
+          scrollLeft: target,
+          duration: 0.65,
+          ease: "power3.out"
+        });
+      }
+    }
+
+    window.addEventListener("mouseup", endDrag);
+    viewport.addEventListener("mouseleave", endDrag);
+
+    // Chặn mở link khi người dùng vừa kéo chuột trượt ngang
+    viewport.addEventListener("click", (e) => {
+      if (hasDragged) {
+        e.preventDefault();
+        e.stopPropagation();
+        hasDragged = false;
+      }
+    }, true);
+
+    // Hỗ trợ cuộn ngang bằng con lăn chuột (Shift + Wheel hoặc trackpad ngang)
+    viewport.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && e.shiftKey) {
+        e.preventDefault();
+        viewport.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
   }
 
   // 2B. KHỐI LỌC SẢN PHẨM THEO DANH MỤC (CHUYỂN ĐỘNG MƯỢT TỪ PHẢI QUA TRÁI 1S BẰNG GSAP 3)

@@ -399,15 +399,35 @@ body.tsport-home-body {
 }
 
 /* ==========================================
-   5. 01 / MUA SẮM — LƯỚI 5 CỘT SẢN PHẨM MỚI
+   5. 01 / MUA SẮM — SẢN PHẨM MỚI (KÉO CHUỘT TRÁI / PHẢI MƯỢT)
    ========================================== */
+.ts-featured-drag-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  scrollbar-width: none;
+  padding: 4px 2px 10px 2px;
+  margin: -4px -2px -10px -2px;
+}
+
+.ts-featured-drag-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.ts-featured-drag-viewport.is-dragging {
+  cursor: grabbing;
+}
+
 .ts-min-products-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
   gap: 16px;
 }
 
 .ts-min-product-card {
+  flex: 0 0 calc((100% - 64px) / 5);
+  min-width: 0;
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
   border-radius: 10px;
@@ -416,7 +436,13 @@ body.tsport-home-body {
   color: inherit;
   display: flex;
   flex-direction: column;
+  -webkit-user-drag: none;
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ts-min-product-card img {
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 .ts-min-product-card:hover {
@@ -830,8 +856,8 @@ body.tsport-home-body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
-  .ts-min-products-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .ts-min-product-card {
+    flex: 0 0 calc((100% - 32px) / 3);
   }
   .ts-tabbox-card {
     flex: 0 0 calc((100% - 24px) / 3);
@@ -878,8 +904,8 @@ body.tsport-home-body {
   .ts-min-footer-grid {
     grid-template-columns: 1fr;
   }
-  .ts-min-products-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .ts-min-product-card {
+    flex: 0 0 calc((100% - 16px) / 2);
   }
   .ts-tabbox-card {
     flex: 0 0 calc((100% - 12px) / 2);
