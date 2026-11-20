@@ -259,76 +259,70 @@ body.tsport-home-body {
   font-weight: 700;
 }
 
-/* Hero Banner xám tối giản chuẩn ảnh */
-.ts-min-hero-banner {
+/* Hero Banner Full Khung Chỉ Chứa Ảnh + Chuyển Mượt 2s */
+.ts-min-hero-banner.ts-hero-slider-only {
   flex: 1;
-  background: #ECEEF1;
+  background: #111827;
   border-radius: 10px;
-  padding: 42px 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 32px;
-  min-height: 290px;
+  padding: 0;
+  min-height: 360px;
+  height: 360px;
   position: relative;
   overflow: hidden;
+  display: block;
 }
 
-.ts-min-hero-copy {
-  max-width: 440px;
-  position: relative;
+.ts-hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.ts-hero-slide.is-active {
+  opacity: 1;
   z-index: 2;
+  pointer-events: auto;
 }
 
-.ts-min-hero-eyebrow {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.7px;
-  color: #4B5563;
-  text-transform: uppercase;
-  margin-bottom: 14px;
+.ts-hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
 }
 
-.ts-min-hero-title {
-  font-size: 36px;
-  font-weight: 800;
-  line-height: 1.18;
-  color: #111827;
-  margin: 0 0 14px 0;
-  letter-spacing: -0.6px;
-}
-
-.ts-min-hero-sub {
-  font-size: 14px;
-  color: #6B7280;
-  margin: 0 0 26px 0;
-}
-
-.ts-min-hero-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #D94C26;
-  color: #FFFFFF;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.ts-min-hero-btn:hover {
-  background: #BF3E1C;
-  transform: translateY(-1px);
-}
-
-.ts-min-hero-art {
-  flex-shrink: 0;
+.ts-hero-slider-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding-right: 24px;
+  gap: 8px;
+  z-index: 5;
+}
+
+.ts-hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+
+.ts-hero-dot.is-active {
+  width: 24px;
+  background: #FFFFFF;
 }
 
 /* ==========================================
@@ -710,16 +704,10 @@ body.tsport-home-body {
   .ts-cat-sidebar-list {
     grid-template-columns: repeat(2, 1fr);
   }
-  .ts-min-hero-banner {
-    padding: 28px 22px;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .ts-min-hero-art {
-    display: none;
-  }
-  .ts-min-hero-title {
-    font-size: 28px;
+  .ts-min-hero-banner.ts-hero-slider-only {
+    padding: 0;
+    height: 220px;
+    min-height: 220px;
   }
   .ts-usp-grid,
   .ts-reuse-grid,

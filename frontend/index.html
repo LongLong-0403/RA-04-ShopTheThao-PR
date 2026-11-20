@@ -118,20 +118,21 @@
           <a href="pages/admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
         </nav>
 
-        <div class="ts-min-hero-banner js-gsap-hero">
-          <div class="ts-min-hero-copy">
-            <div class="ts-min-hero-eyebrow">BANNER CHÍNH / CHIẾN DỊCH THEO MÔN</div>
-            <h1 class="ts-min-hero-title">Sẵn sàng cho<br />cuộc chơi tiếp theo.</h1>
-            <p class="ts-min-hero-sub">Dụng cụ • Giày • Trang phục • Phụ kiện</p>
-            <a href="pages/shop.html" class="ts-min-hero-btn">Khám phá sản phẩm</a>
-          </div>
+        <div class="ts-min-hero-banner ts-hero-slider-only js-gsap-hero" id="heroBannerSlider">
+          <a href="pages/shop.html" class="ts-hero-slide is-active">
+            <img src="assets/banner/banner-1.jpg" alt="Tsport Banner 1" />
+          </a>
+          <a href="pages/shop.html" class="ts-hero-slide">
+            <img src="assets/banner/banner-2.jpg" alt="Tsport Banner 2" />
+          </a>
+          <a href="pages/shop.html" class="ts-hero-slide">
+            <img src="assets/banner/banner-3.jpg" alt="Tsport Banner 3" />
+          </a>
 
-          <!-- Hình minh họa nét mảnh tối giản chuẩn ảnh -->
-          <div class="ts-min-hero-art" aria-hidden="true">
-            <svg width="170" height="220" viewBox="0 0 170 220" fill="none">
-              <ellipse cx="95" cy="82" rx="58" ry="74" stroke="#CBD5E1" stroke-width="2" />
-              <line x1="60" y1="146" x2="26" y2="206" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" />
-            </svg>
+          <div class="ts-hero-slider-dots" id="heroSliderDots">
+            <button type="button" class="ts-hero-dot is-active" data-index="0" aria-label="Ảnh 1"></button>
+            <button type="button" class="ts-hero-dot" data-index="1" aria-label="Ảnh 2"></button>
+            <button type="button" class="ts-hero-dot" data-index="2" aria-label="Ảnh 3"></button>
           </div>
         </div>
       </div>

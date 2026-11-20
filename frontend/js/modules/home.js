@@ -13,10 +13,90 @@
   function initHome() {
     updateHeaderUser();
     updateCartBadge();
+    initHeroBannerSlider();
     renderFeaturedProducts();
     renderRecentlyViewed();
     initSearchDebounce();
     initGsapAnimations();
+  }
+
+  // 0. SLIDER BANNER CHÍNH FULL ẢNH — CHUYỂN ĐỔI MƯỢT MÀ SAU MỖI 2 GIÂY (GSAP 3)
+  function initHeroBannerSlider() {
+    const slider = document.getElementById("heroBannerSlider");
+    if (!slider) return;
+
+    const slides = Array.from(slider.querySelectorAll(".ts-hero-slide"));
+    const dots = Array.from(slider.querySelectorAll(".ts-hero-dot"));
+    if (slides.length <= 1) return;
+
+    let currentIdx = 0;
+    let timer = null;
+    const hasGsap = typeof window.gsap !== "undefined";
+
+    function goToSlide(nextIdx) {
+      if (nextIdx === currentIdx) return;
+      const prevSlide = slides[currentIdx];
+      const nextSlide = slides[nextIdx];
+
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === nextIdx));
+
+      if (hasGsap) {
+        window.gsap.killTweensOf([prevSlide, nextSlide]);
+        window.gsap.set(prevSlide, { zIndex: 1, pointerEvents: "none" });
+        window.gsap.set(nextSlide, { zIndex: 2, pointerEvents: "auto", opacity: 0, scale: 1.04 });
+
+        window.gsap.to(nextSlide, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.75,
+          ease: "power2.inOut",
+          onComplete: () => {
+            prevSlide.classList.remove("is-active");
+            window.gsap.set(prevSlide, { opacity: 0, scale: 1 });
+          }
+        });
+        window.gsap.to(prevSlide, {
+          opacity: 0,
+          duration: 0.75,
+          ease: "power2.inOut"
+        });
+        nextSlide.classList.add("is-active");
+      } else {
+        prevSlide.classList.remove("is-active");
+        nextSlide.classList.add("is-active");
+      }
+
+      currentIdx = nextIdx;
+    }
+
+    function startTimer() {
+      stopTimer();
+      timer = setInterval(() => {
+        goToSlide((currentIdx + 1) % slides.length);
+      }, 2000);
+    }
+
+    function stopTimer() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const idx = Number(dot.dataset.index) || 0;
+        goToSlide(idx);
+        startTimer();
+      });
+    });
+
+    slider.addEventListener("mouseenter", stopTimer);
+    slider.addEventListener("mouseleave", startTimer);
+
+    startTimer();
   }
 
   // 1. CẬP NHẬT LIÊN KẾT TÀI KHOẢN (KHÔNG ICON THỪA)
