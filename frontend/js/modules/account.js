@@ -1,41 +1,71 @@
 /**
- * TSPORT — MODULE TÀI KHOẢN & ĐỔI MẬT KHẨU (D10)
+ * TSPORT — MODULE TÀI KHOẢN CỦA TÔI & ĐỔI MẬT KHẨU (ACCOUNT V2)
  */
 
 (function () {
+  function getInitials(name) {
+    const parts = String(name || "TS").trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
   function initAccountModule() {
     const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-      email: "nguyenvanan@sportstore.vn",
-      full_name: "Nguyễn Văn An",
-      phone: "0912345601",
-      address: "Số 15 Xuân Thủy, Quận Cầu Giấy, Hà Nội",
+      email: "minhanh@example.com",
+      full_name: "Nguyễn Minh Anh",
+      phone: "0901234567",
+      address: "Số 12, Nguyễn Trãi, Thanh Xuân, Hà Nội",
       role: "CUSTOMER"
     };
 
-    // Render thông tin sang form và sidebar
+    // Tìm kiếm từ header
+    document.getElementById("accountSearchForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = document.getElementById("accountSearchInput")?.value.trim();
+      window.location.href = q ? `shop.html?q=${encodeURIComponent(q)}` : "shop.html";
+    });
+
+    // Nạp thông tin vào form và sidebar
     const emailField = document.getElementById("profileEmail");
     const nameField = document.getElementById("profileFullName");
     const phoneField = document.getElementById("profilePhone");
     const addrField = document.getElementById("profileAddress");
 
-    if (emailField) emailField.value = user.email;
+    if (emailField) emailField.value = user.email || "";
     if (nameField) nameField.value = user.full_name || "";
     if (phoneField) phoneField.value = user.phone || "";
     if (addrField) addrField.value = user.address || "";
 
     const sbName = document.getElementById("sbProfileName");
-    const sbEmail = document.getElementById("sbProfileEmail");
-    const sbPhone = document.getElementById("sbProfilePhone");
+    const sbRole = document.getElementById("sbProfileRole");
+    const sbAvatar = document.getElementById("sbProfileAvatar");
     if (sbName) sbName.textContent = user.full_name || user.email;
-    if (sbEmail) sbEmail.textContent = user.email;
-    if (sbPhone) sbPhone.textContent = user.phone || "Chưa cập nhật";
+    if (sbRole) sbRole.textContent = user.role === "ADMIN" ? "Quản trị viên" : "Khách hàng";
+    if (sbAvatar) sbAvatar.textContent = getInitials(user.full_name || user.email);
 
-    // Form Update Profile
+    // Nút Hiện / Ẩn mật khẩu
+    document.querySelectorAll(".js-toggle-pass").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const input = document.getElementById(btn.dataset.target);
+        if (!input) return;
+        const isPassword = input.type === "password";
+        input.type = isPassword ? "text" : "password";
+        btn.textContent = isPassword ? "Ẩn" : "Hiện";
+        btn.classList.toggle("is-visible", isPassword);
+      });
+    });
+
+    // Lưu thay đổi thông tin cá nhân
     document.getElementById("formUpdateProfile")?.addEventListener("submit", (e) => {
       e.preventDefault();
       const updatedName = document.getElementById("profileFullName").value.trim();
       const updatedPhone = document.getElementById("profilePhone").value.trim();
       const updatedAddr = document.getElementById("profileAddress").value.trim();
+
+      if (!updatedName) {
+        showToast("Vui lòng nhập họ và tên.", "error");
+        return;
+      }
 
       user.full_name = updatedName;
       user.phone = updatedPhone;
@@ -43,14 +73,14 @@
       localStorage.setItem("tsport_current_user", JSON.stringify(user));
 
       if (sbName) sbName.textContent = updatedName;
-      if (sbPhone) sbPhone.textContent = updatedPhone;
+      if (sbAvatar) sbAvatar.textContent = getInitials(updatedName);
       const userLabel = document.querySelector(".js-header-user-label");
       if (userLabel) userLabel.textContent = updatedName;
 
-      showToast("Cập nhật thông tin cá nhân thành công (Gửi kèm Bearer Token)!", "success");
+      showToast("Đã lưu thay đổi thông tin cá nhân!", "success");
     });
 
-    // Form Change Password
+    // Đổi mật khẩu
     document.getElementById("formChangePassword")?.addEventListener("submit", (e) => {
       e.preventDefault();
       const cur = document.getElementById("passCurrent").value;
@@ -58,20 +88,31 @@
       const cf = document.getElementById("passConfirm").value;
 
       if (!cur) {
-        alert("⚠️ Vui lòng nhập mật khẩu hiện tại!");
+        showToast("Vui lòng nhập mật khẩu hiện tại.", "error");
         return;
       }
       if (!nw || nw.length < 6) {
-        alert("⚠️ Mật khẩu mới phải có tối thiểu 6 ký tự!");
+        showToast("Mật khẩu mới phải có tối thiểu 6 ký tự.", "error");
         return;
       }
       if (nw !== cf) {
-        alert("⚠️ Mật khẩu xác nhận không trùng khớp!");
+        showToast("Nhập lại mật khẩu mới không trùng khớp.", "error");
         return;
       }
 
-      showToast("Đổi mật khẩu thành công! Mật khẩu mới đã được cập nhật.", "success");
+      showToast("Cập nhật mật khẩu thành công!", "success");
       document.getElementById("formChangePassword").reset();
+    });
+
+    // Đăng xuất
+    document.getElementById("btnAccountLogout")?.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("tsport_token");
+      localStorage.removeItem("tsport_current_user");
+      showToast("Đã đăng xuất tài khoản.", "info");
+      setTimeout(() => {
+        window.location.href = "auth.html";
+      }, 450);
     });
   }
 

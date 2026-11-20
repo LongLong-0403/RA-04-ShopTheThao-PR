@@ -3,170 +3,208 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quản lý Hồ sơ & Tài khoản (D10) | Tsport Store</title>
-    <!-- Google Fonts: Roboto -->
+  <title>Tài khoản của tôi | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body data-root="../">
+<body class="tsport-account-body" data-root="../">
 
-  <!-- TOP BAR & HEADER -->
-  <header class="tsport-header">
-    <div class="tsport-topbar">
-      <div class="container">
-        <div class="tsport-topbar-left">
-          <span class="tsport-topbar-badge">TÀI KHOẢN NGƯỜI DÙNG</span>
-          <span>D10 CẬP NHẬT HỒ SƠ • THAY ĐỔI MẬT KHẨU BẢO MẬT • BEARER TOKEN AUTH</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <a href="../index.html" style="color:#F8FAFC;">🏠 Về Cửa Hàng</a>
-          <a href="products.html" style="color:#FF6B35; font-weight:700;">📦 Quản lý Kho & SKU →</a>
-        </div>
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="accountSearchForm">
+          <input
+            type="text"
+            id="accountSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
       </div>
-    </div>
 
-    <div class="tsport-main-bar">
-      <div class="container">
-        <a href="../index.html" class="tsport-logo">
-          <span class="tsport-logo-text">Tsport</span>
-          <span class="tsport-logo-tag">ACCOUNT SETTINGS</span>
-        </a>
-
-        <div class="tsport-actions">
-          <a href="categories.html" class="btn btn-secondary btn-sm">📁 Quản trị Danh mục</a>
-          <a href="auth.html" class="btn btn-secondary btn-sm">🔐 Đăng xuất / Đổi User</a>
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="account.html" class="ts-min-header-link" style="color:#D94C26; font-weight:700;">Tài khoản</a>
         </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
       </div>
     </div>
   </header>
 
-  <!-- NỘI DUNG CHÍNH -->
-  <main class="tsport-admin-page">
-    <div class="container">
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+    </div>
+  </nav>
 
-      <div class="tsport-page-header">
-        <div class="tsport-page-title-wrap">
-          <h1>
-            <span>👤</span>
-            <span>Hồ sơ Cá nhân & Bảo mật (D10)</span>
-          </h1>
-          <div class="tsport-page-subtitle">
-            Cập nhật thông tin liên hệ nhận hàng, địa chỉ giao nhận và thay đổi mật khẩu đăng nhập an toàn.
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: TÀI KHOẢN CỦA TÔI
+       ========================================== -->
+  <main class="container ts-acc-v2-main">
+
+    <!-- Breadcrumb -->
+    <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Trang chủ</a>
+      <span>/</span>
+      <span class="is-current">Tài khoản của tôi</span>
+    </nav>
+
+    <h1 class="ts-acc-v2-page-title">Tài khoản của tôi</h1>
+
+    <div class="ts-acc-v2-layout">
+
+      <!-- CỘT TRÁI: SIDEBAR ĐIỀU HƯỚNG TÀI KHOẢN -->
+      <aside class="ts-acc-v2-sidebar">
+        <div class="ts-acc-v2-user-head">
+          <div class="ts-acc-v2-avatar" id="sbProfileAvatar">NA</div>
+          <div class="ts-acc-v2-user-meta">
+            <div class="ts-acc-v2-user-name" id="sbProfileName">Nguyễn Minh Anh</div>
+            <div class="ts-acc-v2-user-role" id="sbProfileRole">Khách hàng</div>
           </div>
         </div>
-      </div>
 
-      <!-- GRID TÀI KHOẢN (SIDEBAR + MAIN CONTENT) -->
-      <div class="tsport-account-grid">
+        <nav class="ts-acc-v2-menu" aria-label="Menu tài khoản">
+          <a href="account.html" class="ts-acc-v2-menu-link is-active">Hồ sơ cá nhân</a>
+          <a href="orders.html" class="ts-acc-v2-menu-link">Đơn hàng của tôi</a>
+          <a href="courts.html" class="ts-acc-v2-menu-link">Lịch đặt sân</a>
+          <a href="community.html" class="ts-acc-v2-menu-link">Bài ghép kèo</a>
+          <a href="admin-buyback.html" class="ts-acc-v2-menu-link">Yêu cầu thu mua</a>
+        </nav>
 
-        <!-- SIDEBAR TÀI KHOẢN -->
-        <aside class="tsport-profile-sidebar">
-          <div class="tsport-profile-avatar">👤</div>
-          <h2 id="sbProfileName" style="font-size:18px; font-weight:800; color:#0F172A; margin-bottom:4px;">Nguyễn Văn An</h2>
-          <div id="sbProfileEmail" style="font-size:13px; color:#64748B; margin-bottom:6px;">nguyenvanan@sportstore.vn</div>
-          <div style="display:inline-block; font-size:11px; font-weight:700; color:#2563EB; background:#EFF6FF; padding:2px 8px; border-radius:4px; margin-bottom:16px;">
-            Thành viên Thể thao
-          </div>
-
-          <div style="text-align:left; border-top:1px solid #E2E8F0; padding-top:16px; font-size:13px; color:#475569;">
-            <div style="margin-bottom:8px;">
-              <span style="color:#94A3B8;">Điện thoại:</span>
-              <strong id="sbProfilePhone" style="color:#1E293B; margin-left:4px;">0912345601</strong>
-            </div>
-            <div style="margin-bottom:8px;">
-              <span style="color:#94A3B8;">Trạng thái:</span>
-              <span class="badge badge-active" style="margin-left:4px;">Đã xác thực</span>
-            </div>
-            <div>
-              <span style="color:#94A3B8;">Token JWT:</span>
-              <code style="display:block; margin-top:4px; font-size:10px; word-break:break-all; background:#F1F5F9; padding:4px; border-radius:4px;">Bearer eyJhbGci...sig_tsport</code>
-            </div>
-          </div>
-        </aside>
-
-        <!-- NỘI DUNG FORM CHÍNH -->
-        <div class="tsport-account-main" style="display:flex; flex-direction:column; gap:24px;">
-
-          <!-- CARD 1: CẬP NHẬT THÔNG TIN CÁ NHÂN -->
-          <div class="tsport-auth-card">
-            <div class="tsport-auth-card-header">
-              <h2 class="tsport-auth-card-title">📝 Thông tin Cá nhân & Địa chỉ Giao hàng</h2>
-              <div class="tsport-auth-card-sub">Dữ liệu sẽ được gửi qua API kèm HTTP Header <code>Authorization: Bearer [token]</code>.</div>
-            </div>
-
-            <form id="formUpdateProfile">
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                <div class="form-group">
-                  <label class="form-label">Email tài khoản (Cố định)</label>
-                  <input type="email" id="profileEmail" class="form-control" readonly style="background:#F8FAFC; color:#64748B; cursor:not-allowed;" />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Họ và tên <span class="req">*</span></label>
-                  <input type="text" id="profileFullName" class="form-control" required />
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Số điện thoại liên lạc</label>
-                <input type="tel" id="profilePhone" class="form-control" placeholder="09xxxxxxxx" />
-              </div>
-
-              <div class="form-group">
-                <label class="form-label">Địa chỉ nhận hàng mặc định</label>
-                <textarea id="profileAddress" class="form-control" rows="2" placeholder="Số nhà, đường, phường/xã, quận/huyện..."></textarea>
-              </div>
-
-              <div style="text-align:right;">
-                <button type="submit" class="btn btn-primary">
-                  <span>💾</span>
-                  <span>Lưu thông tin cá nhân</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- CARD 2: THAY ĐỔI MẬT KHẨU -->
-          <div class="tsport-auth-card">
-            <div class="tsport-auth-card-header">
-              <h2 class="tsport-auth-card-title">🛡️ Thay đổi Mật khẩu Bảo mật</h2>
-              <div class="tsport-auth-card-sub">Mật khẩu mới tối thiểu 6 ký tự để bảo vệ tài khoản của bạn.</div>
-            </div>
-
-            <form id="formChangePassword">
-              <div class="form-group">
-                <label class="form-label">Mật khẩu hiện tại <span class="req">*</span></label>
-                <input type="password" id="passCurrent" class="form-control" placeholder="Nhập mật khẩu đang dùng" required />
-              </div>
-
-              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                <div class="form-group">
-                  <label class="form-label">Mật khẩu mới <span class="req">*</span></label>
-                  <input type="password" id="passNew" class="form-control" placeholder="Tối thiểu 6 ký tự" required />
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Xác nhận mật khẩu mới <span class="req">*</span></label>
-                  <input type="password" id="passConfirm" class="form-control" placeholder="Nhập lại mật khẩu mới" required />
-                </div>
-              </div>
-
-              <div style="text-align:right;">
-                <button type="submit" class="btn btn-secondary" style="border-color:#CBD5E1;">
-                  <span>🔒</span>
-                  <span>Cập nhật mật khẩu mới</span>
-                </button>
-              </div>
-            </form>
-          </div>
-
+        <div class="ts-acc-v2-logout-wrap">
+          <button type="button" class="ts-acc-v2-logout-btn" id="btnAccountLogout">Đăng xuất</button>
         </div>
+      </aside>
 
-      </div>
+      <!-- CỘT PHẢI: THÔNG TIN CÁ NHÂN & ĐỔI MẬT KHẨU -->
+      <section class="ts-acc-v2-card">
+
+        <!-- 1. THÔNG TIN CÁ NHÂN -->
+        <h2 class="ts-acc-v2-sec-title">Thông tin cá nhân</h2>
+
+        <form id="formUpdateProfile">
+          <div class="ts-acc-v2-row-2">
+            <div class="ts-acc-v2-field">
+              <label for="profileFullName" class="ts-acc-v2-label">Họ và tên</label>
+              <input type="text" id="profileFullName" class="ts-acc-v2-input" placeholder="Nguyễn Minh Anh" required />
+            </div>
+
+            <div class="ts-acc-v2-field">
+              <label for="profilePhone" class="ts-acc-v2-label">Số điện thoại</label>
+              <input type="tel" id="profilePhone" class="ts-acc-v2-input" placeholder="0901234567" />
+            </div>
+          </div>
+
+          <div class="ts-acc-v2-field">
+            <label for="profileEmail" class="ts-acc-v2-label">Email đăng nhập (chỉ xem)</label>
+            <input type="email" id="profileEmail" class="ts-acc-v2-input is-readonly" readonly />
+            <div class="ts-acc-v2-helper">Email dùng để đăng nhập và nhận diện tài khoản.</div>
+          </div>
+
+          <div class="ts-acc-v2-field">
+            <label for="profileAddress" class="ts-acc-v2-label">Địa chỉ nhận hàng</label>
+            <input type="text" id="profileAddress" class="ts-acc-v2-input" placeholder="Số 12, Nguyễn Trãi, Thanh Xuân, Hà Nội" />
+          </div>
+
+          <div class="ts-acc-v2-save-row">
+            <button type="submit" class="ts-acc-v2-btn-primary">Lưu thay đổi</button>
+          </div>
+        </form>
+
+        <hr class="ts-acc-v2-divider" />
+
+        <!-- 2. ĐỔI MẬT KHẨU -->
+        <h2 class="ts-acc-v2-sec-title is-sub">Đổi mật khẩu</h2>
+
+        <form id="formChangePassword">
+          <div class="ts-acc-v2-row-3">
+            <div class="ts-acc-v2-field">
+              <label for="passCurrent" class="ts-acc-v2-label">Mật khẩu hiện tại</label>
+              <div class="ts-auth-v2-pass-wrap">
+                <input type="password" id="passCurrent" class="ts-acc-v2-input ts-auth-v2-pass-input" placeholder="••••••••" required />
+                <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="passCurrent" aria-label="Hiện mật khẩu">Hiện</button>
+              </div>
+            </div>
+
+            <div class="ts-acc-v2-field">
+              <label for="passNew" class="ts-acc-v2-label">Mật khẩu mới</label>
+              <div class="ts-auth-v2-pass-wrap">
+                <input type="password" id="passNew" class="ts-acc-v2-input ts-auth-v2-pass-input" placeholder="••••••••" required />
+                <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="passNew" aria-label="Hiện mật khẩu">Hiện</button>
+              </div>
+            </div>
+
+            <div class="ts-acc-v2-field">
+              <label for="passConfirm" class="ts-acc-v2-label">Nhập lại mật khẩu mới</label>
+              <div class="ts-auth-v2-pass-wrap">
+                <input type="password" id="passConfirm" class="ts-acc-v2-input ts-auth-v2-pass-input" placeholder="••••••••" required />
+                <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="passConfirm" aria-label="Hiện mật khẩu">Hiện</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ts-acc-v2-pass-actions">
+            <button type="submit" class="ts-acc-v2-btn-secondary">Cập nhật mật khẩu</button>
+          </div>
+        </form>
+
+      </section>
 
     </div>
   </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="admin-buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
