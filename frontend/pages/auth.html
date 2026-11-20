@@ -3,183 +3,210 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Đăng nhập & Đăng ký (D08/D09) | Tsport Store</title>
-    <!-- Google Fonts: Roboto -->
+  <title>Đăng nhập | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body data-root="../">
+<body class="tsport-auth-body" data-root="../">
 
-  <!-- TOP BAR & HEADER -->
-  <header class="tsport-header">
-    <div class="tsport-topbar">
-      <div class="container">
-        <div class="tsport-topbar-left">
-          <span class="tsport-topbar-badge">XÁC THỰC NGƯỜI DÙNG</span>
-          <span>D08 ĐĂNG NHẬP • D09 ĐĂNG KÝ TÀI KHOẢN • JWT BEARER INTERCEPTOR</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <a href="../index.html" style="color:#F8FAFC;">🏠 Về Cửa Hàng</a>
-          <a href="account.html" style="color:#FF6B35; font-weight:700;">👤 Thông tin Cá nhân (D10) →</a>
-        </div>
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="authSearchForm">
+          <input
+            type="text"
+            id="authSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
       </div>
-    </div>
 
-    <div class="tsport-main-bar">
-      <div class="container">
-        <a href="../index.html" class="tsport-logo">
-          <span class="tsport-logo-text">Tsport</span>
-          <span class="tsport-logo-tag">AUTHENTICATION</span>
-        </a>
-
-        <div class="tsport-actions">
-          <a href="products.html" class="btn btn-secondary btn-sm">📦 Quản lý Sản phẩm</a>
-          <a href="categories.html" class="btn btn-secondary btn-sm">📁 Quản lý Danh mục</a>
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="auth.html" class="ts-min-header-link" style="color:#D94C26; font-weight:700;">Tài khoản</a>
         </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
       </div>
     </div>
   </header>
 
-  <!-- NỘI DUNG CHÍNH -->
-  <main class="tsport-admin-page">
-    <div class="container">
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+    </div>
+  </nav>
 
-      <div class="tsport-page-header">
-        <div class="tsport-page-title-wrap">
-          <h1>
-            <span>🔐</span>
-            <span>Xác thực Tài khoản Tsport</span>
-          </h1>
-          <div class="tsport-page-subtitle">
-            Hỗ trợ đăng nhập, đăng ký với đầy đủ validation theo chuẩn SRS, lưu trữ JWT Bearer Token và theo dõi Axios Interceptor tự động.
-          </div>
-        </div>
-      </div>
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: ĐĂNG NHẬP & ĐĂNG KÝ TỐI GIẢN
+       ========================================== -->
+  <main class="container ts-auth-v2-main">
+    <div class="ts-auth-v2-grid">
 
-      <!-- GRID ĐĂNG NHẬP (D08) & ĐĂNG KÝ (D09) -->
-      <div class="tsport-auth-wrapper">
+      <!-- CỘT TRÁI: THẺ THƯƠNG HIỆU TSPORT -->
+      <aside class="ts-auth-v2-brand-card">
+        <div class="ts-auth-v2-brand-logo">Tsport</div>
+        <h2 class="ts-auth-v2-brand-headline">
+          Một tài khoản,<br />
+          trọn cuộc chơi.
+        </h2>
+        <ul class="ts-auth-v2-brand-list">
+          <li>Mua sắm dụng cụ thể thao</li>
+          <li>Đặt sân theo ca cố định</li>
+          <li>Tìm đội và bán lại đồ cũ</li>
+        </ul>
+      </aside>
 
-        <!-- CỘT 1: FORM ĐĂNG NHẬP (D08) -->
-        <div class="tsport-auth-card">
-          <div class="tsport-auth-card-header">
-            <h2 class="tsport-auth-card-title">🔑 Đăng nhập Tài khoản (D08)</h2>
-            <div class="tsport-auth-card-sub">Dành cho khách hàng và quản trị viên Tsport.</div>
-          </div>
+      <!-- CỘT PHẢI: FORM ĐĂNG NHẬP / ĐĂNG KÝ -->
+      <section class="ts-auth-v2-form-col">
 
-          <form id="formLogin">
-            <div class="form-group">
-              <label class="form-label">Email tài khoản <span class="req">*</span></label>
-              <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" value="nguyenvanan@sportstore.vn" required />
-              <div class="form-error" id="errLoginEmail"></div>
+        <!-- FORM ĐĂNG NHẬP -->
+        <div id="authLoginPanel">
+          <h1 class="ts-auth-v2-title">Chào mừng trở lại</h1>
+
+          <form id="formLogin" novalidate>
+            <div class="ts-auth-v2-field">
+              <label for="loginEmail" class="ts-auth-v2-label">Email</label>
+              <input
+                type="email"
+                id="loginEmail"
+                class="ts-auth-v2-input"
+                placeholder="minhanh@example.com"
+                value="nguyenvanan@sportstore.vn"
+                required
+              />
+              <div class="ts-auth-v2-error" id="errLoginEmail"></div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Mật khẩu <span class="req">*</span></label>
-              <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" value="123456" required />
-              <div class="form-error" id="errLoginPassword"></div>
+            <div class="ts-auth-v2-field">
+              <label for="loginPassword" class="ts-auth-v2-label">Mật khẩu</label>
+              <input
+                type="password"
+                id="loginPassword"
+                class="ts-auth-v2-input"
+                placeholder="••••••••••••"
+                value="123456"
+                required
+              />
+              <div class="ts-auth-v2-error" id="errLoginPassword"></div>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-              <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:#475569; cursor:pointer;">
-                <input type="checkbox" id="rememberMe" checked />
-                <span>Ghi nhớ đăng nhập</span>
-              </label>
-              <a href="#" style="font-size:12px; color:#D94C26; font-weight:600;" onclick="alert('Vui lòng liên hệ quản trị viên để cấp lại mật khẩu!'); return false;">Quên mật khẩu?</a>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px;">
-              <span>Đăng nhập ngay</span>
-              <span>→</span>
-            </button>
+            <button type="submit" class="ts-auth-v2-submit">Đăng nhập</button>
           </form>
 
-          <div style="margin-top:20px; padding-top:14px; border-top:1px dashed #E2E8F0;">
-            <div style="font-size:12px; font-weight:700; color:#64748B; margin-bottom:8px;">TÀI KHOẢN MẪU TEST NHANH:</div>
-            <div style="display:flex; gap:8px;">
-              <button type="button" class="btn btn-secondary btn-sm" id="btnQuickLoginCustomer">
-                👤 Khách hàng (An)
-              </button>
-              <button type="button" class="btn btn-secondary btn-sm" id="btnQuickLoginAdmin">
-                🛡️ Admin (admin123@gmail.com)
-              </button>
-            </div>
+          <div class="ts-auth-v2-switch-row">
+            <button type="button" class="ts-auth-v2-switch-link" id="btnShowRegister">
+              Chưa có tài khoản? Đăng ký ngay
+            </button>
+          </div>
+
+          <div class="ts-auth-v2-notice" id="authNoticeBox">
+            Tài khoản bị khóa? Vui lòng liên hệ quản trị viên
           </div>
         </div>
 
-        <!-- CỘT 2: FORM ĐĂNG KÝ (D09) -->
-        <div class="tsport-auth-card">
-          <div class="tsport-auth-card-header">
-            <h2 class="tsport-auth-card-title">📝 Đăng ký Khách hàng mới (D09)</h2>
-            <div class="tsport-auth-card-sub">Tạo tài khoản để nhận ưu đãi thành viên và bảo hành.</div>
-          </div>
+        <!-- FORM ĐĂNG KÝ (ẨN MẶC ĐỊNH, HIỆN KHI BẤM "ĐĂNG KÝ NGAY") -->
+        <div id="authRegisterPanel" style="display:none;">
+          <h1 class="ts-auth-v2-title">Tạo tài khoản Tsport</h1>
 
-          <form id="formRegister">
-            <div class="form-group">
-              <label class="form-label">Họ và tên <span class="req">*</span></label>
-              <input type="text" id="regFullName" class="form-control" placeholder="Nguyễn Văn A" required />
-              <div class="form-error" id="errRegFullName"></div>
+          <form id="formRegister" novalidate>
+            <div class="ts-auth-v2-field">
+              <label for="regFullName" class="ts-auth-v2-label">Họ và tên</label>
+              <input type="text" id="regFullName" class="ts-auth-v2-input" placeholder="Nguyễn Minh Anh" required />
+              <div class="ts-auth-v2-error" id="errRegFullName"></div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Số điện thoại <span class="req">*</span></label>
-              <input type="tel" id="regPhone" class="form-control" placeholder="0912345678" required />
-              <div class="form-error" id="errRegPhone"></div>
+            <div class="ts-auth-v2-field">
+              <label for="regPhone" class="ts-auth-v2-label">Số điện thoại</label>
+              <input type="tel" id="regPhone" class="ts-auth-v2-input" placeholder="0901234567" required />
+              <div class="ts-auth-v2-error" id="errRegPhone"></div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Địa chỉ Email <span class="req">*</span></label>
-              <input type="email" id="regEmail" class="form-control" placeholder="email@gmail.com" required />
-              <div class="form-error" id="errRegEmail"></div>
+            <div class="ts-auth-v2-field">
+              <label for="regEmail" class="ts-auth-v2-label">Email</label>
+              <input type="email" id="regEmail" class="ts-auth-v2-input" placeholder="minhanh@example.com" required />
+              <div class="ts-auth-v2-error" id="errRegEmail"></div>
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-              <div class="form-group">
-                <label class="form-label">Mật khẩu <span class="req">*</span></label>
-                <input type="password" id="regPassword" class="form-control" placeholder="Tối thiểu 6 ký tự" required />
-                <div class="form-error" id="errRegPassword"></div>
+            <div class="ts-auth-v2-pass-grid">
+              <div class="ts-auth-v2-field">
+                <label for="regPassword" class="ts-auth-v2-label">Mật khẩu</label>
+                <input type="password" id="regPassword" class="ts-auth-v2-input" placeholder="Tối thiểu 6 ký tự" required />
+                <div class="ts-auth-v2-error" id="errRegPassword"></div>
               </div>
-              <div class="form-group">
-                <label class="form-label">Nhập lại MK <span class="req">*</span></label>
-                <input type="password" id="regConfirmPassword" class="form-control" placeholder="Khớp mật khẩu" required />
-                <div class="form-error" id="errRegConfirm"></div>
+              <div class="ts-auth-v2-field">
+                <label for="regConfirmPassword" class="ts-auth-v2-label">Nhập lại mật khẩu</label>
+                <input type="password" id="regConfirmPassword" class="ts-auth-v2-input" placeholder="Nhập lại mật khẩu" required />
+                <div class="ts-auth-v2-error" id="errRegConfirm"></div>
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; margin-top:8px;">
-              <span>Đăng ký tài khoản</span>
-            </button>
+            <button type="submit" class="ts-auth-v2-submit">Đăng ký tài khoản</button>
           </form>
-        </div>
 
-      </div>
-
-      <!-- AXIOS INTERCEPTOR LIVE MONITOR -->
-      <div class="tsport-monitor-card">
-        <div class="tsport-monitor-header">
-          <span>📡 AXIOS INTERCEPTOR LIVE MONITOR (JWT BEARER LOG)</span>
-          <div style="display:flex; gap:8px;">
-            <button type="button" class="btn btn-secondary btn-sm" id="btnTestInterceptorRequest" style="background:#1E293B; color:#38BDF8; border-color:#38BDF8;">
-              ⚡ Gửi Test Request có Bearer Token
-            </button>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnClearInterceptorLog" style="background:#1E293B; color:#94A3B8; border-color:#475569;">
-              Dọn Log
+          <div class="ts-auth-v2-switch-row">
+            <button type="button" class="ts-auth-v2-switch-link" id="btnShowLogin">
+              Đã có tài khoản? Đăng nhập ngay
             </button>
           </div>
         </div>
-        <div class="tsport-monitor-log" id="axiosInterceptorLog">
-          <div class="tsport-log-item">
-            <span class="tsport-log-time">[Hệ thống]</span>
-            <span class="tsport-log-method">READY</span>
-            <span class="tsport-log-url">Axios Interceptor đã được nạp và theo dõi mọi request HTTP mang JWT token tự động.</span>
-          </div>
-        </div>
-      </div>
 
+      </section>
     </div>
   </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="admin-buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <!-- TOAST CONTAINER -->
   <div class="toast-container" id="toastContainer"></div>
@@ -191,31 +218,5 @@
   <script src="../js/data/store.js"></script>
   <script src="../js/modules/header.js"></script>
   <script src="../js/modules/auth.js"></script>
-
-  <script>
-    // Xử lý nút dọn log và nút gửi request test
-    document.getElementById("btnClearInterceptorLog")?.addEventListener("click", () => {
-      const monitor = document.getElementById("axiosInterceptorLog");
-      if (monitor) monitor.innerHTML = '<div class="tsport-log-item"><span class="tsport-log-time">[Hệ thống]</span><span class="tsport-log-method">CLEARED</span><span class="tsport-log-url">Log đã được dọn sạch.</span></div>';
-    });
-
-    document.getElementById("btnTestInterceptorRequest")?.addEventListener("click", () => {
-      const token = localStorage.getItem("token") || localStorage.getItem("tsport_token") || "DEMO_JWT_BEARER_TOKEN";
-      const monitor = document.getElementById("axiosInterceptorLog");
-      if (monitor) {
-        const time = new Date().toLocaleTimeString("vi-VN");
-        const item = document.createElement("div");
-        item.className = "tsport-log-item";
-        item.innerHTML = `
-          <span class="tsport-log-time">[${time}]</span>
-          <span class="tsport-log-method">GET</span>
-          <span class="tsport-log-url">/api/users/me/profile</span>
-          <span class="tsport-log-auth">↳ Header: Authorization: Bearer ${token.slice(0, 20)}... (Đã gắn tự động!)</span>
-        `;
-        monitor.prepend(item);
-      }
-      showToast("Đã kích hoạt Axios Request Interceptor kèm Bearer Token!", "info");
-    });
-  </script>
 </body>
 </html>

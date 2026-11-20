@@ -132,6 +132,27 @@
     document.getElementById("formLogin")?.addEventListener("submit", handleLoginSubmit);
     document.getElementById("formRegister")?.addEventListener("submit", handleRegisterSubmit);
 
+    // Tìm kiếm từ header
+    document.getElementById("authSearchForm")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = document.getElementById("authSearchInput")?.value.trim();
+      window.location.href = q ? `shop.html?q=${encodeURIComponent(q)}` : "shop.html";
+    });
+
+    // Chuyển đổi qua lại giữa Đăng nhập & Đăng ký
+    const loginPanel = document.getElementById("authLoginPanel");
+    const regPanel = document.getElementById("authRegisterPanel");
+    document.getElementById("btnShowRegister")?.addEventListener("click", () => {
+      if (loginPanel) loginPanel.style.display = "none";
+      if (regPanel) regPanel.style.display = "block";
+      document.title = "Đăng ký tài khoản | Tsport";
+    });
+    document.getElementById("btnShowLogin")?.addEventListener("click", () => {
+      if (regPanel) regPanel.style.display = "none";
+      if (loginPanel) loginPanel.style.display = "block";
+      document.title = "Đăng nhập | Tsport";
+    });
+
     // Nút test lỗi validate
     document.getElementById("btnTestValidationError")?.addEventListener("click", () => {
       document.getElementById("loginEmail").value = "email-sai-dinh-dang";

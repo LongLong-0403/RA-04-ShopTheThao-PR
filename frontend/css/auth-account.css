@@ -145,3 +145,190 @@
   flex-direction: column;
   gap: 24px;
 }
+
+
+/* ==========================================================================
+   TSPORT — TRANG ĐĂNG NHẬP / ĐĂNG KÝ TỐI GIẢN (AUTH V2 CHUẨN FIGMA)
+   ========================================================================== */
+body.tsport-auth-body {
+  background: #FFFFFF;
+  color: #111827;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ts-auth-v2-main {
+  padding-top: 40px;
+  padding-bottom: 72px;
+}
+
+.ts-auth-v2-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: stretch;
+}
+
+/* CỘT TRÁI: THẺ THƯƠNG HIỆU MÀU XÁM NHẠT */
+.ts-auth-v2-brand-card {
+  background: #F3F4F6;
+  border-radius: 10px;
+  padding: 46px 38px;
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ts-auth-v2-brand-logo {
+  font-size: 20px;
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 26px;
+}
+
+.ts-auth-v2-brand-headline {
+  font-size: 32px;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.24;
+  letter-spacing: -0.4px;
+  margin: 0 0 36px 0;
+}
+
+.ts-auth-v2-brand-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 13.5px;
+  color: #6B7280;
+}
+
+/* CỘT PHẢI: FORM ĐĂNG NHẬP / ĐĂNG KÝ */
+.ts-auth-v2-form-col {
+  padding-top: 10px;
+  max-width: 520px;
+  width: 100%;
+}
+
+.ts-auth-v2-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.3px;
+  margin: 0 0 28px 0;
+}
+
+.ts-auth-v2-field {
+  margin-bottom: 20px;
+}
+
+.ts-auth-v2-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.ts-auth-v2-input {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ts-auth-v2-input:focus {
+  border-color: #D94C26;
+  box-shadow: 0 0 0 3px rgba(217, 76, 38, 0.1);
+}
+
+.ts-auth-v2-input.is-invalid {
+  border-color: #DC2626;
+}
+
+.ts-auth-v2-error {
+  font-size: 12px;
+  color: #DC2626;
+  margin-top: 5px;
+  min-height: 0;
+}
+
+.ts-auth-v2-pass-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ts-auth-v2-submit {
+  width: 100%;
+  background: #D94C26;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s ease;
+}
+
+.ts-auth-v2-submit:hover {
+  background: #BF3E1C;
+}
+
+.ts-auth-v2-switch-row {
+  margin-top: 18px;
+  margin-bottom: 22px;
+}
+
+.ts-auth-v2-switch-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #D94C26;
+  cursor: pointer;
+}
+
+.ts-auth-v2-switch-link:hover {
+  text-decoration: underline;
+}
+
+.ts-auth-v2-notice {
+  background: #FFF1EB;
+  border-left: 3px solid #D94C26;
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-size: 12.5px;
+  color: #374151;
+}
+
+@media (max-width: 900px) {
+  .ts-auth-v2-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .ts-auth-v2-brand-card {
+    min-height: auto;
+    padding: 32px 26px;
+  }
+  .ts-auth-v2-form-col {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .ts-auth-v2-pass-grid {
+    grid-template-columns: 1fr;
+  }
+}
