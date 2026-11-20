@@ -1,284 +1,337 @@
 /**
- * TSPORT — MODULE QUẢN LÝ ĐƠN HÀNG CỦA KHÁCH (ORDERS & IDEMPOTENT RESTOCKING)
- * Tính năng:
- * - Khách xem danh sách đơn hàng và chi tiết đơn của mình
- * - Hủy đơn khi còn ở trạng thái "Chờ xác nhận" (PENDING)
- * - Quy tắc HOÀN TỒN ĐÚNG MỘT LẦN: Khi hủy, hoàn lại số lượng tồn kho cho các SKU;
- *   nếu hủy lặp lại, hệ thống CHẶN TUYỆT ĐỐI và KHÔNG tăng tồn kho lần 2.
+ * TSPORT — MODULE ĐƠN HÀNG CỦA TÔI & CHI TIẾT ĐƠN HÀNG (ORDERS V2 FIGMA)
+ * - View 1: Lịch sử mua hàng với 4 tab lọc (Tất cả / Chờ xác nhận / Đang giao / Hoàn tất)
+ * - View 2: Chi tiết đơn hàng với thanh tiến trình 4 bước, bảng sản phẩm, thông tin người nhận & nút Hủy đơn
+ * - Giữ nguyên quy tắc hoàn tồn kho 1 lần (idempotent) của store.cancelOrder()
  */
 
 (function () {
-  let currentDetailOrder = null;
   let activeStatusFilter = "ALL";
+  let currentOrderId = null;
 
   function initOrdersModule() {
-    renderOrdersList();
+    initSidebarUser();
+    initHeaderSearch();
     bindEvents();
+
+    const params = typeof getUrlParams === "function" ? getUrlParams() : {};
+    if (params.code) {
+      const store = window.tsportStore;
+      const found = store && store.getOrders().find((o) => o.order_code === params.code);
+      if (found) {
+        openOrderDetail(found.id);
+        return;
+      }
+    }
+
+    showOrdersListView();
   }
 
-  function renderTimelineHtml(order) {
-    const store = window.tsportStore;
-    const timeline = store && typeof store.getOrderTimeline === "function"
-      ? store.getOrderTimeline(order)
-      : [];
-
-    return `
-      <div style="display:flex; justify-content:space-between; align-items:center; position:relative; margin:14px 0 10px;">
-        <div style="position:absolute; top:14px; left:20px; right:20px; height:2px; background:#E2E8F0; z-index:1;"></div>
-        ${timeline.map((step) => `
-          <div style="position:relative; z-index:2; text-align:center; flex:1;">
-            <div style="width:28px; height:28px; border-radius:50%; margin:0 auto 4px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; ${step.completed ? 'background:#16A34A; color:#fff;' : step.current ? 'background:#D94C26; color:#fff; box-shadow:0 0 0 4px rgba(217,76,38,0.2);' : 'background:#F1F5F9; color:#94A3B8; border:1px solid #CBD5E1;'}">
-              ${step.completed ? '✓' : step.step}
-            </div>
-            <div style="font-size:11px; font-weight:700; color:${step.completed ? '#16A34A' : step.current ? '#D94C26' : '#94A3B8'};">
-              ${escapeHtml(step.title)}
-            </div>
-            ${step.time ? `<div style="font-size:9px; color:#64748B;">${escapeHtml(step.time)}</div>` : ''}
-          </div>
-        `).join("")}
-      </div>
-    `;
+  function getInitials(name) {
+    const parts = String(name || "TS").trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  function renderOrdersList() {
-    const listWrap = document.getElementById("ordersListWrap");
-    if (!listWrap) return;
+  function initSidebarUser() {
+    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
+      full_name: "Nguyễn Minh Anh",
+      role: "CUSTOMER"
+    };
+    const nameEl = document.getElementById("sbOrdersName");
+    const roleEl = document.getElementById("sbOrdersRole");
+    const avatarEl = document.getElementById("sbOrdersAvatar");
+    if (nameEl) nameEl.textContent = user.full_name || user.email || "Khách hàng";
+    if (roleEl) roleEl.textContent = user.role === "ADMIN" ? "Quản trị viên" : "Khách hàng";
+    if (avatarEl) avatarEl.textContent = getInitials(user.full_name || user.email);
 
+    document.getElementById("btnOrdersLogout")?.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("tsport_token");
+      localStorage.removeItem("tsport_current_user");
+      window.location.href = "auth.html";
+    });
+  }
+
+  function initHeaderSearch() {
+    const form = document.getElementById("ordersSearchForm");
+    const input = document.getElementById("ordersSearchInput");
+    if (!form || !input) return;
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      window.location.href = q ? `shop.html?q=${encodeURIComponent(q)}` : "shop.html";
+    });
+  }
+
+  function formatDateShort(dateStr) {
+    if (!dateStr) return "";
+    const datePart = String(dateStr).split(" ")[0];
+    const parts = datePart.split("-");
+    if (parts.length === 3) {
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+    return datePart;
+  }
+
+  function formatOrderMoney(amount) {
+    return (Number(amount) || 0).toLocaleString("vi-VN") + "đ";
+  }
+
+  function getPaymentLabel(method) {
+    const map = {
+      COD: "COD",
+      BANK: "Chuyển khoản ngân hàng",
+      EWALLET_MOMO: "Ví MoMo",
+      EWALLET_ZALOPAY: "Ví ZaloPay",
+      EWALLET_VNPAY: "Ví VNPay"
+    };
+    return map[method] || method || "COD";
+  }
+
+  function getStatusMeta(status) {
+    const map = {
+      PENDING: { label: "Chờ xác nhận", cls: "is-pending" },
+      CONFIRMED: { label: "Đã xác nhận", cls: "" },
+      SHIPPING: { label: "Đang giao", cls: "" },
+      COMPLETED: { label: "Hoàn tất", cls: "" },
+      CANCELLED: { label: "Đã hủy", cls: "is-cancelled" }
+    };
+    return map[status] || { label: status, cls: "" };
+  }
+
+  // 1. HIỂN THỊ DANH SÁCH ĐƠN HÀNG
+  function showOrdersListView() {
+    currentOrderId = null;
+    const listView = document.getElementById("ordersListView");
+    const detailView = document.getElementById("orderDetailView");
+    if (listView) listView.style.display = "block";
+    if (detailView) detailView.style.display = "none";
+    document.title = "Đơn hàng của tôi | Tsport";
+    renderOrdersTable();
+  }
+
+  function renderOrdersTable() {
+    const tbody = document.getElementById("ordersTableBody");
     const store = window.tsportStore;
-    if (!store) return;
+    if (!tbody || !store) return;
 
-    let orders = store.getOrders();
-
+    let orders = store.getOrders() || [];
     if (activeStatusFilter !== "ALL") {
-      orders = orders.filter(o => o.status === activeStatusFilter);
+      orders = orders.filter((o) => o.status === activeStatusFilter);
     }
 
     if (orders.length === 0) {
-      listWrap.innerHTML = `
-        <div class="tsport-card" style="text-align:center; padding:50px 20px;">
-          <div style="font-size:48px; margin-bottom:12px;">📦</div>
-          <h3 style="font-size:18px; font-weight:800; color:#1E293B;">Không tìm thấy đơn hàng nào khớp bộ lọc</h3>
-          <p style="font-size:13px; color:#64748B; margin-bottom:18px;">Hãy chọn tab trạng thái khác hoặc mua sắm sản phẩm mới!</p>
-          <a href="shop.html" class="btn btn-primary">🛍️ Đến cửa hàng mua sắm</a>
-        </div>
-      `;
-      return;
-    }
-
-    const statusMap = {
-      PENDING: { label: "⏳ Chờ xác nhận", cls: "pending" },
-      CONFIRMED: { label: "✓ Đã xác nhận", cls: "confirmed" },
-      SHIPPING: { label: "🚚 Đang giao hàng", cls: "shipping" },
-      COMPLETED: { label: "★ Đã hoàn thành", cls: "completed" },
-      CANCELLED: { label: "✕ Đã hủy đơn", cls: "cancelled" }
-    };
-
-    listWrap.innerHTML = orders.map((o) => {
-      const st = statusMap[o.status] || { label: o.status, cls: "pending" };
-      const canCancel = o.status === "PENDING";
-      const isCompleted = o.status === "COMPLETED";
-
-      return `
-        <div class="tsport-order-card" data-order-id="${o.id}">
-          <div class="tsport-order-header">
-            <div>
-              <span class="tsport-order-code">
-                <span>📦</span>
-                <span>Mã đơn: ${escapeHtml(o.order_code)}</span>
-              </span>
-              <div class="tsport-order-date">Thời gian đặt: ${escapeHtml(o.created_at)}</div>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:10px;">
-              <span class="tsport-badge-order-status ${st.cls}">
-                ${st.label}
-              </span>
-              ${o.restocked ? '<span class="tsport-restock-alert">✓ Đã hoàn tồn kho (1 lần)</span>' : ''}
-            </div>
-          </div>
-
-          <!-- DÒNG THỜI GIAN TIẾN ĐỘ -->
-          <div style="padding:0 16px; background:#FAFAFA; border-bottom:1px solid #F1F5F9;">
-            ${renderTimelineHtml(o)}
-          </div>
-
-          <div class="tsport-order-body">
-            ${(o.items || []).map((item) => `
-              <div class="tsport-order-item-row" style="align-items:center;">
-                <img src="${escapeHtml(item.image_url)}" class="tsport-order-item-thumb" alt="${escapeHtml(item.product_name)}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
-                <div class="tsport-order-item-details">
-                  <div class="tsport-order-item-title">
-                    ${escapeHtml(item.product_name)}
-                    ${item.condition_type === 'CU' ? '<span class="badge" style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px;">HÀNG CŨ (Lúc đặt)</span>' : '<span class="badge" style="background:#DEF7EC; color:#03543F; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:6px;">HÀNG MỚI (Lúc đặt)</span>'}
-                  </div>
-                  <div class="tsport-order-item-sub">
-                    Phân loại: Size ${escapeHtml(item.size)} • Màu ${escapeHtml(item.color)} | Số lượng: x${item.quantity}
-                  </div>
-                </div>
-                <div style="text-align:right;">
-                  <div class="tsport-order-item-price">${formatMoney(item.price * item.quantity)}</div>
-                  ${isCompleted ? `
-                    <a href="product-detail.html?id=${item.product_id}#sectionProductReviews" class="btn btn-secondary btn-sm" style="font-size:11px; margin-top:6px; display:inline-block; color:#D94C26; border-color:#FFD9CC;">
-                      ⭐ Đánh giá & Nhận xét
-                    </a>
-                  ` : ''}
-                </div>
-              </div>
-            `).join("")}
-          </div>
-
-          <div class="tsport-order-footer">
-            <div class="tsport-order-total">
-              Tổng tiền thanh toán: <strong>${formatMoney(o.total_amount)}</strong>
-              <span style="font-size:12px; color:#64748B; margin-left:8px;">(${o.payment_method})</span>
-            </div>
-
-            <div style="display:flex; gap:8px;">
-              <button type="button" class="btn btn-secondary btn-sm js-view-order-detail" data-id="${o.id}">
-                👁️ Xem chi tiết
-              </button>
-
-              ${canCancel ? `
-                <button type="button" class="btn btn-danger btn-sm js-cancel-order" data-id="${o.id}" title="Hủy đơn hàng và hoàn lại tồn kho">
-                  🚫 Hủy đơn hàng
-                </button>
-              ` : `
-                <button type="button" class="btn btn-secondary btn-sm" disabled style="opacity:0.5; cursor:not-allowed;" title="Chỉ có thể hủy khi đơn ở trạng thái Chờ xác nhận">
-                  ${o.status === 'CANCELLED' ? 'Đã hủy đơn' : 'Không thể hủy'}
-                </button>
-              `}
-            </div>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  // Mở modal xem chi tiết đơn hàng
-  function openOrderDetailModal(orderId) {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    currentDetailOrder = store.getOrderById(orderId);
-    if (!currentDetailOrder) return;
-
-    const o = currentDetailOrder;
-    const modal = document.getElementById("modalOrderDetail");
-    if (!modal) return;
-
-    document.getElementById("detailModalOrderCode").textContent = o.order_code;
-    document.getElementById("detailModalStatus").textContent = o.status;
-    document.getElementById("detailModalDate").textContent = o.created_at;
-    document.getElementById("detailModalCustomer").textContent = o.customer_name;
-    document.getElementById("detailModalPhone").textContent = o.phone;
-    document.getElementById("detailModalAddress").textContent = o.address;
-    document.getElementById("detailModalNote").textContent = o.note || "Không có ghi chú";
-    document.getElementById("detailModalTotal").textContent = formatMoney(o.total_amount);
-
-    const timelineWrap = document.getElementById("detailModalTimeline");
-    if (timelineWrap) {
-      timelineWrap.innerHTML = renderTimelineHtml(o);
-    }
-
-    const itemsWrap = document.getElementById("detailModalItemsTbody");
-    if (itemsWrap) {
-      itemsWrap.innerHTML = (o.items || []).map((i) => `
+      tbody.innerHTML = `
         <tr>
-          <td>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <img src="${escapeHtml(i.image_url)}" style="width:36px; height:36px; border-radius:4px; object-fit:cover;" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
-              <div>
-                <strong>${escapeHtml(i.product_name)}</strong>
-                ${i.condition_type === 'CU' ? '<span class="badge" style="background:#FEF3C7; color:#92400E; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:4px;">CŨ (Lúc đặt)</span>' : '<span class="badge" style="background:#DEF7EC; color:#03543F; font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; margin-left:4px;">MỚI (Lúc đặt)</span>'}
-                <div style="font-size:11px; color:#64748B;">${i.size} - ${i.color}</div>
-              </div>
-            </div>
+          <td colspan="4" style="text-align:center; padding:42px 16px; color:#6B7280;">
+            Chưa có đơn hàng nào ở trạng thái này.
           </td>
-          <td>${formatMoney(i.price)}</td>
-          <td>${i.quantity}</td>
-          <td style="font-weight:700; color:#D94C26;">${formatMoney(i.price * i.quantity)}</td>
         </tr>
-      `).join("");
-    }
-
-    openModal("modalOrderDetail");
-  }
-
-  // Hủy đơn hàng và kiểm tra hoàn tồn đúng 1 lần
-  function handleCancelOrder(orderId) {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    const order = store.getOrderById(orderId);
-    if (!order) return;
-
-    if (!confirm(`Bạn có chắc chắn muốn hủy đơn hàng #${order.order_code} không?\n\nTheo quy tắc: Hệ thống sẽ tự động hoàn lại số lượng tồn kho cho các sản phẩm trong đơn đúng 1 lần duy nhất.`)) {
+      `;
       return;
     }
 
-    try {
-      // Gọi hàm cancelOrder trong store (đã tích hợp kiểm tra idempotency và hoàn tồn)
-      store.cancelOrder(orderId);
-      renderOrdersList();
-      showToast(`Hủy đơn hàng #${order.order_code} thành công! Số lượng sản phẩm đã được hoàn lại vào kho.`, "success");
-    } catch (err) {
-      alert("⚠️ Lỗi: " + err.message);
-    }
+    tbody.innerHTML = orders
+      .map((o) => {
+        const st = getStatusMeta(o.status);
+        return `
+          <tr>
+            <td>
+              <div class="ts-orders-v2-code">${escapeHtml(o.order_code)}</div>
+              <div class="ts-orders-v2-date">${escapeHtml(formatDateShort(o.created_at))}</div>
+            </td>
+            <td class="ts-orders-v2-total">${formatOrderMoney(o.total_amount)}</td>
+            <td>
+              <span class="ts-orders-v2-status ${st.cls}">${escapeHtml(st.label)}</span>
+            </td>
+            <td>
+              <button type="button" class="ts-orders-v2-detail-btn js-open-order-detail" data-order-id="${o.id}">
+                Xem chi tiết →
+              </button>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
   }
 
+  // 2. HIỂN THỊ CHI TIẾT ĐƠN HÀNG
+  function openOrderDetail(orderId) {
+    const store = window.tsportStore;
+    if (!store) return;
+
+    const order = store.getOrders().find((o) => Number(o.id) === Number(orderId));
+    if (!order) {
+      showOrdersListView();
+      return;
+    }
+
+    currentOrderId = order.id;
+
+    const listView = document.getElementById("ordersListView");
+    const detailView = document.getElementById("orderDetailView");
+    if (listView) listView.style.display = "none";
+    if (detailView) detailView.style.display = "block";
+
+    document.title = `Đơn ${order.order_code} | Tsport`;
+
+    const bcCode = document.getElementById("detailBreadcrumbCode");
+    const titleEl = document.getElementById("detailOrderTitle");
+    const metaEl = document.getElementById("detailOrderMeta");
+    if (bcCode) bcCode.textContent = `Đơn ${order.order_code}`;
+    if (titleEl) titleEl.textContent = `Đơn ${order.order_code}`;
+    if (metaEl) {
+      metaEl.textContent = `Đặt ngày ${formatDateShort(order.created_at)} • ${getPaymentLabel(order.payment_method)} • Vận chuyển 0đ`;
+    }
+
+    // Thanh tiến trình 4 bước
+    const stepper = document.getElementById("detailOrderStepper");
+    if (stepper) {
+      if (order.status === "CANCELLED") {
+        stepper.innerHTML = `
+          <div class="ts-ord-det-cancelled-bar">
+            Đơn hàng này đã bị hủy${order.restocked ? " và đã hoàn lại số lượng tồn kho." : "."}
+          </div>
+        `;
+      } else {
+        const steps = [
+          { key: "PENDING", label: "Chờ xác nhận" },
+          { key: "CONFIRMED", label: "Đã xác nhận" },
+          { key: "SHIPPING", label: "Đang giao" },
+          { key: "COMPLETED", label: "Hoàn tất" }
+        ];
+        const currentStepIdx = Math.max(0, steps.findIndex((s) => s.key === order.status));
+        stepper.innerHTML = steps
+          .map((s, idx) => {
+            const cls = idx < currentStepIdx ? "is-done" : idx === currentStepIdx ? "is-current" : "";
+            return `
+              <div class="ts-ord-det-step ${cls}">
+                <span class="ts-ord-det-step-dot" aria-hidden="true">${idx < currentStepIdx ? "✓" : ""}</span>
+                <span class="ts-ord-det-step-label">${s.label}</span>
+              </div>
+            `;
+          })
+          .join("");
+      }
+    }
+
+    // Bảng sản phẩm trong đơn
+    const itemsBody = document.getElementById("detailItemsBody");
+    if (itemsBody) {
+      const items = order.items || [];
+      itemsBody.innerHTML = items
+        .map((item) => {
+          const condText = item.condition_type === "CU" ? "Đã qua sử dụng" : "Mới";
+          const unitText = item.unit === "LO" ? "12 quả / ống" : "Chiếc";
+          const varLine = [item.size, item.color, unitText].filter(Boolean).join(" • ");
+          const unitPrice = Number(item.price_at_order || item.price || 0);
+          const qty = Number(item.quantity || 1);
+          return `
+            <tr>
+              <td>
+                <div class="ts-ord-det-prod-name">${escapeHtml(item.product_name)}</div>
+                <div class="ts-ord-det-prod-var">${escapeHtml(varLine)}</div>
+              </td>
+              <td>${condText}</td>
+              <td>${qty}</td>
+              <td>${formatOrderMoney(unitPrice)}</td>
+              <td>${formatOrderMoney(unitPrice * qty)}</td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    // Thông tin người nhận & tổng tiền
+    const recvContact = document.getElementById("detailReceiverContact");
+    const recvAddr = document.getElementById("detailReceiverAddress");
+    const grandTotal = document.getElementById("detailGrandTotal");
+    const cancelBtn = document.getElementById("btnCancelCurrentOrder");
+    const cancelNote = document.getElementById("detailCancelNote");
+
+    if (recvContact) recvContact.textContent = `${order.customer_name || "Khách hàng"} • ${order.phone || ""}`;
+    if (recvAddr) recvAddr.textContent = order.address || "Chưa cập nhật địa chỉ";
+    if (grandTotal) grandTotal.textContent = formatOrderMoney(order.total_amount);
+
+    const canCancel = order.status === "PENDING";
+    if (cancelBtn) {
+      cancelBtn.disabled = !canCancel;
+      cancelBtn.textContent = order.status === "CANCELLED" ? "Đơn hàng đã hủy" : "Hủy đơn hàng";
+    }
+    if (cancelNote) {
+      cancelNote.textContent = canCancel
+        ? "Có thể hủy khi đơn còn chờ xác nhận."
+        : order.status === "CANCELLED"
+        ? "Đơn hàng đã được hủy và hoàn tồn kho."
+        : "Đơn hàng đã được xác nhận hoặc đang xử lý, không thể tự hủy.";
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // 3. GẮN SỰ KIỆN TƯƠNG TÁC
   function bindEvents() {
-    // Tabs lọc trạng thái đơn hàng
-    document.querySelectorAll(".js-order-status-tab").forEach((tab) => {
-      tab.addEventListener("click", () => {
-        document.querySelectorAll(".js-order-status-tab").forEach(t => t.classList.remove("is-active"));
-        tab.classList.add("is-active");
-        activeStatusFilter = tab.dataset.status;
-        renderOrdersList();
+    // 4 tab lọc trạng thái
+    document.getElementById("ordersStatusTabs")?.addEventListener("click", (e) => {
+      const tab = e.target.closest(".ts-orders-v2-tab");
+      if (!tab) return;
+      activeStatusFilter = tab.dataset.status || "ALL";
+      document.querySelectorAll(".ts-orders-v2-tab").forEach((t) => {
+        t.classList.toggle("is-active", t === tab);
       });
+      renderOrdersTable();
     });
 
-    document.addEventListener("click", (e) => {
-      // Xem chi tiết
-      const viewBtn = e.target.closest(".js-view-order-detail");
-      if (viewBtn) {
-        openOrderDetailModal(viewBtn.dataset.id);
-      }
-
-      // Hủy đơn hàng
-      const cancelBtn = e.target.closest(".js-cancel-order");
-      if (cancelBtn) {
-        handleCancelOrder(cancelBtn.dataset.id);
-      }
-    });
-
-    // Nút test nhanh: Tạo đơn mới ở trạng thái Chờ xác nhận để kiểm tra hủy và hoàn tồn
-    document.getElementById("btnTestSeedOrder")?.addEventListener("click", () => {
-      const store = window.tsportStore;
-      const testOrder = store.createOrder({
-        customer_name: "Nguyễn Văn An (Test)",
-        phone: "0912345601",
-        address: "Số 15 Xuân Thủy, Cầu Giấy, Hà Nội",
-        payment_method: "COD",
-        note: "Đơn hàng test tính năng Hủy & Hoàn tồn kho",
-        items: [
-          {
-            product_id: 1,
-            sku_id: 1,
-            product_name: "Vợt cầu lông Yonex Astrox 88D Pro 2024",
-            sku_code: "AX88DP-4U-BK",
-            size: "4U",
-            color: "Đen Đỏ",
-            unit: "CHIEC",
-            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
-            price: 4250000,
-            quantity: 1
-          }
-        ]
+    // Nút "Xem đơn đang chờ"
+    document.getElementById("btnViewPendingOrders")?.addEventListener("click", () => {
+      activeStatusFilter = "PENDING";
+      document.querySelectorAll(".ts-orders-v2-tab").forEach((t) => {
+        t.classList.toggle("is-active", t.dataset.status === "PENDING");
       });
-
-      renderOrdersList();
-      showToast(`Đã tạo đơn test #${testOrder.order_code}! Bây giờ bạn có thể thử bấm "Hủy đơn hàng" để kiểm tra tính năng hoàn tồn.`, "info");
+      renderOrdersTable();
     });
+
+    // Bấm "Xem chi tiết →" trên từng dòng đơn hàng
+    document.getElementById("ordersTableBody")?.addEventListener("click", (e) => {
+      const btn = e.target.closest(".js-open-order-detail");
+      if (!btn) return;
+      openOrderDetail(Number(btn.dataset.orderId));
+    });
+
+    // Quay lại danh sách đơn hàng từ breadcrumb
+    document.getElementById("btnBackToOrdersList")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState({}, "", "orders.html");
+      }
+      showOrdersListView();
+    });
+
+    // Hủy đơn hàng (chỉ khi PENDING, hoàn tồn kho 1 lần)
+    document.getElementById("btnCancelCurrentOrder")?.addEventListener("click", () => {
+      if (!currentOrderId) return;
+      const confirmed = confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
+      if (!confirmed) return;
+
+      try {
+        window.tsportStore.cancelOrder(currentOrderId);
+        showToast("Đã hủy đơn hàng và hoàn lại tồn kho thành công!", "success");
+        openOrderDetail(currentOrderId);
+      } catch (err) {
+        showToast(err.message || "Không thể hủy đơn hàng này.", "error");
+      }
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
   document.addEventListener("DOMContentLoaded", initOrdersModule);
