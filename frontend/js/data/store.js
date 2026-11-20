@@ -6628,6 +6628,325 @@
         ]
       }
     ],
+    orders: [
+      {
+        id: 1001,
+        order_code: "ORD-202611-1001",
+        customer_name: "Nguyễn Văn An",
+        phone: "0912345601",
+        address: "Số 15 Xuân Thủy, Quận Cầu Giấy, Hà Nội",
+        payment_method: "COD",
+        status: "PENDING",
+        restocked: false,
+        created_at: "2026-11-17 14:30:00",
+        total_amount: 4250000,
+        note: "Giao giờ hành chính, gọi trước khi giao",
+        items: [
+          {
+            product_id: 1,
+            sku_id: 1,
+            product_name: "Vợt cầu lông Yonex Astrox 88D Pro 2024",
+            sku_code: "AX88DP-4U-BK",
+            size: "4U",
+            color: "Đen Đỏ",
+            unit: "CHIEC",
+            condition_type: "MOI",
+            price: 4250000,
+            price_at_order: 4250000,
+            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
+            quantity: 1
+          }
+        ]
+      },
+      {
+        id: 1002,
+        order_code: "ORD-202611-1002",
+        customer_name: "Nguyễn Văn An",
+        phone: "0912345601",
+        address: "Số 15 Xuân Thủy, Quận Cầu Giấy, Hà Nội",
+        payment_method: "COD",
+        status: "CONFIRMED",
+        restocked: false,
+        created_at: "2026-11-16 10:15:00",
+        total_amount: 2750000,
+        note: "Đóng gói cẩn thận",
+        items: [
+          {
+            product_id: 3,
+            sku_id: 4,
+            product_name: "Giày cầu lông Yonex Comfort Z3 Men",
+            sku_code: "SHB-CZ3-41-WH",
+            size: "41",
+            color: "Trắng Đen",
+            unit: "CHIEC",
+            condition_type: "MOI",
+            price: 2750000,
+            price_at_order: 2750000,
+            image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
+            quantity: 1
+          }
+        ]
+      },
+      {
+        id: 1003,
+        order_code: "ORD-202611-1003",
+        customer_name: "Nguyễn Văn An",
+        phone: "0912345601",
+        address: "Số 15 Xuân Thủy, Quận Cầu Giấy, Hà Nội",
+        payment_method: "COD",
+        status: "COMPLETED",
+        restocked: false,
+        created_at: "2026-11-15 08:30:00",
+        confirmed_at: "2026-11-15 09:15:00",
+        shipping_at: "2026-11-15 14:00:00",
+        completed_at: "2026-11-16 11:30:00",
+        total_amount: 8500000,
+        note: "Đã giao thành công cho khách, khách đã thanh toán COD",
+        items: [
+          {
+            product_id: 1,
+            sku_id: 1,
+            product_name: "Vợt cầu lông Yonex Astrox 88D Pro 2024",
+            sku_code: "AX88DP-4U-BK",
+            size: "4U",
+            color: "Đen Đỏ",
+            unit: "CHIEC",
+            condition_type: "MOI",
+            price: 4250000,
+            price_at_order: 4250000,
+            image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300",
+            quantity: 2
+          }
+        ]
+      },
+      {
+        id: 1004,
+        order_code: "ORD-202611-1004",
+        customer_name: "Trần Minh Đức",
+        phone: "0988776655",
+        address: "Số 88 Cầu Giấy, Hà Nội",
+        payment_method: "COD",
+        status: "SHIPPING",
+        restocked: false,
+        created_at: "2026-11-16 16:00:00",
+        confirmed_at: "2026-11-16 17:00:00",
+        shipping_at: "2026-11-17 08:30:00",
+        total_amount: 3200000,
+        note: "Giao trong ngày",
+        items: [
+          {
+            product_id: 2,
+            sku_id: 3,
+            product_name: "Vợt cầu lông Yonex Nanoflare 1000Z",
+            sku_code: "NF1000Z-4U-YL",
+            size: "4U",
+            color: "Vàng Đen",
+            unit: "CHIEC",
+            condition_type: "MOI",
+            price: 3200000,
+            price_at_order: 3200000,
+            image_url: "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?w=300",
+            quantity: 1
+          }
+        ]
+      },
+      {
+        id: 1005,
+        order_code: "ORD-202611-1005",
+        customer_name: "Phạm Quốc Huy",
+        phone: "0987654321",
+        address: "Ngõ 120 Hoàng Quốc Việt, Cầu Giấy, Hà Nội",
+        payment_method: "COD",
+        status: "CANCELLED",
+        restocked: true,
+        created_at: "2026-11-14 11:20:00",
+        cancelled_at: "2026-11-14 13:00:00",
+        cancel_reason: "Khách hàng đổi ý muốn đổi sang mẫu khác",
+        total_amount: 1650000,
+        items: [
+          {
+            product_id: 12,
+            sku_id: 18,
+            product_name: "Giày cầu lông Yonex Comfort Z3 Cũ (90%)",
+            sku_code: "USED-CZ3-WH-41",
+            size: "41",
+            color: "Trắng Đen",
+            unit: "CHIEC",
+            condition_type: "CU",
+            price: 1650000,
+            price_at_order: 1650000,
+            image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
+            quantity: 1
+          }
+        ]
+      }
+    ],
+    reviews: [
+      {
+        id: 1,
+        product_id: 1,
+        user_name: "Nguyễn Văn An",
+        rating: 5,
+        comment: "Vợt rất đầm đầu, đập smash cực kỳ uy lực, hàng chính hãng Yonex nguyên tem mã vạch!",
+        created_at: "2026-11-16 14:20:00"
+      },
+      {
+        id: 2,
+        product_id: 1,
+        user_name: "Trần Minh Đức",
+        rating: 4,
+        comment: "Cây vợt tuyệt vời cho người chơi cầu sau, trợ lực tốt, giao hàng trong 24h.",
+        created_at: "2026-11-16 18:45:00"
+      },
+      {
+        id: 3,
+        product_id: 3,
+        user_name: "Nguyễn Văn An",
+        rating: 5,
+        comment: "Giày đi rất êm, bám sân cực tốt không bị trượt, đệm Power Cushion trợ lực bật nhảy.",
+        created_at: "2026-11-16 16:10:00"
+      }
+    ],
+    buybacks: [
+      {
+        id: 1,
+        customer_name: "Lê Hoàng Yến",
+        phone: "0903112233",
+        product_name: "Vợt Tennis Wilson Clash 100 V2 Cũ",
+        sport_id: 3,
+        category_id: 3,
+        brand_id: 6,
+        condition_grade: "85%",
+        wear_description: "Xước nhẹ viền trên vành vợt do vớt bóng sát sân, khung graphite nguyên bản chưa nứt, cán bọc quấn mới.",
+        proposed_price: 2100000,
+        image_url: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=500",
+        status: "DA_THU_MUA",
+        created_at: "2026-11-16 09:30:00",
+        admin_note: "Đã kiểm định khung vợt đạt chuẩn, thanh toán tiền mặt qua số tài khoản khách.",
+        sku_created: false
+      },
+      {
+        id: 2,
+        customer_name: "Phạm Quốc Huy",
+        phone: "0987654321",
+        product_name: "Giày đá bóng Nike Mercurial Vapor 15 Pro TF Cũ",
+        sport_id: 2,
+        category_id: 7,
+        brand_id: 4,
+        condition_grade: "90%",
+        wear_description: "Đã đá 5 trận sân cỏ nhân tạo, đinh dăm cao su còn sắc nét 95%, keo mép mũi giày còn nguyên.",
+        proposed_price: 1400000,
+        image_url: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500",
+        status: "CHO_DUYET",
+        created_at: "2026-11-17 11:15:00",
+        admin_note: "Chờ khách mang qua cửa hàng giám định độ mòn đinh.",
+        sku_created: false
+      }
+    ],
+    matches: [
+      {
+        id: 1,
+        sport_id: 1,
+        sport_name: "Cầu lông",
+        title: "Tìm 2 bạn đánh đôi nam/nữ tối thứ 4 sân Kỳ Hòa",
+        match_date: "2026-11-19",
+        match_time: "18:00 - 20:00",
+        location: "Sân Kỳ Hòa, Quận 10, TP.HCM",
+        level: "Trung bình - Khá",
+        slots_needed: 2,
+        price_share: "45.000đ / người",
+        contact_name: "Nguyễn Văn An",
+        contact_phone: "0912345601",
+        author_id: 1,
+        status: "OPEN",
+        description: "Nhóm đánh vui vẻ, giao lưu thể thao lành mạnh, cầu lông Hải Yến đỏ."
+      },
+      {
+        id: 2,
+        sport_id: 2,
+        sport_name: "Bóng đá",
+        title: "Kèo sân 7 cỏ nhân tạo tối thứ 6 thiếu 3 chân",
+        match_date: "2026-11-21",
+        match_time: "19:30 - 21:00",
+        location: "Sân Chuyên Việt, Cầu Giấy, Hà Nội",
+        level: "Giao lưu vui vẻ",
+        slots_needed: 3,
+        price_share: "50.000đ / người",
+        contact_name: "Trần Minh Đức",
+        contact_phone: "0988776655",
+        author_id: 2,
+        status: "OPEN",
+        description: "Đá dưỡng sinh cọ xát, không cay cú ăn thua, có sẵn nước giải khát."
+      },
+      {
+        id: 3,
+        sport_id: 4,
+        sport_name: "Pickleball",
+        title: "Cần tìm người chơi Pickleball sáng Chủ Nhật",
+        match_date: "2026-11-23",
+        match_time: "07:00 - 09:00",
+        location: "CLB Pickleball D-Sports, Tây Hồ, Hà Nội",
+        level: "Mới tập chơi / Phong trào",
+        slots_needed: 2,
+        price_share: "60.000đ / người",
+        contact_name: "Lê Hoàng Yến",
+        contact_phone: "0903112233",
+        author_id: 3,
+        status: "OPEN",
+        description: "Có sẵn bóng Franklin X-40, chỉ cần mang vợt."
+      },
+      {
+        id: 4,
+        sport_id: 3,
+        sport_name: "Tennis",
+        title: "Giao lưu đánh đôi Tennis trình độ 3.0 tối thứ 5",
+        match_date: "2026-11-24",
+        match_time: "18:00 - 20:00",
+        location: "CLB Quần Vợt Tennis Bách Khoa, Hà Nội",
+        level: "Khá / Trình độ 3.0+",
+        slots_needed: 2,
+        price_share: "90.000đ / người",
+        contact_name: "Phạm Minh Tuấn",
+        contact_phone: "0915223344",
+        author_id: 2,
+        status: "OPEN",
+        description: "Đánh set giao lưu vui vẻ, đã có bóng mới hộp 3 quả."
+      },
+      {
+        id: 5,
+        sport_id: 6,
+        sport_name: "Bóng bàn",
+        title: "Tìm đối tập giật bóng & đánh đơn bóng bàn chiều thứ 7",
+        match_date: "2026-11-25",
+        match_time: "16:30 - 18:30",
+        location: "CLB Bóng Bàn Hà Nội T&T, Hoàn Kiếm",
+        level: "Phong trào / Trung bình khá",
+        slots_needed: 1,
+        price_share: "40.000đ / người",
+        contact_name: "Nguyễn Quốc Huy",
+        contact_phone: "0982334455",
+        author_id: 3,
+        status: "OPEN",
+        description: "Tập kỹ thuật đều tay và giao hữu 3 ván thắng 2."
+      },
+      {
+        id: 6,
+        sport_id: 1,
+        sport_name: "Cầu lông",
+        title: "Tuyển 2 bạn đánh cầu lông sân Cầu Giấy Pro khung vàng",
+        match_date: "2026-11-26",
+        match_time: "19:30 - 21:30",
+        location: "Sân Cầu Lông Cầu Giấy Pro, Dịch Vọng Hậu",
+        level: "Trung bình - Khá",
+        slots_needed: 2,
+        price_share: "65.000đ / người",
+        contact_name: "Trần Đức Mạnh",
+        contact_phone: "0977889900",
+        author_id: 2,
+        status: "OPEN",
+        description: "Nhóm hòa đồng, chia tiền sân + cầu Hải Yến đều."
+      }
+    ],
     courts: [
       {
         id: 1,
@@ -7002,7 +7321,7 @@
             products: mergedProducts,
             cart: parsed.cart || [],
             orders: safeOrders,
-            matches: (parsed.matches && parsed.matches.length >= 6) ? parsed.matches : initialData.matches,
+            matches: (Array.isArray(parsed.matches) && parsed.matches.length > 0) ? parsed.matches : initialData.matches,
             courts: (parsed.courts && parsed.courts.length >= 8 && parsed.courts[0].image_url) ? parsed.courts : initialData.courts,
             court_slots: (parsed.court_slots && parsed.court_slots.length >= 10) ? parsed.court_slots : initialData.court_slots,
             bookings: parsed.bookings || initialData.bookings,
@@ -7569,6 +7888,7 @@
     }
 
     saveMatch(matchData) {
+      if (!Array.isArray(this.data.matches)) this.data.matches = [];
       if (!matchData.title || !matchData.title.trim()) throw new Error("Vui lòng nhập tiêu đề bài đăng!");
       if (!matchData.sport_id) throw new Error("Vui lòng chọn môn thể thao!");
       if (!matchData.match_date) throw new Error("Vui lòng chọn ngày thi đấu/giao lưu!");

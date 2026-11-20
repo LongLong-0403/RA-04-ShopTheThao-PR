@@ -177,7 +177,7 @@
     return { match_date: isoDate, match_time: timeStr };
   }
 
-  function handleMatchSubmit(e) {
+  async function handleMatchSubmit(e) {
     e.preventDefault();
     const store = window.tsportStore;
     if (!store) return;
@@ -208,6 +208,27 @@
 
     try {
       store.saveMatch(data);
+
+      // Đồng bộ bài ghép kèo lên FastAPI Backend (POST /api/match-posts) nếu đã đăng nhập
+      if (window.api && (localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
+        const hhmm = /^\d{1,2}:\d{2}/.test(dt.match_time) ? dt.match_time.slice(0, 5) : "18:00";
+        window.api.post("/match-posts", {
+          sport_id: sportId,
+          match_time: `${dt.match_date}T${hhmm}:00`,
+          location,
+          skill_level: level,
+          contact_info: contactRaw
+        }).catch(() => {});
+      }
+
+      // Reset bộ lọc để bài vừa đăng luôn hiển thị ngay đầu danh sách
+      const fSport = document.getElementById("filterMatchSport");
+      const fDate = document.getElementById("filterMatchDate");
+      const fLevel = document.getElementById("filterMatchLevel");
+      if (fSport) fSport.value = "ALL";
+      if (fDate) fDate.value = "";
+      if (fLevel) fLevel.value = "ALL";
+
       showToast("Đã đăng bài ghép kèo thành công!", "success");
       showListView();
     } catch (err) {
