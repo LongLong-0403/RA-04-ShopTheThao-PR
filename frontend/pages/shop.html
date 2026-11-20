@@ -135,24 +135,22 @@
            CỘT PHẢI: BANNER THƯƠNG HIỆU VỢT + TOOLBAR + LƯỚI 3 CỘT
            ========================================== -->
       <section class="ts-shop-content-v2">
-        <!-- BANNER QUẢNG CÁO THƯƠNG HIỆU VỢT NGAY TRÊN PHẦN SẮP XẾP -->
-        <div class="ts-shop-brand-banner" aria-label="Quảng cáo thương hiệu vợt chính hãng">
-          <div class="ts-shop-brand-banner-bg">
-            <img src="../assets/banner/banner-1.jpg?v=2" alt="Thương hiệu vợt cầu lông chính hãng" />
-          </div>
-          <div class="ts-shop-brand-banner-overlay"></div>
-          <div class="ts-shop-brand-banner-inner">
-            <div class="ts-shop-brand-pills">
-              <a href="shop.html?q=Yonex" class="ts-shop-brand-pill">YONEX</a>
-              <a href="shop.html?q=Lining" class="ts-shop-brand-pill">LI-NING</a>
-              <a href="shop.html?q=Victor" class="ts-shop-brand-pill">VICTOR</a>
-              <a href="shop.html?q=Mizuno" class="ts-shop-brand-pill">MIZUNO</a>
-              <a href="shop.html?q=Joola" class="ts-shop-brand-pill">JOOLA</a>
-              <a href="shop.html?q=Wilson" class="ts-shop-brand-pill">WILSON</a>
-            </div>
-            <div class="ts-shop-brand-banner-cta-wrap">
-              <a href="shop.html?q=V%E1%BB%A3t" class="ts-shop-brand-cta">Xem tất cả vợt</a>
-            </div>
+        <!-- BANNER QUẢNG CÁO THƯƠNG HIỆU VỢT (CHỈ ẢNH, TRƯỢT TRÁI SANG PHẢI 1S, THẲNG HÀNG SẢN PHẨM) -->
+        <div class="ts-shop-brand-banner" id="shopBrandSlider" aria-label="Banner thương hiệu vợt">
+          <a href="shop.html?q=Mizuno" class="ts-shop-brand-slide is-active">
+            <img src="../assets/banner/shop-banner-mizuno.jpg" alt="Mizuno Badminton" />
+          </a>
+          <a href="shop.html?q=V%E1%BB%A3t" class="ts-shop-brand-slide">
+            <img src="../assets/banner/banner-2.jpg" alt="Thương hiệu vợt thể thao Tsport" />
+          </a>
+          <a href="shop.html?q=Yonex" class="ts-shop-brand-slide">
+            <img src="../assets/banner/banner-3.jpg" alt="Vợt cầu lông chính hãng Tsport" />
+          </a>
+
+          <div class="ts-shop-brand-dots" id="shopBrandDots">
+            <button type="button" class="ts-shop-brand-dot is-active" data-index="0" aria-label="Banner 1"></button>
+            <button type="button" class="ts-shop-brand-dot" data-index="1" aria-label="Banner 2"></button>
+            <button type="button" class="ts-shop-brand-dot" data-index="2" aria-label="Banner 3"></button>
           </div>
         </div>
 

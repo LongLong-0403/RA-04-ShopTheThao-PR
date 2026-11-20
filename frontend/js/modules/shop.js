@@ -12,9 +12,96 @@
   let currentPage = 1;
 
   function initShopModule() {
+    initShopBrandSlider();
     renderFiltersSidebar();
     bindEvents();
     loadProductsFromUrl();
+  }
+
+  // BANNER THƯƠNG HIỆU VỢT: CHỈ ẢNH, TRƯỢT TỪ TRÁI SANG PHẢI TRONG 1S
+  function initShopBrandSlider() {
+    const slider = document.getElementById("shopBrandSlider");
+    if (!slider) return;
+
+    const slides = Array.from(slider.querySelectorAll(".ts-shop-brand-slide"));
+    const dots = Array.from(slider.querySelectorAll(".ts-shop-brand-dot"));
+    if (slides.length <= 1) return;
+
+    let currentIdx = 0;
+    let isAnimating = false;
+    let timer = null;
+
+    function goToSlide(nextIdx) {
+      if (isAnimating || nextIdx === currentIdx) return;
+      isAnimating = true;
+
+      const prevSlide = slides[currentIdx];
+      const nextSlide = slides[nextIdx];
+
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === nextIdx));
+
+      // Đặt slide mới ở ngoài lề trái (-100%) không transition
+      nextSlide.style.transition = "none";
+      nextSlide.style.transform = "translateX(-100%)";
+      nextSlide.style.zIndex = "3";
+      nextSlide.style.pointerEvents = "auto";
+
+      prevSlide.style.transition = "none";
+      prevSlide.style.transform = "translateX(0%)";
+      prevSlide.style.zIndex = "2";
+
+      // Force reflow để trình duyệt nhận vị trí xuất phát
+      void nextSlide.offsetWidth;
+
+      // Trượt đồng thời từ trái sang phải trong đúng 1s
+      const anim = "transform 1s cubic-bezier(0.22, 1, 0.36, 1)";
+      nextSlide.style.transition = anim;
+      prevSlide.style.transition = anim;
+      nextSlide.style.transform = "translateX(0%)";
+      prevSlide.style.transform = "translateX(100%)";
+
+      setTimeout(() => {
+        prevSlide.classList.remove("is-active");
+        prevSlide.style.transition = "none";
+        prevSlide.style.transform = "translateX(-100%)";
+        prevSlide.style.zIndex = "1";
+        prevSlide.style.pointerEvents = "none";
+
+        nextSlide.classList.add("is-active");
+        nextSlide.style.zIndex = "2";
+        currentIdx = nextIdx;
+        isAnimating = false;
+      }, 1020);
+    }
+
+    function startAuto() {
+      stopAuto();
+      timer = setInterval(() => {
+        goToSlide((currentIdx + 1) % slides.length);
+      }, 3200);
+    }
+
+    function stopAuto() {
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const idx = Number(dot.dataset.index) || 0;
+        goToSlide(idx);
+        startAuto();
+      });
+    });
+
+    slider.addEventListener("mouseenter", stopAuto);
+    slider.addEventListener("mouseleave", startAuto);
+
+    startAuto();
   }
 
   function getFiltersFromUrl() {
