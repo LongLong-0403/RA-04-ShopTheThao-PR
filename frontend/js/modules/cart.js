@@ -446,28 +446,33 @@
       if (addrInput && !addrInput.value) addrInput.value = user.address || "";
     }
 
-    // Render danh sách sản phẩm tóm tắt trong trang Checkout
+    // Render danh sách sản phẩm tóm tắt trong trang Checkout (chuẩn tối giản)
     const summaryItems = document.getElementById("checkoutSummaryItems");
     if (summaryItems) {
       if (orderItems.length === 0) {
-        summaryItems.innerHTML = '<div style="color:#EF4444; font-weight:700;">Giỏ hàng trống! Vui lòng quay lại giỏ hàng.</div>';
+        summaryItems.innerHTML = '<div style="color:#D94C26; font-weight:700; font-size:13px;">Giỏ hàng đang trống. Vui lòng quay lại giỏ hàng để thêm sản phẩm.</div>';
         const submitBtn = document.getElementById("btnPlaceOrder");
         if (submitBtn) submitBtn.disabled = true;
       } else {
-        summaryItems.innerHTML = orderItems.map((item) => `
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:13px;">
-            <div style="flex:1; padding-right:10px;">
-              <strong>${escapeHtml(item.product_name)}</strong>
-              <div style="color:#64748B; font-size:11px;">${item.size} • ${item.color} x ${item.quantity}</div>
+        summaryItems.innerHTML = orderItems.map((item) => {
+          const condText = item.condition_type === "CU" ? "Đã qua sử dụng" : "Mới";
+          const unitText = item.unit === "LO" ? `Ống / ${item.quantity_per_lot || 12} quả` : "Chiếc";
+          const metaLine = [item.size, item.color, condText, unitText].filter(Boolean).join(" • ");
+          return `
+            <div class="ts-checkout-v2-item">
+              <div class="ts-checkout-v2-item-name">${escapeHtml(item.product_name)} ×${item.quantity}</div>
+              <div class="ts-checkout-v2-item-meta">${escapeHtml(metaLine)}</div>
+              <div class="ts-checkout-v2-item-price">${formatCartMoney(item.price * item.quantity)}</div>
             </div>
-            <div style="font-weight:700; color:#D94C26;">${formatMoney(item.price * item.quantity)}</div>
-          </div>
-        `).join("");
+          `;
+        }).join("");
       }
     }
 
+    const subtotalEl = document.getElementById("checkoutSubtotal");
+    if (subtotalEl) subtotalEl.textContent = formatCartMoney(totals.subtotal);
     const grandTotalEl = document.getElementById("checkoutGrandTotal");
-    if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
+    if (grandTotalEl) grandTotalEl.textContent = formatCartMoney(totals.grandTotal);
 
     // BIND SỰ KIỆN MÃ GIẢM GIÁ (COUPON)
     document.getElementById("btnApplyCoupon")?.addEventListener("click", handleApplyCoupon);
