@@ -52,15 +52,162 @@
     </div>
   </header>
 
-  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH KHUNG CAM, CHỮ ĐEN HOVER CAM -->
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH KHUNG CAM, CHỮ TRẮNG + MEGA MENU SẢN PHẨM -->
   <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
     <div class="container ts-nav-full-inner">
       <a href="index.html" class="ts-inline-nav-link is-active">Trang chủ</a>
-      <a href="pages/shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="pages/shop.html" class="ts-inline-nav-link" id="navProductsTrigger" aria-haspopup="true" aria-expanded="false">Sản phẩm</a>
       <a href="pages/shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
       <a href="pages/courts.html" class="ts-inline-nav-link">Đặt sân</a>
       <a href="pages/community.html" class="ts-inline-nav-link">Ghép kèo</a>
       <a href="pages/admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+    </div>
+
+    <!-- MEGA MENU TÌM KIẾM DANH MỤC SẢN PHẨM (HIỆN KHI HOVER "SẢN PHẨM") -->
+    <div class="ts-mega-dropdown" id="homeProductsMegaMenu" role="region" aria-label="Danh mục tìm kiếm sản phẩm">
+      <div class="container">
+        <div class="ts-mega-grid-5">
+          <!-- HÀNG 1 -->
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">VỢT CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Vợt cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Vợt cầu lông Victor</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Vợt cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20C%E1%BA%A7u%20L%C3%B4ng%20VS" class="ts-mega-link">Vợt Cầu Lông VS</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Mizuno" class="ts-mega-link">Vợt cầu lông Mizuno</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Apacs" class="ts-mega-link">Vợt cầu lông Apacs</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20C%E1%BA%A7u%20L%C3%B4ng%20VNB" class="ts-mega-link">Vợt Cầu Lông VNB</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Proace" class="ts-mega-link">Vợt cầu lông Proace</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Forza" class="ts-mega-link">Vợt cầu lông Forza</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20C%E1%BA%A7u%20L%C3%B4ng%20FlyPower" class="ts-mega-link">Vợt Cầu Lông FlyPower</a></li>
+            </ul>
+            <a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">GIÀY CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Giày cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Giày cầu lông Victor</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Giày cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20VS" class="ts-mega-link">Giày cầu lông VS</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Kawasaki" class="ts-mega-link">Giày cầu lông Kawasaki</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Mizuno" class="ts-mega-link">Giày cầu lông Mizuno</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Kumpoo" class="ts-mega-link">Giày cầu lông Kumpoo</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Promax" class="ts-mega-link">Giày cầu lông Promax</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng%20Babolat" class="ts-mega-link">Giày cầu lông Babolat</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20C%E1%BA%A7u%20L%C3%B4ng%20Sunbatta" class="ts-mega-link">Giày Cầu Lông Sunbatta</a></li>
+            </ul>
+            <a href="pages/shop.html?q=Gi%C3%A0y%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">ÁO CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Áo cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20VNB" class="ts-mega-link">Áo cầu lông VNB</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20Kamito" class="ts-mega-link">Áo cầu lông Kamito</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20VS" class="ts-mega-link">Áo cầu lông VS</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Áo cầu lông Victor</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Áo cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20DonexPro" class="ts-mega-link">Áo cầu lông DonexPro</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20C%E1%BA%A7u%20L%C3%B4ng%20Alien%20Armour" class="ts-mega-link">Áo Cầu Lông Alien Armour</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20th%E1%BB%83%20thao%20SFD" class="ts-mega-link">Áo thể thao SFD</a></li>
+              <li><a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng%20Kawasaki" class="ts-mega-link">Áo cầu lông Kawasaki</a></li>
+            </ul>
+            <a href="pages/shop.html?q=%C3%81o%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">VÁY CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Váy cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Victec" class="ts-mega-link">Váy cầu lông Victec</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Váy cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Donex%20Pro" class="ts-mega-link">Váy cầu lông Donex Pro</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Váy cầu lông Victor</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Kamito" class="ts-mega-link">Váy cầu lông Kamito</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Taro" class="ts-mega-link">Váy cầu lông Taro</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Vina%20Authentic" class="ts-mega-link">Váy cầu lông Vina Authentic</a></li>
+              <li><a href="pages/shop.html?q=V%C3%A1y%20c%E1%BA%A7u%20l%C3%B4ng%20Hundred" class="ts-mega-link">Váy cầu lông Hundred</a></li>
+            </ul>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">QUẦN CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Quần cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Quần cầu lông Victor</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Quần cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng%20VNB" class="ts-mega-link">Quần cầu lông VNB</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20C%E1%BA%A7u%20L%C3%B4ng%20SFD" class="ts-mega-link">Quần Cầu Lông SFD</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng%20Donex%20Pro" class="ts-mega-link">Quần cầu lông Donex Pro</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20C%E1%BA%A7u%20L%C3%B4ng%20Apacs" class="ts-mega-link">Quần Cầu Lông Apacs</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20C%E1%BA%A7u%20L%C3%B4ng%20Alien%20Armour" class="ts-mega-link">Quần Cầu Lông Alien Armour</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng%20Mizuno" class="ts-mega-link">Quần cầu lông Mizuno</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng%20Kawasaki" class="ts-mega-link">Quần cầu lông Kawasaki</a></li>
+            </ul>
+            <a href="pages/shop.html?q=Qu%E1%BA%A7n%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <!-- HÀNG 2 -->
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=T%C3%BAi%20v%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">TÚI VỢT CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=T%C3%BAi%20v%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Túi vợt cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?q=T%C3%BAi%20%C4%91%E1%BB%B1ng%20gi%C3%A0y" class="ts-mega-link">Túi đựng giày</a></li>
+              <li><a href="pages/shop.html?q=T%C3%BAi%20v%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Túi vợt cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?q=T%C3%BAi%20v%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Túi vợt cầu lông Victor</a></li>
+            </ul>
+            <a href="pages/shop.html?q=T%C3%BAi%20v%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=Balo%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">BALO CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=Balo%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Balo cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?q=Balo%20c%E1%BA%A7u%20l%C3%B4ng%20VS" class="ts-mega-link">Balo cầu lông VS</a></li>
+              <li><a href="pages/shop.html?q=Balo%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Balo cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?q=Balo%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Balo cầu lông Victor</a></li>
+            </ul>
+            <a href="pages/shop.html?q=Balo%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=Ph%E1%BB%A5%20ki%E1%BB%87n%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">PHỤ KIỆN CẦU LÔNG</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=V%E1%BB%9B%20C%E1%BA%A7u%20L%C3%B4ng" class="ts-mega-link">Vớ Cầu Lông</a></li>
+              <li><a href="pages/shop.html?q=C%C6%B0%E1%BB%9Bc%20%C4%91an%20v%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-link">Cước đan vợt cầu lông</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A3%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-link">Quả cầu lông</a></li>
+              <li><a href="pages/shop.html?q=Qu%E1%BA%A5n%20c%C3%A1n%20v%E1%BB%A3t" class="ts-mega-link">Quấn cán vợt</a></li>
+            </ul>
+            <a href="pages/shop.html?q=Ph%E1%BB%A5%20ki%E1%BB%87n%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=V%E1%BB%A3t%20Pickleball" class="ts-mega-col-title">VỢT PICKLEBALL</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20PickleBall%20Head" class="ts-mega-link">Vợt PickleBall Head</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20PickleBall%20Joola" class="ts-mega-link">Vợt PickleBall Joola</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20Pickleball%20Selkirk" class="ts-mega-link">Vợt Pickleball Selkirk</a></li>
+              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20Pickleball%20Kamito" class="ts-mega-link">Vợt Pickleball Kamito</a></li>
+            </ul>
+            <a href="pages/shop.html?q=V%E1%BB%A3t%20Pickleball" class="ts-mega-more">Xem thêm</a>
+          </div>
+
+          <div class="ts-mega-col">
+            <a href="pages/shop.html?q=Gi%C3%A0y%20Pickleball" class="ts-mega-col-title">GIÀY PICKLEBALL</a>
+            <ul class="ts-mega-list">
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20Pickleball%20Jogarbola" class="ts-mega-link">Giày Pickleball Jogarbola</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20Pickleball%20Asics" class="ts-mega-link">Giày Pickleball Asics</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20Pickleball%20Nike" class="ts-mega-link">Giày Pickleball Nike</a></li>
+              <li><a href="pages/shop.html?q=Gi%C3%A0y%20Pickleball%20Mizuno" class="ts-mega-link">Giày Pickleball Mizuno</a></li>
+            </ul>
+            <a href="pages/shop.html?q=Gi%C3%A0y%20Pickleball" class="ts-mega-more">Xem thêm</a>
+          </div>
+        </div>
+      </div>
     </div>
   </nav>
 

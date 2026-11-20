@@ -241,6 +241,10 @@ body.tsport-home-body {
 }
 
 .ts-inline-nav.ts-nav-full-orange {
+  display: block;
+  position: relative;
+  overflow: visible;
+  z-index: 950;
   width: 100%;
   background: #D94C26;
   border-top: 1px solid #B83B19;
@@ -278,6 +282,110 @@ body.tsport-home-body {
   color: #FFFFFF;
   background: rgba(0, 0, 0, 0.14);
   border-bottom-color: #FFFFFF;
+}
+
+.ts-inline-nav-link.is-mega-open {
+  color: #FFFFFF;
+  background: #1F2937;
+  border-bottom-color: #1F2937;
+}
+
+/* ==========================================
+   MEGA MENU DANH MỤC SẢN PHẨM (HOVER "SẢN PHẨM")
+   ========================================== */
+.ts-mega-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 960;
+  background: #FFFFFF;
+  border-top: 1px solid #F3F4F6;
+  border-bottom: 1px solid #E5E7EB;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+  padding: 24px 0 28px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+.ts-mega-dropdown.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.ts-mega-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 26px 28px;
+  align-items: start;
+}
+
+.ts-mega-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ts-mega-col-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #D94C26;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #E5E7EB;
+  transition: color 0.15s ease;
+}
+
+.ts-mega-col-title:hover {
+  color: #B83B19;
+}
+
+.ts-mega-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ts-mega-link {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 400;
+  color: #4B5563;
+  text-decoration: none;
+  line-height: 1.5;
+  transition: color 0.14s ease, transform 0.14s ease;
+}
+
+.ts-mega-link:hover {
+  color: #D94C26;
+  transform: translateX(2px);
+}
+
+.ts-mega-more {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #D94C26;
+  text-decoration: none;
+  transition: color 0.14s ease;
+}
+
+.ts-mega-more:hover {
+  color: #B83B19;
+  text-decoration: underline;
 }
 
 /* Hero Banner Full Màn Hình Edge-to-Edge Khớp Đúng Tỷ Lệ Cắt 1920x680 (Chuyển Mượt 2s) */
@@ -1147,9 +1255,21 @@ body.tsport-home-body {
   .ts-min-footer-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+  .ts-mega-dropdown {
+    max-height: 72vh;
+    overflow-y: auto;
+  }
+  .ts-mega-grid-5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
 }
 
 @media (max-width: 640px) {
+  .ts-mega-grid-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
   .ts-min-header-inner {
     height: auto;
     padding: 12px 0;

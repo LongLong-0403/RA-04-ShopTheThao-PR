@@ -13,6 +13,7 @@
   function initHome() {
     updateHeaderUser();
     updateCartBadge();
+    initNavProductsMegaMenu();
     initHeroBannerSlider();
     renderFeaturedProducts();
     initTabbedShowcase();
@@ -23,6 +24,66 @@
     renderRecentlyViewed();
     initSearchDebounce();
     initGsapAnimations();
+  }
+
+  // 0a. MEGA MENU TÌM KIẾM SẢN PHẨM KHI DI CHUỘT VÀO "SẢN PHẨM"
+  function initNavProductsMegaMenu() {
+    const trigger = document.getElementById("navProductsTrigger");
+    const menu = document.getElementById("homeProductsMegaMenu");
+    if (!trigger || !menu) return;
+
+    let closeTimer = null;
+
+    function openMenu() {
+      if (closeTimer) {
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+      menu.classList.add("is-open");
+      trigger.classList.add("is-mega-open");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+
+    function scheduleClose() {
+      if (closeTimer) clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => {
+        menu.classList.remove("is-open");
+        trigger.classList.remove("is-mega-open");
+        trigger.setAttribute("aria-expanded", "false");
+        closeTimer = null;
+      }, 140);
+    }
+
+    function closeNow() {
+      if (closeTimer) {
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+      menu.classList.remove("is-open");
+      trigger.classList.remove("is-mega-open");
+      trigger.setAttribute("aria-expanded", "false");
+    }
+
+    trigger.addEventListener("mouseenter", openMenu);
+    trigger.addEventListener("mouseleave", scheduleClose);
+    menu.addEventListener("mouseenter", openMenu);
+    menu.addEventListener("mouseleave", scheduleClose);
+
+    trigger.addEventListener("focus", openMenu);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && menu.classList.contains("is-open")) {
+        closeNow();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (
+        menu.classList.contains("is-open") &&
+        !menu.contains(e.target) &&
+        !trigger.contains(e.target)
+      ) {
+        closeNow();
+      }
+    });
   }
 
   // 0. SLIDER BANNER CHÍNH FULL ẢNH — CHUYỂN ĐỔI MƯỢT MÀ SAU MỖI 2 GIÂY (GSAP 3)
