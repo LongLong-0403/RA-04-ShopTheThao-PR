@@ -665,3 +665,124 @@ body.tsport-cart-body {
     border-top: 1px solid #F3F4F6;
   }
 }
+
+
+/* ==========================================================================
+   SẢN PHẨM VỢT CÓ THỂ BẠN SẼ THÍCH (6 CỘT QUẢNG BÁ DƯỚI GIỎ HÀNG)
+   ========================================================================== */
+.ts-cart-rec-section {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.ts-cart-rec-heading {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1F2937;
+  margin: 0 0 22px 0;
+  letter-spacing: -0.2px;
+}
+
+.ts-cart-rec-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.ts-cart-rec-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  background: #FFFFFF;
+  transition: transform 0.2s ease;
+}
+
+.ts-cart-rec-card:hover {
+  transform: translateY(-3px);
+}
+
+.ts-cart-rec-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.ts-cart-rec-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.ts-cart-rec-card:hover .ts-cart-rec-media img {
+  transform: scale(1.04);
+}
+
+.ts-cart-rec-discount {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: #DC2626;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 3px;
+  line-height: 1.2;
+}
+
+.ts-cart-rec-name {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #1F2937;
+  line-height: 1.4;
+  margin: 0 0 6px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
+  transition: color 0.15s ease;
+}
+
+.ts-cart-rec-card:hover .ts-cart-rec-name {
+  color: #D94C26;
+}
+
+.ts-cart-rec-price {
+  font-size: 14px;
+  font-weight: 800;
+  color: #DC2626;
+  line-height: 1.3;
+}
+
+.ts-cart-rec-oldprice {
+  font-size: 12px;
+  color: #9CA3AF;
+  text-decoration: line-through;
+  margin-top: 2px;
+}
+
+@media (max-width: 1024px) {
+  .ts-cart-rec-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ts-cart-rec-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}

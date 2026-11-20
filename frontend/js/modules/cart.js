@@ -105,8 +105,78 @@
   function initCartModule() {
     initCartHeaderSearch();
     renderCartPage();
+    renderCartRecommendations();
     initCheckoutPage();
     bindCartEvents();
+  }
+
+  // GỢI Ý 6 SẢN PHẨM VỢT "CÓ THỂ BẠN SẼ THÍCH" DƯỚI GIỎ HÀNG
+  function renderCartRecommendations() {
+    const grid = document.getElementById("cartRecommendationsGrid");
+    if (!grid) return;
+
+    const store = window.tsportStore;
+    if (!store) return;
+
+    const allProducts = store.getProducts({ status: "ACTIVE" }) || [];
+    const rackets = allProducts.filter((p) => {
+      const name = String(p.name || "").toLowerCase();
+      return name.includes("vợt") || Number(p.category_id) === 2 || Number(p.category_id) === 3 || Number(p.category_id) === 4;
+    });
+
+    // Đưa Victor Auraspeed 90K II (id=10) và các mẫu vợt nổi bật lên trước, lấy 6 sản phẩm
+    const sorted = [...rackets].sort((a, b) => {
+      if (Number(a.id) === 10) return -1;
+      if (Number(b.id) === 10) return 1;
+      return Number(a.id) - Number(b.id);
+    });
+    const list = sorted.slice(0, 6);
+
+    const fallbackImg = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
+    const promoDiscounts = [18, 0, 15, 0, 22, 25];
+
+    grid.innerHTML = list
+      .map((p, idx) => {
+        const primaryImg =
+          (p.images && p.images.find((i) => i.is_primary)) ||
+          (p.images && p.images[0]) ||
+          { image_url: fallbackImg };
+
+        const skus = p.skus || [];
+        const basePrices = skus.map((s) => Number(s.price) || 0).filter(Boolean);
+        const effPrices = skus
+          .map((s) => (s.sale_price && Number(s.sale_price) > 0 ? Number(s.sale_price) : Number(s.price) || 0))
+          .filter(Boolean);
+
+        const minOrig = basePrices.length ? Math.min(...basePrices) : 1500000;
+        let minEff = effPrices.length ? Math.min(...effPrices) : minOrig;
+        let discountPct = 0;
+
+        if (minEff < minOrig) {
+          discountPct = Math.round(((minOrig - minEff) / minOrig) * 100);
+        } else if (promoDiscounts[idx] > 0) {
+          discountPct = promoDiscounts[idx];
+          minEff = Math.round((minOrig * (100 - discountPct)) / 100 / 1000) * 1000;
+        }
+
+        return `
+          <a href="product-detail.html?id=${p.id}" class="ts-cart-rec-card">
+            <div class="ts-cart-rec-media">
+              ${discountPct > 0 ? `<span class="ts-cart-rec-discount">- ${discountPct}%</span>` : ""}
+              <img
+                src="${escapeHtml(primaryImg.image_url)}"
+                alt="${escapeHtml(p.name)}"
+                loading="lazy"
+                onerror="this.src='${fallbackImg}'"
+              />
+            </div>
+            <h3 class="ts-cart-rec-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
+            <div class="ts-cart-rec-price">${formatCartMoney(minEff)}</div>
+            ${discountPct > 0 ? `<div class="ts-cart-rec-oldprice">${formatCartMoney(minOrig)}</div>` : ""}
+          </a>
+        `;
+      })
+      .join("");
   }
 
   function initCartHeaderSearch() {
