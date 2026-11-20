@@ -273,6 +273,18 @@
       this.baseRadius = R;
       this.hoverLift = 0;
 
+      // Vầng sáng hào quang tự động phía sau sản phẩm khi vào chính giữa (không cần hover)
+      this.glowGeo = new THREE.PlaneGeometry(item.width * 1.42, item.height * 1.38);
+      this.glowMat = new THREE.MeshBasicMaterial({
+        map: this._createGlowTexture(),
+        transparent: true,
+        opacity: 0,
+        depthWrite: false
+      });
+      this.glowMesh = new THREE.Mesh(this.glowGeo, this.glowMat);
+      this.glowMesh.position.set(0, 0, -0.03);
+      this.group.add(this.glowMesh);
+
       // Placeholder texture sạch trong khi ảnh thật đang nạp
       const placeholderTex = this._createPlaceholderTexture(item.width, item.height);
       this.artGeo = new THREE.PlaneGeometry(item.width, item.height);
@@ -301,6 +313,23 @@
 
       this.loadedImage = null;
       this._loadProductImage(item);
+    }
+
+    _createGlowTexture() {
+      const c = document.createElement("canvas");
+      c.width = 256;
+      c.height = 256;
+      const ctx = c.getContext("2d");
+      const grad = ctx.createRadialGradient(128, 128, 28, 128, 128, 126);
+      grad.addColorStop(0.0, "rgba(255, 255, 255, 1.0)");
+      grad.addColorStop(0.55, "rgba(255, 255, 255, 0.72)");
+      grad.addColorStop(0.82, "rgba(255, 255, 255, 0.22)");
+      grad.addColorStop(1.0, "rgba(255, 255, 255, 0.0)");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 256, 256);
+      const tex = new window.THREE.CanvasTexture(c);
+      if (window.THREE.SRGBColorSpace) tex.colorSpace = window.THREE.SRGBColorSpace;
+      return tex;
     }
 
     _createPlaceholderTexture(w, h) {
@@ -382,6 +411,7 @@
     setOpacity(val) {
       this.artMat.opacity = val;
       this.capMat.opacity = val * 0.92;
+      if (this.glowMat) this.glowMat.opacity = Math.min(this.glowMat.opacity, val);
     }
 
     setHover(isHovered) {
@@ -432,6 +462,9 @@
     }
 
     dispose() {
+      this.glowGeo?.dispose();
+      this.glowMat?.map?.dispose();
+      this.glowMat?.dispose();
       this.artGeo.dispose();
       this.artMat.map?.dispose();
       this.artMat.dispose();
@@ -1156,19 +1189,24 @@
           const distFromCenter = Math.abs(normalizeAngle(a.theta + controls.angle));
           const focusFactor = Math.exp(-Math.pow(distFromCenter / (stepAngle * 0.72), 2));
 
-          // Sản phẩm chính giữa nổi bật sáng rõ và nhô nhẹ về phía người xem; hai bên tối & mờ dịu
-          a.setHover(isHov || focusFactor > 0.72);
+          // Sản phẩm chính giữa tự động phát sáng (hào quang trắng + sáng 100%) không cần hover; hai bên tối mờ dịu
+          a.setHover(isHov || focusFactor > 0.65);
 
-          const targetOpacity = isHov ? 1.0 : (0.34 + 0.66 * focusFactor);
-          a.artMat.opacity += (targetOpacity - a.artMat.opacity) * 0.16;
+          const targetOpacity = isHov ? 1.0 : (0.30 + 0.70 * focusFactor);
+          a.artMat.opacity += (targetOpacity - a.artMat.opacity) * 0.18;
 
-          const targetBright = isHov ? 1.0 : (0.62 + 0.38 * focusFactor);
+          const targetBright = isHov ? 1.0 : (0.54 + 0.46 * focusFactor);
           const curBright = a.artMat.color.r;
-          const nextBright = curBright + (targetBright - curBright) * 0.16;
+          const nextBright = curBright + (targetBright - curBright) * 0.18;
           a.artMat.color.setRGB(nextBright, nextBright, nextBright);
 
-          const targetCapOpacity = isHov ? 1.0 : (0.16 + 0.84 * Math.pow(focusFactor, 1.5));
-          a.capMat.opacity += (targetCapOpacity - a.capMat.opacity) * 0.16;
+          if (a.glowMat) {
+            const targetGlow = Math.pow(focusFactor, 2.2) * 0.95;
+            a.glowMat.opacity += (targetGlow - a.glowMat.opacity) * 0.18;
+          }
+
+          const targetCapOpacity = isHov ? 1.0 : (0.14 + 0.86 * Math.pow(focusFactor, 1.5));
+          a.capMat.opacity += (targetCapOpacity - a.capMat.opacity) * 0.18;
         });
 
         const centered = getCenteredArtwork();
