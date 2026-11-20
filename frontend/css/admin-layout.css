@@ -944,3 +944,167 @@ body.ts-adm-body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ==========================================================================
+   ADMIN PRODUCT FULL-PAGE EDITOR (THÊM / SỬA SẢN PHẨM & SKU FIGMA)
+   ========================================================================== */
+.ts-adm-prod-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ts-adm-textarea {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: #111827;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.ts-adm-textarea:focus {
+  border-color: #D94C26;
+}
+
+.ts-adm-prod-media-sec {
+  margin-top: 22px;
+}
+
+.ts-adm-prod-photos-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.ts-adm-prod-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 118px);
+  gap: 14px;
+}
+
+.ts-adm-prod-photo-slot {
+  position: relative;
+  width: 118px;
+  height: 118px;
+  background: #ECEEF1;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts-adm-prod-photo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+  display: block;
+}
+
+.ts-adm-prod-photo-tag {
+  position: absolute;
+  left: 7px;
+  bottom: 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #6B7280;
+  background: rgba(255, 255, 255, 0.88);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.ts-adm-upload-btn {
+  min-width: 210px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+/* BẢNG BIẾN THỂ SKU INLINE */
+.ts-adm-sku-table td {
+  padding: 12px 10px;
+}
+
+.ts-adm-sku-input {
+  width: 100%;
+  min-width: 68px;
+  height: 34px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+}
+
+.ts-adm-sku-input:focus {
+  border-color: #D94C26;
+}
+
+.ts-adm-sku-del {
+  border: none;
+  background: none;
+  color: #9CA3AF;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.ts-adm-sku-del:hover {
+  color: #DC2626;
+}
+
+.ts-adm-sku-footer {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.ts-adm-add-sku-btn {
+  min-width: 170px;
+  padding: 10px 16px;
+}
+
+.ts-adm-prod-bottom-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  margin-top: 22px;
+}
+
+@media (max-width: 900px) {
+  .ts-adm-prod-row-3 {
+    grid-template-columns: 1fr;
+  }
+  .ts-adm-prod-photos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+  }
+  .ts-adm-prod-photo-slot {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+  .ts-adm-upload-btn {
+    margin-left: 0;
+    width: 100%;
+  }
+}

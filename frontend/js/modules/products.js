@@ -1,19 +1,27 @@
 /**
- * TSPORT — MODULE QUẢN LÝ SẢN PHẨM & SKU (ADMIN PRODUCTS V2 FIGMA)
- * - Tìm kiếm theo tên sản phẩm hoặc mã SKU, lọc theo Tình trạng (Tất cả / Mới / Cũ)
- * - Bảng 6 cột: Sản phẩm, Môn / Danh mục, Tình trạng, Tồn SKU, Trạng thái, Thao tác (Sửa →)
- * - Modal Thêm / Sửa sản phẩm & SKU (bắt buộc mô tả hao mòn khi chọn Đồ cũ)
+ * TSPORT — MODULE QUẢN LÝ SẢN PHẨM & SKU (LIST + FULL-PAGE EDITOR FIGMA)
+ * - View 1: Danh sách Sản phẩm & SKU (tìm kiếm, lọc tình trạng, bảng 6 cột, nút Sửa sản phẩm đang chọn)
+ * - View 2: Form Thêm / Sửa sản phẩm toàn trang (Ảnh sản phẩm 4 ô + Bảng biến thể SKU & Tồn kho inline)
  */
 
 (function () {
   let selectedProdId = null;
   let editingProdId = null;
+  let draftImages = [];
+  let draftSkus = [];
 
   function initAdminProducts() {
     initTopbarControls();
     populateSelectOptions();
     renderProductsTable();
     bindEvents();
+
+    const params = typeof getUrlParams === "function" ? getUrlParams() : {};
+    if (params.create === "1") {
+      showProductFormView(null);
+    } else if (params.edit) {
+      showProductFormView(Number(params.edit));
+    }
   }
 
   function initTopbarControls() {
@@ -43,21 +51,40 @@
     const catEl = document.getElementById("admProdCategory");
     const brandEl = document.getElementById("admProdBrand");
 
+    const sports = store.getSports() || [];
+    const cats = store.getCategories() || [];
+    const brands = store.getBrands() || [];
+
     if (sportEl) {
-      sportEl.innerHTML = (store.getSports() || [])
-        .map((s) => `<option value="${s.id}">${escapeHtml(s.name)}</option>`)
-        .join("");
+      sportEl.innerHTML = sports.map((s) => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join("");
     }
     if (catEl) {
-      catEl.innerHTML = (store.getCategories() || [])
-        .map((c) => `<option value="${c.id}">${escapeHtml(c.name)}</option>`)
+      catEl.innerHTML = cats
+        .map((c) => {
+          const parent = c.parent_id ? cats.find((p) => Number(p.id) === Number(c.parent_id)) : null;
+          const label = parent ? `${parent.name} > ${c.name}` : c.name;
+          return `<option value="${c.id}">${escapeHtml(label)}</option>`;
+        })
         .join("");
     }
     if (brandEl) {
-      brandEl.innerHTML = (store.getBrands() || [])
-        .map((b) => `<option value="${b.id}">${escapeHtml(b.name)}</option>`)
-        .join("");
+      brandEl.innerHTML = brands.map((b) => `<option value="${b.id}">${escapeHtml(b.name)}</option>`).join("");
     }
+  }
+
+  // ==========================================
+  // VIEW 1: DANH SÁCH SẢN PHẨM & SKU
+  // ==========================================
+  function showProductsListView() {
+    const listView = document.getElementById("adminProductsListView");
+    const formView = document.getElementById("adminProductFormView");
+    const bc = document.getElementById("prodTopBreadcrumb");
+    if (listView) listView.style.display = "block";
+    if (formView) formView.style.display = "none";
+    if (bc) bc.textContent = "Sản phẩm & SKU";
+    document.title = "Sản phẩm & SKU | Tsport Admin";
+    renderProductsTable();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function renderProductsTable() {
@@ -79,9 +106,7 @@
     if (q) {
       products = products.filter((p) => {
         const nameMatch = String(p.name || "").toLowerCase().includes(q);
-        const skuMatch = (p.skus || []).some((s) =>
-          String(s.sku_code || "").toLowerCase().includes(q)
-        );
+        const skuMatch = (p.skus || []).some((s) => String(s.sku_code || "").toLowerCase().includes(q));
         return nameMatch || skuMatch;
       });
     }
@@ -131,77 +156,178 @@
       .join("");
   }
 
-  function openProductModal(prodId) {
+  // ==========================================
+  // VIEW 2: THÊM / SỬA SẢN PHẨM TOÀN TRANG
+  // ==========================================
+  function showProductFormView(prodId) {
     const store = window.tsportStore;
     if (!store) return;
 
     editingProdId = prodId ? Number(prodId) : null;
     const prod = editingProdId ? store.getProductById(editingProdId) : null;
 
-    const titleEl = document.getElementById("modalProdTitle");
+    const listView = document.getElementById("adminProductsListView");
+    const formView = document.getElementById("adminProductFormView");
+    const bc = document.getElementById("prodTopBreadcrumb");
+    if (listView) listView.style.display = "none";
+    if (formView) formView.style.display = "block";
+    if (bc) bc.textContent = "Thêm / Sửa sản phẩm";
+    document.title = "Thêm / Sửa sản phẩm | Tsport Admin";
+
     const nameEl = document.getElementById("admProdName");
     const sportEl = document.getElementById("admProdSport");
     const catEl = document.getElementById("admProdCategory");
     const brandEl = document.getElementById("admProdBrand");
     const condEl = document.getElementById("admProdCondition");
-    const wearWrap = document.getElementById("admProdWearWrap");
+    const statusEl = document.getElementById("admProdStatus");
     const wearEl = document.getElementById("admProdWearDesc");
-    const sizeEl = document.getElementById("admSkuSize");
-    const colorEl = document.getElementById("admSkuColor");
-    const priceEl = document.getElementById("admSkuPrice");
-    const stockEl = document.getElementById("admSkuStock");
+    const descEl = document.getElementById("admProdDesc");
+    const specsEl = document.getElementById("admProdSpecs");
 
     if (prod) {
-      const firstSku = (prod.skus && prod.skus[0]) || {};
-      if (titleEl) titleEl.textContent = `Sửa sản phẩm: ${prod.name}`;
       if (nameEl) nameEl.value = prod.name || "";
       if (sportEl) sportEl.value = String(prod.sport_id || 1);
       if (catEl) catEl.value = String(prod.category_id || 2);
       if (brandEl) brandEl.value = String(prod.brand_id || 1);
       if (condEl) condEl.value = prod.condition_type || "MOI";
+      if (statusEl) statusEl.value = prod.status || "ACTIVE";
       if (wearEl) wearEl.value = prod.wear_description || prod.condition_note || "";
-      if (wearWrap) wearWrap.style.display = prod.condition_type === "CU" ? "block" : "none";
-      if (sizeEl) sizeEl.value = firstSku.size || "4U";
-      if (colorEl) colorEl.value = firstSku.color || "Đen / Đỏ";
-      if (priceEl) priceEl.value = Number(firstSku.price) || 1500000;
-      if (stockEl) stockEl.value = Number(firstSku.stock) || 0;
+      if (descEl) descEl.value = prod.description || "";
+      if (specsEl) {
+        const sp = prod.specifications || {};
+        specsEl.value = Object.entries(sp)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join("; ");
+      }
+      draftImages = (prod.images || []).map((i) => i.image_url).filter(Boolean);
+      draftSkus = (prod.skus || []).map((s) => ({
+        id: s.id,
+        sku_code: s.sku_code || "",
+        size: s.size || "4U",
+        color: s.color || "Đen",
+        price: Number(s.price) || 0,
+        stock: Number(s.stock) || 0,
+        unit: s.unit || "CHIEC",
+        quantity_per_lot: Number(s.quantity_per_lot) || 1
+      }));
     } else {
-      if (titleEl) titleEl.textContent = "Thêm sản phẩm & SKU mới";
       document.getElementById("formAdminProduct")?.reset();
-      if (wearWrap) wearWrap.style.display = "none";
-      if (sizeEl) sizeEl.value = "4U";
-      if (colorEl) colorEl.value = "Đen / Đỏ";
-      if (priceEl) priceEl.value = 1500000;
-      if (stockEl) stockEl.value = 10;
+      if (condEl) condEl.value = "MOI";
+      if (statusEl) statusEl.value = "ACTIVE";
+      draftImages = [];
+      draftSkus = [
+        {
+          id: Date.now() % 100000,
+          sku_code: "TS-NEW-4U-BK",
+          size: "4U",
+          color: "Đen",
+          price: 1250000,
+          stock: 1,
+          unit: "CHIEC",
+          quantity_per_lot: 1
+        }
+      ];
     }
 
-    openModal("modalAdminProduct");
+    renderDraftPhotos();
+    renderDraftSkus();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function renderDraftPhotos() {
+    const grid = document.getElementById("admProdPhotosGrid");
+    if (!grid) return;
+
+    const labels = ["ẢNH CHÍNH", "ẢNH 2", "ẢNH 3", "ẢNH 4"];
+    const fallback = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
+    grid.innerHTML = labels
+      .map((label, idx) => {
+        const src = draftImages[idx];
+        return `
+          <div class="ts-adm-prod-photo-slot">
+            ${src ? `<img src="${escapeHtml(src)}" alt="${label}" onerror="this.src='${fallback}'" />` : ""}
+            <span class="ts-adm-prod-photo-tag">${label}</span>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  function renderDraftSkus() {
+    const tbody = document.getElementById("admSkuTableBody");
+    if (!tbody) return;
+
+    tbody.innerHTML = draftSkus
+      .map(
+        (s, idx) => `
+        <tr data-sku-idx="${idx}">
+          <td><input type="text" class="ts-adm-sku-input js-sku-field" data-field="sku_code" value="${escapeHtml(s.sku_code)}" /></td>
+          <td><input type="text" class="ts-adm-sku-input js-sku-field" data-field="size" value="${escapeHtml(s.size)}" style="max-width:72px;" /></td>
+          <td><input type="text" class="ts-adm-sku-input js-sku-field" data-field="color" value="${escapeHtml(s.color)}" style="max-width:96px;" /></td>
+          <td><input type="number" class="ts-adm-sku-input js-sku-field" data-field="price" value="${Number(s.price) || 0}" min="0" step="10000" style="max-width:116px;" /></td>
+          <td><input type="number" class="ts-adm-sku-input js-sku-field" data-field="stock" value="${Number(s.stock) || 0}" min="0" style="max-width:68px;" /></td>
+          <td>
+            <select class="ts-adm-sku-input js-sku-field" data-field="unit" style="max-width:88px;">
+              <option value="CHIEC" ${s.unit === "CHIEC" ? "selected" : ""}>CHIEC</option>
+              <option value="LO" ${s.unit === "LO" ? "selected" : ""}>LO</option>
+            </select>
+          </td>
+          <td><input type="number" class="ts-adm-sku-input js-sku-field" data-field="quantity_per_lot" value="${Number(s.quantity_per_lot) || 1}" min="1" style="max-width:64px;" /></td>
+          <td><button type="button" class="ts-adm-sku-del js-del-sku-row" data-idx="${idx}" title="Xóa biến thể">✕</button></td>
+        </tr>
+      `
+      )
+      .join("");
+  }
+
+  function syncSkusFromDom() {
+    const rows = document.querySelectorAll("#admSkuTableBody tr[data-sku-idx]");
+    rows.forEach((row) => {
+      const idx = Number(row.dataset.skuIdx);
+      if (!draftSkus[idx]) return;
+      row.querySelectorAll(".js-sku-field").forEach((el) => {
+        const field = el.dataset.field;
+        if (field === "price" || field === "stock" || field === "quantity_per_lot") {
+          draftSkus[idx][field] = Number(el.value) || 0;
+        } else {
+          draftSkus[idx][field] = el.value.trim();
+        }
+      });
+    });
+  }
+
+  function parseSpecsText(raw) {
+    const obj = {};
+    String(raw || "")
+      .split(/[;\n]+/)
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .forEach((pair) => {
+        const idx = pair.indexOf(":");
+        if (idx > 0) {
+          obj[pair.slice(0, idx).trim()] = pair.slice(idx + 1).trim();
+        }
+      });
+    return obj;
   }
 
   function bindEvents() {
     document.getElementById("prodSearchInput")?.addEventListener("input", renderProductsTable);
     document.getElementById("prodConditionFilter")?.addEventListener("change", renderProductsTable);
 
-    document.getElementById("btnAddProduct")?.addEventListener("click", () => openProductModal(null));
+    document.getElementById("btnAddProduct")?.addEventListener("click", () => showProductFormView(null));
     document.getElementById("btnEditSelectedProduct")?.addEventListener("click", () => {
-      if (selectedProdId) openProductModal(selectedProdId);
-      else openProductModal(null);
+      showProductFormView(selectedProdId || null);
     });
-
-    document.getElementById("admProdCondition")?.addEventListener("change", (e) => {
-      const wearWrap = document.getElementById("admProdWearWrap");
-      if (wearWrap) wearWrap.style.display = e.target.value === "CU" ? "block" : "none";
-    });
+    document.getElementById("btnBackToProductsList")?.addEventListener("click", showProductsListView);
 
     document.getElementById("adminProductsTbody")?.addEventListener("click", (e) => {
       const editBtn = e.target.closest(".js-edit-prod");
       if (editBtn) {
         selectedProdId = Number(editBtn.dataset.id);
-        renderProductsTable();
-        openProductModal(selectedProdId);
+        showProductFormView(selectedProdId);
         return;
       }
-
       const row = e.target.closest("tr[data-prod-id]");
       if (row) {
         selectedProdId = Number(row.dataset.prodId);
@@ -209,8 +335,54 @@
       }
     });
 
+    // Tải ảnh sản phẩm
+    document.getElementById("admProdPhotoInput")?.addEventListener("change", (e) => {
+      const files = Array.from(e.target.files || []).slice(0, 4);
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          if (ev.target?.result) {
+            if (draftImages.length >= 4) draftImages.shift();
+            draftImages.push(ev.target.result);
+            renderDraftPhotos();
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // Thêm / Xóa dòng biến thể SKU
+    document.getElementById("btnAddSkuRow")?.addEventListener("click", () => {
+      syncSkusFromDom();
+      draftSkus.push({
+        id: (Date.now() + draftSkus.length) % 100000,
+        sku_code: `SKU-${draftSkus.length + 1}`,
+        size: "3U",
+        color: "Đỏ",
+        price: 1300000,
+        stock: 5,
+        unit: "CHIEC",
+        quantity_per_lot: 1
+      });
+      renderDraftSkus();
+    });
+
+    document.getElementById("admSkuTableBody")?.addEventListener("click", (e) => {
+      const del = e.target.closest(".js-del-sku-row");
+      if (!del) return;
+      syncSkusFromDom();
+      if (draftSkus.length <= 1) {
+        showToast("Sản phẩm cần có ít nhất 1 biến thể SKU.", "error");
+        return;
+      }
+      draftSkus.splice(Number(del.dataset.idx), 1);
+      renderDraftSkus();
+    });
+
+    // Lưu sản phẩm
     document.getElementById("formAdminProduct")?.addEventListener("submit", (e) => {
       e.preventDefault();
+      syncSkusFromDom();
       const store = window.tsportStore;
       if (!store) return;
 
@@ -219,20 +391,29 @@
       const category_id = Number(document.getElementById("admProdCategory")?.value) || 2;
       const brand_id = Number(document.getElementById("admProdBrand")?.value) || 1;
       const condition_type = document.getElementById("admProdCondition")?.value || "MOI";
+      const status = document.getElementById("admProdStatus")?.value || "ACTIVE";
       const wear_description = document.getElementById("admProdWearDesc")?.value.trim() || "";
-      const size = document.getElementById("admSkuSize")?.value.trim() || "Tiêu chuẩn";
-      const color = document.getElementById("admSkuColor")?.value.trim() || "Mặc định";
-      const price = Number(document.getElementById("admSkuPrice")?.value) || 0;
-      const stock = Number(document.getElementById("admSkuStock")?.value) || 0;
+      const description = document.getElementById("admProdDesc")?.value.trim() || "";
+      const specifications = parseSpecsText(document.getElementById("admProdSpecs")?.value);
 
       if (!name) {
         showToast("Vui lòng nhập tên sản phẩm.", "error");
         return;
       }
       if (condition_type === "CU" && !wear_description) {
-        showToast("Sản phẩm cũ bắt buộc phải có mô tả hao mòn!", "error");
+        showToast("Hàng đã qua sử dụng bắt buộc phải có mô tả hao mòn!", "error");
+        document.getElementById("admProdWearDesc")?.focus();
         return;
       }
+
+      const imgs = (draftImages.length ? draftImages : ["/frontend/assets/products/victor-auraspeed-90k-ii.png"]).map(
+        (url, idx) => ({
+          id: idx + 1,
+          image_url: url,
+          is_primary: idx === 0,
+          sort_order: idx + 1
+        })
+      );
 
       const arr = store.data.products || [];
       const existing = editingProdId ? arr.find((p) => Number(p.id) === Number(editingProdId)) : null;
@@ -243,57 +424,36 @@
         existing.category_id = category_id;
         existing.brand_id = brand_id;
         existing.condition_type = condition_type;
+        existing.status = status;
         existing.wear_description = wear_description;
-        if (existing.skus && existing.skus.length) {
-          existing.skus[0].size = size;
-          existing.skus[0].color = color;
-          existing.skus[0].price = price;
-          existing.skus[0].stock = stock;
-        }
+        existing.description = description;
+        existing.specifications = specifications;
+        existing.images = imgs;
+        existing.skus = [...draftSkus];
         store.save();
-        showToast(`Đã cập nhật "${name}" thành công!`, "success");
+        showToast(`Đã lưu cập nhật sản phẩm "${name}"!`, "success");
       } else {
         const newId = arr.length ? Math.max(...arr.map((p) => Number(p.id) || 0)) + 1 : 1;
-        const newSkuId = Date.now() % 100000;
         arr.unshift({
           id: newId,
           sport_id,
           category_id,
           brand_id,
           name,
-          description: "Sản phẩm thể thao chính hãng tại Tsport.",
+          description,
           condition_type,
           wear_description,
-          status: "ACTIVE",
-          specifications: { weight: size, material: "Graphite" },
-          images: [
-            {
-              id: newSkuId,
-              image_url: "/frontend/assets/products/victor-auraspeed-90k-ii.png",
-              is_primary: true,
-              sort_order: 1
-            }
-          ],
-          skus: [
-            {
-              id: newSkuId,
-              sku_code: `TS-${newId}-${size.toUpperCase()}`,
-              size,
-              color,
-              price,
-              stock,
-              unit: "CHIEC",
-              quantity_per_lot: 1
-            }
-          ]
+          status,
+          specifications,
+          images: imgs,
+          skus: [...draftSkus]
         });
         selectedProdId = newId;
         store.save();
-        showToast(`Đã thêm mới "${name}" thành công!`, "success");
+        showToast(`Đã thêm mới sản phẩm "${name}"!`, "success");
       }
 
-      closeModal("modalAdminProduct");
-      renderProductsTable();
+      showProductsListView();
     });
   }
 
