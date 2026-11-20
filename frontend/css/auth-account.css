@@ -361,7 +361,7 @@ body.tsport-auth-body {
   font-weight: 800;
   color: #D94C26;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .ts-auth-v2-contact-trigger:hover {
