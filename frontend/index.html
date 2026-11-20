@@ -3,379 +3,277 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tsport Store — Thế Giới Đồ Thể Thao &amp; Dịch Vụ Thể Thao Chính Hãng (Cam – Trắng)</title>
-  
+  <title>Tsport — Mọi môn thể thao. Mọi cuộc chơi.</title>
+
   <!-- Google Fonts: Roboto -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
-  
+
   <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- GSAP 3 + ScrollTrigger (greensock/gsap-skills) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
 </head>
-<body data-root="">
+<body class="tsport-home-body" data-root="">
 
   <!-- ==========================================
-       HEADER & THANH ĐIỀU HƯỚNG CHUẨN TSPORT
+       1. TOP HEADER BAR TỐI GIẢN (KHÔNG ICON THỪA)
        ========================================== -->
-  <header class="tsport-header">
-    <!-- 1. UTILITY TOPBAR -->
-    <div class="tsport-topbar">
-      <div class="container">
-        <div class="tsport-topbar-left">
-          <span class="tsport-topbar-badge">TSPORT STORE</span>
-          <span>🔥 Hotline tư vấn: <strong>1900 6868</strong> • Miễn phí vận chuyển từ 500k • Đồ cũ minh bạch</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:16px;">
-          <a href="pages/courts.html" style="color:#F8FAFC; text-decoration:none;">🏟️ Đặt sân</a>
-          <a href="pages/community.html" style="color:#F8FAFC; text-decoration:none;">👥 Kèo giao lưu</a>
-          <a href="pages/admin-buyback.html" style="color:#F8FAFC; text-decoration:none;">♻️ Thu mua đồ cũ</a>
-          <a href="pages/orders.html" style="color:#F8FAFC; text-decoration:none;">📦 Tra cứu đơn</a>
-          <a href="pages/admin-dashboard.html" style="color:#FF6B35; font-weight:700; text-decoration:none;">⚙️ Trang Quản Trị</a>
-        </div>
-      </div>
-    </div>
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="index.html" class="ts-min-logo">Tsport</a>
 
-    <!-- 2. MAIN BRAND & SEARCH BAR -->
-    <div class="tsport-main-bar">
-      <div class="container">
-        <a href="index.html" class="tsport-logo">
-          <span class="tsport-logo-text">Tsport</span>
-          <span class="tsport-logo-tag">CAM–TRẮNG</span>
+      <!-- Thanh tìm kiếm có gợi ý debounce -->
+      <div class="ts-min-search-wrap">
+        <form id="homeSearchForm">
+          <input
+            type="text"
+            id="homeSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+        <div class="tsport-search-dropdown" id="homeSearchDropdown"></div>
+      </div>
+
+      <!-- Các liên kết bên phải (chỉ chữ gọn gàng, không icon) -->
+      <div class="ts-min-header-links">
+        <a href="pages/orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="pages/auth.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="pages/cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
         </a>
-
-        <!-- THANH TÌM KIẾM THÔNG MINH CÓ GỢI Ý DEBOUNCE -->
-        <div style="flex:1; max-width:540px; margin:0 24px; position:relative;">
-          <form id="homeSearchForm" style="display:flex;">
-            <input
-              type="text"
-              id="homeSearchInput"
-              class="form-control"
-              placeholder="Tìm vợt cầu lông, giày thể thao, quần áo, bóng đá (Yonex, Lining, Nike...)"
-              autocomplete="off"
-              style="padding-left:38px; border-radius:24px 0 0 24px; font-size:13px;"
-            />
-            <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#94A3B8; pointer-events:none;">🔍</span>
-            <button type="submit" class="btn btn-primary" style="border-radius:0 24px 24px 0; padding:0 22px; font-weight:700;">
-              Tìm kiếm
-            </button>
-          </form>
-
-          <!-- DROPDOWN AUTOCOMPLETE KHI GÕ -->
-          <div class="tsport-search-dropdown" id="homeSearchDropdown"></div>
-        </div>
-
-        <!-- CÁC THAO TÁC NGƯỜI DÙNG & GIỎ HÀNG -->
-        <div class="tsport-actions">
-          <div id="headerUserWrap">
-            <!-- Render động từ home.js (Đăng nhập / Tên người dùng) -->
-            <a href="pages/auth.html" class="btn btn-secondary btn-sm" style="font-weight:700;">
-              <span>👤</span>
-              <span>Đăng nhập / Đăng ký</span>
-            </a>
-          </div>
-
-          <a href="pages/cart.html" class="btn btn-primary btn-sm" style="position:relative; font-weight:700;">
-            <span>🛒</span>
-            <span>Giỏ hàng</span>
-            <span class="badge js-cart-count" style="background:#fff; color:#D94C26; margin-left:6px; font-weight:800;">0</span>
-          </a>
-        </div>
       </div>
     </div>
-
-    <!-- 3. NAVIGATION MENU CHÍNH -->
-    <nav class="tsport-nav-bar">
-      <div class="container" style="display:flex; gap:20px; align-items:center; overflow-x:auto;">
-        <a href="index.html" class="tsport-nav-link is-active">Trang chủ</a>
-        <a href="pages/shop.html" class="tsport-nav-link">Tất cả sản phẩm</a>
-        <a href="pages/shop.html?condition=CU" class="tsport-nav-link" style="color:#D94C26; font-weight:700;">♻️ Đồ cũ minh bạch</a>
-        <a href="pages/courts.html" class="tsport-nav-link">🏟️ Đặt sân online</a>
-        <a href="pages/community.html" class="tsport-nav-link">👥 Kèo giao lưu</a>
-        <a href="pages/admin-buyback.html" class="tsport-nav-link">♻️ Thu mua đồ cũ</a>
-        <a href="pages/admin-discounts.html" class="tsport-nav-link" style="color:#2563EB; font-weight:700;">🏷️ Mã giảm giá</a>
-      </div>
-    </nav>
   </header>
 
   <!-- ==========================================
-       NỘI DUNG CHÍNH TRANG CHỦ (MAIN CONTAINER)
+       NỘI DUNG CHÍNH TRANG CHỦ
        ========================================== -->
   <main class="container">
 
-    <!-- 1. HERO BANNER CHÍNH -->
-    <section class="tsport-hero">
-      <div class="tsport-hero-inner">
-        <div>
-          <div class="tsport-hero-tag">
-            <span>⚡ MÙA GIẢI THỂ THAO 2026</span>
-          </div>
-          <h1 class="tsport-hero-title">
-            Bứt Phá Phong Độ<br />
-            <span>Chinh Phục Đỉnh Cao</span>
-          </h1>
-          <p class="tsport-hero-desc">
-            Dụng cụ thể thao chính hãng &amp; Dịch vụ thể thao toàn diện.
-          </p>
-          <div class="tsport-hero-actions">
-            <a href="pages/shop.html" class="tsport-hero-btn-primary">
-              <span>🛍️ Mua Sắm Ngay</span>
-              <span>→</span>
+    <!-- 2. BỐ CỤC 2 CỘT ĐẦU TRANG: SIDEBAR DANH MỤC + NAV NGANG & BANNER CHÍNH -->
+    <section class="ts-hero-grid">
+      <!-- Cột trái: Danh mục sản phẩm -->
+      <aside class="ts-cat-sidebar">
+        <div class="ts-cat-sidebar-head">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M2 4H14M2 8H14M2 12H14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>DANH MỤC SẢN PHẨM</span>
+        </div>
+        <ul class="ts-cat-sidebar-list">
+          <li>
+            <a href="pages/shop.html?sport=1" class="ts-cat-sidebar-link">
+              <span>Cầu lông</span>
+              <span class="ts-cat-sidebar-chevron">›</span>
             </a>
-            <a href="pages/shop.html?condition=CU" class="tsport-hero-btn-secondary">
-              <span>♻️ Săn Đồ Cũ</span>
+          </li>
+          <li>
+            <a href="pages/shop.html?sport=2" class="ts-cat-sidebar-link">
+              <span>Bóng đá</span>
+              <span class="ts-cat-sidebar-chevron">›</span>
             </a>
-            <a href="pages/courts.html" class="tsport-hero-btn-secondary">
-              <span>🏟️ Đặt Sân Online</span>
+          </li>
+          <li>
+            <a href="pages/shop.html?sport=3" class="ts-cat-sidebar-link">
+              <span>Tennis</span>
+              <span class="ts-cat-sidebar-chevron">›</span>
             </a>
+          </li>
+          <li>
+            <a href="pages/shop.html?sport=4" class="ts-cat-sidebar-link">
+              <span>Pickleball</span>
+              <span class="ts-cat-sidebar-chevron">›</span>
+            </a>
+          </li>
+          <li>
+            <a href="pages/shop.html?cat=15" class="ts-cat-sidebar-link">
+              <span>Quần áo thể thao</span>
+              <span class="ts-cat-sidebar-chevron">›</span>
+            </a>
+          </li>
+          <li>
+            <a href="pages/shop.html?cat=16" class="ts-cat-sidebar-link">
+              <span>Phụ kiện</span>
+              <span class="ts-cat-sidebar-chevron">›</span>
+            </a>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Cột phải: Thanh điều hướng ngang + Banner chính -->
+      <div class="ts-hero-right-col">
+        <nav class="ts-inline-nav" aria-label="Điều hướng chính">
+          <a href="index.html" class="ts-inline-nav-link is-active">Trang chủ</a>
+          <a href="pages/shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+          <a href="pages/shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+          <a href="pages/courts.html" class="ts-inline-nav-link">Đặt sân</a>
+          <a href="pages/community.html" class="ts-inline-nav-link">Ghép kèo</a>
+          <a href="pages/admin-buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+        </nav>
+
+        <div class="ts-min-hero-banner js-gsap-hero">
+          <div class="ts-min-hero-copy">
+            <div class="ts-min-hero-eyebrow">BANNER CHÍNH / CHIẾN DỊCH THEO MÔN</div>
+            <h1 class="ts-min-hero-title">Sẵn sàng cho<br />cuộc chơi tiếp theo.</h1>
+            <p class="ts-min-hero-sub">Dụng cụ • Giày • Trang phục • Phụ kiện</p>
+            <a href="pages/shop.html" class="ts-min-hero-btn">Khám phá sản phẩm</a>
+          </div>
+
+          <!-- Hình minh họa nét mảnh tối giản chuẩn ảnh -->
+          <div class="ts-min-hero-art" aria-hidden="true">
+            <svg width="170" height="220" viewBox="0 0 170 220" fill="none">
+              <ellipse cx="95" cy="82" rx="58" ry="74" stroke="#CBD5E1" stroke-width="2" />
+              <line x1="60" y1="146" x2="26" y2="206" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" />
+            </svg>
           </div>
         </div>
-
-        <div class="tsport-hero-graphic">
-          <div class="tsport-hero-card-floating">
-            <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600" alt="Vợt cầu lông Yonex" class="tsport-hero-card-img" />
-            <div class="tsport-hero-card-badge">HOT SALE -8%</div>
-            <div style="font-weight:800; font-size:15px; color:#fff;">Yonex Astrox 88D Pro 2024</div>
-            <div style="font-size:12px; color:#94A3B8; margin:4px 0;">Vợt tấn công chuyên nghiệp</div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-              <div>
-                <span style="font-size:16px; font-weight:900; color:#FF6B35;">3.890.000 ₫</span>
-                <del style="font-size:12px; color:#64748B; margin-left:6px;">4.250.000 ₫</del>
-              </div>
-              <a href="pages/product-detail.html?id=1" class="btn btn-primary btn-sm" style="font-size:11px; padding:4px 10px;">Xem ngay</a>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
-    <!-- 2. TRUST BAR: 4 CAM KẾT VÀNG -->
-    <section class="tsport-trust-bar">
-      <div class="tsport-trust-item">
-        <div class="tsport-trust-icon">🛡️</div>
-        <div>
-          <div class="tsport-trust-title">100% CHÍNH HÃNG</div>
-          <div class="tsport-trust-sub">Tem barcode &amp; bảo hành hãng</div>
-        </div>
+    <!-- 3. 4 THẺ CAM KẾT NGANG (KHÔNG ICON THỪA) -->
+    <section class="ts-usp-grid">
+      <div class="ts-usp-card js-gsap-usp">
+        <div class="ts-usp-title">Mua hàng thuận tiện</div>
+        <div class="ts-usp-desc">Thanh toán khi nhận hàng</div>
       </div>
-      <div class="tsport-trust-item">
-        <div class="tsport-trust-icon">♻️</div>
-        <div>
-          <div class="tsport-trust-title">ĐỒ CŨ MINH BẠCH</div>
-          <div class="tsport-trust-sub">Kiểm định hao mòn &amp; ảnh thật</div>
-        </div>
+      <div class="ts-usp-card js-gsap-usp">
+        <div class="ts-usp-title">Giao hàng toàn quốc</div>
+        <div class="ts-usp-desc">Phí vận chuyển 0đ</div>
       </div>
-      <div class="tsport-trust-item">
-        <div class="tsport-trust-icon">🚚</div>
-        <div>
-          <div class="tsport-trust-title">GIAO HÀNG TẬN TAY</div>
-          <div class="tsport-trust-sub">Kiểm hàng trước khi thanh toán</div>
-        </div>
+      <div class="ts-usp-card js-gsap-usp">
+        <div class="ts-usp-title">Đặt sân theo ca</div>
+        <div class="ts-usp-desc">Chọn sân • Chọn ngày • Chọn ca</div>
       </div>
-      <div class="tsport-trust-item">
-        <div class="tsport-trust-icon">🔄</div>
-        <div>
-          <div class="tsport-trust-title">ĐỔI TRẢ 7 NGÀY</div>
-          <div class="tsport-trust-sub">Bảo vệ quyền lợi tối đa</div>
-        </div>
+      <div class="ts-usp-card js-gsap-usp">
+        <div class="ts-usp-title">Đồ cũ minh bạch</div>
+        <div class="ts-usp-desc">Xem ảnh và mô tả hao mòn</div>
       </div>
     </section>
 
-    <!-- 3. CÁC MÔN THỂ THAO NỔI BẬT -->
-    <section class="tsport-home-section">
-      <div class="tsport-section-header-wrap">
-        <div class="tsport-section-heading">
-          <h2>Các Môn Thể Thao</h2>
-          <span class="badge-title">6 MÔN CHỦ LỰC</span>
-        </div>
-        <a href="pages/shop.html" class="tsport-section-link">Xem tất cả danh mục →</a>
-      </div>
-
-      <div class="tsport-sports-grid" id="homeSportsGrid">
-        <!-- Render tự động từ store.js -->
-      </div>
-    </section>
-
-    <!-- 4. SẢN PHẨM MỚI VỀ & BÁN CHẠY (BEST SELLERS) -->
-    <section class="tsport-home-section">
-      <div class="tsport-section-header-wrap">
-        <div class="tsport-section-heading">
-          <h2>Sản Phẩm Mới &amp; Bán Chạy</h2>
-          <span class="badge-title">CHÍNH HÃNG 100%</span>
-        </div>
-        <a href="pages/shop.html" class="tsport-section-link">Xem tất cả sản phẩm →</a>
-      </div>
-
-      <div class="tsport-product-grid" id="homeFeaturedGrid">
-        <!-- Render 4 cột động từ store.js -->
-      </div>
-    </section>
-
-    <!-- 5. KHU HÀNG ĐÃ QUA SỬ DỤNG MINH BẠCH (USED CORNER) -->
-    <section class="tsport-used-section-card">
-      <div class="tsport-used-intro">
+    <!-- 4. 01 / MUA SẮM — SẢN PHẨM MỚI (LƯỚI 5 CỘT) -->
+    <section class="ts-min-section js-gsap-section">
+      <div class="ts-min-sec-head">
         <div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:24px;">♻️</span>
-            <h2 style="font-size:20px; font-weight:800; color:#7C2D12; margin:0;">
-              Khu Hàng Đã Qua Sử Dụng Minh Bạch
-            </h2>
-          </div>
-          <p style="font-size:13px; color:#9A3412; margin:4px 0 0 0;">
-            Kiểm định khung sườn 5 bước • Minh bạch độ hao mòn • Tiết kiệm 30% - 50%
-          </p>
+          <div class="ts-min-sec-eyebrow">01 / MUA SẮM</div>
+          <h2 class="ts-min-sec-title">Sản phẩm mới</h2>
         </div>
-        <div style="display:flex; gap:10px;">
-          <a href="pages/admin-buyback.html" class="btn btn-secondary btn-sm" style="background:#fff; border-color:#FDBA74; color:#C2410C; font-weight:700;">
-            📋 Thu mua đồ cũ
-          </a>
-          <a href="pages/shop.html?condition=CU" class="btn btn-primary btn-sm" style="font-weight:700;">
-            Xem toàn bộ hàng cũ →
-          </a>
-        </div>
+        <a href="pages/shop.html" class="ts-min-sec-link">Xem tất cả →</a>
       </div>
 
-      <div class="tsport-product-grid" id="homeUsedGrid">
-        <!-- Render hàng cũ từ store.js -->
+      <div class="ts-min-products-grid" id="homeFeaturedGrid">
+        <!-- Render 5 sản phẩm mới nhất từ store.js -->
       </div>
     </section>
 
-    <!-- 6. LỐI VÀO CÁC DỊCH VỤ THỂ THAO ĐỘC QUYỀN -->
-    <section class="tsport-home-section">
-      <div class="tsport-section-header-wrap">
-        <div class="tsport-section-heading">
-          <h2>Hệ Sinh Thái Dịch Vụ Thể Thao Tsport</h2>
-          <span class="badge-title">ĐỘC QUYỀN</span>
+    <!-- 5. 02 / TÁI SỬ DỤNG — ĐỒ CŨ, THÊM MỘT CUỘC CHƠI (3 THẺ) -->
+    <section class="ts-min-section js-gsap-section">
+      <div class="ts-min-sec-head">
+        <div>
+          <div class="ts-min-sec-eyebrow">02 / TÁI SỬ DỤNG</div>
+          <h2 class="ts-min-sec-title">Đồ cũ, thêm một cuộc chơi</h2>
         </div>
+        <a href="pages/shop.html?condition=CU" class="ts-min-sec-link">Khám phá →</a>
       </div>
 
-      <div class="tsport-services-grid">
-        <!-- Dịch vụ 1: Đặt sân -->
-        <a href="pages/courts.html" class="tsport-service-card">
+      <div class="ts-reuse-grid">
+        <div class="ts-reuse-card">
           <div>
-            <div class="tsport-service-icon">🏟️</div>
-            <h3 class="tsport-service-title">Đặt Sân Thể Thao Trực Tuyến</h3>
-            <p class="tsport-service-desc">
-              Cầu lông, pickleball, tennis, bóng đá. Giữ chỗ tức thì với giá niêm yết cố định.
-            </p>
+            <h3 class="ts-reuse-title">Mua đồ cũ</h3>
+            <p class="ts-reuse-desc">Ảnh thật • Mô tả hao mòn</p>
           </div>
-          <div class="tsport-service-action">
-            <span>Đặt lịch ngay</span>
-            <span>→</span>
-          </div>
-        </a>
+          <a href="pages/shop.html?condition=CU" class="ts-reuse-btn">Xem sản phẩm</a>
+        </div>
 
-        <!-- Dịch vụ 2: Kèo giao lưu -->
-        <a href="pages/community.html" class="tsport-service-card">
+        <div class="ts-reuse-card">
           <div>
-            <div class="tsport-service-icon">👥</div>
-            <h3 class="tsport-service-title">Kết Nối Bạn Chơi &amp; Kèo Giao Lưu</h3>
-            <p class="tsport-service-desc">
-              Ghép cặp theo trình độ, tìm đồng đội giao lưu phong trào mỗi ngày.
-            </p>
+            <h3 class="ts-reuse-title">Bán lại dụng cụ</h3>
+            <p class="ts-reuse-desc">Gửi ảnh • Nhận giá đề nghị</p>
           </div>
-          <div class="tsport-service-action">
-            <span>Khám phá kèo</span>
-            <span>→</span>
-          </div>
-        </a>
+          <a href="pages/admin-buyback.html" class="ts-reuse-btn">Gửi yêu cầu</a>
+        </div>
 
-        <!-- Dịch vụ 3: Thu mua đồ cũ -->
-        <a href="pages/admin-buyback.html" class="tsport-service-card">
+        <div class="ts-reuse-card">
           <div>
-            <div class="tsport-service-icon">♻️</div>
-            <h3 class="tsport-service-title">Thu Mua &amp; Thẩm Định Đồ Cũ</h3>
-            <p class="tsport-service-desc">
-              Định giá online trong 15 phút, giải ngân nhanh và trợ giá lên đời vợt mới.
-            </p>
+            <h3 class="ts-reuse-title">Tìm người cùng chơi</h3>
+            <p class="ts-reuse-desc">Tìm đối theo môn và trình độ</p>
           </div>
-          <div class="tsport-service-action">
-            <span>Gửi yêu cầu</span>
-            <span>→</span>
-          </div>
-        </a>
+          <a href="pages/community.html" class="ts-reuse-btn">Tìm kèo ngay</a>
+        </div>
       </div>
     </section>
 
-    <!-- 7. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (NẾU CÓ) -->
-    <section class="tsport-home-section" id="homeRecentWrap" style="display:none;">
-      <div class="tsport-section-header-wrap">
-        <div class="tsport-section-heading">
-          <h2>Sản Phẩm Bạn Đã Xem Gần Đây</h2>
-          <span class="badge-title">LỊCH SỬ XEM</span>
+    <!-- 6. 03 / RA SÂN — CHỌN SÂN, HẸN GIỜ, BẮT ĐẦU CHƠI (4 Ô MÔN) -->
+    <section class="ts-min-section js-gsap-section">
+      <div class="ts-min-sec-head">
+        <div>
+          <div class="ts-min-sec-eyebrow">03 / RA SÂN</div>
+          <h2 class="ts-min-sec-title">Chọn sân, hẹn giờ, bắt đầu chơi</h2>
         </div>
+        <a href="pages/courts.html" class="ts-min-sec-link">Tìm sân trống →</a>
       </div>
 
-      <div class="tsport-recent-scroll-wrap" id="homeRecentScroll">
-        <!-- Render từ localStorage -->
+      <div class="ts-court-sport-grid">
+        <a href="pages/courts.html?sport=1" class="ts-court-sport-pill">Cầu lông</a>
+        <a href="pages/courts.html?sport=2" class="ts-court-sport-pill">Bóng đá</a>
+        <a href="pages/courts.html?sport=3" class="ts-court-sport-pill">Tennis</a>
+        <a href="pages/courts.html?sport=4" class="ts-court-sport-pill">Pickleball</a>
       </div>
+    </section>
+
+    <!-- 7. SẢN PHẨM ĐÃ XEM GẦN ĐÂY (CHỈ HIỆN KHI NGƯỜI DÙNG ĐÃ XEM SẢN PHẨM) -->
+    <section class="ts-min-section" id="homeRecentWrap" style="display:none;">
+      <div class="ts-min-sec-head">
+        <div>
+          <div class="ts-min-sec-eyebrow">LỊCH SỬ XEM</div>
+          <h2 class="ts-min-sec-title">Sản phẩm đã xem gần đây</h2>
+        </div>
+      </div>
+      <div class="tsport-recent-scroll-wrap" id="homeRecentScroll"></div>
     </section>
 
   </main>
 
   <!-- ==========================================
-       CHÂN TRANG (FOOTER) HOÀN CHỈNH
+       8. FOOTER SÁNG TỐI GIẢN CHUẨN ẢNH
        ========================================== -->
-  <footer class="tsport-main-footer">
+  <footer class="ts-min-footer">
     <div class="container">
-      <div class="tsport-footer-grid">
-        <!-- Cột 1 -->
-        <div class="tsport-footer-col">
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
-            <span style="font-size:26px; font-weight:900; color:#FF6B35;">TSPORT</span>
-            <span style="background:#D94C26; color:#fff; font-size:10px; font-weight:800; padding:2px 6px; border-radius:3px;">OFFICIAL</span>
-          </div>
-          <p style="font-size:13px; line-height:1.6; color:#94A3B8; margin-bottom:14px;">
-            Hệ thống chuỗi bán lẻ dụng cụ thể thao chính hãng và nền tảng dịch vụ kết nối thể thao hàng đầu Việt Nam.
-          </p>
-          <div style="font-size:12px; color:#CBD5E1; line-height:1.8;">
-            <div>📍 <strong>Showroom 1:</strong> 15 Xuân Thủy, Cầu Giấy, Hà Nội</div>
-            <div>📍 <strong>Showroom 2:</strong> 88 Láng Hạ, Đống Đa, Hà Nội</div>
-            <div>📞 <strong>Hotline CSKH:</strong> 1900 6868 (8:00 - 22:00)</div>
-            <div>✉️ <strong>Email:</strong> hotro@tsport.vn</div>
-          </div>
+      <div class="ts-min-footer-grid">
+        <div>
+          <div class="ts-min-footer-brand">Tsport</div>
+          <p class="ts-min-footer-tagline">Mọi môn thể thao. Mọi cuộc chơi.</p>
         </div>
 
-        <!-- Cột 2 -->
-        <div class="tsport-footer-col">
-          <h4>Về Tsport</h4>
-          <ul class="tsport-footer-links">
-            <li><a href="pages/shop.html">Tất cả sản phẩm</a></li>
-            <li><a href="pages/shop.html?condition=CU">Hàng cũ minh bạch</a></li>
-            <li><a href="pages/admin-discounts.html">Mã giảm giá &amp; Ưu đãi</a></li>
+        <div class="ts-min-footer-col">
+          <h4>MUA SẮM</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="pages/shop.html">Sản phẩm mới</a></li>
+            <li><a href="pages/shop.html?condition=CU">Sản phẩm đã qua sử dụng</a></li>
+          </ul>
+        </div>
+
+        <div class="ts-min-footer-col">
+          <h4>DỊCH VỤ</h4>
+          <ul class="ts-min-footer-links">
             <li><a href="pages/courts.html">Đặt sân thể thao</a></li>
-            <li><a href="pages/community.html">Kèo giao lưu kết nối</a></li>
+            <li><a href="pages/community.html">Ghép kèo • Thu mua đồ cũ</a></li>
           </ul>
         </div>
 
-        <!-- Cột 3 -->
-        <div class="tsport-footer-col">
-          <h4>Chính Sách &amp; Hỗ Trợ</h4>
-          <ul class="tsport-footer-links">
-            <li><a href="pages/orders.html">Tra cứu đơn hàng</a></li>
-            <li><a href="pages/admin-guide.html">Hướng dẫn mua sắm &amp; thanh toán</a></li>
-            <li><a href="pages/admin-guide.html">Chính sách bảo hành cước &amp; khung vợt</a></li>
-            <li><a href="pages/admin-guide.html">Chính sách đổi trả 7 ngày</a></li>
-            <li><a href="pages/admin-buyback.html">Quy trình thu mua đồ cũ</a></li>
+        <div class="ts-min-footer-col">
+          <h4>TÀI KHOẢN</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="pages/account.html">Hồ sơ cá nhân</a></li>
+            <li><a href="pages/orders.html">Đơn hàng • Lịch đặt sân</a></li>
+            <li><a href="pages/admin-dashboard.html">Quản trị hệ thống</a></li>
           </ul>
-        </div>
-
-        <!-- Cột 4 -->
-        <div class="tsport-footer-col">
-          <h4>Tài Khoản &amp; Quản Trị</h4>
-          <ul class="tsport-footer-links">
-            <li><a href="pages/auth.html">Đăng nhập / Đăng ký tài khoản</a></li>
-            <li><a href="pages/account.html">Hồ sơ cá nhân &amp; Đổi mật khẩu</a></li>
-            <li><a href="pages/cart.html">Giỏ hàng của tôi</a></li>
-            <li><a href="pages/admin-dashboard.html">Bảng điều khiển Quản Trị Viên (Admin)</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="tsport-footer-bottom">
-        <div>© 2026 TSPORT VIỆT NAM. Toàn bộ bản quyền được bảo lưu. Thiết kế chuẩn Cam – Trắng.</div>
-        <div style="display:flex; gap:16px;">
-          <span>Phương thức thanh toán: COD • Chuyển khoản VietQR</span>
         </div>
       </div>
     </div>
@@ -384,7 +282,6 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- SCRIPTS -->
-  <script src="js/data/mock-data.js"></script>
   <script src="js/data/store.js"></script>
   <script src="js/api.js"></script>
   <script src="js/utils.js"></script>
