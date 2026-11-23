@@ -1,7 +1,7 @@
 /**
  * TSPORT — MODULE THẨM ĐỊNH THU MUA ĐỒ CŨ (ADMIN BUYBACK FIGMA)
- * Luồng trạng thái theo schema:
- * PENDING -> OFFERED -> ACCEPTED / REJECTED -> COMPLETED (nhánh CANCELLED)
+ * Luồng trạng thái:
+ * PENDING -> OFFERED -> ACCEPTED -> DA_THU_MUA (COMPLETED) -> Tạo SKU hàng cũ (nhánh REJECTED / CANCELLED)
  */
 
 (function () {
@@ -10,6 +10,7 @@
   function initAdminBuyback() {
     initShellControls();
     ensureDemoBuybackRequest();
+    ensureCreateSkuUi();
     selectInitialRequest();
     renderSwitcher();
     renderSelectedRequest();
@@ -50,6 +51,50 @@
     });
   }
 
+  function ensureCreateSkuUi() {
+    const card = document.getElementById("admBbDetailCard");
+    if (!card || document.getElementById("admBbCreateSkuBox")) return;
+
+    const box = document.createElement("div");
+    box.id = "admBbCreateSkuBox";
+    box.style.cssText =
+      "display:none; margin-top:18px; padding:16px; border:1px solid #E2E8F0; border-radius:10px; background:#F8FAFC;";
+    box.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:10px;">
+        <div>
+          <strong style="font-size:14px; color:#0F172A;">Tạo SKU hàng cũ vào kho sản phẩm</strong>
+          <div id="admBbSkuStatusText" style="font-size:12px; color:#475569; margin-top:2px;"></div>
+        </div>
+      </div>
+      <div id="admBbSkuFormRow" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:10px; align-items:end;">
+        <div>
+          <label for="admBbSkuPriceInput" style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Giá bán đồ cũ (VNĐ)</label>
+          <input type="number" id="admBbSkuPriceInput" class="ts-adm-input" min="10000" step="5000" />
+        </div>
+        <div>
+          <label for="admBbSkuSizeInput" style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Size / Thông số</label>
+          <input type="text" id="admBbSkuSizeInput" class="ts-adm-input" value="Tiêu chuẩn" />
+        </div>
+        <div>
+          <label for="admBbSkuColorInput" style="display:block; font-size:12px; font-weight:600; margin-bottom:4px;">Màu sắc</label>
+          <input type="text" id="admBbSkuColorInput" class="ts-adm-input" value="Nguyên bản" />
+        </div>
+        <div>
+          <button type="button" class="ts-adm-btn-primary" id="btnAdmBbCreateSku" style="width:100%;">
+            + Tạo SKU hàng cũ
+          </button>
+        </div>
+      </div>
+    `;
+
+    const actionsEl = card.querySelector(".ts-adm-bb-actions");
+    if (actionsEl) {
+      actionsEl.insertAdjacentElement("afterend", box);
+    } else {
+      card.appendChild(box);
+    }
+  }
+
   function ensureDemoBuybackRequest() {
     const store = window.tsportStore;
     if (!store) return;
@@ -83,7 +128,6 @@
     const store = window.tsportStore;
     if (!store) return [];
     const list = store.getBuybacks() || [];
-    // Đưa yêu cầu BB-001 / Yonex Astrox 88D lên đầu cho dễ thao tác thẩm định
     return [...list].sort((a, b) => {
       const aPin = a.request_code === "BB-001" || String(a.product_name || "").includes("Yonex Astrox 88D") ? 1 : 0;
       const bPin = b.request_code === "BB-001" || String(b.product_name || "").includes("Yonex Astrox 88D") ? 1 : 0;
@@ -158,7 +202,7 @@
         feedback: "Khách hàng đã đồng ý giá đề nghị — Sẵn sàng hoàn tất thu mua"
       },
       COMPLETED: {
-        label: "Hoàn tất",
+        label: "Đã thu mua",
         pillCls: "is-neutral",
         feedback: "Đã hoàn tất thu mua và thanh toán cho khách"
       },
@@ -239,6 +283,11 @@
     const completeBtn = document.getElementById("btnAdmBbComplete");
     const cancelBtn = document.getElementById("btnAdmBbCancel");
 
+    const skuBox = document.getElementById("admBbCreateSkuBox");
+    const skuStatusText = document.getElementById("admBbSkuStatusText");
+    const skuFormRow = document.getElementById("admBbSkuFormRow");
+    const skuPriceInput = document.getElementById("admBbSkuPriceInput");
+
     if (titleEl) {
       titleEl.textContent = `Yêu cầu #${code} • ${b.customer_name || "Khách hàng"}`;
     }
@@ -252,13 +301,9 @@
       metaEl.textContent = `${sportName} • ${b.product_name || "Sản phẩm"} • ${formatDMY(b.created_at)}`;
     }
 
-    // 4 ảnh thực tế
     if (photosEl) {
-      const rawImages = Array.isArray(b.images) && b.images.length
-        ? b.images
-        : b.image_url
-          ? [b.image_url]
-          : [];
+      const rawImages =
+        Array.isArray(b.images) && b.images.length ? b.images : b.image_url ? [b.image_url] : [];
 
       const slots = [0, 1, 2, 3].map((idx) => {
         const src = rawImages[idx] || "";
@@ -290,14 +335,14 @@
         ? Number(b.offered_price)
         : Math.max(100000, Math.round((expectedVal * 0.85) / 50000) * 50000);
 
+    const isClosed = stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED";
+
     if (offerInput) {
       offerInput.value = formatVND(defaultOffer);
-      const isClosed = stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED";
       offerInput.disabled = isClosed;
     }
 
     if (sendOfferBtn) {
-      const isClosed = stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED";
       sendOfferBtn.disabled = isClosed;
       sendOfferBtn.style.opacity = isClosed ? "0.55" : "1";
       sendOfferBtn.style.cursor = isClosed ? "not-allowed" : "pointer";
@@ -316,15 +361,37 @@
       const canComplete = stNorm === "ACCEPTED";
       completeBtn.disabled = !canComplete;
       completeBtn.classList.toggle("is-ready", canComplete);
-      completeBtn.textContent =
-        stNorm === "COMPLETED" ? "Đã hoàn tất thu mua" : "Hoàn tất khi khách đã đồng ý";
+      completeBtn.textContent = stNorm === "COMPLETED" ? "Đã thu mua" : "Hoàn tất khi khách đã đồng ý";
     }
 
     if (cancelBtn) {
-      const isClosed = stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED";
       cancelBtn.disabled = isClosed;
       cancelBtn.style.opacity = isClosed ? "0.55" : "1";
       cancelBtn.style.cursor = isClosed ? "not-allowed" : "pointer";
+    }
+
+    // Khu vực Tạo SKU hàng cũ khi trạng thái là Đã thu mua (COMPLETED / DA_THU_MUA)
+    if (skuBox) {
+      const showSkuBox = stNorm === "COMPLETED";
+      skuBox.style.display = showSkuBox ? "block" : "none";
+
+      if (showSkuBox) {
+        if (b.sku_created) {
+          if (skuFormRow) skuFormRow.style.display = "none";
+          if (skuStatusText) {
+            skuStatusText.innerHTML = `Đã tạo SKU hàng cũ vào kho: <code>${escapeHtml(b.created_sku_code || "")}</code>`;
+          }
+        } else {
+          if (skuFormRow) skuFormRow.style.display = "grid";
+          if (skuStatusText) {
+            skuStatusText.textContent = "Yêu cầu đã thu mua — Nhập thông tin để sinh sản phẩm cũ & mã SKU vào danh mục.";
+          }
+          if (skuPriceInput && !skuPriceInput.value) {
+            const basePrice = Number(b.offered_price || b.expected_price || 1500000);
+            skuPriceInput.value = String(Math.round((basePrice * 1.15) / 5000) * 5000 || 1500000);
+          }
+        }
+      }
     }
   }
 
@@ -372,11 +439,51 @@
       return;
     }
 
-    store.updateBuybackStatus(b.id, "COMPLETED", "Đã kiểm định hoàn tất và thanh toán thu mua cho khách.");
+    store.updateBuybackStatus(b.id, "DA_THU_MUA", "Đã kiểm định hoàn tất và thanh toán thu mua cho khách.");
     renderSwitcher();
     renderSelectedRequest();
     if (typeof showToast === "function") {
-      showToast(`Đã hoàn tất thu mua yêu cầu #${getRequestCode(b)}.`, "success");
+      showToast(`Đã thu mua yêu cầu #${getRequestCode(b)}. Bạn có thể tạo SKU hàng cũ ngay bên dưới.`, "success");
+    }
+  }
+
+  function handleCreateSkuFromBuyback() {
+    const store = window.tsportStore;
+    if (!store || !selectedBuybackId) return;
+
+    const b = store.getBuybackById(selectedBuybackId);
+    if (!b) return;
+
+    // Đảm bảo trạng thái lưu trong store khớp điều kiện DA_THU_MUA của store.createSkuFromBuyback
+    if (normalizeStatus(b.status) === "COMPLETED" && b.status !== "DA_THU_MUA") {
+      b.status = "DA_THU_MUA";
+      store.save();
+    }
+
+    const price = Number(document.getElementById("admBbSkuPriceInput")?.value || b.offered_price || b.expected_price || 1500000);
+    const size = document.getElementById("admBbSkuSizeInput")?.value.trim() || "Tiêu chuẩn";
+    const color = document.getElementById("admBbSkuColorInput")?.value.trim() || "Nguyên bản";
+    const wearDesc = b.condition_desc || b.wear_description || `Độ mới ${b.condition_grade || "85%"}. Đã qua kiểm định.`;
+
+    try {
+      const res = store.createSkuFromBuyback(b.id, {
+        price,
+        stock: 1,
+        size,
+        color,
+        wear_description: wearDesc
+      });
+      renderSwitcher();
+      renderSelectedRequest();
+      if (typeof showToast === "function") {
+        showToast(`Đã tạo SKU hàng cũ ${res.skuCode} thành công!`, "success");
+      }
+    } catch (err) {
+      if (typeof showToast === "function") {
+        showToast(err.message || "Không thể tạo SKU hàng cũ.", "error");
+      } else {
+        alert(err.message);
+      }
     }
   }
 
@@ -414,6 +521,7 @@
     document.getElementById("admBbOfferForm")?.addEventListener("submit", handleSendOffer);
     document.getElementById("btnAdmBbComplete")?.addEventListener("click", handleCompleteBuyback);
     document.getElementById("btnAdmBbCancel")?.addEventListener("click", handleCancelOrReject);
+    document.getElementById("btnAdmBbCreateSku")?.addEventListener("click", handleCreateSkuFromBuyback);
   }
 
   document.addEventListener("DOMContentLoaded", initAdminBuyback);

@@ -2,7 +2,7 @@
  * TSPORT — MODULE GHÉP KÈO THỂ THAO TỐI GIẢN (COMMUNITY V2 FIGMA)
  * - Lọc theo Môn thể thao, Thời gian (ngày) và Trình độ
  * - Lưới 2 cột thẻ bài đăng sạch gọn (Đang tìm đối, tiêu đề, ngày/giờ, địa điểm + trình độ, liên hệ)
- * - Đăng bài mới, Đóng bài hoặc Xóa bài
+ * - Đăng bài mới, Sửa bài (có kiểm tra quyền), Đóng bài hoặc Xóa bài
  */
 
 (function () {
@@ -20,7 +20,36 @@
     }
   }
 
+  function getCurrentUser() {
+    try {
+      return JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+    } catch (_e) {
+      return null;
+    }
+  }
+
+  function canEditMatch(match) {
+    if (!match) return false;
+    const user = getCurrentUser();
+    if (!user) return true; // Cho phép chỉnh sửa trực tiếp khi chạy local chưa đăng nhập
+    const role = String(user.role || "").toUpperCase();
+    if (role === "ADMIN") return true;
+
+    const currentPhone = String(user.phone || "").replace(/\D/g, "");
+    const matchPhone = String(match.contact_phone || "").replace(/\D/g, "");
+    if (currentPhone && matchPhone && currentPhone === matchPhone) return true;
+
+    if (user.id && match.user_id && Number(user.id) === Number(match.user_id)) return true;
+
+    const currentName = String(user.full_name || user.name || "").trim().toLowerCase();
+    const contactName = String(match.contact_name || "").trim().toLowerCase();
+    if (currentName && contactName && currentName === contactName) return true;
+
+    return false;
+  }
+
   function showListView() {
+    currentEditingMatchId = null;
     const listView = document.getElementById("communityListView");
     const createView = document.getElementById("communityCreateView");
     if (listView) listView.style.display = "block";
@@ -30,30 +59,57 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function showCreateView() {
-    currentEditingMatchId = null;
+  function showCreateView(matchToEdit = null) {
     const form = document.getElementById("formMatch");
-    if (form) form.reset();
+    const headingEl = document.querySelector("#communityCreateView .ts-comm-create-head .ts-comm-v2-title");
+    const submitBtn = form?.querySelector('button[type="submit"]');
 
-    const dtInput = document.getElementById("matchDateTime");
-    if (dtInput && !dtInput.value) {
-      const today = new Date();
-      const d = String(today.getDate()).padStart(2, "0");
-      const m = String(today.getMonth() + 1).padStart(2, "0");
-      dtInput.value = `${d}/${m}/${today.getFullYear()} 18:00`;
-    }
+    if (matchToEdit) {
+      currentEditingMatchId = Number(matchToEdit.id);
+      if (headingEl) headingEl.textContent = "Chỉnh sửa bài tìm đối";
+      if (submitBtn) submitBtn.textContent = "Lưu cập nhật bài kèo";
 
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
-    const phoneEl = document.getElementById("matchContactPhone");
-    if (phoneEl && !phoneEl.value && user && user.phone) {
-      phoneEl.value = `${user.phone} / Zalo`;
+      const sportEl = document.getElementById("matchSportId");
+      const dtEl = document.getElementById("matchDateTime");
+      const locEl = document.getElementById("matchLocation");
+      const lvlEl = document.getElementById("matchLevel");
+      const phoneEl = document.getElementById("matchContactPhone");
+
+      if (sportEl && matchToEdit.sport_id) sportEl.value = String(matchToEdit.sport_id);
+      if (dtEl) {
+        const dmy = formatDMY(matchToEdit.match_date);
+        const time = matchToEdit.match_time || "18:00";
+        dtEl.value = `${dmy} ${time}`.trim();
+      }
+      if (locEl) locEl.value = matchToEdit.location || "";
+      if (lvlEl && matchToEdit.level) lvlEl.value = matchToEdit.level;
+      if (phoneEl) phoneEl.value = matchToEdit.contact_phone ? `${matchToEdit.contact_phone} / Zalo` : "";
+    } else {
+      currentEditingMatchId = null;
+      if (headingEl) headingEl.textContent = "Đăng bài tìm đối";
+      if (submitBtn) submitBtn.textContent = "Đăng bài ghép kèo";
+      if (form) form.reset();
+
+      const dtInput = document.getElementById("matchDateTime");
+      if (dtInput && !dtInput.value) {
+        const today = new Date();
+        const d = String(today.getDate()).padStart(2, "0");
+        const m = String(today.getMonth() + 1).padStart(2, "0");
+        dtInput.value = `${d}/${m}/${today.getFullYear()} 18:00`;
+      }
+
+      const user = getCurrentUser();
+      const phoneEl = document.getElementById("matchContactPhone");
+      if (phoneEl && !phoneEl.value && user && user.phone) {
+        phoneEl.value = `${user.phone} / Zalo`;
+      }
     }
 
     const listView = document.getElementById("communityListView");
     const createView = document.getElementById("communityCreateView");
     if (listView) listView.style.display = "none";
     if (createView) createView.style.display = "block";
-    document.title = "Đăng bài tìm đối | Tsport";
+    document.title = matchToEdit ? "Chỉnh sửa bài tìm đối | Tsport" : "Đăng bài tìm đối | Tsport";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -131,6 +187,7 @@
         const timeStr = m.match_time || "18:00";
         const levelStr = m.level || "Trung bình";
         const phone = m.contact_phone || "0901234567";
+        const editable = canEditMatch(m);
 
         return `
           <article class="ts-comm-v2-card">
@@ -139,6 +196,7 @@
                 ${isClosed ? "Đã đủ người" : "Đang tìm đối"}
               </span>
               <div class="ts-comm-v2-card-actions">
+                ${editable ? `<button type="button" class="ts-comm-v2-mini-btn js-edit-match" data-id="${m.id}">Sửa</button>` : ""}
                 ${!isClosed ? `<button type="button" class="ts-comm-v2-mini-btn js-close-match" data-id="${m.id}">Đóng bài</button>` : ""}
                 <button type="button" class="ts-comm-v2-mini-btn js-delete-match" data-id="${m.id}">Xóa</button>
               </div>
@@ -182,6 +240,18 @@
     const store = window.tsportStore;
     if (!store) return;
 
+    const isEditing = Boolean(currentEditingMatchId);
+    const existingMatch = isEditing && typeof store.getMatchById === "function"
+      ? store.getMatchById(currentEditingMatchId)
+      : null;
+
+    if (isEditing && existingMatch && !canEditMatch(existingMatch)) {
+      if (typeof showToast === "function") {
+        showToast("Bạn không có quyền chỉnh sửa bài tìm bạn này.", "error");
+      }
+      return;
+    }
+
     const sportId = Number(document.getElementById("matchSportId").value);
     const sportObj = store.getSports().find((s) => Number(s.id) === sportId);
     const sportName = sportObj ? sportObj.name : "Thể thao";
@@ -189,7 +259,7 @@
     const location = document.getElementById("matchLocation").value.trim();
     const level = document.getElementById("matchLevel").value;
     const contactRaw = document.getElementById("matchContactPhone").value.trim();
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+    const user = getCurrentUser();
 
     const data = {
       id: currentEditingMatchId,
@@ -198,30 +268,30 @@
       match_date: dt.match_date,
       match_time: dt.match_time,
       location,
-      slots_needed: 2,
+      slots_needed: existingMatch?.slots_needed || 2,
       level,
-      price_share: "Chia đều sân",
-      contact_name: (user && user.full_name) || "Thành viên Tsport",
+      price_share: existingMatch?.price_share || "Chia đều sân",
+      contact_name: existingMatch?.contact_name || (user && user.full_name) || "Thành viên Tsport",
       contact_phone: contactRaw.replace(/\s*\/\s*zalo/i, "").trim(),
-      description: ""
+      description: existingMatch?.description || ""
     };
 
     try {
       store.saveMatch(data);
 
-      // Đồng bộ bài ghép kèo lên FastAPI Backend (POST /api/match-posts) nếu đã đăng nhập
-      if (window.api && (localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
+      if (!isEditing && window.api && (localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
         const hhmm = /^\d{1,2}:\d{2}/.test(dt.match_time) ? dt.match_time.slice(0, 5) : "18:00";
-        window.api.post("/match-posts", {
-          sport_id: sportId,
-          match_time: `${dt.match_date}T${hhmm}:00`,
-          location,
-          skill_level: level,
-          contact_info: contactRaw
-        }).catch(() => {});
+        window.api
+          .post("/match-posts", {
+            sport_id: sportId,
+            match_time: `${dt.match_date}T${hhmm}:00`,
+            location,
+            skill_level: level,
+            contact_info: contactRaw
+          })
+          .catch(() => {});
       }
 
-      // Reset bộ lọc để bài vừa đăng luôn hiển thị ngay đầu danh sách
       const fSport = document.getElementById("filterMatchSport");
       const fDate = document.getElementById("filterMatchDate");
       const fLevel = document.getElementById("filterMatchLevel");
@@ -229,10 +299,14 @@
       if (fDate) fDate.value = "";
       if (fLevel) fLevel.value = "ALL";
 
-      showToast("Đã đăng bài ghép kèo thành công!", "success");
+      if (typeof showToast === "function") {
+        showToast(isEditing ? "Đã cập nhật bài ghép kèo thành công!" : "Đã đăng bài ghép kèo thành công!", "success");
+      }
       showListView();
     } catch (err) {
-      showToast(err.message || "Không thể đăng bài lúc này.", "error");
+      if (typeof showToast === "function") {
+        showToast(err.message || "Không thể lưu bài lúc này.", "error");
+      }
     }
   }
 
@@ -242,7 +316,7 @@
     document.getElementById("filterMatchLevel")?.addEventListener("change", renderMatchesList);
     document.getElementById("btnApplyMatchFilter")?.addEventListener("click", renderMatchesList);
 
-    document.getElementById("btnOpenCreateMatch")?.addEventListener("click", showCreateView);
+    document.getElementById("btnOpenCreateMatch")?.addEventListener("click", () => showCreateView(null));
     document.getElementById("btnBackToMatchesList")?.addEventListener("click", (e) => {
       e.preventDefault();
       showListView();
@@ -253,11 +327,27 @@
       const store = window.tsportStore;
       if (!store) return;
 
+      const editBtn = e.target.closest(".js-edit-match");
+      if (editBtn) {
+        const match = typeof store.getMatchById === "function" ? store.getMatchById(editBtn.dataset.id) : null;
+        if (!match) return;
+        if (!canEditMatch(match)) {
+          if (typeof showToast === "function") {
+            showToast("Bạn không có quyền sửa bài tìm bạn này.", "error");
+          }
+          return;
+        }
+        showCreateView(match);
+        return;
+      }
+
       const closeBtn = e.target.closest(".js-close-match");
       if (closeBtn) {
         store.closeMatch(closeBtn.dataset.id);
         renderMatchesList();
-        showToast("Đã chuyển bài đăng sang trạng thái Đã đủ người.", "info");
+        if (typeof showToast === "function") {
+          showToast("Đã chuyển bài đăng sang trạng thái Đã đủ người.", "info");
+        }
         return;
       }
 
@@ -266,7 +356,9 @@
         if (confirm("Bạn có chắc muốn xóa bài đăng tìm kèo này?")) {
           store.deleteMatch(delBtn.dataset.id);
           renderMatchesList();
-          showToast("Đã xóa bài đăng.", "success");
+          if (typeof showToast === "function") {
+            showToast("Đã xóa bài đăng.", "success");
+          }
         }
       }
     });
