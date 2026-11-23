@@ -1,0 +1,21 @@
+.guide-page { color: #202124; background: #fff; }
+.guide-layout { display: grid; grid-template-columns: minmax(0, 70ch) minmax(14rem, 18rem); justify-content: space-between; gap: 3rem; padding-block: clamp(2rem, 6vw, 5rem); }
+.guide-layout article { line-height: 1.65; }
+.guide-layout h1 { margin: .55em 0; font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1.12; }
+.guide-layout h2 { font-size: 1.24rem; margin: 1.8em 0 .5em; }
+.guide-layout p, .guide-layout ol { margin: .7em 0; }
+.guide-layout ol { padding-left: 1.5em; }
+.guide-layout li { margin-block: .45em; }
+.guide-layout article a { color: #95390e; text-decoration: underline; text-underline-offset: .16em; }
+.guide-layout dt { font-weight: 700; margin-top: .75em; }
+.guide-layout dd { margin: 0; }
+.guide-menu { align-self: start; border-top: 3px solid #db5426; }
+.guide-menu h2 { margin: 1em 0; }
+.guide-menu a { display: block; padding: .7em 0; border-bottom: 1px solid #dedede; }
+.guide-menu a[aria-current] { color: #95390e; font-weight: 700; }
+@media (max-width: 768px) { .guide-layout { grid-template-columns: 1fr; gap: 2rem; } }
+.guide-layout section { scroll-margin-top: 5rem; }
+.guide-layout section + section { border-top: 1px solid #dedede; margin-top: 2rem; }
+@media (max-width: 768px) {
+  .guide-layout:has(#shopping-guide) .guide-menu { grid-row: 1; }
+}

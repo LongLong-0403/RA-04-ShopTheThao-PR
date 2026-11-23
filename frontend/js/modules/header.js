@@ -131,6 +131,7 @@
         <a href="${root}pages/courts.html" class="ts-mob-drawer-link ${pageName === "courts.html" || pageName === "court-detail.html" ? "is-active" : ""}">Đặt sân</a>
         <a href="${root}pages/community.html" class="ts-mob-drawer-link ${pageName === "community.html" ? "is-active" : ""}">Ghép kèo</a>
         <a href="${root}pages/buyback.html" class="ts-mob-drawer-link ${pageName === "buyback.html" ? "is-active" : ""}">Thu mua đồ cũ</a>
+        <a href="${root}pages/guide.html" class="ts-mob-drawer-link">Hướng dẫn</a>
         <hr class="ts-mob-drawer-divider" />
         <a href="${root}pages/orders.html" class="ts-mob-drawer-link ${pageName === "orders.html" ? "is-active" : ""}">Đơn hàng của tôi</a>
         <a href="${root}pages/my-bookings.html" class="ts-mob-drawer-link ${pageName === "my-bookings.html" ? "is-active" : ""}">Lịch đặt sân của tôi</a>
@@ -155,6 +156,7 @@
         <span class="ts-mob-tab-dot"></span>
         <span>Đặt sân</span>
       </a>
+      <a href="${root}pages/guide.html" class="ts-mob-tab-item"><span class="ts-mob-tab-dot"></span><span>Hướng dẫn</span></a>
       <a href="${root}pages/account.html" class="ts-mob-tab-item ${isAccountTab ? "is-active" : ""}">
         <span class="ts-mob-tab-dot"></span>
         <span>Tài khoản</span>
