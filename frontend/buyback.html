@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thu Mua Vợt Cũ | Tsport Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Roboto", sans-serif;
+      background: #F8FAFC;
+      color: #0F172A;
+    }
+    .bbx-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 28px 16px 60px;
+    }
+    .bbx-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .bbx-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 900;
+    }
+    .bbx-header p {
+      margin: 4px 0 0;
+      color: #64748B;
+      font-size: 14px;
+    }
+    .bbx-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .bbx-grid { grid-template-columns: 1fr; }
+    }
+    .bbx-card {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+    .bbx-card h2 {
+      margin: 0 0 16px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .bbx-form-group {
+      margin-bottom: 14px;
+    }
+    .bbx-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 600px) {
+      .bbx-form-row { grid-template-columns: 1fr; }
+    }
+    .bbx-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #1E293B;
+    }
+    .bbx-input, .bbx-textarea, .bbx-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      background: #FFFFFF;
+    }
+    .bbx-input:focus, .bbx-textarea:focus, .bbx-select:focus {
+      outline: none;
+      border-color: #D94C26;
+    }
+    .bbx-preview {
+      margin-top: 8px;
+      width: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #E2E8F0;
+      display: none;
+    }
+    .bbx-btn-primary {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #D94C26;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .bbx-btn-primary:hover {
+      background: #B93C1B;
+    }
+    .bbx-btn-cancel {
+      padding: 6px 12px;
+      border: 1px solid #EF4444;
+      background: #FEF2F2;
+      color: #DC2626;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .bbx-btn-cancel:hover {
+      background: #FEE2E2;
+    }
+    .bbx-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .bbx-item {
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: 14px;
+      background: #FFFFFF;
+    }
+    .bbx-item-top {
+      display: flex;
+      gap: 12px;
+    }
+    .bbx-item-img {
+      width: 68px;
+      height: 68px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid #E2E8F0;
+      flex-shrink: 0;
+    }
+    .bbx-item-title {
+      font-weight: 800;
+      font-size: 15px;
+      margin: 0 0 4px;
+    }
+    .bbx-meta {
+      font-size: 12px;
+      color: #64748B;
+      line-height: 1.5;
+    }
+    .bbx-badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .bbx-msg {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="bbx-container">
+    <div class="bbx-header">
+      <div>
+        <h1>♻️ Gửi Yêu Cầu Thu Mua Vợt Cũ</h1>
+        <p>Nhập thông tin vợt cũ của bạn, theo dõi trạng thái xử lý và hủy khi đang chờ duyệt.</p>
+      </div>
+      <div>
+        <a href="index.html" style="text-decoration:none; color:#334155; font-weight:700; font-size:14px; margin-right:14px;">← Trang chủ</a>
+        <a href="pages/admin-buyback.html" style="text-decoration:none; color:#D94C26; font-weight:700; font-size:14px;">Trang Admin thu mua →</a>
+      </div>
+    </div>
+
+    <div class="bbx-grid">
+      <!-- FORM KHÁCH GỬI YÊU CẦU -->
+      <div class="bbx-card">
+        <h2>📝 Tạo yêu cầu thu mua</h2>
+        <form id="customerBuybackForm">
+          <div class="bbx-form-row">
+            <div class="bbx-form-group">
+              <label class="bbx-label" for="bbxBrand">Hãng vợt *</label>
+              <input type="text" id="bbxBrand" class="bbx-input" required placeholder="VD: Yonex, Lining, Victor..." />
+            </div>
+            <div class="bbx-form-group">
+              <label class="bbx-label" for="bbxModel">Model / Dòng vợt *</label>
+              <input type="text" id="bbxModel" class="bbx-input" required placeholder="VD: Astrox 88D Pro 4U" />
+            </div>
+          </div>
+
+          <div class="bbx-form-row">
+            <div class="bbx-form-group">
+              <label class="bbx-label" for="bbxCondition">Tình trạng / Độ mới *</label>
+              <select id="bbxCondition" class="bbx-select" required>
+                <option value="95% (Rất mới, ít đánh)">95% (Rất mới, ít đánh)</option>
+                <option value="90% (Xước dăm nhẹ)" selected>90% (Xước dăm nhẹ)</option>
+                <option value="85% (Trầy viền, khung nguyên)">85% (Trầy viền, khung nguyên)</option>
+                <option value="80% (Hao mòn nhiều)">80% (Hao mòn nhiều)</option>
+              </select>
+            </div>
+            <div class="bbx-form-group">
+              <label class="bbx-label" for="bbxDesiredPrice">Giá mong muốn (VNĐ) *</label>
+              <input type="number" id="bbxDesiredPrice" class="bbx-input" required min="10000" step="10000" placeholder="VD: 2000000" />
+            </div>
+          </div>
+
+          <div class="bbx-form-group">
+            <label class="bbx-label" for="bbxWearDesc">Mô tả chi tiết tình trạng / hao mòn</label>
+            <textarea id="bbxWearDesc" class="bbx-textarea" rows="3" placeholder="VD: Có 2 vết trầy nhỏ góc 10h, đũa vợt thẳng, không nứt khung..."></textarea>
+          </div>
+
+          <div class="bbx-form-group">
+            <label class="bbx-label" for="bbxImageFile">Ảnh vợt cũ (chọn file ảnh hoặc dán link ảnh)</label>
+            <input type="file" id="bbxImageFile" class="bbx-input" accept="image/*" style="margin-bottom:8px;" />
+            <input type="text" id="bbxImageUrl" class="bbx-input" placeholder="Hoặc dán đường dẫn ảnh (https://...)" />
+            <img id="bbxImagePreview" class="bbx-preview" alt="Xem trước ảnh vợt" />
+          </div>
+
+          <div class="bbx-form-row">
+            <div class="bbx-form-group">
+              <label class="bbx-label" for="bbxCustomerName">Họ và tên *</label>
+              <input type="text" id="bbxCustomerName" class="bbx-input" required placeholder="VD: Nguyễn Văn A" />
+            </div>
+            <div class="bbx-form-group">
+              <label class="bbx-label" for="bbxContact">Thông tin liên hệ (SĐT / Zalo / Email) *</label>
+              <input type="text" id="bbxContact" class="bbx-input" required placeholder="VD: 0912345678" />
+            </div>
+          </div>
+
+          <button type="submit" class="bbx-btn-primary">Gửi yêu cầu thu mua</button>
+          <div id="bbxFormMessage" class="bbx-msg"></div>
+        </form>
+      </div>
+
+      <!-- DANH SÁCH YÊU CẦU CỦA KHÁCH -->
+      <div class="bbx-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:8px; flex-wrap:wrap;">
+          <h2 style="margin:0;">📋 Yêu cầu thu mua của tôi</h2>
+          <input type="text" id="bbxFilterContact" class="bbx-input" style="max-width:220px; padding:7px 10px; font-size:13px;" placeholder="Lọc theo SĐT / liên hệ..." />
+        </div>
+        <div id="customerBuybackList" class="bbx-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data/mock-data.js"></script>
+  <script src="js/data/store.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    (function () {
+      const STORAGE_KEY = "tsport_store_data_v4";
+      let uploadedImageDataUrl = "";
+
+      function readData() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          const parsed = raw ? JSON.parse(raw) : {};
+          if (!Array.isArray(parsed.buybacks)) parsed.buybacks = [];
+          return parsed;
+        } catch (_) {
+          return { buybacks: [] };
+        }
+      }
+
+      function writeData(data) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      }
+
+      function formatMoney(num) {
+        const val = Number(num);
+        if (!Number.isFinite(val) || val <= 0) return "Chưa có";
+        return val.toLocaleString("vi-VN") + " đ";
+      }
+
+      function escapeHtml(str) {
+        return String(str ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function showMessage(text, isError = false) {
+        const el = document.getElementById("bbxFormMessage");
+        if (!el) return;
+        el.style.display = "block";
+        el.style.background = isError ? "#FEF2F2" : "#F0FDF4";
+        el.style.color = isError ? "#B91C1C" : "#15803D";
+        el.style.border = isError ? "1px solid #FECACA" : "1px solid #BBF7D0";
+        el.textContent = text;
+      }
+
+      function renderStatusBadge(status) {
+        const map = {
+          CHO_DUYET: { label: "⏳ Chờ duyệt", bg: "#FEF3C7", color: "#B45309" },
+          DANG_DINH_GIA: { label: "💰 Đang định giá", bg: "#DBEAFE", color: "#1D4ED8" },
+          DA_THU_MUA: { label: "✓ Đã thu mua", bg: "#DCFCE7", color: "#15803D" },
+          TU_CHOI: { label: "✕ Từ chối", bg: "#FEE2E2", color: "#B91C1C" },
+          DA_HUY: { label: "Đã hủy", bg: "#F1F5F9", color: "#64748B" }
+        };
+        const st = map[status] || { label: status, bg: "#E2E8F0", color: "#334155" };
+        return `<span class="bbx-badge" style="background:${st.bg}; color:${st.color};">${escapeHtml(st.label)}</span>`;
+      }
+
+      function renderCustomerRequests() {
+        const container = document.getElementById("customerBuybackList");
+        if (!container) return;
+
+        const keyword = (document.getElementById("bbxFilterContact")?.value || "").trim().toLowerCase();
+        const data = readData();
+        let list = data.buybacks || [];
+
+        if (keyword) {
+          list = list.filter((item) => {
+            const contact = String(item.contact_info || item.phone || "").toLowerCase();
+            const name = String(item.customer_name || "").toLowerCase();
+            const title = String(item.product_name || "").toLowerCase();
+            return contact.includes(keyword) || name.includes(keyword) || title.includes(keyword);
+          });
+        }
+
+        if (list.length === 0) {
+          container.innerHTML =
+            '<div style="color:#94A3B8; font-size:14px; padding:20px 0; text-align:center;">Chưa có yêu cầu thu mua nào.</div>';
+          return;
+        }
+
+        container.innerHTML = list
+          .map((item) => {
+            const desired = item.desired_price ?? item.proposed_price ?? 0;
+            const offered = item.offered_price;
+            const canCancel = item.status === "CHO_DUYET";
+
+            return `
+              <div class="bbx-item">
+                <div class="bbx-item-top">
+                  <img src="${escapeHtml(item.image_url || "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600")}" class="bbx-item-img" alt="" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+                  <div style="flex:1; min-width:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                      <h3 class="bbx-item-title">#${escapeHtml(item.id)} — ${escapeHtml(item.product_name)}</h3>
+                      ${renderStatusBadge(item.status)}
+                    </div>
+                    <div class="bbx-meta">
+                      <div>Hãng: <strong>${escapeHtml(item.brand || "-")}</strong> · Model: <strong>${escapeHtml(item.model || "-")}</strong> · Tình trạng: <strong>${escapeHtml(item.condition_grade || "-")}</strong></div>
+                      <div>Giá mong muốn: <strong>${formatMoney(desired)}</strong> · Giá đề nghị: <strong style="color:#D94C26;">${formatMoney(offered)}</strong></div>
+                      <div>Người gửi: ${escapeHtml(item.customer_name || "-")} (${escapeHtml(item.contact_info || item.phone || "-")})</div>
+                      ${item.wear_description ? `<div>Mô tả: ${escapeHtml(item.wear_description)}</div>` : ""}
+                      ${item.note ? `<div style="color:#1D4ED8;">Ghi chú: ${escapeHtml(item.note)}</div>` : ""}
+                    </div>
+                    ${canCancel ? `
+                      <div style="margin-top:10px;">
+                        <button type="button" class="bbx-btn-cancel js-cancel-buyback" data-id="${escapeHtml(item.id)}">Hủy yêu cầu (Chờ duyệt)</button>
+                      </div>
+                    ` : ""}
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      function bindBuybackPageEvents() {
+        document.getElementById("bbxImageFile")?.addEventListener("change", (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) {
+            uploadedImageDataUrl = "";
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => {
+            uploadedImageDataUrl = String(reader.result || "");
+            const preview = document.getElementById("bbxImagePreview");
+            if (preview) {
+              preview.src = uploadedImageDataUrl;
+              preview.style.display = "block";
+            }
+          };
+          reader.readAsDataURL(file);
+        });
+
+        document.getElementById("bbxImageUrl")?.addEventListener("input", (e) => {
+          const url = e.target.value.trim();
+          const preview = document.getElementById("bbxImagePreview");
+          if (!preview) return;
+          if (url) {
+            uploadedImageDataUrl = "";
+            preview.src = url;
+            preview.style.display = "block";
+          } else if (!uploadedImageDataUrl) {
+            preview.style.display = "none";
+          }
+        });
+
+        document.getElementById("customerBuybackForm")?.addEventListener("submit", (e) => {
+          e.preventDefault();
+
+          const brand = document.getElementById("bbxBrand").value.trim();
+          const model = document.getElementById("bbxModel").value.trim();
+          const conditionGrade = document.getElementById("bbxCondition").value.trim();
+          const desiredPrice = Number(document.getElementById("bbxDesiredPrice").value);
+          const wearDesc = document.getElementById("bbxWearDesc").value.trim();
+          const imageUrlInput = document.getElementById("bbxImageUrl").value.trim();
+          const customerName = document.getElementById("bbxCustomerName").value.trim();
+          const contactInfo = document.getElementById("bbxContact").value.trim();
+
+          const payload = {
+            brand,
+            model,
+            product_name: `${brand} ${model}`.trim(),
+            condition_grade: conditionGrade,
+            wear_description: wearDesc,
+            desired_price: desiredPrice,
+            proposed_price: desiredPrice,
+            image_url:
+              uploadedImageDataUrl ||
+              imageUrlInput ||
+              "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600",
+            customer_name: customerName,
+            phone: contactInfo,
+            contact_info: contactInfo
+          };
+
+          try {
+            if (window.tsportStore && typeof window.tsportStore.createBuyback === "function") {
+              window.tsportStore.createBuyback(payload);
+            } else {
+              const data = readData();
+              const maxId = (data.buybacks || []).reduce((m, x) => Math.max(m, Number(x.id) || 0), 0);
+              data.buybacks.unshift({
+                ...payload,
+                id: maxId + 1,
+                offered_price: null,
+                status: "CHO_DUYET",
+                note: "",
+                sku_created: false,
+                created_sku_code: "",
+                created_at: new Date().toISOString().slice(0, 19).replace("T", " ")
+              });
+              writeData(data);
+            }
+
+            if (typeof api !== "undefined") {
+              api.post("/buybacks", payload).catch(() => {});
+            }
+
+            e.target.reset();
+            uploadedImageDataUrl = "";
+            const preview = document.getElementById("bbxImagePreview");
+            if (preview) preview.style.display = "none";
+
+            showMessage("Đã gửi yêu cầu thu mua thành công! Yêu cầu đang ở trạng thái Chờ duyệt.");
+            renderCustomerRequests();
+          } catch (err) {
+            showMessage(err.message || "Gửi yêu cầu thất bại.", true);
+          }
+        });
+
+        document.addEventListener("click", (e) => {
+          const cancelBtn = e.target.closest(".js-cancel-buyback");
+          if (!cancelBtn) return;
+
+          const id = Number(cancelBtn.dataset.id);
+          try {
+            if (window.tsportStore && typeof window.tsportStore.cancelBuyback === "function") {
+              window.tsportStore.cancelBuyback(id);
+            } else {
+              const data = readData();
+              const item = (data.buybacks || []).find((x) => Number(x.id) === id);
+              if (!item || item.status !== "CHO_DUYET") {
+                throw new Error("Chỉ có thể hủy yêu cầu khi đang ở trạng thái Chờ duyệt");
+              }
+              item.status = "DA_HUY";
+              writeData(data);
+            }
+
+            if (typeof api !== "undefined") {
+              api.patch(`/buybacks/${id}/cancel`).catch(() => {});
+            }
+
+            showMessage(`Đã hủy yêu cầu #${id}.`);
+            renderCustomerRequests();
+          } catch (err) {
+            showMessage(err.message || "Không thể hủy yêu cầu.", true);
+          }
+        });
+
+        document.getElementById("bbxFilterContact")?.addEventListener("input", renderCustomerRequests);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        bindBuybackPageEvents();
+        renderCustomerRequests();
+      });
+    })();
+  </script>
+</body>
+</html>
