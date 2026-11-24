@@ -42,7 +42,10 @@
       document.getElementById("errLoginPassword").textContent = "";
     }
 
-    if (hasError) return;
+    if (hasError) {
+      showToast("Vui lòng kiểm tra email và mật khẩu.", "error");
+      return;
+    }
 
     let token = "";
     let userObj = null;
@@ -63,13 +66,9 @@
       }
     }
 
-    // Fallback cục bộ khi backend chưa bật
     if (!token || !userObj) {
-      const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
-      const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
-      const fullName = isSpecialAdmin ? "Quản Trị Viên (admin123)" : email.split("@")[0];
-      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role, exp: Date.now() + 86400000 })) + ".sig_verified_tsport";
-      userObj = { email, full_name: fullName, role };
+      showToast("Không thể xác thực với máy chủ. Vui lòng thử lại.", "error");
+      return;
     }
 
     localStorage.setItem("token", token);
@@ -116,19 +115,19 @@
       hasError = true;
     } else document.getElementById("regEmail").classList.remove("is-invalid");
 
-    if (!pass || pass.length < 6) {
+    if (!pass || pass.length < 8) {
       document.getElementById("regPassword").classList.add("is-invalid");
       hasError = true;
     } else document.getElementById("regPassword").classList.remove("is-invalid");
 
     if (pass !== confirmPass) {
       document.getElementById("regConfirmPassword").classList.add("is-invalid");
-      alert("⚠️ Mật khẩu xác nhận không khớp!");
+      showToast("Mật khẩu xác nhận không khớp!", "error");
       return;
     } else document.getElementById("regConfirmPassword").classList.remove("is-invalid");
 
     if (hasError) {
-      alert("⚠️ Vui lòng kiểm tra lại các trường báo đỏ!");
+      showToast("Vui lòng kiểm tra lại các trường báo đỏ!", "error");
       return;
     }
 
@@ -157,10 +156,8 @@
     }
 
     if (!token || !userObj) {
-      const isSpecialAdmin = email.toLowerCase() === "admin123@gmail.com" || email.toLowerCase().includes("admin");
-      const role = isSpecialAdmin ? "ADMIN" : "CUSTOMER";
-      token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify({ sub: email, role })) + ".sig_verified_tsport";
-      userObj = { email, full_name: fullName, phone, address, role };
+      showToast("Không thể xác thực với máy chủ. Vui lòng thử lại.", "error");
+      return;
     }
 
     localStorage.setItem("token", token);

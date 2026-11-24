@@ -19,6 +19,202 @@
   function initAdminDashboard() {
     initTopbarControls();
     renderKpisAndTasks();
+    initBannerEditors();
+  }
+
+  async function initBannerEditors() {
+    const workspace = document.getElementById("adminBannerEditors");
+    if (!workspace) return;
+    const form = workspace.querySelector("form");
+    const slot = form.elements.namedItem("slot");
+    const file = form.elements.namedItem("file");
+    const url = form.elements.namedItem("url");
+    const save = form.querySelector('[type="submit"]');
+    const discard = form.querySelector('[data-banner-action="discard"]');
+    const status = form.querySelector('[role="status"]');
+    const frame = workspace.querySelector(".ts-adm-banner-frame");
+    const preview = frame.querySelector("img");
+    const previewState = frame.querySelector("p");
+    const layoutInputs = ["fit", "zoom", "x", "y"].map((name) => form.elements.namedItem(name));
+    const deviceLabel = document.getElementById("adminBannerDeviceLabel");
+    const drafts = new Map();
+    const original = (index) => `/frontend/assets/banner/banner-${index}.jpg${index === "1" ? "?v=2" : ""}`;
+    let published;
+    let previewVersion = 0;
+    let reading = false;
+    let saving = false;
+
+    form.inert = true;
+    try { published = await api.get("/home-banners", { include_framing: true }); }
+    catch (error) {
+      status.textContent = "Không tải được banner. Tải lại trang để thử lại.";
+      showToast(error.message, "error");
+      return;
+    }
+    form.inert = false;
+
+    function savedBanner(index) {
+      const data = published[index];
+      return {
+        image: data?.image_url || original(index),
+        framing: { desktop: bannerFrameFor(data?.framing, "desktop"), mobile: bannerFrameFor(data?.framing, "mobile") }
+      };
+    }
+
+    function currentBanner() {
+      return drafts.get(slot.value) || savedBanner(slot.value);
+    }
+
+    function updateFramingControls() {
+      const device = frame.dataset.device;
+      const settings = currentBanner().framing[device];
+      deviceLabel.textContent = device === "mobile" ? "Điện thoại" : "Máy tính";
+      for (const input of layoutInputs) {
+        input.value = settings[input.name];
+        const value = form.querySelector(`[data-banner-value="${input.name}"]`);
+        if (value) value.textContent = settings[input.name] + "%";
+      }
+      applyBannerFrame(preview, settings);
+    }
+
+    function updateDraftState() {
+      const draft = drafts.has(slot.value);
+      for (const option of slot.options) {
+        option.textContent = `Banner ${option.value}${drafts.has(option.value) ? " · Chưa lưu" : ""}`;
+      }
+      save.disabled = !draft || preview.hidden || reading || saving;
+      discard.disabled = !draft;
+      status.textContent = saving ? "Đang lưu…" : reading ? "Đang đọc tệp…" :
+        draft ? "Có thay đổi chưa lưu." : "Đang dùng ảnh đã lưu.";
+      updateFramingControls();
+    }
+
+    async function renderPreview() {
+      const version = ++previewVersion;
+      const source = storefrontImageUrl(currentBanner().image);
+      preview.hidden = true;
+      updateDraftState();
+      previewState.hidden = false;
+      previewState.textContent = "Đang tải ảnh…";
+      const image = new Image();
+      image.src = source;
+      try {
+        await image.decode();
+      } catch {
+        if (version !== previewVersion) return;
+        previewState.textContent = "Không tải được ảnh. Kiểm tra lại tệp hoặc URL.";
+        return;
+      }
+      if (version !== previewVersion) return;
+      preview.src = source;
+      preview.hidden = false;
+      previewState.hidden = true;
+      updateDraftState();
+    }
+
+    function setDraft(banner) {
+      if (JSON.stringify(banner) === JSON.stringify(savedBanner(slot.value))) drafts.delete(slot.value);
+      else drafts.set(slot.value, banner);
+    }
+
+    function changeFraming(settings) {
+      const current = currentBanner();
+      setDraft({ ...current, framing: { ...current.framing, [frame.dataset.device]: settings } });
+      updateDraftState();
+    }
+
+    function resetInputs() {
+      file.value = "";
+      const image = drafts.get(slot.value)?.image;
+      url.value = /^https?:\/\//i.test(image || "") ? image : "";
+    }
+
+    slot.addEventListener("change", () => {
+      resetInputs();
+      renderPreview();
+    });
+    file.addEventListener("change", async () => {
+      const selected = file.files[0];
+      if (!selected) return;
+      reading = true;
+      form.inert = true;
+      renderPreview();
+      try {
+        const source = await readStorefrontImage(selected);
+        setDraft({ ...currentBanner(), image: source });
+        url.value = "";
+      } catch (error) {
+        showToast(error.message, "error");
+      } finally {
+        reading = false;
+        form.inert = false;
+        file.value = "";
+        renderPreview();
+      }
+    });
+
+    form.querySelector('[data-banner-action="url"]').addEventListener("click", () => {
+      const source = url.value.trim();
+      if (!/^https?:\/\//i.test(source) || !url.checkValidity()) {
+        showToast("Nhập URL ảnh hợp lệ bắt đầu bằng http:// hoặc https://.", "error");
+        return;
+      }
+      setDraft({ ...currentBanner(), image: source });
+      renderPreview();
+    });
+    for (const input of layoutInputs) {
+      input.addEventListener("input", () => {
+        const frameSettings = currentBanner().framing[frame.dataset.device];
+        const value = input.name === "fit" ? input.value : Number(input.value);
+        changeFraming({ ...frameSettings, [input.name]: value });
+      });
+    }
+    form.querySelector('[data-banner-action="reset-frame"]').addEventListener("click", () => {
+      changeFraming(defaultBannerFrame);
+    });
+    discard.addEventListener("click", () => {
+      drafts.delete(slot.value);
+      resetInputs();
+      renderPreview();
+    });
+    form.querySelector('[data-banner-action="restore"]').addEventListener("click", () => {
+      url.value = "";
+      setDraft({ image: original(slot.value), framing: { desktop: defaultBannerFrame, mobile: defaultBannerFrame } });
+      renderPreview();
+    });
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const index = slot.value;
+      const draft = drafts.get(index);
+      if (!draft || save.disabled || saving) return;
+      if (url.value.trim() && url.value.trim() !== draft.image) {
+        showToast("Bấm “Xem ảnh từ URL” để kiểm tra URL mới trước khi lưu.", "error");
+        return;
+      }
+      form.inert = true;
+      saving = true;
+      status.textContent = "Đang lưu…";
+      try {
+        const result = await api.put(`/home-banners/${index}`, draft);
+        published[index] = result;
+        drafts.delete(index);
+        resetInputs();
+        showToast(`Đã lưu banner ${index}.`, "success");
+      } catch (error) {
+        showToast(error.message, "error");
+      } finally {
+        saving = false;
+        form.inert = false;
+        renderPreview();
+      }
+    });
+    const devices = workspace.querySelectorAll("[data-banner-device]");
+    devices.forEach((button) => button.addEventListener("click", () => {
+      frame.dataset.device = button.dataset.bannerDevice;
+      devices.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      if (published) updateFramingControls();
+    }));
+    renderPreview();
   }
 
   function initTopbarControls() {
@@ -179,5 +375,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initAdminDashboard);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initAdminDashboard));
 })();

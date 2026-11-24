@@ -9,17 +9,17 @@
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  function initAccountModule() {
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-      email: "minhanh@example.com",
-      full_name: "Nguyễn Minh Anh",
-      phone: "0901234567",
-      address: "Số 12, Nguyễn Trãi, Thanh Xuân, Hà Nội",
-      role: "CUSTOMER"
-    };
+  async function initAccountModule() {
+    let user;
+    try { user = await api.get("/auth/me"); }
+    catch (err) {
+      if (err.status === 401) location.replace("auth.html");
+      else showToast(err.message, "error");
+      return;
+    }
 
     // Tìm kiếm từ header
-    document.getElementById("accountSearchForm")?.addEventListener("submit", (e) => {
+    document.getElementById("accountSearchForm")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const q = document.getElementById("accountSearchInput")?.value.trim();
       window.location.href = q ? `shop.html?q=${encodeURIComponent(q)}` : "shop.html";
@@ -56,7 +56,7 @@
     });
 
     // Lưu thay đổi thông tin cá nhân
-    document.getElementById("formUpdateProfile")?.addEventListener("submit", (e) => {
+    document.getElementById("formUpdateProfile")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const updatedName = document.getElementById("profileFullName").value.trim();
       const updatedPhone = document.getElementById("profilePhone").value.trim();
@@ -67,9 +67,8 @@
         return;
       }
 
-      user.full_name = updatedName;
-      user.phone = updatedPhone;
-      user.address = updatedAddr;
+      try { user = await api.put("/auth/me", {full_name: updatedName, phone: updatedPhone, address: updatedAddr}); }
+      catch (err) { showToast(err.message, "error"); return; }
       localStorage.setItem("tsport_current_user", JSON.stringify(user));
 
       if (sbName) sbName.textContent = updatedName;
@@ -81,7 +80,7 @@
     });
 
     // Đổi mật khẩu
-    document.getElementById("formChangePassword")?.addEventListener("submit", (e) => {
+    document.getElementById("formChangePassword")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const cur = document.getElementById("passCurrent").value;
       const nw = document.getElementById("passNew").value;
@@ -91,8 +90,8 @@
         showToast("Vui lòng nhập mật khẩu hiện tại.", "error");
         return;
       }
-      if (!nw || nw.length < 6) {
-        showToast("Mật khẩu mới phải có tối thiểu 6 ký tự.", "error");
+      if (!nw || nw.length < 8) {
+        showToast("Mật khẩu mới phải có tối thiểu 8 ký tự.", "error");
         return;
       }
       if (nw !== cf) {
@@ -100,16 +99,19 @@
         return;
       }
 
+      try { await api.post("/auth/password", {current_password: cur, new_password: nw}); }
+      catch (err) { showToast(err.message, "error"); return; }
       showToast("Cập nhật mật khẩu thành công!", "success");
       document.getElementById("formChangePassword").reset();
     });
 
     // Đăng xuất
-    document.getElementById("btnAccountLogout")?.addEventListener("click", () => {
+    document.getElementById("btnAccountLogout")?.addEventListener("click", async () => {
+      try { await api.post("/auth/logout"); } catch (err) { if (err.status !== 401) { showToast(err.message,"error"); return; } }
       localStorage.removeItem("token");
       localStorage.removeItem("tsport_token");
       localStorage.removeItem("tsport_current_user");
-      showToast("Đã đăng xuất tài khoản.", "info");
+      showToast("Đã đăng xuất tài khoản.", "success");
       setTimeout(() => {
         window.location.href = "auth.html";
       }, 450);

@@ -330,36 +330,144 @@ h1, h2, h3, h4, h5, h6 {
   gap: 12px;
 }
 
+.tsport-banner-image {
+  object-fit: var(--banner-fit, cover);
+  object-position: var(--banner-x, 50%) var(--banner-y, 0%);
+  transform: scale(var(--banner-scale, 1));
+  transform-origin: var(--banner-x, 50%) var(--banner-y, 0%);
+}
+
+.tsport-confirm {
+  position: fixed;
+  inset: 0;
+  width: min(32rem, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  margin: auto;
+  padding: clamp(16px, 4vw, 24px);
+  border: 1px solid var(--tsport-border-dark);
+  border-radius: 0;
+  color: var(--tsport-text);
+  background: var(--tsport-card);
+  box-shadow: var(--tsport-shadow-lg);
+}
+.tsport-confirm::backdrop { background: rgb(15 23 42 / 56%); }
+.tsport-confirm h2 { margin-bottom: 10px; font-size: 1.25rem; }
+.tsport-confirm p { line-height: 1.55; overflow-wrap: anywhere; }
+.tsport-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.tsport-confirm-actions button {
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--tsport-border-dark);
+  border-radius: 0;
+  background: var(--tsport-card);
+  color: var(--tsport-text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.tsport-confirm-actions button:hover { background: var(--tsport-orange-tint); }
+.tsport-confirm-actions .tsport-confirm-submit {
+  border-color: var(--tsport-orange);
+  background: var(--tsport-orange);
+  color: var(--tsport-card);
+}
+.tsport-confirm-actions .tsport-confirm-submit:hover { background: var(--tsport-orange-hover); }
+.tsport-confirm-actions button:focus-visible {
+  outline: 2px solid var(--tsport-blue);
+  outline-offset: 2px;
+}
+
+.tsport-cart-flight {
+  position: fixed;
+  z-index: 9998;
+  pointer-events: none;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #fff;
+  box-shadow: var(--tsport-shadow-lg);
+  will-change: transform, opacity;
+}
+
 /* Toast Notification */
 .tsport-toast {
+  --toast-surface: #202b3a;
+  --toast-accent: #a9bdd6;
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  top: max(16px, env(safe-area-inset-top));
+  left: max(16px, env(safe-area-inset-left));
   z-index: 10000;
-  padding: 12px 20px;
-  border-radius: var(--tsport-radius);
-  background: #1E293B;
+  width: max-content;
+  max-width: min(42rem, calc(100% - 32px));
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-left: 4px solid var(--toast-accent);
+  border-radius: 12px;
+  background: var(--toast-surface);
   color: #fff;
   font-weight: 600;
-  font-size: 13px;
-  box-shadow: var(--tsport-shadow-lg);
-  display: none;
-  align-items: center;
-  gap: 8px;
-}
-.tsport-toast.is-visible {
+  font-size: 14px;
+  line-height: 1.45;
+  box-shadow: 0 10px 28px rgb(15 23 42 / 20%);
   display: flex;
-  animation: slideInToast 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  align-items: center;
+  gap: 10px;
+  animation: slideInToast 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.tsport-toast.is-leaving {
+  pointer-events: none;
+  animation: slideOutToast 180ms ease-in both;
 }
 .tsport-toast.is-success {
-  background: #065F46;
-  border-left: 4px solid #34D399;
+  --toast-surface: #075b45;
+  --toast-accent: #43e0a0;
 }
 .tsport-toast.is-error {
-  background: #991B1B;
-  border-left: 4px solid #F87171;
+  --toast-surface: #92252d;
+  --toast-accent: #fda4a9;
+}
+.tsport-toast-icon,
+.tsport-toast-close {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  line-height: 1;
+}
+.tsport-toast-icon {
+  width: 26px;
+  height: 26px;
+  background: rgb(255 255 255 / 13%);
+  color: var(--toast-accent);
+  font-weight: 800;
+}
+.tsport-toast-message { overflow-wrap: anywhere; }
+.tsport-toast-close {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 21px;
+  cursor: pointer;
+}
+.tsport-toast-close:hover,
+.tsport-toast-close:focus-visible {
+  background: rgb(255 255 255 / 15%);
 }
 @keyframes slideInToast {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from { transform: translateX(-12px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOutToast {
+  to { transform: translateX(-8px); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tsport-toast, .tsport-toast.is-leaving { animation: none; }
+  .tsport-toast.is-leaving { opacity: 0; }
 }

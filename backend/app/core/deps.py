@@ -41,3 +41,9 @@ def require_admin(user: User = Depends(get_current_user)) -> User:
     if user.role != UserRole.ADMIN:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Chỉ quản trị viên được thực hiện thao tác này")
     return user
+
+
+def require_customer(user: User = Depends(get_current_user)) -> User:
+    if user.role != UserRole.CUSTOMER:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Chức năng này dành cho khách hàng")
+    return user

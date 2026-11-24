@@ -75,3 +75,33 @@ const api = {
   delete: (path) => http.delete(path).then((res) => res.data),
 };
 window.api = api;
+
+async function initRolePage(init, role) {
+  try {
+    const user = await api.get("/auth/me");
+    if (user.role !== role) { location.replace(user.role === "ADMIN" ? "admin-dashboard.html" : "account.html"); return; }
+    document.body.hidden = false;
+    await init();
+  } catch (error) {
+    if (error.status === 401) location.replace("auth.html");
+    else { document.body.textContent = error.message; document.body.hidden = false; }
+  }
+}
+
+function initAdminPage(init) { return initRolePage(init, "ADMIN"); }
+function initCustomerPage(init) { return initRolePage(init, "CUSTOMER"); }
+
+function matchView(row) {
+  const [date,time] = row.match_time.split("T");
+  return {...row, title: row.location, match_date: date, match_time: time.slice(0,5),
+    level: row.skill_level, contact_phone: row.contact_info};
+}
+
+window.addEventListener("load", async () => {
+  const links = document.querySelectorAll("[data-admin-link]");
+  if (!links.length || !(localStorage.getItem("token") || localStorage.getItem("tsport_token"))) return;
+  try {
+    const user = await api.get("/auth/me");
+    for (const link of links) link.hidden = user.role !== "ADMIN";
+  } catch { /* Giữ ẩn liên kết khi chưa xác minh được phiên. */ }
+});

@@ -1,6 +1,7 @@
 """Catalog maintenance and public product search."""
 import math
 from decimal import Decimal
+from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import select, func, or_
@@ -8,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.core.deps import require_admin
 from app.db.session import get_db
 from app.models.catalog import Sport, Category, Brand, Product, ProductSku, ProductImage, ConditionEnum, ProductStatusEnum, UnitEnum
+from app.routers.media import store_image
 
 router = APIRouter()
 
@@ -184,6 +186,34 @@ def add_image(product_id: int, data: ImageInput, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(row)
     return row
+
+class ProductPhotosInput(BaseModel):
+    images: list[Annotated[str, Field(max_length=5_592_432)]] = Field(min_length=1, max_length=8)
+
+
+@router.put('/products/{product_id}/images', tags=['catalog-images'], dependencies=[Depends(require_admin)])
+def replace_product_images(product_id: int, data: ProductPhotosInput, db: Session = Depends(get_db)):
+    product = product_or_404(db, product_id)
+    urls = [store_image(db, source) for source in data.images]
+    main = next((image for image in product.images if image.is_primary), None)
+    for image in list(product.images):
+        if image is not main:
+            db.delete(image)
+    if main is None:
+        main = ProductImage(product_id=product.id, is_primary=True, image_url=urls[0], sort_order=1)
+        db.add(main)
+    else:
+        main.image_url = urls[0]
+        main.sort_order = 1
+    others = [
+        ProductImage(product_id=product.id, image_url=url, is_primary=False, sort_order=index)
+        for index, url in enumerate(urls[1:], start=2)
+    ]
+    db.add_all(others)
+    db.commit()
+    return [{"image_url": url, "is_primary": index == 1, "sort_order": index}
+            for index, url in enumerate(urls, start=1)]
+
 
 @router.put('/products/{product_id}/skus/{sku_id}', tags=['catalog-skus'], dependencies=[Depends(require_admin)])
 def edit_sku(product_id: int, sku_id: int, data: SkuInput, db: Session = Depends(get_db)):

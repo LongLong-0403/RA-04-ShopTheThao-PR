@@ -55,12 +55,14 @@
     return iso || "";
   }
 
-  function renderMatchesTable() {
+  async function renderMatchesTable() {
     const tbody = document.getElementById("myMatchesTableBody");
     const store = window.tsportStore;
     if (!tbody || !store) return;
 
-    const matches = store.getMatches({ sport_id: "ALL", showHidden: false }) || [];
+    let matches;
+    try { matches = (await api.get("/match-posts/mine")).map(matchView); }
+    catch (err) { showToast(err.message, "error"); return; }
 
     if (matches.length === 0) {
       tbody.innerHTML = `
@@ -75,7 +77,7 @@
 
     tbody.innerHTML = matches
       .map((m) => {
-        const isClosed = m.status === "CLOSED";
+        const isClosed = m.status !== "OPEN";
         const dateTime = `${formatDMY(m.match_date)} ${m.match_time || "18:00"}`;
 
         return `
@@ -111,22 +113,24 @@
   }
 
   function bindEvents() {
-    document.getElementById("myMatchesTableBody")?.addEventListener("click", (e) => {
+    document.getElementById("myMatchesTableBody")?.addEventListener("click", async (e) => {
       const store = window.tsportStore;
       if (!store) return;
 
       const closeBtn = e.target.closest(".js-close-my-match");
       if (closeBtn) {
-        store.closeMatch(closeBtn.dataset.id);
+        try { await api.patch(`/match-posts/${closeBtn.dataset.id}/status`, {status: "CLOSED"}); }
+        catch (err) { showToast(err.message, "error"); return; }
         renderMatchesTable();
-        showToast("Đã đóng bài ghép kèo (Đã đủ người).", "info");
+        showToast("Đã đóng bài ghép kèo (Đã đủ người).", "success");
         return;
       }
 
       const delBtn = e.target.closest(".js-delete-my-match");
       if (delBtn) {
-        if (confirm("Bạn có chắc muốn hủy bài ghép kèo này không?")) {
-          store.deleteMatch(delBtn.dataset.id);
+        if (await confirmAction("Bạn có chắc muốn hủy bài ghép kèo này không?", "Hủy bài")) {
+          try { await api.patch(`/match-posts/${delBtn.dataset.id}/status`, {status: "CANCELLED"}); }
+        catch (err) { showToast(err.message, "error"); return; }
           renderMatchesTable();
           showToast("Đã hủy bài ghép kèo.", "success");
         }
@@ -144,5 +148,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initMyMatchesPage);
+  document.addEventListener("DOMContentLoaded", () => initCustomerPage(initMyMatchesPage));
 })();

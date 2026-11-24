@@ -486,5 +486,8 @@
     return (Number(amount) || 0).toLocaleString("vi-VN") + "đ";
   }
 
-  document.addEventListener("DOMContentLoaded", initShopModule);
+  document.addEventListener("DOMContentLoaded", async () => {
+    await window.tsportCatalogReady;
+    initShopModule();
+  });
 })();

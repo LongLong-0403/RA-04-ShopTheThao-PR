@@ -282,14 +282,14 @@
     document.getElementById("btnAdmConfirmOrder")?.addEventListener("click", () => advanceCurrentOrder("CONFIRMED"));
     document.getElementById("btnAdmNextOrderStatus")?.addEventListener("click", () => advanceCurrentOrder(null));
 
-    document.getElementById("btnAdmCancelOrder")?.addEventListener("click", () => {
+    document.getElementById("btnAdmCancelOrder")?.addEventListener("click", async () => {
       const store = window.tsportStore;
       if (!store || !currentOrderId) return;
-      if (!confirm("Xác nhận hủy đơn hàng này và hoàn lại tồn kho?")) return;
+      if (!(await confirmAction("Xác nhận hủy đơn hàng này và hoàn lại tồn kho?", "Hủy đơn hàng"))) return;
 
       try {
         store.cancelOrder(currentOrderId);
-        showToast("Đã hủy đơn hàng và hoàn tồn kho thành công!", "info");
+        showToast("Đã hủy đơn hàng và hoàn tồn kho thành công!", "success");
         openOrderDetail(currentOrderId);
       } catch (err) {
         showToast(err.message || "Không thể hủy đơn hàng này.", "error");
@@ -307,5 +307,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initAdminOrders);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initAdminOrders));
 })();

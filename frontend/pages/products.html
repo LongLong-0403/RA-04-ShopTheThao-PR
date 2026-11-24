@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body class="ts-adm-body" data-root="../">
+<body class="ts-adm-body" data-root="../" hidden>
 
   <div class="ts-adm-shell">
 
@@ -25,7 +25,6 @@
       </div>
 
       <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
-        <a href="guide.html" class="ts-adm-nav-link">Hướng dẫn</a>
         <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
         <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
         <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
@@ -93,10 +92,14 @@
                 <option value="MOI">Tình trạng: Mới</option>
                 <option value="CU">Tình trạng: Cũ</option>
               </select>
+              <select id="prodCategoryFilter" class="ts-adm-select" aria-label="Lọc theo danh mục">
+                <option value="">Danh mục: Tất cả</option>
+              </select>
               <button type="button" class="ts-adm-btn-primary ts-adm-filter-btn" id="btnAddProduct">
                 + Thêm sản phẩm
               </button>
             </div>
+            <p id="prodFilterSummary" class="ts-adm-banner-status" role="status"></p>
           </section>
 
           <!-- BẢNG 6 CỘT SẢN PHẨM & SKU -->
@@ -211,16 +214,20 @@
               </div>
 
               <!-- ẢNH SẢN PHẨM -->
-              <div class="ts-adm-prod-media-sec">
-                <h2 class="ts-adm-card-title" style="font-size:16px; margin-bottom:14px;">Ảnh sản phẩm</h2>
+              <div class="ts-adm-prod-media-sec" id="adminProductPhotos">
+                <header class="ts-adm-editor-heading">
+                  <h2 class="ts-adm-card-title" id="adminProductPhotosTitle" tabindex="-1">Ảnh sản phẩm</h2>
+                  <a id="viewStorefrontProduct" class="ts-adm-btn-secondary" target="_blank" rel="noopener" hidden>Xem sản phẩm ↗</a>
+                </header>
+                <p class="ts-adm-banner-status" id="productPhotoStatus" role="status"></p>
                 <div class="ts-adm-prod-photos-row">
                   <div class="ts-adm-prod-photos-grid" id="admProdPhotosGrid">
                     <!-- Render 4 ô ảnh từ products.js -->
                   </div>
-                  <label for="admProdPhotoInput" class="ts-adm-btn-secondary ts-adm-upload-btn">
-                    <input type="file" id="admProdPhotoInput" accept="image/*" multiple hidden />
-                    + Tải ảnh / Sắp xếp
-                  </label>
+                </div>
+                <div class="ts-adm-banner-actions ts-adm-product-photo-actions">
+                  <button id="btnSaveProductPhotos" type="button" class="ts-adm-btn-primary" hidden>Lưu ảnh sản phẩm</button>
+                  <button id="btnDiscardProductPhotos" type="button" class="ts-adm-btn-secondary" hidden>Bỏ thay đổi ảnh</button>
                 </div>
               </div>
 

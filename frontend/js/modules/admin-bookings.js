@@ -183,7 +183,10 @@
 
     const bookings = store.getBookings() || [];
     const target = bookings.find((b) => Number(b.id) === Number(id));
-    if (!target) return;
+    if (!target) {
+      showToast("Không tìm thấy yêu cầu đặt sân.", "error");
+      return;
+    }
 
     // Kiểm tra trùng lịch trước khi xác nhận
     if (nextStatus === "CONFIRMED") {
@@ -208,7 +211,12 @@
         ? "Quản trị viên hủy lịch"
         : "";
 
-    store.updateBookingStatus(id, nextStatus, reason);
+    try {
+      store.updateBookingStatus(id, nextStatus, reason);
+    } catch (error) {
+      showToast(error.message || "Không thể cập nhật lịch đặt sân.", "error");
+      return;
+    }
     selectedBookingId = Number(id);
     renderAll();
 
@@ -217,7 +225,7 @@
       REJECTED: "Đã từ chối yêu cầu đặt sân.",
       CANCELLED: "Đã hủy lịch đặt sân."
     };
-    showToast(msgMap[nextStatus] || "Đã cập nhật trạng thái.", nextStatus === "CONFIRMED" ? "success" : "info");
+    showToast(msgMap[nextStatus] || "Đã cập nhật trạng thái.", "success");
   }
 
   function bindEvents() {
@@ -270,5 +278,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initAdminBookings);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initAdminBookings));
 })();

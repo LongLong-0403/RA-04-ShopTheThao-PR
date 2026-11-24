@@ -10,7 +10,12 @@
   let currentOrderId = null;
 
   function initOrdersModule() {
-    initSidebarUser();
+    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+    if (!user || !(localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
+      window.location.replace("auth.html");
+      return;
+    }
+    initSidebarUser(user);
     initHeaderSearch();
     bindEvents();
 
@@ -22,6 +27,7 @@
         openOrderDetail(found.id);
         return;
       }
+      showToast("Không tìm thấy đơn hàng trong tài khoản này.", "error");
     }
 
     showOrdersListView();
@@ -33,11 +39,7 @@
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  function initSidebarUser() {
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-      full_name: "Nguyễn Minh Anh",
-      role: "CUSTOMER"
-    };
+  function initSidebarUser(user) {
     const nameEl = document.getElementById("sbOrdersName");
     const roleEl = document.getElementById("sbOrdersRole");
     const avatarEl = document.getElementById("sbOrdersAvatar");
@@ -309,9 +311,9 @@
     });
 
     // Hủy đơn hàng (chỉ khi PENDING, hoàn tồn kho 1 lần)
-    document.getElementById("btnCancelCurrentOrder")?.addEventListener("click", () => {
+    document.getElementById("btnCancelCurrentOrder")?.addEventListener("click", async () => {
       if (!currentOrderId) return;
-      const confirmed = confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
+      const confirmed = await confirmAction("Bạn có chắc chắn muốn hủy đơn hàng này không?", "Hủy đơn hàng");
       if (!confirmed) return;
 
       try {
@@ -334,5 +336,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initOrdersModule);
+  document.addEventListener("DOMContentLoaded", () => initCustomerPage(initOrdersModule));
 })();

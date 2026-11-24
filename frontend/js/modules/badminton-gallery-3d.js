@@ -1,9 +1,9 @@
 /**
- * TSPORT — TRIỂN LÃM CẦU LÔNG 3D (CONCAVE CURVED WALL GALLERY + SEAMLESS GSAP DETAIL)
+ * TSPORT — TRIỂN LÃM CẦU LÔNG 3D (PHÒNG TRƯNG BÀY VÀ XEM CHI TIẾT)
  *
  * Cấu trúc module:
  * - BADMINTON_GALLERY_CONFIG: Toàn bộ thông số hình học, camera, tương tác & thời lượng chuyển cảnh
- * - GalleryScene: Three.js WebGLRenderer, PerspectiveCamera, bức tường cong mặt trong hình trụ, sàn xám nhạt
+ * - GalleryScene: Three.js WebGLRenderer, PerspectiveCamera, hai tường bên và tường cuối phòng, sàn xám nhạt
  * - ArtworkMesh: 20 sản phẩm cầu lông thật từ tsportStore, giữ nguyên tỷ lệ ảnh + nhãn tên/giá đi theo phối cảnh
  * - GalleryControls: Kéo chuột, vuốt ngang mobile, wheel/trackpad ngang, phím mũi tên, quán tính delta-time
  * - TransitionController: Máy trạng thái gallery -> focusing -> detail -> returning -> gallery bằng GSAP 3
@@ -14,24 +14,30 @@
   // 1. CẤU HÌNH TẬP TRUNG (CHỈNH TẤT CẢ THÔNG SỐ HIỆU ỨNG TẠI ĐÂY)
   // ==========================================================================
   const BADMINTON_GALLERY_CONFIG = {
-    wallRadius: 14.8,         // Bán kính bức tường cong hình trụ đứng
-    wallHeight: 11.8,         // Chiều cao tường
-    floorY: -2.85,            // Cao độ mặt sàn (tạo đường tiếp giáp cong rõ theo phối cảnh)
-    artworkY: 0.42,           // Cao độ trưng bày thống nhất cho toàn bộ sản phẩm
-    artworkInset: 0.16,       // Khoảng cách từ mặt sản phẩm tới mặt tường (tránh z-fighting)
-    artworkSpacing: null,     // Tự động chia đều 2*PI / N để xoay vòng lặp vô hạn không bước nhảy
-    maxItems: 18,             // 18 tác phẩm dọc theo tường cong — thoáng và thấy rõ từng sản phẩm
-    cameraFov: 48,            // FOV cân đối để sản phẩm giữa rõ nét, hai mép lớn và nghiêng đẹp
-    cameraMobileFov: 56,      // FOV trên mobile
-    cameraZ: -3.8,            // Camera tiến gần hơn một chút để thấy rõ chi tiết sản phẩm
+    roomHalfWidth: 5,
+    roomBack: -19,
+    roomEntrance: 7,
+    roomOffsetZ: -8,
+    previewRadius: 14.8,
+    previewArtworkRadius: 14.64,
+    previewWallHeight: 11.8,
+    previewFloorY: -2.85,
+    wallHeight: 8,
+    floorY: -3.1,
+    artworkY: 0.42,
+    featureZ: -15.5,
+    featureScale: 1.45,
+    maxItems: 18,
+    cameraFov: 45,
+    cameraMobileFov: 57,
+    cameraOutsideZ: -3.8,
+    cameraInsideZ: -8,
     cameraY: 0.16,
     dragSensitivity: 0.0022,  // Độ nhạy kéo chuột / vuốt ngang
     wheelSensitivity: 0.00055,// Độ nhạy con lăn / trackpad
     damping: 5.2,             // Hệ số tắt dần quán tính (theo delta time)
     maxVelocity: 2.2,         // Giới hạn vận tốc góc (rad/s)
     clickThresholdPx: 8,      // Ngưỡng phân biệt click (<8px) và drag
-    autoPlay: true,           // Tự động di chuyển sản phẩm từ trái sang phải
-    autoPlaySpeedSec: 1.0,    // Tốc độ 1s (di chuyển mượt từ trái sang phải mỗi 1 giây)
     focusDuration: 0.55,      // Giai đoạn A: xoay ngắn nhất đưa sản phẩm về trung tâm (giây)
     zoomDuration: 0.85,       // Giai đoạn B: tiến camera gần sản phẩm (giây)
     detailDuration: 0.65      // Giai đoạn C: trượt ảnh sang cột trái & hiện chi tiết (giây)
@@ -104,7 +110,7 @@
   }
 
   // ==========================================================================
-  // 3. GALLERY SCENE (TƯỜNG CONG MẶT TRONG HÌNH TRỤ + SÀN XÁM NHẠT)
+  // 3. KHÔNG GIAN PHÒNG TRIỂN LÃM
   // ==========================================================================
   class GalleryScene {
     constructor(canvas, container) {
@@ -119,7 +125,9 @@
       const aspect = Math.max(rect.width, 320) / Math.max(rect.height, 320);
       const isMobile = rect.width <= 768;
 
-      this.baseCameraZ = isMobile ? BADMINTON_GALLERY_CONFIG.cameraZ - 1.2 : BADMINTON_GALLERY_CONFIG.cameraZ;
+      this.baseCameraZ = isMobile ? BADMINTON_GALLERY_CONFIG.cameraOutsideZ - 1.2 : BADMINTON_GALLERY_CONFIG.cameraOutsideZ;
+      this.roomProgress = 0;
+      this.architectureOpacity = 1;
       this.camera = new THREE.PerspectiveCamera(
         isMobile ? BADMINTON_GALLERY_CONFIG.cameraMobileFov : BADMINTON_GALLERY_CONFIG.cameraFov,
         aspect,
@@ -127,7 +135,7 @@
         80
       );
       this.camera.position.set(0, BADMINTON_GALLERY_CONFIG.cameraY, this.baseCameraZ);
-      this.camera.lookAt(0, 0.05, -BADMINTON_GALLERY_CONFIG.wallRadius);
+      this.camera.lookAt(0, 0.05, BADMINTON_GALLERY_CONFIG.featureZ);
 
       this.renderer = new THREE.WebGLRenderer({
         canvas,
@@ -135,7 +143,7 @@
         alpha: false,
         powerPreference: "high-performance"
       });
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
       this.renderer.setSize(rect.width, rect.height, false);
       if (THREE.SRGBColorSpace) {
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -153,7 +161,7 @@
       c.width = 512;
       c.height = 512;
       const ctx = c.getContext("2d");
-      // Chuyển sáng mềm mại theo chiều đứng để thấy rõ hình khối tường cong
+      // Chuyển sáng theo chiều đứng trên tường
       const grad = ctx.createLinearGradient(0, 0, 0, 512);
       grad.addColorStop(0.0, "#EAEAE7");
       grad.addColorStop(0.28, "#F5F5F3");
@@ -190,33 +198,42 @@
 
     _buildArchitecture() {
       const THREE = window.THREE;
-      const R = BADMINTON_GALLERY_CONFIG.wallRadius;
-      const H = BADMINTON_GALLERY_CONFIG.wallHeight;
-      const floorY = BADMINTON_GALLERY_CONFIG.floorY;
+      const { roomHalfWidth, roomBack, roomEntrance, wallHeight, floorY, featureZ, roomOffsetZ,
+        previewRadius, previewWallHeight, previewFloorY } = BADMINTON_GALLERY_CONFIG;
+      const depth = roomEntrance - roomBack;
+      const midZ = (roomEntrance + roomBack) / 2;
+      const midY = floorY + wallHeight / 2;
 
-      // Mặt trong hình trụ đứng (concave wall)
-      const wallGeo = new THREE.CylinderGeometry(R, R, H, 84, 1, true);
-      this.wallMat = new THREE.MeshBasicMaterial({
-        map: this._createWallTexture(),
-        side: THREE.BackSide,
-        transparent: true,
-        opacity: 1
-      });
-      this.wallMesh = new THREE.Mesh(wallGeo, this.wallMat);
-      this.wallMesh.position.y = floorY + H / 2;
-      this.scene.add(this.wallMesh);
+      this.wallMat = new THREE.MeshBasicMaterial({ map: this._createWallTexture(), transparent: true });
+      this.floorMat = new THREE.MeshBasicMaterial({ map: this._createFloorTexture(), transparent: true });
+      this.roomMeshes = [];
+      const plane = (width, height, material, x, y, z, rx, ry) => {
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(width, height), material);
+        mesh.position.set(x, y, z + roomOffsetZ);
+        mesh.rotation.set(rx, ry, 0);
+        this.scene.add(mesh);
+        this.roomMeshes.push(mesh);
+      };
+      plane(depth, wallHeight, this.wallMat, -roomHalfWidth, midY, midZ, 0, Math.PI / 2);
+      plane(depth, wallHeight, this.wallMat, roomHalfWidth, midY, midZ, 0, -Math.PI / 2);
+      plane(roomHalfWidth * 2, wallHeight, this.wallMat, 0, midY, roomBack, 0, 0);
+      plane(roomHalfWidth * 2, depth + 7, this.floorMat, 0, floorY, midZ + 3.5, -Math.PI / 2, 0);
+      const plinth = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.45, 2.5), this.floorMat);
+      plinth.position.set(0, floorY + 0.225, featureZ + roomOffsetZ);
+      this.scene.add(plinth);
+      this.roomMeshes.push(plinth);
 
-      // Sàn xám nhạt tạo đường cong tiếp giáp tường-sàn rõ nét
-      const floorGeo = new THREE.CircleGeometry(R + 0.08, 84);
-      this.floorMat = new THREE.MeshBasicMaterial({
-        map: this._createFloorTexture(),
-        transparent: true,
-        opacity: 1
-      });
-      this.floorMesh = new THREE.Mesh(floorGeo, this.floorMat);
-      this.floorMesh.rotation.x = -Math.PI / 2;
-      this.floorMesh.position.y = floorY;
-      this.scene.add(this.floorMesh);
+      const previewWall = new THREE.Mesh(
+        new THREE.CylinderGeometry(previewRadius, previewRadius, previewWallHeight, 84, 1, true),
+        this.wallMat.clone()
+      );
+      previewWall.material.side = THREE.BackSide;
+      previewWall.position.y = previewFloorY + previewWallHeight / 2;
+      const previewFloor = new THREE.Mesh(new THREE.CircleGeometry(previewRadius + 0.08, 84), this.floorMat.clone());
+      previewFloor.rotation.x = -Math.PI / 2;
+      previewFloor.position.y = previewFloorY;
+      this.previewMeshes = [previewWall, previewFloor];
+      this.scene.add(...this.previewMeshes);
     }
 
     _buildLights() {
@@ -228,7 +245,6 @@
       const rect = this.container.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
       const isMobile = rect.width <= 768;
-      this.baseCameraZ = isMobile ? BADMINTON_GALLERY_CONFIG.cameraZ - 1.2 : BADMINTON_GALLERY_CONFIG.cameraZ;
       this.camera.fov = isMobile ? BADMINTON_GALLERY_CONFIG.cameraMobileFov : BADMINTON_GALLERY_CONFIG.cameraFov;
       this.camera.aspect = rect.width / rect.height;
       this.camera.updateProjectionMatrix();
@@ -236,14 +252,30 @@
     }
 
     render() {
+      const progress = this.roomProgress;
+      this.wallMat.opacity = this.floorMat.opacity = progress * this.architectureOpacity;
+      this.wallMat.depthWrite = this.floorMat.depthWrite = progress === 1;
+      this.roomMeshes.forEach((mesh) => {
+        mesh.visible = progress > 0;
+        mesh.renderOrder = progress === 1 ? 0 : -2;
+      });
+      this.previewMeshes.forEach((mesh) => {
+        mesh.visible = progress < 1;
+        mesh.material.opacity = (1 - progress) * this.architectureOpacity;
+        mesh.material.depthWrite = progress === 0;
+        mesh.renderOrder = progress === 0 ? 0 : -1;
+      });
       this.renderer.render(this.scene, this.camera);
     }
 
     dispose() {
-      this.wallMesh.geometry.dispose();
+      this.roomMeshes.forEach((mesh) => mesh.geometry.dispose());
+      this.previewMeshes.forEach((mesh) => {
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+      });
       this.wallMat.map?.dispose();
       this.wallMat.dispose();
-      this.floorMesh.geometry.dispose();
       this.floorMat.map?.dispose();
       this.floorMat.dispose();
       this.renderer.dispose();
@@ -260,18 +292,7 @@
       this.index = index;
       this.theta = (index / total) * Math.PI * 2;
 
-      const R = BADMINTON_GALLERY_CONFIG.wallRadius - BADMINTON_GALLERY_CONFIG.artworkInset;
       this.group = new THREE.Group();
-      this.group.position.set(
-        R * Math.sin(this.theta),
-        BADMINTON_GALLERY_CONFIG.artworkY,
-        -R * Math.cos(this.theta)
-      );
-      // Xoay mặt trước hướng vào trong phòng dọc theo tiếp tuyến tường cong
-      this.group.rotation.y = -this.theta;
-
-      this.baseRadius = R;
-      this.hoverLift = 0;
 
       // Vầng sáng hào quang tự động phía sau sản phẩm khi vào chính giữa (không cần hover)
       this.glowGeo = new THREE.PlaneGeometry(item.width * 1.42, item.height * 1.38);
@@ -352,7 +373,7 @@
       img.onload = () => {
         this.loadedImage = img;
         const c = document.createElement("canvas");
-        const cw = 960;
+        const cw = 768;
         const ch = Math.round(cw * (item.height / item.width));
         c.width = cw;
         c.height = ch;
@@ -377,7 +398,7 @@
 
         const tex = new window.THREE.CanvasTexture(c);
         if (window.THREE.SRGBColorSpace) tex.colorSpace = window.THREE.SRGBColorSpace;
-        tex.anisotropy = 8;
+        tex.anisotropy = 4;
         if (this.artMat.map) this.artMat.map.dispose();
         this.artMat.map = tex;
         this.artMat.needsUpdate = true;
@@ -412,16 +433,6 @@
       this.artMat.opacity = val;
       this.capMat.opacity = val * 0.92;
       if (this.glowMat) this.glowMat.opacity = Math.min(this.glowMat.opacity, val);
-    }
-
-    setHover(isHovered) {
-      const target = isHovered ? 0.14 : 0;
-      if (Math.abs(target - this.hoverLift) > 0.001) {
-        this.hoverLift += (target - this.hoverLift) * 0.18;
-        const r = this.baseRadius - this.hoverLift;
-        this.group.position.x = r * Math.sin(this.theta);
-        this.group.position.z = -r * Math.cos(this.theta);
-      }
     }
 
     // Chiếu chính xác 4 góc mặt phẳng sản phẩm sang tọa độ pixel trên viewport
@@ -498,7 +509,7 @@
 
     _bind() {
       this._onPointerDown = (e) => {
-        if (this.locked) return;
+        if (this.locked || e.target.closest("button, a")) return;
         if (e.pointerType === "mouse" && e.button !== 0) return;
         this.isDragging = true;
         this.dragStartX = e.clientX;
@@ -558,7 +569,7 @@
       };
 
       this._onKeyDown = (e) => {
-        if (this.locked) return;
+        if (this.locked || !this.stageEl.contains(document.activeElement)) return;
         const tag = (document.activeElement?.tagName || "").toLowerCase();
         if (tag === "input" || tag === "textarea" || tag === "select") return;
         if (e.key === "ArrowLeft") {
@@ -678,6 +689,11 @@
           document.querySelectorAll(".js-cart-count").forEach((el) => {
             el.textContent = String(total);
           });
+          animateProductToCart(
+            document.getElementById("bg3dDetailHeroImg"),
+            document.getElementById("btnBg3dAddToBag"),
+            this.overlay
+          );
           if (typeof showToast === "function") {
             showToast(`Đã thêm "${prod.title}" (${sku.size || ""}) vào giỏ hàng!`, "success");
           }
@@ -793,10 +809,12 @@
       const targetAngle = this.controls.angle + currentWorldTheta;
 
       // Khoảng cách camera tiến gần để sản phẩm chiếm ~56% chiều cao khung hình
-      const R = BADMINTON_GALLERY_CONFIG.wallRadius - BADMINTON_GALLERY_CONFIG.artworkInset;
       const fovRad = (this.sceneObj.camera.fov * Math.PI) / 180;
-      const targetDist = Math.max(3.4, (artwork.item.height / 0.58) / (2 * Math.tan(fovRad / 2)));
-      const targetCamZ = -R + targetDist;
+      const config = BADMINTON_GALLERY_CONFIG;
+      const progress = this.sceneObj.roomProgress;
+      const scale = window.THREE.MathUtils.lerp(1, config.featureScale, progress);
+      const targetDist = Math.max(3.4, (artwork.item.height * scale / 0.58) / (2 * Math.tan(fovRad / 2)));
+      const targetCamZ = window.THREE.MathUtils.lerp(-config.previewArtworkRadius, config.featureZ + config.roomOffsetZ, progress) + targetDist;
 
       if (this.activeTimeline) this.activeTimeline.kill();
 
@@ -806,7 +824,7 @@
       const tl = gsap.timeline();
       this.activeTimeline = tl;
 
-      // Giai đoạn A: Xoay ngắn nhất về trung tâm
+      // Giai đoạn A: Chọn vị trí trưng bày trung tâm
       tl.to(this.controls, {
         angle: targetAngle,
         duration: dFocus,
@@ -834,8 +852,7 @@
           ease: "power2.out",
           onUpdate: () => {
             otherArtworks.forEach((a) => a.setOpacity(fadeProxy.others));
-            this.sceneObj.wallMat.opacity = fadeProxy.room;
-            this.sceneObj.floorMat.opacity = fadeProxy.room;
+            this.sceneObj.architectureOpacity = fadeProxy.room;
           }
         },
         "<"
@@ -843,7 +860,6 @@
 
       // Giai đoạn C: Chuyển liền mạch WebGL -> ảnh HTML trùng khít pixel rồi trượt sang cột trái
       tl.add(() => {
-        this.sceneObj.galleryGroup.rotation.y = this.controls.angle;
         this.sceneObj.render();
         const startRect = artwork.getScreenRect(this.sceneObj.camera, this.sceneObj.canvas);
 
@@ -975,8 +991,7 @@
           ease: "power2.out",
           onUpdate: () => {
             otherArtworks.forEach((a) => a.setOpacity(fadeProxy.others));
-            this.sceneObj.wallMat.opacity = fadeProxy.room;
-            this.sceneObj.floorMat.opacity = fadeProxy.room;
+            this.sceneObj.architectureOpacity = fadeProxy.room;
           }
         },
         "<"
@@ -997,11 +1012,12 @@
   // 7. KHỞI CHẠY & FALLBACK KHÔNG CÓ WEBGL
   // ==========================================================================
   function initBadmintonGallery3D() {
+    const sectionEl = document.getElementById("sectionBadmintonGallery3D");
     const stageEl = document.getElementById("bg3dStage");
     const canvasEl = document.getElementById("bg3dCanvas");
     const fallbackEl = document.getElementById("bg3dFallback");
     const fallbackGrid = document.getElementById("bg3dFallbackGrid");
-    if (!stageEl || !canvasEl) return;
+    if (!sectionEl || !stageEl || !canvasEl) return;
 
     const items = getBadmintonCatalog();
     if (!items.length) return;
@@ -1010,7 +1026,7 @@
     let webglOk = false;
     try {
       const testC = document.createElement("canvas");
-      webglOk = Boolean(window.THREE && (testC.getContext("webgl2") || testC.getContext("webgl")));
+      webglOk = Boolean(window.gsap && window.THREE && (testC.getContext("webgl2") || testC.getContext("webgl")));
     } catch (_e) {
       webglOk = false;
     }
@@ -1057,16 +1073,8 @@
     }
 
     function getCenteredArtwork() {
-      let best = artworks[0];
-      let bestDist = Infinity;
-      artworks.forEach((a) => {
-        const d = Math.abs(normalizeAngle(a.theta - controls.angle));
-        if (d < bestDist) {
-          bestDist = d;
-          best = a;
-        }
-      });
-      return best;
+      const center = Math.round(controls.angle / stepAngle);
+      return artworks[((center % artworks.length) + artworks.length) % artworks.length];
     }
 
     const stepAngle = (Math.PI * 2) / artworks.length;
@@ -1081,6 +1089,7 @@
         window.gsap.to(controls, {
           angle: controls.angle + dir * stepAngle,
           duration: 0.5,
+          overwrite: "auto",
           ease: "power3.out"
         });
       }
@@ -1091,11 +1100,11 @@
     // Nút điều hướng góc trên (dễ truy cập bằng chuột / bàn phím)
     document.getElementById("btnBg3dPrev")?.addEventListener("click", () => {
       if (controls.locked) return;
-      window.gsap.to(controls, { angle: controls.angle + stepAngle, duration: 0.5, ease: "power3.out" });
+      window.gsap.to(controls, { angle: controls.angle + stepAngle, duration: 0.5, ease: "power3.out", overwrite: "auto" });
     });
     document.getElementById("btnBg3dNext")?.addEventListener("click", () => {
       if (controls.locked) return;
-      window.gsap.to(controls, { angle: controls.angle - stepAngle, duration: 0.5, ease: "power3.out" });
+      window.gsap.to(controls, { angle: controls.angle - stepAngle, duration: 0.5, ease: "power3.out", overwrite: "auto" });
     });
     document.getElementById("btnBg3dOpenCenter")?.addEventListener("click", () => {
       if (controls.locked) return;
@@ -1119,102 +1128,133 @@
 
     // Cập nhật tiêu đề bộ sưu tập động theo sản phẩm ở giữa
     const collSubEl = document.getElementById("bg3dCollSub");
-    let lastCenteredId = null;
+    let lastCaption = "";
 
-    // Vòng lặp render 60fps + chuyển động lần lượt trái -> phải thay đổi sau mỗi 1s
+    const roomEntry = { progress: 0 };
+    let entryTween;
+    if (window.ScrollTrigger) {
+      const plugin = window.ScrollTrigger;
+      window.gsap.registerPlugin(plugin);
+      entryTween = window.gsap.to(roomEntry, {
+        progress: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionEl,
+          start: () => {
+            const header = document.querySelector(".ts-min-header");
+            const mobileHeader = document.querySelector(".ts-mob-header");
+            return "top " + ((header?.offsetHeight || mobileHeader?.offsetHeight || 0) + 4) + "px";
+          },
+          end: () => "+=" + Math.round(stageEl.clientHeight * 0.95),
+          pin: sectionEl,
+          pinSpacing: true,
+          scrub: REDUCED_MOTION ? true : 0.28,
+          invalidateOnRefresh: true
+        }
+      });
+      plugin.refresh();
+    }
+
+    let lastLayoutAngle;
+    let lastLayoutProgress;
+    let settled = false;
+    function layoutRoom(dt) {
+      const { roomHalfWidth, artworkY, featureZ, featureScale, roomOffsetZ, previewArtworkRadius } = BADMINTON_GALLERY_CONFIG;
+      const progress = sceneObj.roomProgress;
+      if (settled && lastLayoutAngle === controls.angle && lastLayoutProgress === progress) return;
+      const firstLayout = lastLayoutAngle === undefined;
+      lastLayoutAngle = controls.angle;
+      lastLayoutProgress = progress;
+      settled = true;
+      const mix = THREE.MathUtils.lerp;
+      // Keep the original carousel responsive, while easing position changes on the room walls.
+      const follow = firstLayout || REDUCED_MOTION ? 1 : mix(1, 1 - Math.exp(-18 * dt), progress);
+      const center = Math.round(controls.angle / stepAngle);
+      const half = Math.floor(artworks.length / 2);
+      for (const artwork of artworks) {
+        const angle = normalizeAngle(artwork.theta - controls.angle);
+        const offset = ((artwork.index - center + half) % artworks.length + artworks.length) % artworks.length - half;
+        const side = Math.sign(offset);
+        const slot = Math.max(0, Math.abs(offset) - 1);
+        const column = Math.floor(slot / 2);
+        const wallY = slot % 2 === 0 ? 0.15 : 2.95;
+        const roomZ = side ? -16.2 + column * 3.55 : featureZ;
+        const x = mix(previewArtworkRadius * Math.sin(angle), side * (roomHalfWidth - 0.09), progress);
+        const y = mix(artworkY, side ? wallY : artworkY, progress);
+        const z = mix(-previewArtworkRadius * Math.cos(angle), roomZ + roomOffsetZ, progress);
+        const rotation = -angle + normalizeAngle(angle - side * Math.PI / 2) * progress;
+        const scale = mix(1, side ? 0.66 : featureScale, progress);
+        const group = artwork.group;
+        const turn = normalizeAngle(rotation - group.rotation.y);
+        const arrived = Math.abs(x - group.position.x) + Math.abs(y - group.position.y) +
+          Math.abs(z - group.position.z) + Math.abs(turn) + Math.abs(scale - group.scale.x) < 0.001;
+        const blend = arrived ? 1 : follow;
+        if (blend < 1) settled = false;
+        group.position.set(mix(group.position.x, x, blend), mix(group.position.y, y, blend), mix(group.position.z, z, blend));
+        group.rotation.y = blend === 1 ? rotation : normalizeAngle(group.rotation.y + turn * blend);
+        group.scale.setScalar(mix(group.scale.x, scale, blend));
+      }
+    }
+
     let rafId = null;
     let lastTs = performance.now();
-    let isPointerInside = false;
-    let autoStepElapsed = 0;
-    let autoTween = null;
-
-    stageEl.addEventListener("pointerenter", () => {
-      isPointerInside = true;
-      autoStepElapsed = 0;
-      if (autoTween) {
-        autoTween.kill();
-        autoTween = null;
-      }
-    });
-    stageEl.addEventListener("pointerleave", () => {
-      isPointerInside = false;
-      autoStepElapsed = 0;
-    });
-
-    const stepIntervalSec = Math.max(0.4, BADMINTON_GALLERY_CONFIG.autoPlaySpeedSec || 1.0);
+    let stageNearby = true;
+    const visibility = new IntersectionObserver(([entry]) => {
+      stageNearby = entry.isIntersecting;
+    }, { rootMargin: "180px 0px" });
+    visibility.observe(stageEl);
 
     function animate(ts) {
       rafId = requestAnimationFrame(animate);
       const dt = Math.min(0.05, (ts - lastTs) / 1000);
       lastTs = ts;
-
+      if (!stageNearby && transitionCtrl.state === "gallery") return;
       controls.update(dt);
-
-      // Chuyển động từng sản phẩm lần lượt từ trái sang phải, đổi sau mỗi 1s
-      if (
-        BADMINTON_GALLERY_CONFIG.autoPlay &&
-        !REDUCED_MOTION &&
-        transitionCtrl.state === "gallery" &&
-        !controls.locked &&
-        !controls.isDragging &&
-        !isPointerInside &&
-        Math.abs(controls.velocity) < 0.01
-      ) {
-        autoStepElapsed += dt;
-        if (autoStepElapsed >= stepIntervalSec && !autoTween) {
-          autoStepElapsed = 0;
-          const snappedTarget = Math.round(controls.angle / stepAngle) * stepAngle - stepAngle;
-          autoTween = window.gsap.to(controls, {
-            angle: snappedTarget,
-            duration: 0.62,
-            ease: "power3.inOut",
-            onComplete: () => {
-              autoTween = null;
-            }
-          });
-        }
-      } else {
-        autoStepElapsed = 0;
-        if (autoTween && (controls.isDragging || controls.locked || transitionCtrl.state !== "gallery")) {
-          autoTween.kill();
-          autoTween = null;
-        }
+      const { cameraOutsideZ, cameraInsideZ, cameraY } = BADMINTON_GALLERY_CONFIG;
+      if (transitionCtrl.state === "gallery") {
+        const progress = roomEntry.progress;
+        sceneObj.roomProgress = REDUCED_MOTION ? Number(progress >= 0.5) : progress * progress * (3 - 2 * progress);
       }
-
-      sceneObj.galleryGroup.rotation.y = controls.angle;
+      const mobileOffset = sceneObj.camera.aspect < 1 ? THREE.MathUtils.lerp(-1.2, 1, sceneObj.roomProgress) : 0;
+      sceneObj.baseCameraZ = THREE.MathUtils.lerp(cameraOutsideZ, cameraInsideZ, sceneObj.roomProgress) + mobileOffset;
+      layoutRoom(dt);
 
       if (transitionCtrl.state === "gallery") {
+        sceneObj.camera.position.set(0, cameraY, sceneObj.baseCameraZ);
+        const appearanceBlend = 1 - Math.exp(-12 * dt);
+        const sideOpacity = THREE.MathUtils.lerp(0.30, 0.90, sceneObj.roomProgress);
+        const sideBrightness = THREE.MathUtils.lerp(0.54, 0.85, sceneObj.roomProgress);
+        const sideCaption = THREE.MathUtils.lerp(0.14, 0.65, sceneObj.roomProgress);
         artworks.forEach((a) => {
           const isHov = a === hoveredArtwork;
           const distFromCenter = Math.abs(normalizeAngle(a.theta - controls.angle));
           const focusFactor = Math.exp(-Math.pow(distFromCenter / (stepAngle * 0.68), 2));
 
           // Sản phẩm chính giữa tự động phát sáng (hào quang trắng + sáng 100%) không cần hover; hai bên tối mờ dịu
-          a.setHover(isHov || focusFactor > 0.65);
 
-          const targetOpacity = isHov ? 1.0 : (0.30 + 0.70 * focusFactor);
-          a.artMat.opacity += (targetOpacity - a.artMat.opacity) * 0.18;
+          const targetOpacity = isHov ? 1.0 : sideOpacity + (1 - sideOpacity) * focusFactor;
+          a.artMat.opacity += (targetOpacity - a.artMat.opacity) * appearanceBlend;
 
-          const targetBright = isHov ? 1.0 : (0.54 + 0.46 * focusFactor);
+          const targetBright = isHov ? 1.0 : sideBrightness + (1 - sideBrightness) * focusFactor;
           const curBright = a.artMat.color.r;
-          const nextBright = curBright + (targetBright - curBright) * 0.18;
+          const nextBright = curBright + (targetBright - curBright) * appearanceBlend;
           a.artMat.color.setRGB(nextBright, nextBright, nextBright);
 
           if (a.glowMat) {
             const targetGlow = Math.pow(focusFactor, 2.2) * 0.95;
-            a.glowMat.opacity += (targetGlow - a.glowMat.opacity) * 0.18;
+            a.glowMat.opacity += (targetGlow - a.glowMat.opacity) * appearanceBlend;
           }
 
-          const targetCapOpacity = isHov ? 1.0 : (0.14 + 0.86 * Math.pow(focusFactor, 1.5));
-          a.capMat.opacity += (targetCapOpacity - a.capMat.opacity) * 0.18;
+          const targetCapOpacity = isHov ? 1.0 : sideCaption + (1 - sideCaption) * Math.pow(focusFactor, 1.5);
+          a.capMat.opacity += (targetCapOpacity - a.capMat.opacity) * appearanceBlend;
         });
 
         const centered = getCenteredArtwork();
-        if (centered && centered.item.id !== lastCenteredId) {
-          lastCenteredId = centered.item.id;
-          if (collSubEl) {
-            collSubEl.textContent = `${centered.item.title}  •  Kéo hoặc cuộn ngang để khám phá`;
-          }
+        const hint = roomEntry.progress < 0.8 ? "Cuộn xuống để tiến vào phòng" : "Dùng mũi tên để đổi sản phẩm";
+        const caption = `${centered.item.title} • ${hint}`;
+        if (collSubEl && caption !== lastCaption) {
+          lastCaption = caption;
+          collSubEl.textContent = caption;
         }
       }
 
@@ -1228,11 +1268,17 @@
     window.addEventListener("beforeunload", () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("resize", onResize);
+      visibility.disconnect();
+      entryTween?.scrollTrigger?.kill();
+      entryTween?.kill();
       controls.dispose();
       artworks.forEach((a) => a.dispose());
       sceneObj.dispose();
     });
   }
 
-  document.addEventListener("DOMContentLoaded", initBadmintonGallery3D);
+  document.addEventListener("DOMContentLoaded", async () => {
+    await window.tsportCatalogReady;
+    initBadmintonGallery3D();
+  });
 })();

@@ -81,7 +81,7 @@
         <button type="button" class="ts-courts-v2-mode-btn is-active" id="tabBtnCustomer" onclick="switchCourtTab('customer')">
           Đặt sân &amp; Lịch của tôi
         </button>
-        <button type="button" class="ts-courts-v2-mode-btn" id="tabBtnAdmin" onclick="switchCourtTab('admin')">
+        <button type="button" class="ts-courts-v2-mode-btn" id="tabBtnAdmin" hidden>
           Quản trị sân &amp; Ca chơi
         </button>
       </div>
@@ -316,7 +316,7 @@
       document.getElementById("tabBtnCustomer").classList.toggle("is-active", tab === "customer");
       document.getElementById("tabBtnAdmin").classList.toggle("is-active", tab === "admin");
       document.getElementById("courtPaneCustomer").classList.toggle("is-active", tab === "customer");
-      document.getElementById("courtPaneAdmin").classList.toggle("is-active", tab === "admin");
+      document.getElementById("courtPaneAdmin")?.classList.toggle("is-active", tab === "admin");
     }
 
     document.getElementById("courtsHeaderSearchForm")?.addEventListener("submit", function (e) {

@@ -64,9 +64,10 @@
 
     // Cập nhật thông tin tài khoản đăng nhập trên Header
     const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
-    const userLabel = document.querySelector(".js-header-user-label");
-    if (userLabel && user) {
-      userLabel.textContent = user.full_name || user.email;
+    const userLabel = document.querySelector(".js-header-user-label, #headerUserWrap a");
+    if (userLabel && user && (localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
+      userLabel.textContent = user.full_name || user.email || "Tài khoản";
+      userLabel.href = (document.body.dataset.root ?? "../") + "pages/account.html";
     }
 
     // Cập nhật số lượng giỏ hàng trên Header
@@ -136,7 +137,7 @@
         <a href="${root}pages/orders.html" class="ts-mob-drawer-link ${pageName === "orders.html" ? "is-active" : ""}">Đơn hàng của tôi</a>
         <a href="${root}pages/my-bookings.html" class="ts-mob-drawer-link ${pageName === "my-bookings.html" ? "is-active" : ""}">Lịch đặt sân của tôi</a>
         <a href="${root}pages/account.html" class="ts-mob-drawer-link ${pageName === "account.html" ? "is-active" : ""}">Tài khoản</a>
-        <a href="${root}pages/admin-dashboard.html" class="ts-mob-drawer-link">Quản trị hệ thống</a>
+        <a data-admin-link hidden href="${root}pages/admin-dashboard.html" class="ts-mob-drawer-link">Quản trị hệ thống</a>
       </nav>
     `;
 

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field, ConfigDict
 from sqlalchemy import select, delete
 from sqlalchemy.orm import Session
-from app.core.deps import get_current_user, require_admin
+from app.core.deps import get_current_user, require_customer
 from app.db.session import get_db
 from app.models.user import User, UserRole
 from app.models.catalog import ProductSku, Product
@@ -22,12 +22,7 @@ class Checkout(BaseModel):
     receiver_phone: str = Field(min_length=9, max_length=20)
     shipping_address: str = Field(min_length=1)
 
-def customer(user):
-    if user.role != UserRole.CUSTOMER:
-        raise HTTPException(403, 'Chỉ CUSTOMER được giao dịch')
-
 def cart(db, user):
-    customer(user)
     db.scalar(select(User).where(User.id == user.id).with_for_update())
     row = db.scalar(select(Cart).where(Cart.user_id == user.id).with_for_update())
     if row is None:
@@ -43,7 +38,7 @@ def sellable(db, sku_id):
     return sku
 
 @router.get('/cart', tags=['Cart'])
-def read_cart(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def read_cart(db: Session = Depends(get_db), user: User = Depends(require_customer)):
     row = cart(db, user)
     result = [{'product_sku_id': i.product_sku_id, 'quantity': i.quantity,
                'unit': i.product_sku.unit, 'price': i.product_sku.price,
@@ -66,21 +61,21 @@ def change_cart(sku_id, data, add, db, user):
     return {'product_sku_id': sku_id, 'quantity': quantity}
 
 @router.post('/cart/items/{sku_id}', tags=['Cart'])
-def add_item(sku_id: int, data: Quantity, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def add_item(sku_id: int, data: Quantity, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     return change_cart(sku_id, data, True, db, user)
 
 @router.put('/cart/items/{sku_id}', tags=['Cart'])
-def set_item(sku_id: int, data: Quantity, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def set_item(sku_id: int, data: Quantity, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     return change_cart(sku_id, data, False, db, user)
 
 @router.delete('/cart/items/{sku_id}', tags=['Cart'], status_code=204)
-def remove_item(sku_id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def remove_item(sku_id: int, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     row = cart(db, user)
     db.execute(delete(CartItem).where(CartItem.cart_id == row.id, CartItem.product_sku_id == sku_id))
     db.commit()
 
 @router.post('/orders', tags=['Orders'], status_code=201)
-def checkout(data: Checkout, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def checkout(data: Checkout, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     row = cart(db, user)
     items = list(db.scalars(select(CartItem).where(CartItem.cart_id == row.id).order_by(CartItem.product_sku_id).with_for_update()))
     if not items:

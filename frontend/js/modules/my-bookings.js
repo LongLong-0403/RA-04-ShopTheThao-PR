@@ -70,12 +70,19 @@
     return map[status] || { label: status, cls: "", action: "Xem thông tin", actionType: "info" };
   }
 
-  function renderBookingsTable() {
+  let bookings = [];
+  async function renderBookingsTable() {
     const tbody = document.getElementById("myBookingsTableBody");
     const store = window.tsportStore;
     if (!tbody || !store) return;
 
-    const bookings = store.getBookings() || [];
+    try {
+      const [rows,courts,slots] = await Promise.all([api.get("/bookings"),api.get("/courts/"),api.get("/slots/")]);
+      bookings = rows.map(b => {const slot = slots.find(s => s.id === b.court_slot_id);
+        return {...b, court_name:courts.find(c=>c.id===b.court_id)?.name || "Sân "+b.court_id, time_slot:slot?.slot_name || "", fixed_price:b.price_at_booking,
+          status:({CHO_XAC_NHAN:"PENDING",XAC_NHAN:"CONFIRMED",HUY:"CANCELLED",TU_CHOI:"REJECTED"})[b.status] || b.status};
+      });
+    } catch (err) { showToast(err.message, "error"); return; }
 
     if (bookings.length === 0) {
       tbody.innerHTML = `
@@ -121,7 +128,7 @@
   }
 
   function bindEvents() {
-    document.getElementById("myBookingsTableBody")?.addEventListener("click", (e) => {
+    document.getElementById("myBookingsTableBody")?.addEventListener("click", async (e) => {
       const btn = e.target.closest(".js-booking-action");
       if (!btn) return;
       const store = window.tsportStore;
@@ -129,18 +136,14 @@
 
       const id = Number(btn.dataset.bookingId);
       const type = btn.dataset.actionType;
-      const booking = store.getBookings().find((b) => Number(b.id) === id);
+      const booking = bookings.find((b) => Number(b.id) === id);
       if (!booking) return;
 
       if (type === "cancel") {
-        const ok = confirm(`Bạn có chắc muốn hủy lịch "${booking.court_name}" (${booking.time_slot})?`);
+        const ok = await confirmAction(`Bạn có chắc muốn hủy lịch "${booking.court_name}" (${booking.time_slot})?`, "Hủy lịch");
         if (!ok) return;
         try {
-          if (booking.status === "PENDING") {
-            store.cancelBooking(id);
-          } else {
-            store.updateBookingStatus(id, "CANCELLED", "Khách hàng chủ động hủy lịch");
-          }
+          await api.patch("/bookings/"+id+"/status", {status:"HUY"});
           showToast("Đã hủy lịch đặt sân thành công.", "success");
           renderBookingsTable();
         } catch (err) {
@@ -163,5 +166,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initMyBookingsPage);
+  document.addEventListener("DOMContentLoaded", () => initCustomerPage(initMyBookingsPage));
 })();

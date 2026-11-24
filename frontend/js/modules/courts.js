@@ -10,14 +10,18 @@
   let currentSportFilter = "ALL";
   let currentSearchKeyword = "";
 
-  function initCourtsModule() {
-    renderBookingSportOptions();
-    renderBookingCourts();
-    renderBookingSlots();
+  let courtsFromDb = [];
+  async function initCourtsModule() {
+    const adminTab = document.getElementById("tabBtnAdmin");
+    if (adminTab) {
+      adminTab.hidden = true;
+      adminTab.onclick = () => location.assign("admin-courts.html");
+      if (localStorage.getItem("token")) api.get("/auth/me").then(u => {adminTab.hidden = u.role !== "ADMIN";}).catch(() => {});
+    }
+    document.getElementById("courtPaneAdmin")?.remove();
+    try { courtsFromDb = await api.get("/courts/"); }
+    catch (err) { showToast(err.message, "error"); return; }
     renderCustomerCourtCards();
-    renderMyBookings();
-    renderAdminBookingRequests();
-    renderAdminCourtsAndSlots();
     bindEvents();
   }
 
@@ -28,7 +32,7 @@
     const store = window.tsportStore;
     if (!grid || !store) return;
 
-    let courts = store.getCourts();
+    let courts = courtsFromDb;
     if (currentSportFilter && currentSportFilter !== "ALL") {
       courts = courts.filter(c => c.sport_id === Number(currentSportFilter));
     }
@@ -391,7 +395,7 @@
           if (typeof showToast === "function") showToast("Đã lưu cụm sân vào danh sách yêu thích!", "success");
         } else {
           favBtn.textContent = "🤍";
-          if (typeof showToast === "function") showToast("Đã bỏ lưu yêu thích.", "info");
+          if (typeof showToast === "function") showToast("Đã bỏ lưu yêu thích.", "success");
         }
       }
 
@@ -403,193 +407,7 @@
       }
     });
 
-    // Thay đổi môn ở form đặt sân -> cập nhật danh sách sân & ca
-    document.getElementById("bookingSportSelect")?.addEventListener("change", () => {
-      renderBookingCourts();
-      renderBookingSlots();
-    });
 
-    // Thay đổi sân -> cập nhật ca
-    document.getElementById("bookingCourtSelect")?.addEventListener("change", () => {
-      renderBookingSlots();
-    });
-
-    // Thay đổi ngày -> cập nhật tình trạng ca trống / ca bị chiếm
-    document.getElementById("bookingDate")?.addEventListener("change", () => {
-      renderBookingSlots();
-    });
-
-    // Chọn Ca chơi
-    document.getElementById("bookingSlotSelector")?.addEventListener("click", (e) => {
-      const btn = e.target.closest(".js-slot-btn");
-      if (btn) {
-        document.querySelectorAll(".js-slot-btn").forEach(b => b.classList.remove("is-active"));
-        btn.classList.add("is-active");
-        selectedSlotId = Number(btn.dataset.slotId);
-      }
-    });
-
-    // Khách Gửi yêu cầu đặt sân
-    document.getElementById("formCustomerBooking")?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const store = window.tsportStore;
-      if (!store) return;
-
-      const courtId = Number(document.getElementById("bookingCourtSelect")?.value);
-      const bookingDate = document.getElementById("bookingDate")?.value;
-      const name = document.getElementById("bookingCustomerName")?.value.trim();
-      const phone = document.getElementById("bookingCustomerPhone")?.value.trim();
-      const note = document.getElementById("bookingCustomerNote")?.value.trim() || "";
-
-      if (!courtId || !selectedSlotId || !bookingDate) {
-        alert("⚠️ Vui lòng chọn đầy đủ Sân, Ngày và Ca giờ chơi!");
-        return;
-      }
-
-      try {
-        const newBooking = store.createBooking({
-          court_id: courtId,
-          slot_id: selectedSlotId,
-          booking_date: bookingDate,
-          customer_name: name,
-          phone,
-          note
-        });
-
-        renderMyBookings();
-        renderAdminBookingRequests();
-        showToast(`Đã gửi yêu cầu đặt sân thành công! Mã yêu cầu: ${newBooking.booking_code}`, "success");
-      } catch (err) {
-        alert("⚠️ " + err.message);
-      }
-    });
-
-    // Khách Hủy yêu cầu đặt sân
-    document.addEventListener("click", (e) => {
-      const store = window.tsportStore;
-      if (!store) return;
-
-      const cancelBtn = e.target.closest(".js-cancel-booking");
-      if (cancelBtn) {
-        if (confirm("Bạn có chắc chắn muốn hủy yêu cầu đặt sân này không?")) {
-          try {
-            store.cancelBooking(cancelBtn.dataset.id);
-            renderMyBookings();
-            renderAdminBookingRequests();
-            showToast("Đã hủy yêu cầu đặt sân thành công!", "info");
-          } catch (err) {
-            alert("⚠️ " + err.message);
-          }
-        }
-      }
-
-      // Chọn ca giờ chơi
-      const slotBtn = e.target.closest(".js-slot-btn");
-      if (slotBtn) {
-        if (slotBtn.dataset.occupied === "true") {
-          alert("⚠️ Ca này đã có người đặt trước và được xác nhận! Vui lòng chọn ca khác hoặc ngày khác.");
-          return;
-        }
-        document.querySelectorAll(".js-slot-btn").forEach(b => b.classList.remove("is-active"));
-        slotBtn.classList.add("is-active");
-        selectedSlotId = Number(slotBtn.dataset.slotId);
-      }
-
-      // Admin Duyệt yêu cầu (Kiểm tra xung đột 2 Admin đồng thời & Ca bị chiếm)
-      const confirmBtn = e.target.closest(".js-admin-confirm-booking");
-      if (confirmBtn) {
-        const bookingId = Number(confirmBtn.dataset.id);
-        const expectedVersion = Number(confirmBtn.dataset.version) || 1;
-        try {
-          store.adminConfirmBooking(bookingId, 1, expectedVersion);
-          renderMyBookings();
-          renderAdminBookingRequests();
-          renderBookingSlots();
-          showToast("✓ Đã duyệt yêu cầu đặt sân thành công (Khóa ca tránh trùng lịch)!", "success");
-        } catch (err) {
-          alert("⚠️ " + err.message);
-          renderMyBookings();
-          renderAdminBookingRequests();
-          renderBookingSlots();
-        }
-      }
-
-      // Admin Hủy / Giải phóng ca sân
-      const releaseBtn = e.target.closest(".js-admin-release-booking");
-      if (releaseBtn) {
-        const bookingId = Number(releaseBtn.dataset.id);
-        if (confirm("Bạn có chắc chắn muốn HỦY / GIẢI PHÓNG ca sân này về trạng thái sẵn sàng cho khách khác đặt không?")) {
-          try {
-            store.adminReleaseSlot(bookingId, "Admin giải phóng ca sân");
-            renderMyBookings();
-            renderAdminBookingRequests();
-            renderBookingSlots();
-            showToast("✓ Đã giải phóng ca sân thành công!", "success");
-          } catch (err) {
-            alert("⚠️ Lỗi: " + err.message);
-          }
-        }
-      }
-
-      // Admin Từ chối yêu cầu
-      const rejectBtn = e.target.closest(".js-admin-reject-booking");
-      if (rejectBtn) {
-        const reason = prompt("Nhập lý do từ chối yêu cầu đặt sân (ví dụ: Sân đã kín, Sân đang bảo dưỡng định kỳ):", "Sân đang bảo dưỡng định kỳ");
-        if (reason !== null) {
-          store.updateBookingStatus(rejectBtn.dataset.id, "REJECTED", reason);
-          renderMyBookings();
-          renderAdminBookingRequests();
-          showToast("Đã từ chối yêu cầu đặt sân", "info");
-        }
-      }
-    });
-
-    // Form Admin Tạo Sân Con mới
-    document.getElementById("formAdminCreateCourt")?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const store = window.tsportStore;
-      if (!store) return;
-
-      const name = document.getElementById("adminCourtName")?.value.trim();
-      const sportId = Number(document.getElementById("adminCourtSport")?.value);
-      const surface = document.getElementById("adminCourtSurface")?.value.trim();
-      const addr = document.getElementById("adminCourtAddress")?.value.trim();
-
-      try {
-        store.saveCourt({ name, sport_id: sportId, surface, address: addr });
-        closeModal("modalAdminCourtForm");
-        renderBookingCourts();
-        renderAdminCourtsAndSlots();
-        showToast(`Đã tạo sân mới "${name}" thành công!`, "success");
-      } catch (err) {
-        alert("⚠️ " + err.message);
-      }
-    });
-
-    // Form Admin Cấu hình Ca Giờ & Giá Cố Định
-    document.getElementById("formAdminCreateSlot")?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const store = window.tsportStore;
-      if (!store) return;
-
-      const courtId = Number(document.getElementById("adminSlotCourt")?.value);
-      const timeSlot = document.getElementById("adminSlotTime")?.value.trim();
-      const price = Number(document.getElementById("adminSlotPrice")?.value);
-
-      try {
-        store.saveSlot({ court_id: courtId, time_slot: timeSlot, fixed_price: price });
-        closeModal("modalAdminSlotForm");
-        renderBookingSlots();
-        renderAdminCourtsAndSlots();
-        showToast(`Đã cấu hình ca chơi "${timeSlot}" thành công!`, "success");
-      } catch (err) {
-        alert("⚠️ " + err.message);
-      }
-    });
-
-    // Mở modal admin
-    document.getElementById("btnOpenAdminAddCourt")?.addEventListener("click", () => openModal("modalAdminCourtForm"));
-    document.getElementById("btnOpenAdminAddSlot")?.addEventListener("click", () => openModal("modalAdminSlotForm"));
   }
 
   document.addEventListener("DOMContentLoaded", initCourtsModule);

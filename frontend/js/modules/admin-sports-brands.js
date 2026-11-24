@@ -218,7 +218,7 @@
     });
 
     // Xóa mục đang chọn
-    document.getElementById("btnDeleteSbItem")?.addEventListener("click", () => {
+    document.getElementById("btnDeleteSbItem")?.addEventListener("click", async () => {
       const store = window.tsportStore;
       if (!store || selectedId == null || selectedId < 0) return;
 
@@ -227,13 +227,13 @@
       if (idx === -1) return;
 
       const targetName = arr[idx].name;
-      if (!confirm(`Bạn có chắc muốn xóa "${targetName}" không?`)) return;
+      if (!(await confirmAction(`Bạn có chắc muốn xóa "${targetName}" không?`, "Xóa"))) return;
 
       arr.splice(idx, 1);
       store.save();
       selectedId = arr[0] ? arr[0].id : -1;
       renderAll();
-      showToast(`Đã xóa "${targetName}".`, "info");
+      showToast(`Đã xóa "${targetName}".`, "success");
     });
   }
 
@@ -247,5 +247,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initModule);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initModule));
 })();

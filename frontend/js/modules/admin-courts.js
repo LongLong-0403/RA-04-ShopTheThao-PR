@@ -340,5 +340,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initAdminCourts);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initAdminCourts));
 })();

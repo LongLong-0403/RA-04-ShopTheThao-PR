@@ -99,7 +99,7 @@
       msgEl.textContent = "";
     }
     updateCheckoutTotals();
-    showToast("Đã hủy áp dụng mã giảm giá.", "info");
+    showToast("Đã hủy áp dụng mã giảm giá.", "success");
   }
 
   function initCartModule() {
@@ -458,15 +458,9 @@
     const urlParams = typeof getUrlParams === "function" ? getUrlParams() : {};
     if (urlParams.success === "1" || urlParams.order) {
       const store = window.tsportStore;
-      const latestOrder =
-        (store && store.getOrders && store.getOrders().find((o) => o.order_code === urlParams.order)) ||
-        (store && store.getOrders && store.getOrders()[0]) || {
-          order_code: urlParams.order || "ORD-20261107-001",
-          total_amount: 2850000,
-          payment_method: "COD"
-        };
-      showCheckoutSuccessView(latestOrder);
-      return;
+      const orders = store?.getOrders() || [];
+      const order = urlParams.order ? orders.find(row => row.order_code === urlParams.order) : orders[0];
+      if (order) { showCheckoutSuccessView(order); return; }
     }
 
     const store = window.tsportStore;
@@ -612,7 +606,7 @@
     const payment = selectedMethod === "EWALLET" ? `EWALLET_${walletProvider.toUpperCase()}` : selectedMethod;
 
     if (!name || !phone || !addr) {
-      alert("⚠️ Vui lòng nhập đầy đủ Tên người nhận, SĐT và Địa chỉ giao hàng!");
+      showToast("Vui lòng nhập đầy đủ Tên người nhận, SĐT và Địa chỉ giao hàng!", "error");
       return;
     }
 
@@ -650,9 +644,8 @@
         if (errorBanner && errorText) {
           errorBanner.style.display = "flex";
           errorText.textContent = err.message;
-        } else {
-          alert(err.message);
         }
+        showToast(err.message || "Không thể đặt hàng.", "error");
       } finally {
         isSubmitting = false;
         if (btnSubmit) {
@@ -665,7 +658,7 @@
 
   // 4. BẮT CÁC SỰ KIỆN TRONG BẢNG GIỎ HÀNG
   function bindCartEvents() {
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", async (e) => {
       const store = window.tsportStore;
       if (!store) return;
 
@@ -678,38 +671,32 @@
           try {
             store.updateCartItem(skuId, item.quantity + 1);
             renderCartPage();
+            showToast("Đã cập nhật số lượng sản phẩm.", "success");
           } catch (err) {
-            alert("⚠️ " + err.message);
+            showToast(err.message, "error");
           }
         }
       }
 
-      // Nút Giảm số lượng (-)
+      // Giảm số lượng hoặc xóa sản phẩm khỏi giỏ
       const minusBtn = e.target.closest(".js-cart-minus");
-      if (minusBtn) {
-        const skuId = Number(minusBtn.dataset.sku);
-        const item = store.getCart().find((i) => i.sku_id === skuId);
-        if (item) {
-          if (item.quantity > 1) {
-            store.updateCartItem(skuId, item.quantity - 1);
-            renderCartPage();
-          } else {
-            if (confirm(`Bạn có chắc muốn xóa "${item.product_name}" khỏi giỏ hàng?`)) {
-              store.removeFromCart(skuId);
-              renderCartPage();
-              showToast("Đã xóa sản phẩm khỏi giỏ hàng", "info");
-            }
-          }
-        }
-      }
-
-      // Nút Xóa dòng
-      const removeBtn = e.target.closest(".js-cart-remove");
-      if (removeBtn) {
-        const skuId = Number(removeBtn.dataset.sku);
-        store.removeFromCart(skuId);
+      const action = minusBtn || e.target.closest(".js-cart-remove");
+      if (!action) return;
+      const skuId = Number(action.dataset.sku);
+      const item = store.getCart().find((i) => i.sku_id === skuId);
+      if (!item) return;
+      const shouldRemove = !minusBtn || item.quantity <= 1;
+      if (shouldRemove && !(await confirmAction(
+        `Bạn có chắc muốn xóa "${item.product_name}" khỏi giỏ hàng?`,
+        "Xóa sản phẩm"
+      ))) return;
+      try {
+        if (shouldRemove) store.removeFromCart(skuId);
+        else store.updateCartItem(skuId, item.quantity - 1);
         renderCartPage();
-        showToast("Đã xóa sản phẩm khỏi giỏ hàng", "info");
+        showToast(shouldRemove ? "Đã xóa sản phẩm khỏi giỏ hàng." : "Đã cập nhật số lượng sản phẩm.", "success");
+      } catch (error) {
+        showToast(error.message || "Không thể cập nhật giỏ hàng.", "error");
       }
     });
 
@@ -722,13 +709,14 @@
         try {
           store.updateCartItem(skuId, val);
           renderCartPage();
+          showToast("Đã cập nhật số lượng sản phẩm.", "success");
         } catch (err) {
-          alert("⚠️ " + err.message);
+          showToast(err.message, "error");
           renderCartPage();
         }
       }
     });
   }
 
-  document.addEventListener("DOMContentLoaded", initCartModule);
+  document.addEventListener("DOMContentLoaded", () => initCustomerPage(initCartModule));
 })();

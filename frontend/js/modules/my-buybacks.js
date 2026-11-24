@@ -9,7 +9,6 @@
   function initMyBuybacksPage() {
     initSidebarUser();
     initHeaderSearch();
-    ensureDemoQuotedBuyback();
     renderBuybacksList();
     bindEvents();
   }
@@ -52,31 +51,6 @@
   }
 
   // Đảm bảo có sẵn 1 yêu cầu ở trạng thái Đã báo giá (OFFERED) để khách trải nghiệm luồng phản hồi
-  function ensureDemoQuotedBuyback() {
-    const store = window.tsportStore;
-    if (!store) return;
-    const list = store.getBuybacks() || [];
-    const hasDemo = list.some((b) => String(b.product_name || "").includes("Yonex Astrox 88D"));
-    if (!hasDemo) {
-      store.saveBuyback({
-        customer_name: "Nguyễn Minh Anh",
-        phone: "0901234567",
-        sport_name: "Cầu lông",
-        product_name: "Yonex Astrox 88D",
-        condition_desc: "Trầy nhẹ ở viền khung; không nứt, đã sử dụng 6 tháng.",
-        expected_price: 1200000,
-        offered_price: 1000000,
-        images: [
-          "/frontend/assets/products/victor-auraspeed-90k-ii.png",
-          "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=400",
-          "https://images.unsplash.com/photo-1616423640778-28d1b53229bd?w=400"
-        ],
-        status: "OFFERED",
-        created_at: "2026-11-07"
-      });
-    }
-  }
-
   function formatDMY(iso) {
     const parts = String(iso || "").split(" ")[0].split("-");
     if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -102,12 +76,14 @@
     return map[status] || { label: status, cls: "" };
   }
 
-  function renderBuybacksList() {
+  async function renderBuybacksList() {
     const wrap = document.getElementById("myBuybacksList");
     const store = window.tsportStore;
     if (!wrap || !store) return;
 
-    const buybacks = store.getBuybacks() || [];
+    let buybacks;
+    try { buybacks = (await api.get("/buyback-requests")).map(row => ({...row, product_name:row.brand_model, condition_desc:row.condition_detail})); }
+    catch (err) { showToast(err.message, "error"); return; }
 
     if (buybacks.length === 0) {
       wrap.innerHTML = `
@@ -208,13 +184,14 @@
   }
 
   function bindEvents() {
-    document.getElementById("myBuybacksList")?.addEventListener("click", (e) => {
+    document.getElementById("myBuybacksList")?.addEventListener("click", async (e) => {
       const store = window.tsportStore;
       if (!store) return;
 
       const acceptBtn = e.target.closest(".js-bb-accept");
       if (acceptBtn) {
-        store.updateBuybackStatus(acceptBtn.dataset.id, "ACCEPTED", "Khách hàng đã đồng ý giá đề nghị.");
+        try { await api.patch(`/buyback-requests/${acceptBtn.dataset.id}/status`, {status: "ACCEPTED"}); }
+        catch (err) { showToast(err.message, "error"); return; }
         renderBuybacksList();
         showToast("Bạn đã đồng ý giá đề nghị! Cửa hàng sẽ liên hệ hoàn tất thu mua.", "success");
         return;
@@ -222,20 +199,22 @@
 
       const rejectBtn = e.target.closest(".js-bb-reject");
       if (rejectBtn) {
-        if (confirm("Bạn có chắc muốn từ chối giá đề nghị này?")) {
-          store.updateBuybackStatus(rejectBtn.dataset.id, "REJECTED", "Khách hàng từ chối giá đề nghị.");
+        if (await confirmAction("Bạn có chắc muốn từ chối giá đề nghị này?", "Từ chối giá")) {
+          try { await api.patch(`/buyback-requests/${rejectBtn.dataset.id}/status`, {status: "REJECTED"}); }
+        catch (err) { showToast(err.message, "error"); return; }
           renderBuybacksList();
-          showToast("Đã từ chối giá đề nghị.", "info");
+          showToast("Đã từ chối giá đề nghị.", "success");
         }
         return;
       }
 
       const cancelBtn = e.target.closest(".js-bb-cancel");
       if (cancelBtn) {
-        if (confirm("Bạn có chắc muốn hủy yêu cầu thu mua này không?")) {
-          store.updateBuybackStatus(cancelBtn.dataset.id, "CANCELLED", "Khách hàng chủ động hủy yêu cầu.");
+        if (await confirmAction("Bạn có chắc muốn hủy yêu cầu thu mua này không?", "Hủy yêu cầu")) {
+          try { await api.patch(`/buyback-requests/${cancelBtn.dataset.id}/status`, {status: "CANCELLED"}); }
+        catch (err) { showToast(err.message, "error"); return; }
           renderBuybacksList();
-          showToast("Đã hủy yêu cầu thu mua.", "info");
+          showToast("Đã hủy yêu cầu thu mua.", "success");
         }
       }
     });
@@ -251,5 +230,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initMyBuybacksPage);
+  document.addEventListener("DOMContentLoaded", () => initCustomerPage(initMyBuybacksPage));
 })();

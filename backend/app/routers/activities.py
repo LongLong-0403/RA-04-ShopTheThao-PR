@@ -1,11 +1,13 @@
 """Court bookings, community matches and buyback workflows."""
 from datetime import date, datetime, time, timezone, timedelta
 from decimal import Decimal
+from typing import Annotated
+from pydantic import StringConstraints
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field, HttpUrl, ConfigDict
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.core.deps import get_current_user, require_admin
+from app.core.deps import get_current_user, require_admin, require_customer
 from app.db.session import get_db
 from app.models.user import User, UserRole
 from app.models.court import Court, CourtSlot, CourtBooking, MatchPost, BuybackRequest, BookingStatusEnum, MatchStatusEnum, BuybackStatusEnum
@@ -107,8 +109,7 @@ def availability(court_id: int, booking_date: date, db: Session = Depends(get_db
             for s in db.scalars(select(CourtSlot).where(CourtSlot.court_id == court_id, CourtSlot.status == 'ACTIVE'))]
 
 @router.post('/bookings', tags=['Bookings'], status_code=201)
-def book(data: BookingInput, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    if user.role != UserRole.CUSTOMER: raise HTTPException(403, 'Chỉ CUSTOMER đặt sân')
+def book(data: BookingInput, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     court = db.scalar(select(Court).where(Court.id == data.court_id).with_for_update())
     slot = db.scalar(select(CourtSlot).where(CourtSlot.id == data.court_slot_id).with_for_update())
     if court is None or slot is None or slot.court_id != court.id: raise HTTPException(422, 'Ca không thuộc sân')
@@ -152,8 +153,14 @@ def matches(sport_id: int | None = None, db: Session = Depends(get_db)):
     if sport_id: query = query.where(MatchPost.sport_id == sport_id)
     return list(db.scalars(query.order_by(MatchPost.match_time)))
 
+@router.get('/match-posts/mine', tags=['Matches'])
+def my_matches(db: Session = Depends(get_db), user: User = Depends(require_customer)):
+    query = select(MatchPost).where(MatchPost.user_id == user.id).order_by(MatchPost.match_time.desc())
+    return list(db.scalars(query))
+
+
 @router.post('/match-posts', tags=['Matches'], status_code=201)
-def create_match(data: MatchInput, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def create_match(data: MatchInput, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     if data.match_time.tzinfo is not None or data.match_time <= now(): raise HTTPException(422, 'Giờ thi đấu phải là giờ địa phương trong tương lai')
     row = MatchPost(user_id=user.id, **data.model_dump())
     db.add(row)
@@ -162,7 +169,7 @@ def create_match(data: MatchInput, db: Session = Depends(get_db), user: User = D
     return row
 
 @router.put('/match-posts/{row_id}', tags=['Matches'])
-def edit_match(row_id: int, data: MatchInput, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def edit_match(row_id: int, data: MatchInput, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     row = owned(db, MatchPost, row_id, user)
     if row.user_id != user.id: raise HTTPException(403, 'Chỉ chủ bài được sửa')
     if row.status.value != 'OPEN' or data.match_time.tzinfo or data.match_time <= now(): raise HTTPException(409, 'Bài không còn mở hoặc giờ không hợp lệ')
@@ -174,7 +181,7 @@ class MatchState(BaseModel):
     status: MatchStatusEnum
 
 @router.patch('/match-posts/{row_id}/status', tags=['Matches'])
-def close_match(row_id: int, data: MatchState, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def close_match(row_id: int, data: MatchState, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     row = owned(db, MatchPost, row_id, user)
     if row.user_id != user.id: raise HTTPException(403, 'Chỉ chủ bài được đóng')
     if row.status.value != 'OPEN' or data.status.value not in ('CLOSED', 'CANCELLED'): raise HTTPException(409, 'Chuyển trạng thái không hợp lệ')
@@ -188,10 +195,10 @@ class BuybackInput(BaseModel):
     brand_model: str = Field(min_length=1, max_length=255)
     condition_detail: str = Field(min_length=1)
     expected_price: Decimal = Field(ge=0, max_digits=12, decimal_places=2)
-    images: list[HttpUrl] = Field(min_length=1, max_length=5)
+    images: list[HttpUrl | Annotated[str, StringConstraints(pattern=r'^data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$', max_length=2000000)]] = Field(min_length=1, max_length=5)
 
 @router.post('/buyback-requests', tags=['Buyback'], status_code=201)
-def buyback(data: BuybackInput, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def buyback(data: BuybackInput, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     row = BuybackRequest(user_id=user.id, **data.model_dump(exclude={'images'}), images=[str(x) for x in data.images])
     db.add(row)
     db.commit()

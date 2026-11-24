@@ -17,7 +17,7 @@
     const form = document.getElementById("bbHeaderSearchForm");
     const input = document.getElementById("bbHeaderSearchInput");
     if (!form || !input) return;
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const q = input.value.trim();
       window.location.href = q ? `shop.html?q=${encodeURIComponent(q)}` : "shop.html";
@@ -60,9 +60,10 @@
     fileInput?.addEventListener("change", (e) => {
       const files = Array.from(e.target.files || []).slice(0, 5);
       files.forEach((file) => {
+        if (!["image/png","image/jpeg","image/webp"].includes(file.type) || file.size > 1499900) { showToast("Chọn ảnh JPG, PNG hoặc WebP dưới 1,5 MB.", "error"); return; }
         const reader = new FileReader();
         reader.onload = (ev) => {
-          if (ev.target?.result) {
+          if (uploadedPreviews.length < 5 && ev.target?.result) {
             uploadedPreviews.push(ev.target.result);
             renderPreviews();
           }
@@ -79,7 +80,7 @@
       renderPreviews();
     });
 
-    document.getElementById("formBuybackRequest")?.addEventListener("submit", (e) => {
+    document.getElementById("formBuybackRequest")?.addEventListener("submit", async (e) => {
       e.preventDefault();
       const store = window.tsportStore;
       if (!store) return;
@@ -89,10 +90,7 @@
       const model = document.getElementById("bbModelInput")?.value.trim();
       const desc = document.getElementById("bbConditionDesc")?.value.trim();
       const expectedPrice = parsePriceNumber(document.getElementById("bbExpectedPrice")?.value);
-      const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-        full_name: "Nguyễn Minh Anh",
-        phone: "0901234567"
-      };
+
 
       if (!model || !desc || !expectedPrice) {
         showToast("Vui lòng nhập đầy đủ Hãng/Model, tình trạng và giá mong muốn.", "error");
@@ -100,20 +98,8 @@
       }
 
       try {
-        const created = store.saveBuyback({
-          customer_name: user.full_name || "Khách hàng Tsport",
-          phone: user.phone || "0901234567",
-          sport_name: sportObj ? sportObj.name : "Cầu lông",
-          product_name: model,
-          condition_desc: desc,
-          expected_price: expectedPrice,
-          offered_price: null,
-          images: uploadedPreviews.length
-            ? [...uploadedPreviews]
-            : ["/frontend/assets/products/victor-auraspeed-90k-ii.png"],
-          status: "PENDING",
-          created_at: new Date().toISOString().split("T")[0]
-        });
+        if (!uploadedPreviews.length) { showToast("Vui lòng thêm ảnh thực tế của sản phẩm.", "error"); return; }
+        const created = await api.post("/buyback-requests", {sport_id: sportId, brand_model: model, condition_detail: desc, expected_price: expectedPrice, images: uploadedPreviews});
 
         document.getElementById("formBuybackRequest").reset();
         uploadedPreviews = [];
@@ -135,5 +121,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initBuybackPage);
+  document.addEventListener("DOMContentLoaded", () => initCustomerPage(initBuybackPage));
 })();

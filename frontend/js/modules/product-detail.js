@@ -52,12 +52,13 @@
 
   function trackRecentView(productId) {
     try {
-      let recent = JSON.parse(localStorage.getItem("tsport_recent_views") || "[]");
+      let recent = window.tsportStore.data.recentViews;
       if (!Array.isArray(recent)) recent = [];
       recent = recent.filter((id) => id !== productId);
       recent.unshift(productId);
       if (recent.length > 8) recent = recent.slice(0, 8);
-      localStorage.setItem("tsport_recent_views", JSON.stringify(recent));
+      window.tsportStore.data.recentViews = recent;
+      window.tsportStore.save();
     } catch (_) {}
   }
 
@@ -432,6 +433,7 @@
       if (redirectToCheckout) {
         window.location.href = "cart.html";
       } else {
+        animateProductToCart(document.getElementById("pdpMainImage"), document.getElementById("btnAddToCart"));
         showToast(`Đã thêm ${qty} × "${currentProduct.name}" vào giỏ hàng.`, "success");
       }
     } catch (err) {
@@ -453,5 +455,8 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initProductDetailModule);
+  document.addEventListener("DOMContentLoaded", async () => {
+    await window.tsportCatalogReady;
+    initProductDetailModule();
+  });
 })();

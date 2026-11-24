@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="../css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-<body class="ts-adm-body" data-root="../">
+<body class="ts-adm-body" data-root="../" hidden>
 
   <div class="ts-adm-shell">
 
@@ -27,7 +27,6 @@
       </div>
 
       <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
-        <a href="guide.html" class="ts-adm-nav-link">Hướng dẫn</a>
         <a href="admin-dashboard.html" class="ts-adm-nav-link is-active">Tổng quan</a>
         <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
         <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
@@ -105,6 +104,64 @@
             <div class="ts-adm-kpi-num" id="kpiOutOfStockSkus">00</div>
             <div class="ts-adm-kpi-sub">Cần cập nhật tồn kho</div>
           </a>
+        </section>
+
+        <section class="ts-adm-card" id="quan-ly-banner" aria-labelledby="adminBannerTitle">
+          <header class="ts-adm-editor-heading">
+            <h2 class="ts-adm-card-title" id="adminBannerTitle">Banner trang chủ</h2>
+            <a href="../index.html" target="_blank" rel="noopener" class="ts-adm-btn-secondary">Xem trang chủ ↗</a>
+          </header>
+          <div class="ts-adm-banner-workspace" id="adminBannerEditors">
+            <form class="ts-adm-banner-controls">
+              <label for="adminBannerSlot">Banner cần chỉnh</label>
+              <select id="adminBannerSlot" class="ts-adm-select" name="slot">
+                <option value="1">Banner 1</option>
+                <option value="2">Banner 2</option>
+                <option value="3">Banner 3</option>
+              </select>
+              <label for="adminBannerFile">Tải ảnh từ máy</label>
+              <input id="adminBannerFile" name="file" type="file" accept="image/jpeg,image/png,image/webp">
+              <small>JPG, PNG hoặc WebP, tối đa 4 MB.</small>
+              <label for="adminBannerUrl">Hoặc dùng URL ảnh</label>
+              <input id="adminBannerUrl" name="url" class="ts-adm-input" type="url" placeholder="https://…">
+              <button type="button" class="ts-adm-btn-secondary" data-banner-action="url">Xem ảnh từ URL</button>
+              <fieldset class="ts-adm-banner-framing">
+                <legend>Căn ảnh · <span id="adminBannerDeviceLabel">Máy tính</span></legend>
+                <label for="adminBannerFit">Cách đặt ảnh</label>
+                <select id="adminBannerFit" name="fit" class="ts-adm-select">
+                  <option value="cover">Lấp đầy khung</option>
+                  <option value="contain">Hiện toàn bộ ảnh</option>
+                </select>
+                <label for="adminBannerZoom">Phóng ảnh <output for="adminBannerZoom" data-banner-value="zoom">100%</output></label>
+                <input id="adminBannerZoom" name="zoom" type="range" min="100" max="200" value="100">
+                <label for="adminBannerX">Căn ngang <output for="adminBannerX" data-banner-value="x">50%</output></label>
+                <input id="adminBannerX" name="x" type="range" min="0" max="100" value="50">
+                <label for="adminBannerY">Căn dọc <output for="adminBannerY" data-banner-value="y">0%</output></label>
+                <input id="adminBannerY" name="y" type="range" min="0" max="100" value="0">
+                <button type="button" class="ts-adm-btn-secondary" data-banner-action="reset-frame">Đặt lại cách căn ảnh</button>
+              </fieldset>
+              <div class="ts-adm-banner-actions">
+                <button type="submit" class="ts-adm-btn-primary" disabled>Lưu banner</button>
+                <button type="button" class="ts-adm-btn-secondary" data-banner-action="discard" disabled>Bỏ thay đổi</button>
+              </div>
+              <button type="button" class="ts-adm-btn-secondary" data-banner-action="restore">Chọn lại ảnh gốc</button>
+              <p class="ts-adm-banner-status" role="status">Đang tải banner…</p>
+            </form>
+
+            <div class="ts-adm-banner-preview">
+              <div class="ts-adm-editor-heading">
+                <h3>Xem trước banner</h3>
+                <div class="ts-adm-banner-actions" role="group" aria-label="Thiết bị xem trước">
+                  <button type="button" class="ts-adm-btn-secondary" data-banner-device="desktop" aria-pressed="true">Máy tính</button>
+                  <button type="button" class="ts-adm-btn-secondary" data-banner-device="mobile" aria-pressed="false">Điện thoại</button>
+                </div>
+              </div>
+              <div class="ts-adm-banner-frame" data-device="desktop">
+                <img class="tsport-banner-image" alt="Ảnh banner đang xem" hidden>
+                <p>Đang tải ảnh…</p>
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- BẢNG CÔNG VIỆC CẦN XỬ LÝ -->

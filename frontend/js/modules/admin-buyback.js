@@ -367,7 +367,7 @@
 
     if (normalizeStatus(b.status) !== "ACCEPTED") {
       if (typeof showToast === "function") {
-        showToast("Chỉ có thể hoàn tất khi khách hàng đã đồng ý mức giá đề nghị.", "info");
+        showToast("Chỉ có thể hoàn tất khi khách hàng đã đồng ý mức giá đề nghị.", "error");
       }
       return;
     }
@@ -395,7 +395,7 @@
     renderSwitcher();
     renderSelectedRequest();
     if (typeof showToast === "function") {
-      showToast(`Đã cập nhật trạng thái ${nextStatus} cho yêu cầu #${getRequestCode(b)}.`, "info");
+      showToast(`Đã cập nhật trạng thái ${nextStatus} cho yêu cầu #${getRequestCode(b)}.`, "success");
     }
   }
 
@@ -416,5 +416,5 @@
     document.getElementById("btnAdmBbCancel")?.addEventListener("click", handleCancelOrReject);
   }
 
-  document.addEventListener("DOMContentLoaded", initAdminBuyback);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initAdminBuyback));
 })();

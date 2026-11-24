@@ -209,7 +209,7 @@
       renderAll();
     });
 
-    document.getElementById("btnDeleteCategory")?.addEventListener("click", () => {
+    document.getElementById("btnDeleteCategory")?.addEventListener("click", async () => {
       const store = window.tsportStore;
       if (!store || selectedCatId == null || selectedCatId < 0) return;
 
@@ -224,12 +224,12 @@
         return;
       }
 
-      if (!confirm(`Bạn có chắc muốn xóa danh mục "${target.name}"?`)) return;
+      if (!(await confirmAction(`Bạn có chắc muốn xóa danh mục "${target.name}"?`, "Xóa danh mục"))) return;
       arr.splice(idx, 1);
       store.save();
       selectedCatId = arr[0] ? arr[0].id : -1;
       renderAll();
-      showToast(`Đã xóa danh mục "${target.name}".`, "info");
+      showToast(`Đã xóa danh mục "${target.name}".`, "success");
     });
   }
 
@@ -243,5 +243,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initCategoriesModule);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initCategoriesModule));
 })();

@@ -10,11 +10,13 @@
 (function () {
   let searchDebounceTimer = null;
 
-  function initHome() {
+  async function initHome() {
     updateHeaderUser();
     updateCartBadge();
     initNavProductsMegaMenu();
     initHeroBannerSlider();
+    initSmoothScroll();
+    await window.tsportCatalogReady;
     renderFeaturedProducts();
     initTabbedShowcase();
     initHomeCourtsShowcase();
@@ -93,6 +95,53 @@
     if (!slider) return;
 
     const slides = Array.from(slider.querySelectorAll(".ts-hero-slide"));
+    const banner = slider.closest(".ts-hero-full-wrap");
+    const mobilePlaceholder = document.querySelector("#tsMobileHome .ts-mob-hero-card");
+    const desktopPosition = document.createComment("Vị trí banner trên máy tính");
+    banner.before(desktopPosition);
+    const mobileViewport = window.matchMedia("(max-width: 768px)");
+    let published = {};
+
+    function updateBannerFrames() {
+      const device = mobileViewport.matches ? "mobile" : "desktop";
+      slides.forEach((slide, index) => {
+        const image = slide.querySelector("img");
+        if (image) applyBannerFrame(image, bannerFrameFor(published[index + 1]?.framing, device));
+      });
+    }
+
+    function positionBanner() {
+      if (mobileViewport.matches && mobilePlaceholder) {
+        mobilePlaceholder.before(banner);
+        mobilePlaceholder.hidden = true;
+      } else {
+        desktopPosition.after(banner);
+        if (mobilePlaceholder) mobilePlaceholder.hidden = false;
+      }
+      updateBannerFrames();
+    }
+    positionBanner();
+    mobileViewport.addEventListener("change", () => {
+      positionBanner();
+      window.ScrollTrigger?.refresh();
+    });
+
+    window.api?.get("/home-banners", { include_framing: true }).then((banners) => {
+      published = banners;
+      slides.forEach((slide, index) => {
+        const source = published[index + 1]?.image_url;
+        const image = slide.querySelector("img");
+        if (!source || !image) return;
+        const original = image.getAttribute("src");
+        image.addEventListener("error", () => {
+          delete published[index + 1];
+          image.src = original;
+          updateBannerFrames();
+        }, { once: true });
+        image.src = storefrontImageUrl(source);
+      });
+      updateBannerFrames();
+    }).catch(() => {});
     const dots = Array.from(slider.querySelectorAll(".ts-hero-dot"));
     if (slides.length <= 1) return;
 
@@ -167,15 +216,15 @@
   }
 
   // 1. CẬP NHẬT LIÊN KẾT TÀI KHOẢN (KHÔNG ICON THỪA)
-  function updateHeaderUser() {
+  async function updateHeaderUser() {
     const userRaw = localStorage.getItem("tsport_current_user");
     const userWrap = document.getElementById("headerUserWrap");
     if (!userWrap) return;
 
-    if (userRaw) {
+    if (userRaw && (localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
       try {
-        const user = JSON.parse(userRaw);
-        const isAdmin = user.role === "ADMIN" || (user.email && user.email.toLowerCase().includes("admin"));
+        const user = await api.get("/auth/me");
+        const isAdmin = user.role === "ADMIN";
         const displayName = user.full_name || user.email || "Tài khoản";
         userWrap.innerHTML = `
           <div style="display:flex; align-items:center; gap:10px;">
@@ -189,8 +238,8 @@
           localStorage.removeItem("tsport_current_user");
           localStorage.removeItem("token");
           localStorage.removeItem("tsport_token");
-          if (typeof showToast === "function") showToast("Đã đăng xuất tài khoản.", "info");
-          updateHeaderUser();
+          if (typeof showToast === "function") showToast("Đã đăng xuất tài khoản.", "success");
+          location.reload();
         });
         return;
       } catch (_) {}
@@ -1048,7 +1097,7 @@
     if (!container || !store) return;
 
     try {
-      const recentIds = JSON.parse(localStorage.getItem("tsport_recent_views") || "[]");
+      const recentIds = window.tsportStore.data.recentViews;
       if (!Array.isArray(recentIds) || recentIds.length === 0) {
         if (wrap) wrap.style.display = "none";
         return;
@@ -1160,16 +1209,53 @@
     });
   }
 
+  function initSmoothScroll() {
+    const { Lenis, gsap, ScrollTrigger } = window;
+    if (!Lenis || !gsap) return;
+
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      const lenis = new Lenis({
+        lerp: 0.115,
+        syncTouch: false,
+        anchors: true,
+        stopInertiaOnNavigate: true,
+        virtualScroll: ({ event, deltaX, deltaY }) =>
+          !event.shiftKey && Math.abs(deltaY) >= Math.abs(deltaX)
+      });
+      if (ScrollTrigger) lenis.on("scroll", ScrollTrigger.update);
+      const tick = (seconds) => lenis.raf(seconds * 1000);
+      gsap.ticker.add(tick);
+
+      // Dừng quán tính của trang nền khi mở chi tiết hoặc menu.
+      const overlays = [document.getElementById("bg3dDetailOverlay"), document.getElementById("mobDrawer")].filter(Boolean);
+      const onOverlayChange = () => {
+        const blocked = overlays.some((overlay) => overlay.classList.contains("is-open"));
+        if (blocked && !lenis.isStopped) lenis.stop();
+        else if (!blocked && lenis.isStopped) lenis.start();
+      };
+      const observer = new MutationObserver(onOverlayChange);
+      overlays.forEach((overlay) => observer.observe(overlay, { attributes: true, attributeFilter: ["class"] }));
+      onOverlayChange();
+
+      return () => {
+        observer.disconnect();
+        gsap.ticker.remove(tick);
+        lenis.destroy();
+      };
+    });
+  }
+
   // 5. CHUYỂN ĐỘNG GSAP 3 + SCROLLTRIGGER (THEO SKILL GREENSOCK/GSAP-SKILLS)
   function initGsapAnimations() {
-    if (typeof window.gsap === "undefined") return;
-    if (typeof window.ScrollTrigger !== "undefined") {
-      window.gsap.registerPlugin(window.ScrollTrigger);
-    }
+    const { gsap, ScrollTrigger } = window;
+    if (!gsap) return;
+    if (ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
-    const mm = window.gsap.matchMedia();
-    mm.add("(prefers-reduced-motion: no-preference)", () => {
-      window.gsap.from(".js-gsap-hero", {
+    const mm = gsap.matchMedia();
+    mm.add({ motion: "(prefers-reduced-motion: no-preference)", mobile: "(max-width: 768px)" }, (context) => {
+      if (!context.conditions.motion) return;
+      gsap.from(".js-gsap-hero", {
         y: 16,
         opacity: 0,
         duration: 0.55,
@@ -1177,32 +1263,43 @@
         clearProps: "transform,opacity"
       });
 
-      window.gsap.from(".js-gsap-usp", {
-        y: 14,
-        opacity: 0,
-        duration: 0.45,
-        stagger: 0.06,
-        delay: 0.12,
-        ease: "power2.out",
-        clearProps: "transform,opacity"
-      });
+      if (!ScrollTrigger) return;
+      const focusListeners = new AbortController();
+      const sections = [
+        ...Array.from(document.querySelectorAll(".js-gsap-section, #homeRecentWrap"), (section) => ({
+          trigger: section,
+          targets: Array.from(section.children)
+        })),
+        {
+          trigger: document.querySelector("#tsMobileHome .ts-mob-sec-head"),
+          targets: document.querySelectorAll("#tsMobileHome .ts-mob-sec-head, #mobNewProductsGrid")
+        },
+        {
+          trigger: document.querySelector("#tsMobileHome .ts-mob-service-card"),
+          targets: document.querySelectorAll("#tsMobileHome .ts-mob-service-card")
+        }
+      ];
 
-      if (typeof window.ScrollTrigger !== "undefined") {
-        document.querySelectorAll(".js-gsap-section").forEach((sec) => {
-          window.gsap.from(sec, {
-            y: 18,
-            opacity: 0,
-            duration: 0.5,
-            ease: "power2.out",
-            clearProps: "transform,opacity",
-            scrollTrigger: {
-              trigger: sec,
-              start: "top 88%",
-              once: true
-            }
-          });
+      for (const { trigger, targets } of sections) {
+        if (!trigger?.getClientRects().length || trigger.getBoundingClientRect().top < window.innerHeight) continue;
+        const reveal = gsap.fromTo(targets, { y: 18, opacity: 0.18 }, {
+          y: 0,
+          opacity: 1,
+          duration: 0.82,
+          stagger: 0.11,
+          ease: "power3.out",
+          clearProps: "transform,opacity",
+          scrollTrigger: {
+            trigger,
+            start: "top 98%",
+            once: true
+          }
         });
+        for (const target of targets) {
+          target.addEventListener("focusin", () => reveal.progress(1), { signal: focusListeners.signal });
+        }
       }
+      return () => focusListeners.abort();
     });
   }
 

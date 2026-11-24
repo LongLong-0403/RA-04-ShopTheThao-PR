@@ -287,6 +287,9 @@
     margin-bottom: 14px;
   }
 
+  #tsMobileHome .ts-hero-full-wrap { margin-bottom: 14px; }
+  #tsMobileHome .ts-hero-fullscreen { aspect-ratio: 16 / 9; min-height: 0; }
+
   .ts-mob-hero-eyebrow {
     font-size: 10px;
     font-weight: 700;

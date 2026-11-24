@@ -8,7 +8,14 @@
  */
 
 (function () {
-  const STORAGE_KEY = "tsport_store_data_v5";
+  const STORAGE_KEY = "tsport_shared_v6";
+  const personalFields = ["cart", "orders", "bookings", "buybacks", "matches", "recentViews"];
+
+  function accountStorageKey() {
+    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+    const token = localStorage.getItem("token") || localStorage.getItem("tsport_token");
+    return "tsport_personal_v1:" + (token && user?.id ? "user:" + user.id : token && user?.email ? "email:" + user.email.trim().toLowerCase() : "guest");
+  }
 
   // Dữ liệu hạt giống (Seed Data) chuẩn SRS
   const initialData = {
@@ -7235,12 +7242,19 @@
 
   class TsportStore {
     constructor() {
+      this.ownerKey = accountStorageKey();
       this.data = this.load();
+      let personal = {};
+      try { personal = JSON.parse(localStorage.getItem(this.ownerKey) || "{}") || {}; }
+      catch (err) { console.warn("Không đọc được dữ liệu tài khoản", err); }
+      for (const field of personalFields) {
+        this.data[field] = Array.isArray(personal[field]) ? personal[field] : [];
+      }
     }
 
     load() {
       try {
-        let saved = localStorage.getItem(STORAGE_KEY);
+        let saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("tsport_store_data_v5");
         // Tự động chuyển đổi và kế thừa từ v2 hoặc v1 nếu chưa có v3
         if (!saved) {
           const prevSaved = localStorage.getItem("tsport_store_data_v2") || localStorage.getItem("tsport_store_data");
@@ -7257,7 +7271,7 @@
               reviews: parsedPrev.reviews || initialData.reviews,
               buybacks: parsedPrev.buybacks || initialData.buybacks
             };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedInit));
+            // Keep the legacy snapshot intact until the shared catalog is saved.
             return mergedInit;
           }
         }
@@ -7298,7 +7312,7 @@
           if (victor90k) {
             const localImg = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
             victor90k.model_3d_texture = localImg;
-            if (!victor90k.images || !victor90k.images.length || String(victor90k.images[0].image_url || "").includes("unsplash.com")) {
+            if (!victor90k.images || !victor90k.images.length) {
               victor90k.images = [{ id: 16, image_url: localImg, is_primary: true, sort_order: 1 }];
             }
           }
@@ -7337,8 +7351,16 @@
     }
 
     save() {
+      if (this.ownerKey !== accountStorageKey()) return;
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+        const shared = { ...this.data };
+        const personal = {};
+        for (const field of personalFields) {
+          personal[field] = shared[field] || [];
+          delete shared[field];
+        }
+        localStorage.setItem(this.ownerKey, JSON.stringify(personal));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(shared));
       } catch (e) {
         console.warn("Lỗi lưu localStorage:", e);
       }
@@ -7346,6 +7368,7 @@
 
     reset() {
       this.data = JSON.parse(JSON.stringify(initialData));
+      for (const field of personalFields) this.data[field] = [];
       this.save();
       return this.data;
     }
@@ -8817,7 +8840,8 @@
       try {
         const res = await fetch(`${apiBase}/catalog/bootstrap`, {
           method: "GET",
-          headers: { Accept: "application/json" }
+          headers: { Accept: "application/json" },
+          signal: AbortSignal.timeout(4000)
         });
         if (!res.ok) return false;
         const payload = await res.json();
@@ -8832,6 +8856,11 @@
         });
 
         payload.products.forEach((p) => {
+          for (const image of p.images || []) {
+            if (image.image_url.startsWith("/api/media/")) {
+              image.image_url = apiBase.replace(/\/$/, "") + image.image_url.slice(4);
+            }
+          }
           (p.skus || []).forEach((s) => {
             if (!s.sale_price && saleMap.has(s.sku_code)) {
               s.sale_price = saleMap.get(s.sku_code);
@@ -8856,8 +8885,15 @@
 }
 
   window.tsportStore = new TsportStore();
+  function refreshAccount() {
+    if (window.tsportStore.ownerKey !== accountStorageKey()) window.location.reload();
+  }
+  window.addEventListener("storage", (event) => {
+    if (!event.key || ["tsport_current_user", "token", "tsport_token"].includes(event.key)) refreshAccount();
+  });
+  window.addEventListener("pageshow", refreshAccount);
   // Tự động đồng bộ dữ liệu thực từ FastAPI + MySQL ở nền ngay khi tải trang
   if (typeof window !== "undefined" && typeof fetch === "function") {
-    window.tsportStore.syncFromBackend();
+    window.tsportCatalogReady = window.tsportStore.syncFromBackend();
   }
 })();

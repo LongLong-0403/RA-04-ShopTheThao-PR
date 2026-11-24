@@ -156,7 +156,7 @@
           selectedUserId = u.id;
           renderUsersTable();
           renderEditPanel();
-          showToast(`Đã khóa tài khoản ${u.full_name}.`, "info");
+          showToast(`Đã khóa tài khoản ${u.full_name}.`, "success");
         }
         return;
       }
@@ -205,5 +205,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initAdminUsers);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initAdminUsers));
 })();

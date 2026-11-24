@@ -8,9 +8,11 @@
   let selectedProdId = null;
   let editingProdId = null;
   let draftImages = [];
+  let photosChanged = false;
   let draftSkus = [];
 
-  function initAdminProducts() {
+  async function initAdminProducts() {
+    await window.tsportCatalogReady;
     initTopbarControls();
     populateSelectOptions();
     renderProductsTable();
@@ -66,6 +68,9 @@
           return `<option value="${c.id}">${escapeHtml(label)}</option>`;
         })
         .join("");
+      document.getElementById("prodCategoryFilter")?.append(
+        ...Array.from(catEl.options, (option) => option.cloneNode(true))
+      );
     }
     if (brandEl) {
       brandEl.innerHTML = brands.map((b) => `<option value="${b.id}">${escapeHtml(b.name)}</option>`).join("");
@@ -94,6 +99,7 @@
 
     const q = (document.getElementById("prodSearchInput")?.value || "").trim().toLowerCase();
     const cond = document.getElementById("prodConditionFilter")?.value || "ALL";
+    const category = document.getElementById("prodCategoryFilter")?.value || "";
 
     const sports = store.getSports() || [];
     const cats = store.getCategories() || [];
@@ -101,6 +107,16 @@
 
     if (cond !== "ALL") {
       products = products.filter((p) => p.condition_type === cond);
+    }
+    if (category) {
+      const included = new Set([Number(category)]);
+      for (let previousSize = 0; previousSize !== included.size;) {
+        previousSize = included.size;
+        cats.forEach((cat) => {
+          if (included.has(Number(cat.parent_id))) included.add(Number(cat.id));
+        });
+      }
+      products = products.filter((p) => included.has(Number(p.category_id)));
     }
 
     if (q) {
@@ -111,9 +127,11 @@
       });
     }
 
-    if (selectedProdId == null && products.length) {
-      selectedProdId = products[0].id;
-    }
+    if (!products.some((p) => Number(p.id) === Number(selectedProdId))) selectedProdId = products[0]?.id ?? null;
+    const summary = document.getElementById("prodFilterSummary");
+    if (summary) summary.textContent = `${products.length} sản phẩm`;
+    const editSelected = document.getElementById("btnEditSelectedProduct");
+    if (editSelected) editSelected.disabled = selectedProdId === null;
 
     if (products.length === 0) {
       tbody.innerHTML = `
@@ -133,21 +151,28 @@
         const totalStock = (p.skus || []).reduce((sum, s) => sum + (Number(s.stock) || 0), 0);
         const isOut = totalStock <= 0;
         const isSelected = Number(p.id) === Number(selectedProdId);
+        const cover = (p.images || []).find((image) => image.is_primary) || p.images?.[0];
 
         return `
           <tr class="${isSelected ? "is-selected-row" : ""}" data-prod-id="${p.id}">
-            <td style="font-weight:600;">${escapeHtml(p.name)}</td>
+            <td><div class="ts-adm-product-cell">
+              ${cover ? `<img src="${escapeHtml(cover.image_url)}" alt="" loading="lazy">` : ""}
+              <strong>${escapeHtml(p.name)}</strong>
+            </div></td>
             <td style="color:#4B5563;">${escapeHtml(sportName)} / ${escapeHtml(catName)}</td>
             <td>${p.condition_type === "CU" ? "Cũ" : "Mới"}</td>
             <td>${totalStock}</td>
             <td>
               <span class="ts-orders-v2-status ${isOut ? "is-pending" : ""}">
-                ${isOut ? "Hết hàng" : "Hiển thị"}
+                ${p.status === "INACTIVE" ? "Đang ẩn" : isOut ? "Hết hàng" : "Hiển thị"}
               </span>
             </td>
             <td>
               <button type="button" class="ts-orders-v2-detail-btn js-edit-prod" data-id="${p.id}">
                 Sửa →
+              </button>
+              <button type="button" class="ts-orders-v2-detail-btn js-edit-prod" data-id="${p.id}" data-edit-photos>
+                Chỉnh ảnh
               </button>
             </td>
           </tr>
@@ -159,12 +184,26 @@
   // ==========================================
   // VIEW 2: THÊM / SỬA SẢN PHẨM TOÀN TRANG
   // ==========================================
-  function showProductFormView(prodId) {
+  function productPhotoSources(product) {
+    return [...(product?.images || [])]
+      .sort((a, b) => Number(b.is_primary) - Number(a.is_primary) || a.sort_order - b.sort_order)
+      .map((image) => image.image_url).filter(Boolean);
+  }
+
+  function showProductFormView(prodId, focusPhotos = false) {
     const store = window.tsportStore;
     if (!store) return;
 
     editingProdId = prodId ? Number(prodId) : null;
+    photosChanged = false;
     const prod = editingProdId ? store.getProductById(editingProdId) : null;
+    if (editingProdId && !prod) {
+      showToast("Không tìm thấy sản phẩm.", "error");
+      return;
+    }
+    const viewProduct = document.getElementById("viewStorefrontProduct");
+    viewProduct.hidden = !prod || prod.status === "INACTIVE";
+    if (prod) viewProduct.href = `product-detail.html?id=${encodeURIComponent(prod.id)}`;
 
     const listView = document.getElementById("adminProductsListView");
     const formView = document.getElementById("adminProductFormView");
@@ -199,7 +238,7 @@
           .map(([k, v]) => `${k}: ${v}`)
           .join("; ");
       }
-      draftImages = (prod.images || []).map((i) => i.image_url).filter(Boolean);
+      draftImages = productPhotoSources(prod);
       draftSkus = (prod.skus || []).map((s) => ({
         id: s.id,
         sku_code: s.sku_code || "",
@@ -231,26 +270,72 @@
 
     renderDraftPhotos();
     renderDraftSkus();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (focusPhotos) {
+      const heading = document.getElementById("adminProductPhotosTitle");
+      heading.focus({ preventScroll: true });
+      heading.scrollIntoView({ block: "start" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   function renderDraftPhotos() {
     const grid = document.getElementById("admProdPhotosGrid");
     if (!grid) return;
 
-    const labels = ["ẢNH CHÍNH", "ẢNH 2", "ẢNH 3", "ẢNH 4"];
-    const fallback = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
-    grid.innerHTML = labels
-      .map((label, idx) => {
+    grid.innerHTML = Array.from({ length: Math.max(4, Math.min(8, draftImages.length + 1)) }, (_, idx) => {
+        const label = idx === 0 ? "Ảnh chính" : `Ảnh ${idx + 1}`;
         const src = draftImages[idx];
         return `
-          <div class="ts-adm-prod-photo-slot">
-            ${src ? `<img src="${escapeHtml(src)}" alt="${label}" onerror="this.src='${fallback}'" />` : ""}
-            <span class="ts-adm-prod-photo-tag">${label}</span>
+          <div class="ts-adm-image-editor" data-photo-slot="${idx}">
+            <div class="ts-adm-prod-photo-slot">
+              ${src ? `<img src="${escapeHtml(src)}" alt="${label}" />` : ""}
+              <span class="ts-adm-prod-photo-tag">${label}</span>
+            </div>
+            <label class="ts-adm-filter-label">Đổi bằng tệp
+              <input class="js-product-photo-file" type="file" accept="image/jpeg,image/png,image/webp">
+            </label>
+            <label class="ts-adm-filter-label">Hoặc dán URL
+              <input class="ts-adm-select js-product-photo-url" type="text" inputmode="url" placeholder="https://…">
+            </label>
+            <button class="ts-adm-btn-secondary" type="button" data-photo-action="url">Dùng URL</button>
+            ${src && idx ? '<button class="ts-adm-btn-secondary" type="button" data-photo-action="primary">Đặt làm ảnh chính</button>' : ""}
+            ${src ? '<button class="ts-adm-btn-secondary" type="button" data-photo-action="remove">Bỏ ảnh</button>' : ""}
           </div>
         `;
       })
       .join("");
+    const save = document.getElementById("btnSaveProductPhotos");
+    save.hidden = !editingProdId;
+    save.disabled = !photosChanged;
+    document.getElementById("btnDiscardProductPhotos").hidden = !editingProdId || !photosChanged;
+    document.getElementById("productPhotoStatus").textContent = photosChanged
+      ? "Có thay đổi ảnh chưa lưu."
+      : editingProdId ? "Ảnh chính hiển thị trong danh sách sản phẩm." : "";
+  }
+
+  function changePhoto(index, source) {
+    if (index >= draftImages.length) draftImages.push(source);
+    else draftImages[index] = source;
+    photosChanged = true;
+    renderDraftPhotos();
+  }
+
+  async function saveProductPhotos() {
+    if (!draftImages.length) throw new Error("Sản phẩm cần ít nhất một ảnh.");
+    const productId = editingProdId;
+    const draft = draftImages;
+    const images = await api.put(`/products/${productId}/images`, {
+      images: draft.map(storefrontImageSource)
+    });
+    const product = window.tsportStore.getProductById(productId);
+    product.images = images.map((image) => ({...image, image_url: storefrontImageUrl(image.image_url)}));
+    window.tsportStore.save();
+    if (draft === draftImages) {
+      draftImages = product.images.map((image) => image.image_url);
+      photosChanged = false;
+      renderDraftPhotos();
+    }
   }
 
   function renderDraftSkus() {
@@ -314,18 +399,22 @@
   function bindEvents() {
     document.getElementById("prodSearchInput")?.addEventListener("input", renderProductsTable);
     document.getElementById("prodConditionFilter")?.addEventListener("change", renderProductsTable);
+    document.getElementById("prodCategoryFilter")?.addEventListener("change", renderProductsTable);
 
     document.getElementById("btnAddProduct")?.addEventListener("click", () => showProductFormView(null));
     document.getElementById("btnEditSelectedProduct")?.addEventListener("click", () => {
       showProductFormView(selectedProdId || null);
     });
-    document.getElementById("btnBackToProductsList")?.addEventListener("click", showProductsListView);
+    document.getElementById("btnBackToProductsList")?.addEventListener("click", async () => {
+      if (photosChanged && !(await confirmAction("Ảnh đã chỉnh chưa được lưu. Quay lại danh sách và bỏ các thay đổi ảnh?", "Bỏ thay đổi"))) return;
+      showProductsListView();
+    });
 
     document.getElementById("adminProductsTbody")?.addEventListener("click", (e) => {
       const editBtn = e.target.closest(".js-edit-prod");
       if (editBtn) {
         selectedProdId = Number(editBtn.dataset.id);
-        showProductFormView(selectedProdId);
+        showProductFormView(selectedProdId, editBtn.hasAttribute("data-edit-photos"));
         return;
       }
       const row = e.target.closest("tr[data-prod-id]");
@@ -336,19 +425,54 @@
     });
 
     // Tải ảnh sản phẩm
-    document.getElementById("admProdPhotoInput")?.addEventListener("change", (e) => {
-      const files = Array.from(e.target.files || []).slice(0, 4);
-      files.forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          if (ev.target?.result) {
-            if (draftImages.length >= 4) draftImages.shift();
-            draftImages.push(ev.target.result);
-            renderDraftPhotos();
-          }
-        };
-        reader.readAsDataURL(file);
-      });
+    const photos = document.getElementById("admProdPhotosGrid");
+    photos?.addEventListener("change", async (event) => {
+      if (!event.target.matches(".js-product-photo-file") || !event.target.files.length) return;
+      const slot = Number(event.target.closest("[data-photo-slot]").dataset.photoSlot);
+      const draft = draftImages;
+      try {
+        const source = await readStorefrontImage(event.target.files[0]);
+        if (draft === draftImages && event.target.isConnected) changePhoto(slot, source);
+      } catch (error) { showToast(error.message, "error"); }
+    });
+    photos?.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-photo-action]");
+      if (!button) return;
+      const editor = button.closest("[data-photo-slot]");
+      const slot = Number(editor.dataset.photoSlot);
+      if (button.dataset.photoAction === "url") {
+        const source = editor.querySelector(".js-product-photo-url").value.trim();
+        if (!/^https?:\/\//i.test(source)) {
+          showToast("Nhập URL ảnh bắt đầu bằng https:// hoặc http://.", "error");
+          return;
+        }
+        changePhoto(slot, source);
+        return;
+      }
+      const [source] = draftImages.splice(slot, 1);
+      if (button.dataset.photoAction === "primary") draftImages.unshift(source);
+      photosChanged = true;
+      renderDraftPhotos();
+    });
+    document.getElementById("btnSaveProductPhotos")?.addEventListener("click", async (event) => {
+      const button = event.currentTarget;
+      button.disabled = true;
+      photos.inert = true;
+      try {
+        await saveProductPhotos();
+        showToast("Đã cập nhật ảnh sản phẩm.", "success");
+      } catch (error) {
+        showToast(error.message, "error");
+      } finally {
+        photos.inert = false;
+        button.disabled = !photosChanged;
+      }
+    });
+    document.getElementById("btnDiscardProductPhotos")?.addEventListener("click", () => {
+      const product = window.tsportStore.getProductById(editingProdId);
+      draftImages = productPhotoSources(product);
+      photosChanged = false;
+      renderDraftPhotos();
     });
 
     // Thêm / Xóa dòng biến thể SKU
@@ -382,6 +506,10 @@
     // Lưu sản phẩm
     document.getElementById("formAdminProduct")?.addEventListener("submit", (e) => {
       e.preventDefault();
+      if (editingProdId && photosChanged) {
+        showToast("Bấm “Lưu ảnh sản phẩm” để lưu ảnh trước.", "error");
+        return;
+      }
       syncSkusFromDom();
       const store = window.tsportStore;
       if (!store) return;
@@ -428,7 +556,6 @@
         existing.wear_description = wear_description;
         existing.description = description;
         existing.specifications = specifications;
-        existing.images = imgs;
         existing.skus = [...draftSkus];
         store.save();
         showToast(`Đã lưu cập nhật sản phẩm "${name}"!`, "success");
@@ -467,5 +594,5 @@
       .replace(/'/g, "&#039;");
   }
 
-  document.addEventListener("DOMContentLoaded", initAdminProducts);
+  document.addEventListener("DOMContentLoaded", () => initAdminPage(initAdminProducts));
 })();

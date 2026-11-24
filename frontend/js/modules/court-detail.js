@@ -13,31 +13,22 @@
 
   const DAYS_VI = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"];
 
-  function initCourtDetail() {
+  async function initCourtDetail() {
     initHeaderSearch();
     const store = window.tsportStore;
     if (!store) return;
 
     const params = typeof getUrlParams === "function" ? getUrlParams() : {};
     const courtId = Number(params.id) || 1;
-    const courts = store.getCourts() || [];
-    currentCourt = courts.find((c) => Number(c.id) === courtId) || courts[0];
+    let courts;
+    try { courts = await api.get("/courts/"); } catch (err) { showToast(err.message, "error"); return; }
+    currentCourt = courts.find((c) => Number(c.id) === courtId);
 
     if (!currentCourt) {
       window.location.href = "courts.html";
       return;
     }
 
-    if (params.success === "1") {
-      const latest = (store.getBookings && store.getBookings()[0]) || {
-        court_name: currentCourt.name,
-        booking_date: toISODate(new Date()),
-        time_slot: "16:00 - 18:00",
-        fixed_price: 180000
-      };
-      showBookingSuccessView(latest);
-      return;
-    }
 
     renderCourtInfo(currentCourt);
     populateDateSelect();
@@ -139,44 +130,21 @@
     selectedDateISO = select.value;
   }
 
-  function getSlotsForCourt(courtId) {
-    const store = window.tsportStore;
-    const allSlots = (store && store.getSlots && store.getSlots()) || [];
-    let slots = allSlots.filter((s) => Number(s.court_id) === Number(courtId));
-
-    // Nếu sân chưa có cấu hình ca riêng, dùng bộ 4 ca tiêu chuẩn
-    if (!slots.length) {
-      slots = [
-        { id: Number(`${courtId}01`), court_id: courtId, time_slot: "06:00 - 08:00", fixed_price: 120000 },
-        { id: Number(`${courtId}02`), court_id: courtId, time_slot: "08:00 - 10:00", fixed_price: 150000 },
-        { id: Number(`${courtId}03`), court_id: courtId, time_slot: "16:00 - 18:00", fixed_price: 180000 },
-        { id: Number(`${courtId}04`), court_id: courtId, time_slot: "18:00 - 20:00", fixed_price: 200000 }
-      ];
-    }
-    return slots;
+  let availableSlots = [];
+  function getSlotBookingState(courtId, slotId) {
+    return availableSlots.find(s => s.id === slotId)?.available ? "AVAILABLE" : "BOOKED";
   }
-
-  function getSlotBookingState(courtId, slotId, dateISO) {
-    const store = window.tsportStore;
-    const bookings = (store && store.getBookings && store.getBookings()) || [];
-    const match = bookings.find(
-      (b) =>
-        Number(b.court_id) === Number(courtId) &&
-        Number(b.slot_id) === Number(slotId) &&
-        String(b.booking_date) === String(dateISO) &&
-        b.status !== "CANCELLED" &&
-        b.status !== "REJECTED"
-    );
-    if (!match) return "AVAILABLE";
-    if (match.status === "CONFIRMED" || match.status === "COMPLETED") return "BOOKED";
-    return "HELD";
-  }
-
-  function renderSlotsGrid() {
+  async function renderSlotsGrid() {
     const grid = document.getElementById("cdSlotsGrid");
     if (!grid || !currentCourt) return;
 
-    const slots = getSlotsForCourt(currentCourt.id);
+    const date = selectedDateISO;
+    try {
+      const rows = await api.get("/availability", {court_id: currentCourt.id, booking_date: date});
+      if (date !== selectedDateISO) return;
+      availableSlots = rows.map(({slot, available}) => ({id: slot.id, available, time_slot: slot.start_time.slice(0,5)+" - "+slot.end_time.slice(0,5), fixed_price: slot.price}));
+    } catch(err) { availableSlots = []; showToast(err.message, "error"); }
+    const slots = availableSlots;
 
     // Nếu chưa chọn ca nào hoặc ca đã chọn không còn trống -> tự chọn ca trống đầu tiên
     const validSelected = slots.find(
@@ -260,25 +228,15 @@
       renderSlotsGrid();
     });
 
-    document.getElementById("btnConfirmCourtBooking")?.addEventListener("click", () => {
+    document.getElementById("btnConfirmCourtBooking")?.addEventListener("click", async () => {
       if (!currentCourt || !selectedSlotId || !selectedDateISO) return;
       const store = window.tsportStore;
       if (!store) return;
 
-      const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-        full_name: "Nguyễn Minh Anh",
-        phone: "0901234567"
-      };
-
       try {
-        const bkg = store.createBooking({
-          court_id: currentCourt.id,
-          slot_id: selectedSlotId,
-          booking_date: selectedDateISO,
-          customer_name: user.full_name || "Khách hàng Tsport",
-          phone: user.phone || "0901234567",
-          note: ""
-        });
+        const slot = availableSlots.find(s => s.id === selectedSlotId);
+        const row = await api.post("/bookings", {court_id: currentCourt.id, court_slot_id: selectedSlotId, booking_date: selectedDateISO});
+        const bkg = {...row, booking_code: row.id, court_name: currentCourt.name, time_slot: slot.time_slot, fixed_price: row.price_at_booking};
         showToast(`Đã gửi yêu cầu đặt sân (${bkg.booking_code})!`, "success");
         showBookingSuccessView(bkg);
       } catch (err) {

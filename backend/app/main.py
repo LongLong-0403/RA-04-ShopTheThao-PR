@@ -15,7 +15,7 @@ from app import models  # noqa: F401 - import để SQLAlchemy biết các bản
 from app.core.config import settings
 from app.db.session import Base, SessionLocal, engine
 from app.db.seed_catalog import seed_catalog
-from app.routers import auth, courts, health, items, users, commerce, catalog, activities
+from app.routers import auth, courts, health, items, users, commerce, catalog, activities, media
 from app.services import court_service, item_service, user_service
 from app.services.exceptions import ServiceError
 
@@ -90,6 +90,7 @@ async def integrity_error_handler(request: Request, exc: IntegrityError):
 app.include_router(auth.router, prefix="/api")
 app.include_router(commerce.router, prefix="/api")
 app.include_router(catalog.router, prefix="/api")
+app.include_router(media.router, prefix="/api")
 app.include_router(activities.router, prefix="/api")
 app.include_router(courts.router, prefix="/api")
 app.include_router(courts.router, include_in_schema=False)  # giữ URL cũ /courts/, /slots/

@@ -11,10 +11,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.28/dist/lenis.css" />
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <!-- GSAP 3 + ScrollTrigger + Three.js cho Triển lãm Cầu Lông 3D -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.28/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 <body class="tsport-home-body" data-root="">
@@ -37,7 +39,7 @@
             autocomplete="off"
           />
         </form>
-        <div class="tsport-search-dropdown" id="homeSearchDropdown"></div>
+        <div class="tsport-search-dropdown" id="homeSearchDropdown" data-lenis-prevent></div>
       </div>
 
       <!-- Các liên kết bên phải (chỉ chữ gọn gàng, không icon) -->
@@ -66,7 +68,7 @@
     </div>
 
     <!-- MEGA MENU TÌM KIẾM DANH MỤC SẢN PHẨM (HIỆN KHI HOVER "SẢN PHẨM") -->
-    <div class="ts-mega-dropdown" id="homeProductsMegaMenu" role="region" aria-label="Danh mục tìm kiếm sản phẩm">
+    <div class="ts-mega-dropdown" id="homeProductsMegaMenu" role="region" aria-label="Danh mục tìm kiếm sản phẩm" data-lenis-prevent>
       <div class="container">
         <div class="ts-mega-grid-5">
           <!-- HÀNG 1 -->
@@ -217,13 +219,13 @@
   <section class="ts-hero-full-wrap">
     <div class="ts-min-hero-banner ts-hero-slider-only ts-hero-fullscreen js-gsap-hero" id="heroBannerSlider">
       <a href="pages/shop.html" class="ts-hero-slide is-active">
-        <img src="assets/banner/banner-1.jpg?v=2" alt="Tsport Banner 1" />
+        <img class="tsport-banner-image" src="assets/banner/banner-1.jpg?v=2" alt="Tsport Banner 1" />
       </a>
       <a href="pages/shop.html" class="ts-hero-slide">
-        <img src="assets/banner/banner-2.jpg" alt="Tsport Banner 2" />
+        <img class="tsport-banner-image" src="assets/banner/banner-2.jpg" alt="Tsport Banner 2" />
       </a>
       <a href="pages/shop.html" class="ts-hero-slide">
-        <img src="assets/banner/banner-3.jpg" alt="Tsport Banner 3" />
+        <img class="tsport-banner-image" src="assets/banner/banner-3.jpg" alt="Tsport Banner 3" />
       </a>
 
       <div class="ts-hero-slider-dots" id="heroSliderDots">
@@ -239,10 +241,10 @@
        ========================================== -->
   <section class="ts-bg3d-section" id="sectionBadmintonGallery3D" aria-label="Triển lãm sản phẩm cầu lông 3D">
     <div class="ts-bg3d-stage" id="bg3dStage">
-      <canvas class="ts-bg3d-canvas" id="bg3dCanvas" aria-label="Không gian triển lãm tường cong 3D sản phẩm cầu lông"></canvas>
+      <canvas class="ts-bg3d-canvas" id="bg3dCanvas" aria-label="Phòng triển lãm 3D sản phẩm cầu lông"></canvas>
 
       <div class="ts-bg3d-top-hud">
-        <div class="ts-bg3d-hud-label">TSPORT EXHIBITION / 20 SẢN PHẨM CẦU LÔNG</div>
+        <div class="ts-bg3d-hud-label">TRIỂN LÃM TSPORT</div>
         <div class="ts-bg3d-hud-nav">
           <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dPrev" aria-label="Sản phẩm trước">←</button>
           <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dOpenCenter" aria-label="Xem chi tiết sản phẩm ở giữa">Xem chi tiết</button>
@@ -253,7 +255,7 @@
       <div class="ts-bg3d-bottom-hud">
         <div class="ts-bg3d-coll-eyebrow">YONEX • LINING • VICTOR • MIZUNO</div>
         <h2 class="ts-bg3d-coll-title">BỘ SƯU TẬP CẦU LÔNG</h2>
-        <div class="ts-bg3d-coll-sub" id="bg3dCollSub">Kéo hoặc cuộn ngang để khám phá • Nhấn vào sản phẩm để xem chi tiết</div>
+        <div class="ts-bg3d-coll-sub" id="bg3dCollSub">Cuộn xuống để tiến vào phòng • Chọn sản phẩm để xem chi tiết</div>
       </div>
     </div>
 
@@ -482,7 +484,7 @@
           <ul class="ts-min-footer-links">
             <li><a href="pages/account.html">Hồ sơ cá nhân</a></li>
             <li><a href="pages/orders.html">Đơn hàng • Lịch đặt sân</a></li>
-            <li><a href="pages/admin-dashboard.html">Quản trị hệ thống</a></li>
+            <li><a data-admin-link hidden href="pages/admin-dashboard.html">Quản trị hệ thống</a></li>
           </ul>
         </div>
       </div>
@@ -507,7 +509,7 @@
   </header>
 
   <div class="ts-mob-drawer-backdrop" id="mobDrawerBackdrop"></div>
-  <aside class="ts-mob-drawer" id="mobDrawer" aria-label="Menu di động">
+  <aside class="ts-mob-drawer" id="mobDrawer" aria-label="Menu di động" data-lenis-prevent>
     <div class="ts-mob-drawer-head">
       <a href="index.html" class="ts-mob-logo">Tsport</a>
       <button type="button" class="ts-mob-drawer-close" id="btnMobMenuClose" aria-label="Đóng menu">✕</button>
@@ -524,7 +526,7 @@
       <a href="pages/orders.html" class="ts-mob-drawer-link">Đơn hàng của tôi</a>
       <a href="pages/my-bookings.html" class="ts-mob-drawer-link">Lịch đặt sân của tôi</a>
       <a href="pages/account.html" class="ts-mob-drawer-link">Tài khoản</a>
-      <a href="pages/admin-dashboard.html" class="ts-mob-drawer-link">Quản trị hệ thống</a>
+      <a data-admin-link hidden href="pages/admin-dashboard.html" class="ts-mob-drawer-link">Quản trị hệ thống</a>
     </nav>
   </aside>
 
@@ -599,7 +601,7 @@
   </div>
 
   <!-- LỚP PHỦ CHI TIẾT SẢN PHẨM CẦU LÔNG (2 CỘT DESKTOP / 1 CỘT MOBILE) -->
-  <div class="ts-bg3d-detail-overlay" id="bg3dDetailOverlay" role="dialog" aria-modal="true" aria-label="Chi tiết sản phẩm cầu lông">
+  <div class="ts-bg3d-detail-overlay" id="bg3dDetailOverlay" role="dialog" aria-modal="true" aria-label="Chi tiết sản phẩm cầu lông" data-lenis-prevent>
     <header class="ts-bg3d-detail-topbar">
       <button type="button" class="ts-bg3d-back-btn" id="btnBg3dBack">← Quay lại triển lãm</button>
       <div class="ts-bg3d-detail-top-right">
@@ -675,6 +677,7 @@
 
   <!-- SCRIPTS -->
   <script src="js/data/store.js"></script>
+  <script src="js/config.js"></script>
   <script src="js/api.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/modules/home.js"></script>

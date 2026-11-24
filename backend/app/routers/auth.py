@@ -7,7 +7,9 @@
 Sau khi login, gửi header  Authorization: Bearer <access_token>  cho các API cần đăng nhập.
 Trên /docs: bấm nút "Authorize" và dán access_token vào.
 """
-from fastapi import APIRouter, Depends, status
+from pydantic import BaseModel, Field, ConfigDict
+from app.core.security import hash_password, verify_password
+from fastapi import HTTPException, APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from app.core.deps import get_current_user
@@ -39,6 +41,37 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserOut)
 def me(user: User = Depends(get_current_user)):
     return user
+
+
+class ProfileInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    full_name: str = Field(min_length=1, max_length=150)
+    phone: str = Field(min_length=9, max_length=20)
+    address: str | None = None
+
+
+@router.put("/me", response_model=UserOut)
+def update_profile(data: ProfileInput, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    for key, value in data.model_dump().items():
+        setattr(user, key, value)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+class PasswordInput(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8, max_length=72)
+
+
+@router.post("/password", status_code=204)
+def change_password(data: PasswordInput, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if len(data.new_password.encode()) > 72:
+        raise HTTPException(422, "Mật khẩu vượt 72 byte")
+    if not verify_password(data.current_password, user.password_hash):
+        raise HTTPException(403, "Mật khẩu hiện tại không đúng")
+    user.password_hash = hash_password(data.new_password)
+    db.commit()
 
 
 @router.post('/logout', status_code=204)
