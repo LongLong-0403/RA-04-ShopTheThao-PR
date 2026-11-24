@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Môn thể thao &amp; Thương hiệu | Tsport Admin</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="ts-adm-body" data-root="../" hidden>
+
+  <div class="ts-adm-shell">
+
+    <!-- SIDEBAR TRÁI NỀN TỐI -->
+    <aside class="ts-adm-sidebar" id="adminSidebar">
+      <div class="ts-adm-brand">
+        <a href="admin-dashboard.html" class="ts-adm-logo">Tsport</a>
+        <div class="ts-adm-logo-sub">QUẢN TRỊ HỆ THỐNG</div>
+      </div>
+
+      <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
+        <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
+        <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
+        <a href="admin-sports-brands.html" class="ts-adm-nav-link is-active">Môn &amp; Thương hiệu</a>
+        <a href="categories.html" class="ts-adm-nav-link">Danh mục cha / con</a>
+        <a href="products.html" class="ts-adm-nav-link">Sản phẩm &amp; SKU</a>
+        <a href="admin-courts.html" class="ts-adm-nav-link">Sân &amp; Ca giờ</a>
+        <a href="admin-bookings.html" class="ts-adm-nav-link">Lịch đặt sân</a>
+        <a href="admin-orders.html" class="ts-adm-nav-link">Đơn hàng</a>
+        <a href="admin-buyback.html" class="ts-adm-nav-link">Thu mua đồ cũ</a>
+      </nav>
+
+      <div class="ts-adm-sidebar-foot">
+        <a href="../index.html" class="ts-adm-back-shop">Quay về cửa hàng ↗</a>
+      </div>
+    </aside>
+
+    <!-- CỘT PHẢI -->
+    <div class="ts-adm-main-wrap">
+
+      <!-- TOP BAR -->
+      <header class="ts-adm-topbar">
+        <div class="ts-adm-topbar-left">
+          <button type="button" class="ts-adm-mobile-menu-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div class="ts-adm-breadcrumb">
+            <span>Quản trị</span>
+            <span>/</span>
+            <span class="is-current">Môn thể thao &amp; Thương hiệu</span>
+          </div>
+        </div>
+
+        <div class="ts-adm-user-wrap">
+          <button type="button" class="ts-adm-user-btn" id="btnAdminUserMenu">
+            <span>Admin</span>
+            <span style="font-size:10px;">▾</span>
+          </button>
+          <div class="ts-adm-user-dropdown" id="adminUserDropdown">
+            <a href="../index.html">Về cửa hàng</a>
+            <button type="button" id="btnAdminLogout">Đăng xuất</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- NỘI DUNG MÔN THỂ THAO & THƯƠNG HIỆU -->
+      <main class="ts-adm-content">
+
+        <header class="ts-adm-page-head">
+          <h1 class="ts-adm-page-title">Môn thể thao &amp; Thương hiệu</h1>
+          <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+        </header>
+
+        <!-- 2 TABS CHUYỂN ĐỔI -->
+        <div class="ts-adm-tabs-row" id="sbTabsBar">
+          <button type="button" class="ts-adm-tab-pill is-active" data-tab="sports">Môn thể thao</button>
+          <button type="button" class="ts-adm-tab-pill" data-tab="brands">Thương hiệu</button>
+        </div>
+
+        <!-- BỐ CỤC 2 CỘT: DANH SÁCH (TRÁI) | THÊM / SỬA (PHẢI) -->
+        <div class="ts-adm-split-2">
+
+          <!-- CỘT TRÁI: DANH SÁCH -->
+          <section class="ts-adm-card ts-adm-list-card">
+            <div class="ts-adm-card-head-inline">
+              <h2 class="ts-adm-card-title" style="margin:0;">Danh sách</h2>
+              <button type="button" class="ts-adm-text-btn" id="btnNewSbItem">+ Thêm mới</button>
+            </div>
+
+            <div class="ts-orders-v2-table-wrap">
+              <table class="ts-orders-v2-table ts-adm-table">
+                <thead>
+                  <tr>
+                    <th>Tên</th>
+                    <th>Slug</th>
+                    <th>Trạng thái</th>
+                  </tr>
+                </thead>
+                <tbody id="sbListTbody">
+                  <!-- Render động từ admin-sports-brands.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="ts-adm-list-summary">
+              <div class="ts-adm-list-summary-title" id="sbSummaryHeading">Tab Thương hiệu</div>
+              <div class="ts-adm-list-summary-items" id="sbSummaryItems">Yonex • Lining • Nike • Wilson • Joola</div>
+              <div class="ts-adm-list-summary-note">Các thao tác: Thêm / Sửa / Xóa</div>
+            </div>
+          </section>
+
+          <!-- CỘT PHẢI: THÊM / SỬA -->
+          <aside class="ts-adm-card">
+            <h2 class="ts-adm-card-title" id="sbFormTitle">Thêm / Sửa</h2>
+
+            <form id="formSportsBrands">
+              <div class="ts-courts-v2-field">
+                <label for="sbNameInput" class="ts-adm-filter-label">Tên *</label>
+                <input type="text" id="sbNameInput" class="ts-adm-input" placeholder="Cầu lông" required />
+              </div>
+
+              <div class="ts-courts-v2-field">
+                <label for="sbSlugInput" class="ts-adm-filter-label">Slug *</label>
+                <input type="text" id="sbSlugInput" class="ts-adm-input" placeholder="cau-long" required />
+              </div>
+
+              <div class="ts-courts-v2-field">
+                <label for="sbDescInput" class="ts-adm-filter-label">Mô tả / Logo thương hiệu</label>
+                <input
+                  type="text"
+                  id="sbDescInput"
+                  class="ts-adm-input"
+                  placeholder="Chọn tệp logo hoặc nhập mô tả"
+                />
+              </div>
+
+              <div class="ts-courts-v2-field">
+                <label for="sbStatusSelect" class="ts-adm-filter-label">Trạng thái</label>
+                <select id="sbStatusSelect" class="ts-adm-select">
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="INACTIVE">INACTIVE</option>
+                </select>
+              </div>
+
+              <div class="ts-adm-form-stack-btns">
+                <button type="submit" class="ts-adm-btn-primary">Lưu thông tin</button>
+                <button type="button" class="ts-adm-btn-secondary" id="btnDeleteSbItem">Xóa mục này</button>
+              </div>
+            </form>
+          </aside>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/admin-sports-brands.js"></script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sản phẩm &amp; SKU | Tsport Admin</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="ts-adm-body" data-root="../" hidden>
+
+  <div class="ts-adm-shell">
+
+    <!-- SIDEBAR TRÁI NỀN TỐI -->
+    <aside class="ts-adm-sidebar" id="adminSidebar">
+      <div class="ts-adm-brand">
+        <a href="admin-dashboard.html" class="ts-adm-logo">Tsport</a>
+        <div class="ts-adm-logo-sub">QUẢN TRỊ HỆ THỐNG</div>
+      </div>
+
+      <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
+        <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
+        <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
+        <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
+        <a href="categories.html" class="ts-adm-nav-link">Danh mục cha / con</a>
+        <a href="products.html" class="ts-adm-nav-link is-active">Sản phẩm &amp; SKU</a>
+        <a href="admin-courts.html" class="ts-adm-nav-link">Sân &amp; Ca giờ</a>
+        <a href="admin-bookings.html" class="ts-adm-nav-link">Lịch đặt sân</a>
+        <a href="admin-orders.html" class="ts-adm-nav-link">Đơn hàng</a>
+        <a href="admin-buyback.html" class="ts-adm-nav-link">Thu mua đồ cũ</a>
+      </nav>
+
+      <div class="ts-adm-sidebar-foot">
+        <a href="../index.html" class="ts-adm-back-shop">Quay về cửa hàng ↗</a>
+      </div>
+    </aside>
+
+    <!-- CỘT PHẢI -->
+    <div class="ts-adm-main-wrap">
+
+      <!-- TOP BAR -->
+      <header class="ts-adm-topbar">
+        <div class="ts-adm-topbar-left">
+          <button type="button" class="ts-adm-mobile-menu-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div class="ts-adm-breadcrumb">
+            <span>Quản trị</span>
+            <span>/</span>
+            <span class="is-current" id="prodTopBreadcrumb">Sản phẩm &amp; SKU</span>
+          </div>
+        </div>
+
+        <div class="ts-adm-user-wrap">
+          <button type="button" class="ts-adm-user-btn" id="btnAdminUserMenu">
+            <span>Admin</span>
+            <span style="font-size:10px;">▾</span>
+          </button>
+          <div class="ts-adm-user-dropdown" id="adminUserDropdown">
+            <a href="../index.html">Về cửa hàng</a>
+            <button type="button" id="btnAdminLogout">Đăng xuất</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- NỘI DUNG CHÍNH -->
+      <main class="ts-adm-content">
+
+        <!-- VIEW 1: DANH SÁCH SẢN PHẨM & SKU -->
+        <div id="adminProductsListView">
+          <header class="ts-adm-page-head">
+            <h1 class="ts-adm-page-title">Sản phẩm &amp; SKU</h1>
+            <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+          </header>
+
+          <!-- THANH TÌM KIẾM, LỌC TÌNH TRẠNG & THÊM SẢN PHẨM -->
+          <section class="ts-adm-filter-block">
+            <label for="prodSearchInput" class="ts-adm-filter-label">Tìm sản phẩm</label>
+            <div class="ts-adm-filter-row">
+              <input
+                type="text"
+                id="prodSearchInput"
+                class="ts-adm-input"
+                placeholder="Tên sản phẩm / SKU"
+              />
+              <select id="prodConditionFilter" class="ts-adm-select" aria-label="Lọc theo tình trạng">
+                <option value="ALL">Tình trạng: Tất cả</option>
+                <option value="MOI">Tình trạng: Mới</option>
+                <option value="CU">Tình trạng: Cũ</option>
+              </select>
+              <select id="prodCategoryFilter" class="ts-adm-select" aria-label="Lọc theo danh mục">
+                <option value="">Danh mục: Tất cả</option>
+              </select>
+              <button type="button" class="ts-adm-btn-primary ts-adm-filter-btn" id="btnAddProduct">
+                + Thêm sản phẩm
+              </button>
+            </div>
+            <p id="prodFilterSummary" class="ts-adm-banner-status" role="status"></p>
+          </section>
+
+          <!-- BẢNG 6 CỘT SẢN PHẨM & SKU -->
+          <section class="ts-adm-table-section">
+            <div class="ts-orders-v2-table-wrap">
+              <table class="ts-orders-v2-table ts-adm-table">
+                <thead>
+                  <tr>
+                    <th>Sản phẩm</th>
+                    <th>Môn / Danh mục</th>
+                    <th>Tình trạng</th>
+                    <th>Tồn SKU</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="adminProductsTbody">
+                  <!-- Render động từ products.js -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- NÚT SỬA SẢN PHẨM ĐANG CHỌN -->
+          <div class="ts-orders-v2-bottom-bar" style="margin-top:20px;">
+            <button type="button" class="ts-adm-btn-secondary" id="btnEditSelectedProduct" style="min-width:210px;">
+              Sửa sản phẩm đang chọn
+            </button>
+          </div>
+
+          <!-- THANH LƯU Ý SẢN PHẨM CŨ & SKU -->
+          <div class="ts-court-det-notice" style="margin-top:20px;">
+            Sản phẩm cũ phải có mô tả hao mòn. Giá bán và tồn kho được quản lý trên từng SKU.
+          </div>
+        </div>
+
+        <!-- VIEW 2: THÊM / SỬA SẢN PHẨM (FULL-PAGE CHUẨN FIGMA) -->
+        <div id="adminProductFormView" style="display:none;">
+          <header class="ts-adm-page-head">
+            <h1 class="ts-adm-page-title">Thêm / Sửa sản phẩm</h1>
+            <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+          </header>
+
+          <form id="formAdminProduct">
+            <section class="ts-adm-card">
+
+              <!-- Tên sản phẩm -->
+              <div class="ts-courts-v2-field">
+                <label for="admProdName" class="ts-adm-filter-label">Tên sản phẩm *</label>
+                <input type="text" id="admProdName" class="ts-adm-input" placeholder="Yonex Astrox 88D" required />
+              </div>
+
+              <!-- 3 cột: Môn thể thao | Danh mục | Thương hiệu -->
+              <div class="ts-adm-prod-row-3">
+                <div class="ts-courts-v2-field">
+                  <label for="admProdSport" class="ts-adm-filter-label">Môn thể thao *</label>
+                  <select id="admProdSport" class="ts-adm-select" required></select>
+                </div>
+
+                <div class="ts-courts-v2-field">
+                  <label for="admProdCategory" class="ts-adm-filter-label">Danh mục *</label>
+                  <select id="admProdCategory" class="ts-adm-select" required></select>
+                </div>
+
+                <div class="ts-courts-v2-field">
+                  <label for="admProdBrand" class="ts-adm-filter-label">Thương hiệu *</label>
+                  <select id="admProdBrand" class="ts-adm-select" required></select>
+                </div>
+              </div>
+
+              <!-- 2 cột: Tình trạng | Trạng thái hiển thị -->
+              <div class="ts-adm-edit-grid-2">
+                <div>
+                  <label for="admProdCondition" class="ts-adm-filter-label">Tình trạng *</label>
+                  <select id="admProdCondition" class="ts-adm-select">
+                    <option value="MOI">MOI - Hàng mới</option>
+                    <option value="CU">CU - Hàng đã qua sử dụng</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="admProdStatus" class="ts-adm-filter-label">Trạng thái hiển thị</label>
+                  <select id="admProdStatus" class="ts-adm-select">
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Mô tả hao mòn -->
+              <div class="ts-courts-v2-field" style="margin-top:16px;">
+                <label for="admProdWearDesc" class="ts-adm-filter-label">Mô tả hao mòn * (bắt buộc với hàng cũ)</label>
+                <textarea
+                  id="admProdWearDesc"
+                  class="ts-adm-textarea"
+                  rows="2"
+                  placeholder="Trầy nhẹ ở viền; không nứt, cán còn nguyên."
+                ></textarea>
+              </div>
+
+              <!-- 2 cột: Mô tả sản phẩm | Thông số kỹ thuật -->
+              <div class="ts-adm-edit-grid-2">
+                <div>
+                  <label for="admProdDesc" class="ts-adm-filter-label">Mô tả sản phẩm</label>
+                  <textarea id="admProdDesc" class="ts-adm-textarea" rows="3" placeholder="Mô tả chi tiết..."></textarea>
+                </div>
+
+                <div>
+                  <label for="admProdSpecs" class="ts-adm-filter-label">Thông số kỹ thuật</label>
+                  <textarea id="admProdSpecs" class="ts-adm-textarea" rows="3" placeholder="Trọng lượng: 4U; Chất liệu: Graphite"></textarea>
+                </div>
+              </div>
+
+              <!-- ẢNH SẢN PHẨM -->
+              <div class="ts-adm-prod-media-sec" id="adminProductPhotos">
+                <header class="ts-adm-editor-heading">
+                  <h2 class="ts-adm-card-title" id="adminProductPhotosTitle" tabindex="-1">Ảnh sản phẩm</h2>
+                  <a id="viewStorefrontProduct" class="ts-adm-btn-secondary" target="_blank" rel="noopener" hidden>Xem sản phẩm ↗</a>
+                </header>
+                <p class="ts-adm-banner-status" id="productPhotoStatus" role="status"></p>
+                <div class="ts-adm-prod-photos-row">
+                  <div class="ts-adm-prod-photos-grid" id="admProdPhotosGrid">
+                    <!-- Render 4 ô ảnh từ products.js -->
+                  </div>
+                </div>
+                <div class="ts-adm-banner-actions ts-adm-product-photo-actions">
+                  <button id="btnSaveProductPhotos" type="button" class="ts-adm-btn-primary" hidden>Lưu ảnh sản phẩm</button>
+                  <button id="btnDiscardProductPhotos" type="button" class="ts-adm-btn-secondary" hidden>Bỏ thay đổi ảnh</button>
+                </div>
+              </div>
+
+              <hr class="ts-acc-v2-divider" />
+
+              <!-- BIẾN THỂ SKU & TỒN KHO -->
+              <div class="ts-adm-prod-sku-sec">
+                <h2 class="ts-adm-card-title" style="font-size:17px;">Biến thể SKU &amp; Tồn kho</h2>
+
+                <div class="ts-orders-v2-table-wrap">
+                  <table class="ts-orders-v2-table ts-adm-sku-table">
+                    <thead>
+                      <tr>
+                        <th>SKU</th>
+                        <th>Size</th>
+                        <th>Màu</th>
+                        <th>Giá</th>
+                        <th>Kho</th>
+                        <th>Đơn vị</th>
+                        <th>Quả / lô</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="admSkuTableBody">
+                      <!-- Render động các dòng SKU -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="ts-adm-sku-footer">
+                  <button type="button" class="ts-adm-btn-secondary ts-adm-add-sku-btn" id="btnAddSkuRow">
+                    + Thêm biến thể
+                  </button>
+                  <span class="ts-adm-edit-hint">Đơn vị CHIEC: 1 • Đơn vị LO: nhập số quả/lô.</span>
+                </div>
+              </div>
+
+            </section>
+
+            <!-- HÀNG NÚT CUỐI TRANG: QUAY LẠI | LƯU SẢN PHẨM -->
+            <div class="ts-adm-prod-bottom-actions">
+              <button type="button" class="ts-adm-btn-secondary" id="btnBackToProductsList" style="min-width:160px;">
+                Quay lại
+              </button>
+              <button type="submit" class="ts-adm-btn-primary" style="min-width:210px;">
+                Lưu sản phẩm
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/products.js"></script>
+</body>
+</html>

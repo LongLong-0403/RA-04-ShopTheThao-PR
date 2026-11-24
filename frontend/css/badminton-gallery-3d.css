@@ -1,0 +1,571 @@
+/* ==========================================================================
+   TSPORT — TRIỂN LÃM CẦU LÔNG 3D (CONCAVE CURVED WALL GALLERY + DETAIL)
+   Phong cách triển lãm nghệ thuật tối giản: nền trắng ngả xám, sàn xám nhạt,
+   chữ đen sắc nét, nhiều khoảng trống, không card bo góc / bóng đổ dày.
+   ========================================================================== */
+
+.ts-bg3d-section {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  background: #F4F4F2;
+  border-bottom: 1px solid #E5E5E2;
+  margin-bottom: 64px;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ts-bg3d-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(580px, 82vh, 840px);
+  background: #F2F2F0;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.ts-bg3d-stage.is-grabbing {
+  cursor: grabbing;
+}
+
+.ts-bg3d-stage.is-hovering {
+  cursor: pointer;
+}
+
+.ts-bg3d-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Thanh thông tin góc trên trong không gian triển lãm */
+.ts-bg3d-top-hud {
+  position: absolute;
+  top: 20px;
+  left: 28px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.ts-bg3d-hud-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #525252;
+}
+
+.ts-bg3d-hud-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.ts-bg3d-hud-btn {
+  height: 30px;
+  padding: 0 11px;
+  border: 1px solid rgba(17, 24, 39, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(6px);
+  color: #111827;
+  font-family: 'Roboto', sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ts-bg3d-hud-btn:hover,
+.ts-bg3d-hud-btn:focus-visible {
+  background: #FFFFFF;
+  border-color: #111827;
+  outline: none;
+}
+
+/* Nhãn bộ sưu tập giữa đáy gallery (giống video tham chiếu) */
+.ts-bg3d-bottom-hud {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none;
+  z-index: 5;
+  width: min(92%, 520px);
+}
+
+.ts-bg3d-coll-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #737373;
+  margin-bottom: 5px;
+}
+
+.ts-bg3d-coll-title {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #171717;
+  margin: 0 0 4px 0;
+}
+
+.ts-bg3d-coll-sub {
+  font-size: 11px;
+  color: #6B7280;
+  letter-spacing: 0.4px;
+}
+
+/* Fallback khi WebGL không khả dụng */
+.ts-bg3d-fallback {
+  display: none;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ts-bg3d-fallback.is-visible {
+  display: block;
+}
+
+.ts-bg3d-fallback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 24px;
+}
+
+.ts-bg3d-fallback-item {
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ts-bg3d-fallback-item img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: #E8E8E5;
+  margin-bottom: 8px;
+}
+
+/* ==========================================================================
+   LỚP PHỦ CHI TIẾT SẢN PHẨM TOÀN MÀN HÌNH (CHUYỂN CẢNH LIỀN MẠCH TỪ WEBGL)
+   ========================================================================== */
+.ts-bg3d-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #F6F6F4;
+  color: #171717;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.ts-bg3d-detail-overlay.is-open {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* Ảnh bay chuyển tiếp khớp chính xác tọa độ chiếu WebGL -> Cột trái */
+.ts-bg3d-fly-wrap {
+  position: fixed;
+  z-index: 2050;
+  pointer-events: none;
+  overflow: hidden;
+  background: #EFEFED;
+  display: none;
+}
+
+.ts-bg3d-fly-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 8%;
+  background: #FFFFFF;
+}
+
+/* Header mỏng phía trên lớp chi tiết */
+.ts-bg3d-detail-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  padding: 0 32px;
+  background: rgba(246, 246, 244, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #E5E5E2;
+}
+
+.ts-bg3d-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  color: #171717;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.ts-bg3d-back-btn:hover,
+.ts-bg3d-back-btn:focus-visible {
+  color: #111827;
+  outline: none;
+}
+
+.ts-bg3d-detail-top-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ts-bg3d-detail-top-link {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #171717;
+  text-decoration: none;
+}
+
+.ts-bg3d-detail-top-link:hover {
+  color: #111827;
+}
+
+/* Bố cục 2 cột Desktop */
+.ts-bg3d-detail-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+
+.ts-bg3d-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 64px;
+  align-items: start;
+}
+
+.ts-bg3d-detail-media-col {
+  position: sticky;
+  top: 86px;
+}
+
+.ts-bg3d-detail-img-slot {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  max-height: 74vh;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ts-bg3d-detail-img-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8%;
+  display: block;
+}
+
+.ts-bg3d-detail-info-col {
+  padding-top: 8px;
+}
+
+.ts-bg3d-detail-brand {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #737373;
+  margin-bottom: 10px;
+}
+
+.ts-bg3d-detail-title {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  color: #111827;
+  text-transform: uppercase;
+  margin: 0 0 14px 0;
+}
+
+.ts-bg3d-detail-price {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 18px;
+}
+
+.ts-bg3d-detail-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #525252;
+  margin: 0 0 26px 0;
+}
+
+.ts-bg3d-opt-group {
+  margin-bottom: 20px;
+}
+
+.ts-bg3d-opt-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #525252;
+  margin-bottom: 10px;
+}
+
+.ts-bg3d-opt-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ts-bg3d-opt-pill {
+  min-width: 72px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid #D4D4D0;
+  background: transparent;
+  color: #171717;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.ts-bg3d-opt-pill:hover {
+  border-color: #171717;
+}
+
+.ts-bg3d-opt-pill.is-active {
+  background: #171717;
+  border-color: #171717;
+  color: #FFFFFF;
+}
+
+.ts-bg3d-buy-row {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  gap: 12px;
+  margin: 26px 0 16px;
+}
+
+.ts-bg3d-qty-box {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px;
+  height: 46px;
+  border: 1px solid #D4D4D0;
+  background: #FFFFFF;
+}
+
+.ts-bg3d-qty-btn {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  color: #171717;
+  cursor: pointer;
+}
+
+.ts-bg3d-qty-val {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.ts-bg3d-add-btn {
+  height: 46px;
+  border: none;
+  background: #171717;
+  color: #FFFFFF;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ts-bg3d-add-btn:hover {
+  background: #111827;
+}
+
+.ts-bg3d-fullpage-link {
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #525252;
+  text-decoration: underline;
+  margin-bottom: 24px;
+}
+
+/* Accordions */
+.ts-bg3d-accordions {
+  border-top: 1px solid #E5E5E2;
+  margin-top: 8px;
+}
+
+.ts-bg3d-acc-item {
+  border-bottom: 1px solid #E5E5E2;
+}
+
+.ts-bg3d-acc-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border: none;
+  background: transparent;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #171717;
+  cursor: pointer;
+}
+
+.ts-bg3d-acc-body {
+  display: none;
+  padding: 0 0 16px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #525252;
+}
+
+.ts-bg3d-acc-item.is-open .ts-bg3d-acc-body {
+  display: block;
+}
+
+/* Get the collection (Sản phẩm liên quan) */
+.ts-bg3d-related {
+  margin-top: 72px;
+  padding-top: 36px;
+  border-top: 1px solid #E5E5E2;
+}
+
+.ts-bg3d-related-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #171717;
+  margin: 0 0 24px 0;
+}
+
+.ts-bg3d-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.ts-bg3d-rel-card {
+  border: none;
+  background: transparent;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ts-bg3d-rel-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: #FFFFFF;
+  margin-bottom: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ts-bg3d-rel-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10%;
+  transition: transform 0.3s ease;
+}
+
+.ts-bg3d-rel-card:hover .ts-bg3d-rel-thumb img {
+  transform: scale(1.04);
+}
+
+.ts-bg3d-rel-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #171717;
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+
+.ts-bg3d-rel-price {
+  font-size: 12.5px;
+  color: #525252;
+}
+
+/* ==========================================================================
+   RESPONSIVE MOBILE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .ts-bg3d-stage {
+    height: 480px;
+  }
+  .ts-bg3d-top-hud {
+    top: 14px;
+    left: 16px;
+    right: 16px;
+  }
+  .ts-bg3d-detail-topbar {
+    padding: 0 16px;
+  }
+  .ts-bg3d-detail-inner {
+    padding: 20px 16px 64px;
+  }
+  .ts-bg3d-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .ts-bg3d-detail-media-col {
+    position: static;
+  }
+  .ts-bg3d-detail-img-slot {
+    aspect-ratio: 1 / 1;
+    max-height: none;
+  }
+  .ts-bg3d-detail-title {
+    font-size: 24px;
+  }
+  .ts-bg3d-related-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sản phẩm thể thao | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+</head>
+<body class="tsport-home-body" data-root="../">
+
+  <!-- ==========================================
+       1. HEADER GIỮ NGUYÊN ĐỒNG BỘ TRANG CHỦ
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="shopSearchForm">
+          <input
+            type="text"
+            id="shopSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <a href="auth.html" class="ts-min-header-link js-header-user-label">Tài khoản</a>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG CAM ĐẬM FULL MÀN HÌNH GIỮ NGUYÊN ĐỒNG BỘ TRANG CHỦ -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link is-active">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link">Hướng dẫn</a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: SẢN PHẨM THỂ THAO
+       ========================================== -->
+  <main class="container ts-shop-page-main">
+
+    <div class="ts-shop-layout-v2">
+
+      <!-- ==========================================
+           CỘT TRÁI: BỘ LỌC (SIDEBAR & DRAWER MOBILE)
+           ========================================== -->
+      <aside class="ts-shop-sidebar-v2" id="shopFilterSidebar">
+        <div class="ts-shop-filter-head">
+          <span class="ts-shop-filter-heading">BỘ LỌC</span>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button type="button" class="ts-shop-filter-clear" id="btnResetFilters">Xóa lọc</button>
+            <button type="button" class="ts-shop-mobile-close" id="btnCloseMobileFilter" aria-label="Đóng bộ lọc">✕</button>
+          </div>
+        </div>
+
+        <!-- 1. Môn thể thao -->
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Môn thể thao</div>
+          <div class="ts-shop-filter-list" id="filterSportsList"></div>
+        </div>
+
+        <!-- 2. Danh mục -->
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Danh mục</div>
+          <div class="ts-shop-filter-list" id="filterCategoriesList"></div>
+        </div>
+
+        <!-- 3. Thương hiệu -->
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Thương hiệu</div>
+          <div class="ts-shop-filter-list" id="filterBrandsList"></div>
+        </div>
+
+        <!-- 4. Tình trạng -->
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Tình trạng</div>
+          <div class="ts-shop-filter-list">
+            <label class="ts-shop-check-row">
+              <input type="radio" name="filterConditionRadio" value="ALL" checked />
+              <span>Tất cả</span>
+            </label>
+            <label class="ts-shop-check-row">
+              <input type="radio" name="filterConditionRadio" value="MOI" />
+              <span>Mới</span>
+            </label>
+            <label class="ts-shop-check-row">
+              <input type="radio" name="filterConditionRadio" value="CU" />
+              <span>Đã qua sử dụng</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 5. Khoảng giá -->
+        <div class="ts-shop-filter-group">
+          <div class="ts-shop-filter-group-title">Khoảng giá</div>
+          <input
+            type="range"
+            id="filterMaxPriceSlider"
+            class="ts-shop-price-slider"
+            min="500000"
+            max="7000000"
+            step="250000"
+            value="7000000"
+          />
+          <div class="ts-shop-price-range-text" id="filterPriceRangeText">0đ - 7.000.000đ</div>
+        </div>
+
+        <button type="button" class="ts-shop-apply-btn" id="btnApplyFilters">Áp dụng bộ lọc</button>
+      </aside>
+
+      <!-- ==========================================
+           CỘT PHẢI: BANNER THƯƠNG HIỆU VỢT + TOOLBAR + LƯỚI 3 CỘT
+           ========================================== -->
+      <section class="ts-shop-content-v2">
+        <!-- BANNER QUẢNG CÁO THƯƠNG HIỆU VỢT (CHỈ ẢNH, TRƯỢT TRÁI SANG PHẢI 1S, THẲNG HÀNG SẢN PHẨM) -->
+        <div class="ts-shop-brand-banner" id="shopBrandSlider" aria-label="Banner thương hiệu vợt">
+          <a href="shop.html?q=Mizuno" class="ts-shop-brand-slide is-active">
+            <img src="../assets/banner/shop-banner-mizuno.jpg" alt="Mizuno Badminton" />
+          </a>
+          <a href="shop.html?q=V%E1%BB%A3t" class="ts-shop-brand-slide">
+            <img src="../assets/banner/banner-2.jpg" alt="Thương hiệu vợt thể thao Tsport" />
+          </a>
+          <a href="shop.html?q=Yonex" class="ts-shop-brand-slide">
+            <img src="../assets/banner/banner-3.jpg" alt="Vợt cầu lông chính hãng Tsport" />
+          </a>
+
+          <div class="ts-shop-brand-dots" id="shopBrandDots">
+            <button type="button" class="ts-shop-brand-dot is-active" data-index="0" aria-label="Banner 1"></button>
+            <button type="button" class="ts-shop-brand-dot" data-index="1" aria-label="Banner 2"></button>
+            <button type="button" class="ts-shop-brand-dot" data-index="2" aria-label="Banner 3"></button>
+          </div>
+        </div>
+
+        <div class="ts-mob-shop-head ts-mob-only">
+          <h1 class="ts-mob-shop-title">Sản phẩm thể thao</h1>
+        </div>
+
+        <div class="ts-shop-toolbar-v2">
+          <div class="ts-shop-toolbar-left">
+            <button type="button" class="ts-shop-mobile-filter-btn" id="btnToggleMobileFilter">Bộ lọc ▾</button>
+            <span class="ts-shop-count-text" id="shopTotalCount">0 sản phẩm</span>
+          </div>
+
+          <div class="ts-shop-sort-wrap">
+            <select id="shopSortSelect" class="ts-shop-sort-select" aria-label="Sắp xếp sản phẩm">
+              <option value="newest">Sắp xếp: Mới nhất</option>
+              <option value="price_asc">Sắp xếp: Giá thấp đến cao</option>
+              <option value="price_desc">Sắp xếp: Giá cao đến thấp</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- LƯỚI SẢN PHẨM 3 CỘT CHUẨN ẢNH -->
+        <div class="ts-shop-grid-v2" id="shopProductGrid">
+          <!-- Render động từ shop.js -->
+        </div>
+
+        <!-- PHÂN TRANG CĂN GIỮA -->
+        <div class="ts-shop-pagination-v2" id="shopPagination"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER SÁNG TỐI GIẢN ĐỒNG BỘ TRANG CHỦ -->
+  <footer class="ts-min-footer">
+    <div class="container">
+      <div class="ts-min-footer-grid">
+        <div>
+          <div class="ts-min-footer-brand">Tsport</div>
+          <p class="ts-min-footer-tagline">Mọi môn thể thao. Mọi cuộc chơi.</p>
+        </div>
+
+        <div class="ts-min-footer-col">
+          <h4>MUA SẮM</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="shop.html">Sản phẩm mới</a></li>
+            <li><a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a></li>
+          </ul>
+        </div>
+
+        <div class="ts-min-footer-col">
+          <h4>DỊCH VỤ</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="courts.html">Đặt sân thể thao</a></li>
+            <li><a href="community.html">Ghép kèo • Thu mua đồ cũ</a></li>
+          </ul>
+        </div>
+
+        <div class="ts-min-footer-col">
+          <h4>TÀI KHOẢN</h4>
+          <ul class="ts-min-footer-links">
+            <li><a href="account.html">Hồ sơ cá nhân</a></li>
+            <li><a href="orders.html">Đơn hàng • Lịch đặt sân</a></li>
+            <li><a data-admin-link hidden href="admin-dashboard.html">Quản trị hệ thống</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/shop.js"></script>
+</body>
+</html>

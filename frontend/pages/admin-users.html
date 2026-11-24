@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý người dùng | Tsport Admin</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="ts-adm-body" data-root="../" hidden>
+
+  <div class="ts-adm-shell">
+
+    <!-- SIDEBAR TRÁI NỀN TỐI -->
+    <aside class="ts-adm-sidebar" id="adminSidebar">
+      <div class="ts-adm-brand">
+        <a href="admin-dashboard.html" class="ts-adm-logo">Tsport</a>
+        <div class="ts-adm-logo-sub">QUẢN TRỊ HỆ THỐNG</div>
+      </div>
+
+      <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
+        <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
+        <a href="admin-users.html" class="ts-adm-nav-link is-active">Người dùng</a>
+        <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
+        <a href="categories.html" class="ts-adm-nav-link">Danh mục cha / con</a>
+        <a href="products.html" class="ts-adm-nav-link">Sản phẩm &amp; SKU</a>
+        <a href="admin-courts.html" class="ts-adm-nav-link">Sân &amp; Ca giờ</a>
+        <a href="admin-bookings.html" class="ts-adm-nav-link">Lịch đặt sân</a>
+        <a href="admin-orders.html" class="ts-adm-nav-link">Đơn hàng</a>
+        <a href="admin-buyback.html" class="ts-adm-nav-link">Thu mua đồ cũ</a>
+      </nav>
+
+      <div class="ts-adm-sidebar-foot">
+        <a href="../index.html" class="ts-adm-back-shop">Quay về cửa hàng ↗</a>
+      </div>
+    </aside>
+
+    <!-- CỘT PHẢI -->
+    <div class="ts-adm-main-wrap">
+
+      <!-- TOP BAR -->
+      <header class="ts-adm-topbar">
+        <div class="ts-adm-topbar-left">
+          <button type="button" class="ts-adm-mobile-menu-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div class="ts-adm-breadcrumb">
+            <span>Quản trị</span>
+            <span>/</span>
+            <span class="is-current">Quản lý người dùng</span>
+          </div>
+        </div>
+
+        <div class="ts-adm-user-wrap">
+          <button type="button" class="ts-adm-user-btn" id="btnAdminUserMenu">
+            <span>Admin</span>
+            <span style="font-size:10px;">▾</span>
+          </button>
+          <div class="ts-adm-user-dropdown" id="adminUserDropdown">
+            <a href="../index.html">Về cửa hàng</a>
+            <button type="button" id="btnAdminLogout">Đăng xuất</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- NỘI DUNG QUẢN LÝ NGƯỜI DÙNG -->
+      <main class="ts-adm-content">
+
+        <header class="ts-adm-page-head">
+          <h1 class="ts-adm-page-title">Quản lý người dùng</h1>
+          <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+        </header>
+
+        <!-- THANH TÌM KIẾM & LỌC VAI TRÒ -->
+        <section class="ts-adm-filter-block">
+          <label for="userSearchInput" class="ts-adm-filter-label">Tìm theo email / SĐT</label>
+          <div class="ts-adm-filter-row">
+            <input
+              type="text"
+              id="userSearchInput"
+              class="ts-adm-input"
+              placeholder="minhanh@example.com"
+            />
+            <button type="button" class="ts-adm-btn-secondary ts-adm-filter-btn" id="btnSearchUsers">
+              Tìm kiếm
+            </button>
+            <select id="userRoleFilter" class="ts-adm-select ts-adm-filter-select" aria-label="Lọc theo vai trò">
+              <option value="ALL">Vai trò: Tất cả</option>
+              <option value="CUSTOMER">Vai trò: CUSTOMER</option>
+              <option value="ADMIN">Vai trò: ADMIN</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- BẢNG NGƯỜI DÙNG -->
+        <section class="ts-adm-table-section">
+          <div class="ts-orders-v2-table-wrap">
+            <table class="ts-orders-v2-table ts-adm-table">
+              <thead>
+                <tr>
+                  <th>Họ tên / Email</th>
+                  <th>Số điện thoại</th>
+                  <th>Vai trò</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTbody">
+                <!-- Render động từ admin-users.js -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- KHUNG CẬP NHẬT TÀI KHOẢN -->
+        <section class="ts-adm-card ts-adm-edit-panel" id="userEditPanel">
+          <h2 class="ts-adm-card-title" id="editUserHeading">Cập nhật tài khoản: Nguyễn Minh Anh</h2>
+
+          <div class="ts-adm-edit-grid-2">
+            <div>
+              <label for="editUserRole" class="ts-adm-filter-label">Vai trò</label>
+              <select id="editUserRole" class="ts-adm-select">
+                <option value="CUSTOMER">CUSTOMER</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="editUserStatus" class="ts-adm-filter-label">Trạng thái</label>
+              <select id="editUserStatus" class="ts-adm-select">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="INACTIVE">INACTIVE</option>
+                <option value="LOCKED">LOCKED</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ts-adm-edit-footer">
+            <span class="ts-adm-edit-hint">Trạng thái: ACTIVE / INACTIVE / LOCKED</span>
+            <button type="button" class="ts-adm-btn-primary ts-adm-save-btn" id="btnSaveUserUpdate">
+              Lưu cập nhật
+            </button>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/admin-users.js"></script>
+</body>
+</html>

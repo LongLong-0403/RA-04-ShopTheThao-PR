@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đơn hàng của tôi | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="tsport-orders-body" data-root="../">
+
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="ordersSearchForm">
+          <input
+            type="text"
+            id="ordersSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link" style="color:#111827; font-weight:700;">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="account.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link">Hướng dẫn</a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: DANH SÁCH ĐƠN HÀNG & CHI TIẾT ĐƠN HÀNG
+       ========================================== -->
+  <main class="container ts-orders-v2-main">
+
+    <!-- VIEW 1: DANH SÁCH ĐƠN HÀNG CỦA TÔI -->
+    <div id="ordersListView">
+      <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <span class="is-current">Đơn hàng của tôi</span>
+      </nav>
+
+      <h1 class="ts-acc-v2-page-title">Đơn hàng của tôi</h1>
+
+      <div class="ts-acc-v2-layout">
+        <!-- SIDEBAR TÀI KHOẢN -->
+        <aside class="ts-acc-v2-sidebar">
+          <div class="ts-acc-v2-user-head">
+            <div class="ts-acc-v2-avatar" id="sbOrdersAvatar"></div>
+            <div class="ts-acc-v2-user-meta">
+              <div class="ts-acc-v2-user-name" id="sbOrdersName"></div>
+              <div class="ts-acc-v2-user-role" id="sbOrdersRole"></div>
+            </div>
+          </div>
+
+          <nav class="ts-acc-v2-menu" aria-label="Menu tài khoản">
+            <a href="account.html" class="ts-acc-v2-menu-link">Hồ sơ cá nhân</a>
+            <a href="orders.html" class="ts-acc-v2-menu-link is-active">Đơn hàng của tôi</a>
+            <a href="my-bookings.html" class="ts-acc-v2-menu-link">Lịch đặt sân</a>
+            <a href="my-matches.html" class="ts-acc-v2-menu-link">Bài ghép kèo</a>
+            <a href="my-buybacks.html" class="ts-acc-v2-menu-link">Yêu cầu thu mua</a>
+          </nav>
+
+          <div class="ts-acc-v2-logout-wrap">
+            <button type="button" class="ts-acc-v2-logout-btn" id="btnOrdersLogout">Đăng xuất</button>
+          </div>
+        </aside>
+
+        <!-- CỘT PHẢI: LỊCH SỬ MUA HÀNG -->
+        <section class="ts-orders-v2-content">
+          <h2 class="ts-orders-v2-heading">Lịch sử mua hàng</h2>
+
+          <!-- 4 TABS LỌC TRẠNG THÁI -->
+          <div class="ts-orders-v2-tabs" id="ordersStatusTabs">
+            <button type="button" class="ts-orders-v2-tab is-active" data-status="ALL">Tất cả</button>
+            <button type="button" class="ts-orders-v2-tab" data-status="PENDING">Chờ xác nhận</button>
+            <button type="button" class="ts-orders-v2-tab" data-status="SHIPPING">Đang giao</button>
+            <button type="button" class="ts-orders-v2-tab" data-status="COMPLETED">Hoàn tất</button>
+          </div>
+
+          <!-- BẢNG LỊCH SỬ ĐƠN HÀNG -->
+          <div class="ts-orders-v2-table-wrap">
+            <table class="ts-orders-v2-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn / Ngày đặt</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <!-- Render động từ orders.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="ts-orders-v2-bottom-bar">
+            <button type="button" class="ts-orders-v2-pending-btn" id="btnViewPendingOrders">
+              Xem đơn đang chờ
+            </button>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- VIEW 2: CHI TIẾT ĐƠN HÀNG -->
+    <div id="orderDetailView" style="display:none;">
+      <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <a href="orders.html" id="btnBackToOrdersList">Đơn hàng của tôi</a>
+        <span>/</span>
+        <span class="is-current" id="detailBreadcrumbCode"></span>
+      </nav>
+
+      <header class="ts-ord-det-head">
+        <h1 class="ts-ord-det-title" id="detailOrderTitle"></h1>
+        <p class="ts-ord-det-sub" id="detailOrderMeta"></p>
+      </header>
+
+      <!-- THANH TIẾN TRÌNH 4 BƯỚC -->
+      <section class="ts-ord-det-stepper" id="detailOrderStepper" aria-label="Tiến độ đơn hàng">
+        <!-- Render động từ orders.js -->
+      </section>
+
+      <!-- BẢNG SẢN PHẨM TRONG ĐƠN -->
+      <section class="ts-ord-det-items-sec">
+        <h2 class="ts-ord-det-sec-title">Sản phẩm trong đơn</h2>
+        <div class="ts-orders-v2-table-wrap">
+          <table class="ts-orders-v2-table ts-ord-det-table">
+            <thead>
+              <tr>
+                <th>Sản phẩm / Biến thể</th>
+                <th>Tình trạng lúc mua</th>
+                <th>Số lượng</th>
+                <th>Đơn giá lúc đặt</th>
+                <th>Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody id="detailItemsBody">
+              <!-- Render động từ orders.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- HÀNG DƯỚI: NGƯỜI NHẬN HÀNG (TRÁI) | TỔNG THANH TOÁN & HỦY ĐƠN (PHẢI) -->
+      <section class="ts-ord-det-footer-grid">
+        <div class="ts-ord-det-receiver-card">
+          <h3 class="ts-ord-det-receiver-title">Người nhận hàng</h3>
+          <div class="ts-ord-det-receiver-line" id="detailReceiverContact"></div>
+          <div class="ts-ord-det-receiver-addr" id="detailReceiverAddress"></div>
+        </div>
+
+        <div class="ts-ord-det-total-col">
+          <div class="ts-ord-det-total-row">
+            <span>Tổng thanh toán</span>
+            <strong class="ts-ord-det-total-val" id="detailGrandTotal">0đ</strong>
+          </div>
+
+          <button type="button" class="ts-ord-det-cancel-btn" id="btnCancelCurrentOrder">
+            Hủy đơn hàng
+          </button>
+
+          <div class="ts-ord-det-cancel-note" id="detailCancelNote">
+            Có thể hủy khi đơn còn chờ xác nhận.
+          </div>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/orders.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết sản phẩm | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+</head>
+<body class="tsport-pdp-body" data-root="../">
+
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="pdpSearchForm">
+          <input
+            type="text"
+            id="pdpSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="auth.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link is-active" id="pdpNavShopLink">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link" id="pdpNavUsedLink">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link">Hướng dẫn</a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: CHI TIẾT SẢN PHẨM + XEM 3D 360°
+       ========================================== -->
+  <main class="container ts-pdp-main">
+
+    <!-- Breadcrumb -->
+    <nav class="ts-pdp-breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Trang chủ</a>
+      <span>/</span>
+      <a href="shop.html" id="pdpBreadcrumbSport">Cầu lông</a>
+      <span>/</span>
+      <a href="shop.html" id="pdpBreadcrumbCat">Vợt</a>
+      <span>/</span>
+      <span id="pdpBreadcrumbName" class="is-current">Chi tiết sản phẩm</span>
+    </nav>
+
+    <!-- PHẦN TRÊN: 2 CỘT (TRÌNH XEM 3D & ẢNH | THÔNG TIN MUA HÀNG) -->
+    <section class="ts-pdp-top-grid">
+
+      <!-- CỘT TRÁI: ẢNH SẢN PHẨM + GALLERY -->
+      <div class="ts-pdp-media-col">
+        <div class="ts-pdp-stage" id="pdpMediaStage">
+          <!-- Ảnh sản phẩm chính -->
+          <img id="pdpMainImage" class="ts-pdp-main-img" src="" alt="Ảnh sản phẩm" />
+
+          <!-- Nhãn góc dưới trái -->
+          <span class="ts-pdp-img-caption" id="pdpImageCaption">ẢNH SẢN PHẨM / 01</span>
+        </div>
+
+        <!-- Hàng ảnh thu nhỏ bên dưới -->
+        <div class="ts-pdp-thumbs-row" id="pdpThumbsWrap">
+          <!-- Render động từ product-detail.js -->
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI: THÔNG TIN SẢN PHẨM, BIẾN THỂ & MUA HÀNG -->
+      <div class="ts-pdp-info-col">
+        <div class="ts-pdp-badge-row" id="pdpConditionBadgeWrap">
+          <span class="ts-pdp-cond-pill">Mới</span>
+        </div>
+
+        <h1 class="ts-pdp-title" id="pdpTitle">Đang tải sản phẩm...</h1>
+
+        <div class="ts-pdp-meta-path" id="pdpMetaPath">Yonex / Cầu lông / Vợt cầu lông</div>
+
+        <div class="ts-pdp-price-row">
+          <span class="ts-pdp-price" id="pdpPrice">0đ</span>
+          <span class="ts-pdp-oldprice" id="pdpOldPrice" style="display:none;"></span>
+        </div>
+
+        <!-- Chọn màu sắc -->
+        <div class="ts-pdp-variant-group" id="pdpColorSection">
+          <div class="ts-pdp-variant-label">Chọn màu sắc</div>
+          <div class="ts-pdp-variant-list" id="pdpColorOptions"></div>
+        </div>
+
+        <!-- Chọn Trọng lượng / Size -->
+        <div class="ts-pdp-variant-group" id="pdpSizeSection">
+          <div class="ts-pdp-variant-label">Trọng lượng / Size</div>
+          <div class="ts-pdp-variant-list" id="pdpSizeOptions"></div>
+        </div>
+
+        <!-- Đơn vị & Tồn kho biến thể -->
+        <div class="ts-pdp-stock-line" id="pdpStockStatus">Đơn vị: Chiếc • Tồn kho biến thể: 0</div>
+
+        <!-- Thông báo nhắc chọn đủ biến thể -->
+        <div class="ts-pdp-variant-hint" id="pdpVariantHint" style="display:none;"></div>
+
+        <!-- Số lượng + Thêm vào giỏ + Mua ngay -->
+        <div class="ts-pdp-buy-group">
+          <div class="ts-pdp-variant-label">Số lượng</div>
+          <div class="ts-pdp-buy-row">
+            <div class="ts-pdp-qty-box">
+              <button type="button" class="ts-pdp-qty-btn" id="btnQtyMinus" aria-label="Giảm số lượng">−</button>
+              <input type="number" class="ts-pdp-qty-input" id="pdpQuantity" value="1" min="1" readonly />
+              <button type="button" class="ts-pdp-qty-btn" id="btnQtyPlus" aria-label="Tăng số lượng">+</button>
+            </div>
+
+            <button type="button" class="ts-pdp-btn-cart" id="btnAddToCart" disabled>Thêm vào giỏ</button>
+            <button type="button" class="ts-pdp-btn-buynow" id="btnBuyNow" disabled>Mua ngay</button>
+          </div>
+        </div>
+
+        <!-- Khung thông báo COD & Phí vận chuyển -->
+        <div class="ts-pdp-cod-note">
+          Thanh toán khi nhận hàng (COD). Phí vận chuyển: 0đ.
+        </div>
+      </div>
+
+    </section>
+
+    <hr class="ts-pdp-divider" />
+
+    <!-- PHẦN DƯỚI: MÔ TẢ & THÔNG SỐ KỸ THUẬT (TRÁI) | THÔNG TIN BIẾN THỂ / TÌNH TRẠNG THỰC TẾ (PHẢI) -->
+    <section class="ts-pdp-bottom-grid">
+
+      <div class="ts-pdp-desc-col">
+        <h2 class="ts-pdp-sec-kicker">MÔ TẢ SẢN PHẨM</h2>
+        <p class="ts-pdp-desc-text" id="pdpDesc">
+          Vợt dành cho người chơi thể thao; chọn đúng màu và trọng lượng trước khi thêm vào giỏ.
+        </p>
+
+        <h3 class="ts-pdp-specs-heading">Thông số kỹ thuật</h3>
+        <div class="ts-pdp-specs-wrap">
+          <table class="ts-pdp-specs-table">
+            <thead>
+              <tr>
+                <th>Thông số</th>
+                <th>Giá trị</th>
+              </tr>
+            </thead>
+            <tbody id="pdpSpecsTbody">
+              <!-- Render từ product-detail.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="ts-pdp-side-col">
+        <div class="ts-pdp-info-card" id="pdpSideInfoCard">
+          <!-- Render động theo Mới (THÔNG TIN BIẾN THỂ) hoặc Đã qua sử dụng (TÌNH TRẠNG THỰC TẾ) -->
+        </div>
+      </aside>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/product-detail.js"></script>
+</body>
+</html>

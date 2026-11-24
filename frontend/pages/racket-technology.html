@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Công nghệ vợt | Tsport</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/guides.css">
+</head>
+<body class="tsport-home-body guide-page" data-root="../">
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form action="shop.html" method="get">
+          <input
+            type="text"
+            name="q" aria-label="Tìm sản phẩm"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <a href="auth.html" class="ts-min-header-link js-header-user-label">Tài khoản</a>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG CAM ĐẬM FULL MÀN HÌNH GIỮ NGUYÊN ĐỒNG BỘ TRANG CHỦ -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link is-active">Hướng dẫn</a>
+    </div>
+  </nav>
+  <main class="container guide-layout">
+    <article>
+      <a href="../index.html">Trang chủ</a>
+      <h1>Công nghệ vợt</h1>
+      <h2>ISOMETRIC™ và vùng đánh hiệu quả</h2>
+      <p>Theo Yonex, dáng đầu vợt gần vuông giúp mở rộng vùng giao nhau giữa dây dọc và dây ngang. Nhờ đó, người chơi có vùng tiếp xúc cầu hiệu quả rộng hơn so với khung đầu tròn truyền thống. <a href="https://www.yonex.com/badminton/racquets/nanoflare/nf-002f">Nguồn Yonex · ISOMETRIC™ trên Nanoflare 002 Feel</a>.</p>
+      <h2>Graphite trong khung vợt</h2>
+      <p>Ở dòng Nanoflare 800, Yonex mô tả việc kết hợp graphite M40X với graphite mô đun cao để khung ổn định và hỗ trợ tăng tốc cầu. Khi so sánh các phiên bản, hãy đọc mục vật liệu khung của từng mẫu. <a href="https://nanoflare.yonex.com/nanoflare-800.html">Nguồn Yonex · Cấu tạo Nanoflare 800</a>.</p>
+    </article>
+    <nav class="guide-menu" aria-label="Hướng dẫn và thông tin">
+      <h2>Hướng dẫn và thông tin</h2>
+      <a href="payment-guide.html">Hướng dẫn thanh toán</a>
+      <a href="shopping-guide.html">Hướng dẫn mua hàng</a>
+      <a href="racket-guide.html">Hướng dẫn chọn vợt</a>
+      <a href="racket-technology.html" aria-current="page">Công nghệ vợt</a>
+      <a href="about.html">Giới thiệu Tsport</a>
+      <a href="contact.html">Liên hệ</a>
+    </nav>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+</body>
+</html>

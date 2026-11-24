@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lịch đặt sân của tôi | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="tsport-orders-body" data-root="../">
+
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="myBookingsSearchForm">
+          <input
+            type="text"
+            id="myBookingsSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="account.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link is-active">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link">Hướng dẫn</a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: LỊCH ĐẶT SÂN CỦA TÔI
+       ========================================== -->
+  <main class="container ts-orders-v2-main">
+
+    <!-- Breadcrumb -->
+    <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Trang chủ</a>
+      <span>/</span>
+      <span class="is-current">Lịch đặt sân của tôi</span>
+    </nav>
+
+    <h1 class="ts-acc-v2-page-title">Lịch đặt sân của tôi</h1>
+
+    <div class="ts-acc-v2-layout">
+
+      <!-- CỘT TRÁI: SIDEBAR TÀI KHOẢN -->
+      <aside class="ts-acc-v2-sidebar">
+        <div class="ts-acc-v2-user-head">
+          <div class="ts-acc-v2-avatar" id="sbBookingsAvatar">NA</div>
+          <div class="ts-acc-v2-user-meta">
+            <div class="ts-acc-v2-user-name" id="sbBookingsName">Nguyễn Minh Anh</div>
+            <div class="ts-acc-v2-user-role" id="sbBookingsRole">Khách hàng</div>
+          </div>
+        </div>
+
+        <nav class="ts-acc-v2-menu" aria-label="Menu tài khoản">
+          <a href="account.html" class="ts-acc-v2-menu-link">Hồ sơ cá nhân</a>
+          <a href="orders.html" class="ts-acc-v2-menu-link">Đơn hàng của tôi</a>
+          <a href="my-bookings.html" class="ts-acc-v2-menu-link is-active">Lịch đặt sân</a>
+          <a href="my-matches.html" class="ts-acc-v2-menu-link">Bài ghép kèo</a>
+          <a href="my-buybacks.html" class="ts-acc-v2-menu-link">Yêu cầu thu mua</a>
+        </nav>
+
+        <div class="ts-acc-v2-logout-wrap">
+          <button type="button" class="ts-acc-v2-logout-btn" id="btnBookingsLogout">Đăng xuất</button>
+        </div>
+      </aside>
+
+      <!-- CỘT PHẢI: BẢNG LỊCH ĐẶT SÂN -->
+      <section class="ts-orders-v2-content">
+        <div class="ts-orders-v2-table-wrap">
+          <table class="ts-orders-v2-table">
+            <thead>
+              <tr>
+                <th>Sân / Ngày</th>
+                <th>Ca giờ / Giá đã đặt</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="myBookingsTableBody">
+              <!-- Render động từ my-bookings.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- THANH LƯU Ý GIỮ GIÁ -->
+        <div class="ts-court-det-notice" style="margin-top:26px;">
+          Giá lịch đã đặt được giữ nguyên khi giá ca giờ thay đổi.
+        </div>
+
+        <div class="ts-orders-v2-bottom-bar" style="margin-top:22px;">
+          <a href="courts.html" class="ts-acc-v2-btn-primary" style="text-decoration:none; text-align:center; min-width:190px;">
+            Đặt thêm sân
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/my-bookings.js"></script>
+</body>
+</html>

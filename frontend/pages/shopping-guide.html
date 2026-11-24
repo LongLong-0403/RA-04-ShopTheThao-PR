@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hướng dẫn mua hàng | Tsport</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/guides.css">
+</head>
+<body class="tsport-home-body guide-page" data-root="../">
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form action="shop.html" method="get">
+          <input
+            type="text"
+            name="q" aria-label="Tìm sản phẩm"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <a href="auth.html" class="ts-min-header-link js-header-user-label">Tài khoản</a>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG CAM ĐẬM FULL MÀN HÌNH GIỮ NGUYÊN ĐỒNG BỘ TRANG CHỦ -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link is-active">Hướng dẫn</a>
+    </div>
+  </nav>
+  <main class="container guide-layout">
+    <article>
+      <a href="../index.html">Trang chủ</a>
+      <h1>Hướng dẫn mua hàng</h1>
+      <h2>Chọn đúng phiên bản và đơn vị bán</h2>
+      <p>Mở sản phẩm trong <a href="shop.html">cửa hàng</a>. Mỗi SKU là một phiên bản cụ thể, chẳng hạn vợt 4U màu đen. Chọn kích cỡ và màu, rồi kiểm tra giá và tồn kho của phiên bản đó.</p>
+      <p>Với hàng bán theo lô hoặc ống, đọc quy cách trước khi nhập số lượng. Ví dụ, nếu một ống có 12 quả cầu, đặt số lượng 2 nghĩa là mua 2 ống, tổng cộng 24 quả.</p>
+      <h2>Đặt hàng</h2>
+      <ol><li>Thêm phiên bản đã chọn vào giỏ. Trong <a href="cart.html">Giỏ hàng</a>, kiểm tra số lượng và thành tiền từng dòng.</li><li>Chuyển sang thanh toán, điền thông tin giao hàng và chọn phương thức thanh toán.</li><li>Xác nhận đặt hàng và lưu mã đơn để tra cứu.</li></ol>
+      <h2>Hủy đơn đang chờ xác nhận</h2>
+      <p>Mở <a href="orders.html">Đơn hàng</a>, chọn đơn ở trạng thái <strong>Chờ xác nhận</strong>, nhấn <strong>Hủy đơn hàng</strong> và xác nhận. Kiểm tra trạng thái <strong>Đã hủy</strong>. Nếu đơn đã được xác nhận, hãy <a href="contact.html">liên hệ Tsport</a> kèm mã đơn để được hỗ trợ.</p>
+    </article>
+    <nav class="guide-menu" aria-label="Hướng dẫn và thông tin">
+      <h2>Hướng dẫn và thông tin</h2>
+      <a href="payment-guide.html">Hướng dẫn thanh toán</a>
+      <a href="shopping-guide.html" aria-current="page">Hướng dẫn mua hàng</a>
+      <a href="racket-guide.html">Hướng dẫn chọn vợt</a>
+      <a href="racket-technology.html">Công nghệ vợt</a>
+      <a href="about.html">Giới thiệu Tsport</a>
+      <a href="contact.html">Liên hệ</a>
+    </nav>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+</body>
+</html>

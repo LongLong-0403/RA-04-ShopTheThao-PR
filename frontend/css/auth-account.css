@@ -1,0 +1,843 @@
+/* ==========================================================================
+   TSPORT — AUTH (D08/D09) & ACCOUNT MANAGEMENT (D10) STYLES
+   ========================================================================== */
+
+.tsport-auth-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.tsport-auth-card {
+  background: #fff;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius-lg);
+  box-shadow: var(--tsport-shadow-sm);
+  padding: 24px;
+}
+.tsport-auth-card-header {
+  border-bottom: 1px solid var(--tsport-border);
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+}
+.tsport-auth-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--tsport-text);
+}
+.tsport-auth-card-sub {
+  font-size: 12px;
+  color: var(--tsport-text-muted);
+  margin-top: 4px;
+}
+
+/* Axios Interceptor Live Monitor */
+.tsport-monitor-card {
+  background: #0F172A;
+  border-radius: var(--tsport-radius-lg);
+  color: #E2E8F0;
+  padding: 20px;
+  margin-top: 24px;
+  font-family: monospace;
+}
+.tsport-monitor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  color: #38BDF8;
+  font-weight: 700;
+  font-size: 13px;
+}
+.tsport-monitor-log {
+  max-height: 180px;
+  overflow-y: auto;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.tsport-log-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.tsport-log-time {
+  color: #64748B;
+}
+.tsport-log-method {
+  color: #374151;
+  font-weight: 700;
+}
+.tsport-log-url {
+  color: #A7F3D0;
+}
+.tsport-log-auth {
+  color: #38BDF8;
+}
+
+/* Trang tài khoản D10 */
+.tsport-account-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.tsport-profile-sidebar {
+  background: #fff;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius-lg);
+  padding: 24px;
+  text-align: center;
+}
+.tsport-profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--tsport-orange);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.tsport-profile-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--tsport-text);
+}
+.tsport-profile-role {
+  display: inline-block;
+  background: var(--tsport-orange-tint);
+  color: var(--tsport-orange);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+.tsport-profile-details {
+  text-align: left;
+  margin-top: 20px;
+  border-top: 1px solid var(--tsport-border);
+  padding-top: 16px;
+  font-size: 13px;
+}
+.tsport-profile-field {
+  margin-bottom: 10px;
+}
+.tsport-profile-field-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+}
+.tsport-profile-field-value {
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.tsport-account-forms {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+/* ==========================================================================
+   TSPORT — TRANG ĐĂNG NHẬP / ĐĂNG KÝ TỐI GIẢN (AUTH V2 CHUẨN FIGMA)
+   ========================================================================== */
+body.tsport-auth-body {
+  background: #FFFFFF;
+  color: #111827;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ts-auth-v2-main {
+  padding-top: 40px;
+  padding-bottom: 72px;
+}
+
+.ts-auth-v2-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1fr);
+  gap: 56px;
+  align-items: stretch;
+}
+
+/* CỘT TRÁI: KHUNG ẢNH THỂ THAO FULL-BLEED */
+.ts-auth-v2-brand-card {
+  background: #111827;
+  border-radius: 10px;
+  padding: 0;
+  min-height: 460px;
+  overflow: hidden;
+  display: block;
+}
+
+.ts-auth-v2-brand-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.ts-auth-v2-brand-logo {
+  font-size: 20px;
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 26px;
+}
+
+.ts-auth-v2-brand-headline {
+  font-size: 32px;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.24;
+  letter-spacing: -0.4px;
+  margin: 0 0 36px 0;
+}
+
+.ts-auth-v2-brand-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 13.5px;
+  color: #6B7280;
+}
+
+/* CỘT PHẢI: FORM ĐĂNG NHẬP / ĐĂNG KÝ */
+.ts-auth-v2-form-col {
+  padding-top: 10px;
+  max-width: 520px;
+  width: 100%;
+}
+
+.ts-auth-v2-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.3px;
+  margin: 0 0 28px 0;
+}
+
+.ts-auth-v2-field {
+  margin-bottom: 20px;
+}
+
+.ts-auth-v2-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.ts-auth-v2-input {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ts-auth-v2-input:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+}
+
+.ts-auth-v2-input.is-invalid {
+  border-color: #DC2626;
+}
+
+.ts-auth-v2-error {
+  font-size: 12px;
+  color: #DC2626;
+  margin-top: 5px;
+  min-height: 0;
+}
+
+.ts-auth-v2-pass-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ts-auth-v2-submit {
+  width: 100%;
+  background: #111827;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 13px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.15s ease;
+}
+
+.ts-auth-v2-submit:hover {
+  background: #27272A;
+}
+
+.ts-auth-v2-switch-row {
+  margin-top: 18px;
+  margin-bottom: 22px;
+}
+
+.ts-auth-v2-switch-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  cursor: pointer;
+}
+
+.ts-auth-v2-switch-link:hover {
+  text-decoration: underline;
+}
+
+.ts-auth-v2-notice {
+  background: #F3F4F6;
+  border-left: 3px solid #111827;
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-size: 12.5px;
+  color: #374151;
+}
+
+@media (max-width: 900px) {
+  .ts-auth-v2-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .ts-auth-v2-brand-card {
+    min-height: 320px;
+    padding: 0;
+  }
+  .ts-auth-v2-form-col {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .ts-auth-v2-pass-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ==========================================================================
+   LIÊN HỆ QUẢN TRỊ VIÊN (TRIGGER + MODAL HỖ TRỢ TỐI GIẢN)
+   ========================================================================== */
+.ts-auth-v2-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ts-auth-v2-contact-trigger {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #111827;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.ts-auth-v2-contact-trigger:hover {
+  color: #1F2937;
+}
+
+.ts-admin-contact-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(15, 23, 42, 0.52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.ts-admin-contact-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.ts-admin-contact-modal {
+  width: 100%;
+  max-width: 520px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 24px 26px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+  transform: translateY(10px);
+  transition: transform 0.2s ease;
+}
+
+.ts-admin-contact-backdrop.is-open .ts-admin-contact-modal {
+  transform: translateY(0);
+}
+
+.ts-admin-contact-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.ts-admin-contact-title {
+  font-size: 19px;
+  font-weight: 900;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.ts-admin-contact-sub {
+  font-size: 12.5px;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.ts-admin-contact-close {
+  border: none;
+  background: #F3F4F6;
+  color: #374151;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ts-admin-contact-close:hover {
+  background: #E5E7EB;
+  color: #111827;
+}
+
+.ts-admin-contact-channels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  background: #F8F9FA;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+
+.ts-admin-channel-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ts-admin-channel-label {
+  font-size: 11px;
+  color: #6B7280;
+}
+
+.ts-admin-channel-val {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #111827;
+  text-decoration: none;
+}
+
+a.ts-admin-channel-val:hover {
+  color: #111827;
+}
+
+.ts-admin-contact-textarea {
+  resize: vertical;
+  min-height: 82px;
+  line-height: 1.5;
+}
+
+.ts-admin-contact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.ts-admin-contact-cancel {
+  padding: 10px 18px;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #374151;
+  cursor: pointer;
+}
+
+.ts-admin-contact-cancel:hover {
+  border-color: #9CA3AF;
+}
+
+.ts-admin-contact-submit {
+  padding: 10px 20px;
+  background: #111827;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ts-admin-contact-submit:hover {
+  background: #27272A;
+}
+
+@media (max-width: 640px) {
+  .ts-admin-contact-channels {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* NÚT HIỆN / ẨN MẬT KHẨU */
+.ts-auth-v2-pass-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ts-auth-v2-pass-input {
+  padding-right: 58px;
+}
+
+.ts-auth-v2-pass-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6B7280;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.ts-auth-v2-pass-toggle:hover,
+.ts-auth-v2-pass-toggle.is-visible {
+  color: #111827;
+}
+
+
+/* ==========================================================================
+   TSPORT — TRANG TÀI KHOẢN CỦA TÔI (ACCOUNT V2 CHUẨN FIGMA)
+   ========================================================================== */
+body.tsport-account-body {
+  background: #FFFFFF;
+  color: #111827;
+  font-family: 'Roboto', sans-serif;
+}
+
+.ts-acc-v2-main {
+  padding-top: 22px;
+  padding-bottom: 64px;
+}
+
+.ts-acc-v2-page-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: -0.3px;
+  margin: 0 0 24px 0;
+}
+
+.ts-acc-v2-layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* CỘT TRÁI: SIDEBAR TÀI KHOẢN */
+.ts-acc-v2-sidebar {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 20px 14px 18px;
+  display: flex;
+  flex-direction: column;
+  min-height: 410px;
+}
+
+.ts-acc-v2-user-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 6px 18px;
+}
+
+.ts-acc-v2-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #E5E7EB;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ts-acc-v2-user-meta {
+  min-width: 0;
+}
+
+.ts-acc-v2-user-name {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ts-acc-v2-user-role {
+  font-size: 12px;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+.ts-acc-v2-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ts-acc-v2-menu-link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ts-acc-v2-menu-link:hover {
+  background: #F9FAFB;
+  color: #111827;
+}
+
+.ts-acc-v2-menu-link.is-active {
+  background: #F3F4F6;
+  color: #111827;
+  font-weight: 700;
+}
+
+.ts-acc-v2-logout-wrap {
+  margin-top: auto;
+  padding-top: 24px;
+  padding-left: 12px;
+}
+
+.ts-acc-v2-logout-btn {
+  background: none;
+  border: none;
+  padding: 6px 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6B7280;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.ts-acc-v2-logout-btn:hover {
+  color: #111827;
+}
+
+/* CỘT PHẢI: THẺ THÔNG TIN CÁ NHÂN & ĐỔI MẬT KHẨU */
+.ts-acc-v2-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 28px 30px;
+}
+
+.ts-acc-v2-sec-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 22px 0;
+}
+
+.ts-acc-v2-sec-title.is-sub {
+  font-size: 17px;
+  margin-bottom: 18px;
+}
+
+.ts-acc-v2-row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.ts-acc-v2-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ts-acc-v2-field {
+  margin-bottom: 18px;
+}
+
+.ts-acc-v2-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.ts-acc-v2-input {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 11px 14px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ts-acc-v2-input:focus {
+  border-color: #111827;
+  box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.1);
+}
+
+.ts-acc-v2-input.is-readonly {
+  background: #F3F4F6;
+  color: #4B5563;
+  cursor: not-allowed;
+}
+
+.ts-acc-v2-input.is-readonly:focus {
+  border-color: #E5E7EB;
+  box-shadow: none;
+}
+
+.ts-acc-v2-helper {
+  font-size: 11.5px;
+  color: #9CA3AF;
+  margin-top: 6px;
+}
+
+.ts-acc-v2-save-row {
+  margin-top: 6px;
+}
+
+.ts-acc-v2-btn-primary {
+  min-width: 156px;
+  background: #111827;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  padding: 11px 22px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ts-acc-v2-btn-primary:hover {
+  background: #27272A;
+}
+
+.ts-acc-v2-divider {
+  border: none;
+  border-top: 1px solid #E5E7EB;
+  margin: 28px 0 24px 0;
+}
+
+.ts-acc-v2-pass-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.ts-acc-v2-btn-secondary {
+  min-width: 168px;
+  background: #FFFFFF;
+  color: #111827;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.ts-acc-v2-btn-secondary:hover {
+  border-color: #111827;
+  color: #111827;
+}
+
+@media (max-width: 900px) {
+  .ts-acc-v2-layout {
+    grid-template-columns: 1fr;
+  }
+  .ts-acc-v2-sidebar {
+    min-height: auto;
+  }
+  .ts-acc-v2-row-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .ts-acc-v2-card {
+    padding: 20px 18px;
+  }
+  .ts-acc-v2-row-2 {
+    grid-template-columns: 1fr;
+  }
+}

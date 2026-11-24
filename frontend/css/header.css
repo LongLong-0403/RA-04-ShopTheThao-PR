@@ -1,0 +1,299 @@
+/* ==========================================================================
+   TSPORT — HEADER & MEGA MENU STYLES (CAM – TRẮNG)
+   ========================================================================== */
+
+.tsport-header {
+  background: #fff;
+  border-bottom: 2px solid var(--tsport-orange);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.tsport-topbar {
+  background: #1E293B;
+  color: #94A3B8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 0;
+}
+.tsport-topbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tsport-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.tsport-topbar-badge {
+  background: var(--tsport-orange);
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+.tsport-main-bar {
+  padding: 12px 0;
+}
+.tsport-main-bar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.tsport-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.tsport-logo-text {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--tsport-orange);
+  text-transform: uppercase;
+}
+.tsport-logo-tag {
+  background: var(--tsport-orange-tint);
+  border: 1px solid var(--tsport-orange-border);
+  color: var(--tsport-orange);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Thanh tìm kiếm */
+.tsport-search-bar {
+  flex: 1;
+  max-width: 540px;
+}
+.tsport-search-wrapper {
+  display: flex;
+  position: relative;
+}
+.tsport-search-input {
+  width: 100%;
+  padding: 10px 16px;
+  border: 2px solid var(--tsport-orange);
+  border-right: none;
+  border-radius: var(--tsport-radius) 0 0 var(--tsport-radius);
+  font-size: 13px;
+}
+.tsport-search-input:focus {
+  outline: none;
+}
+.tsport-search-btn {
+  background: var(--tsport-orange);
+  color: #fff;
+  border: 2px solid var(--tsport-orange);
+  border-radius: 0 var(--tsport-radius) var(--tsport-radius) 0;
+  padding: 0 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tsport-search-btn:hover {
+  background: var(--tsport-orange-hover);
+}
+
+/* Nút tác vụ nhanh */
+.tsport-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tsport-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #fff;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius);
+  color: var(--tsport-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+.tsport-action-btn:hover {
+  background: var(--tsport-orange-tint);
+  border-color: var(--tsport-orange-border);
+  color: var(--tsport-orange);
+}
+.tsport-action-badge {
+  background: var(--tsport-orange);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: var(--tsport-radius-full);
+}
+
+/* Navigation bar & Mega menu trigger */
+.tsport-nav {
+  background: #fff;
+  border-top: 1px solid var(--tsport-border);
+}
+.tsport-nav .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tsport-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.tsport-nav-link {
+  padding: 12px 16px;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--tsport-text);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.tsport-nav-link:hover, .tsport-nav-link.is-active {
+  color: var(--tsport-orange);
+  border-bottom-color: var(--tsport-orange);
+}
+
+/* Mega Menu Dropdown */
+.tsport-mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-bottom: 3px solid var(--tsport-orange);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  display: none;
+  padding: 24px 0;
+  z-index: 999;
+}
+.tsport-mega-menu.is-open {
+  display: block;
+}
+.tsport-mega-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+}
+.tsport-mega-col {
+  border-right: 1px solid #F1F5F9;
+  padding-right: 16px;
+}
+.tsport-mega-col:last-child {
+  border-right: none;
+}
+.tsport-mega-col-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--tsport-orange);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--tsport-orange-tint);
+}
+.tsport-mega-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  color: var(--tsport-text);
+  font-size: 13px;
+  transition: color 0.15s ease;
+  cursor: pointer;
+}
+.tsport-mega-item:hover {
+  color: var(--tsport-orange);
+  font-weight: 600;
+}
+.tsport-mega-item-count {
+  font-size: 11px;
+  color: var(--tsport-text-light);
+}
+.tsport-mega-more {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--tsport-orange);
+}
+
+/* ==========================================================================
+   THANH TAB CÁC MÔN THỂ THAO (SPORTS CATEGORY TABS CHUẨN FIGMA)
+   ========================================================================== */
+.tsport-sports-tab-bar {
+  background: #FFFFFF;
+  border-bottom: 2px solid #E2E8F0;
+  margin-bottom: 24px;
+}
+.tsport-sports-tabs {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 4px;
+}
+.tsport-sports-tabs::-webkit-scrollbar {
+  display: none;
+}
+.tsport-sport-tab {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 12px 12px 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.tsport-sport-tab-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+.tsport-sport-tab-text {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #1E293B;
+  text-transform: uppercase;
+}
+.tsport-sport-tab:hover .tsport-sport-tab-text {
+  color: #111827;
+}
+.tsport-sport-tab.is-active {
+  border-bottom-color: #111827;
+}
+.tsport-sport-tab.is-active .tsport-sport-tab-text {
+  color: #111827;
+}

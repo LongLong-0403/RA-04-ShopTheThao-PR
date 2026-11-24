@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chi tiết sân &amp; Đặt ca | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="tsport-courts-body" data-root="../">
+
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="courtDetailSearchForm">
+          <input
+            type="text"
+            id="courtDetailSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="auth.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link is-active">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link">Hướng dẫn</a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: CHI TIẾT SÂN & ĐẶT SÂN THÀNH CÔNG
+       ========================================== -->
+  <main class="container ts-court-det-main">
+
+    <!-- VIEW 1: CHI TIẾT SÂN & CHỌN CA -->
+    <div id="courtDetailView">
+      <!-- Breadcrumb -->
+      <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <a href="courts.html">Đặt sân</a>
+        <span>/</span>
+        <span class="is-current" id="cdBreadcrumbName">Sân cầu lông số 1</span>
+      </nav>
+
+      <!-- Tên sân & Địa chỉ -->
+      <header class="ts-court-det-head">
+        <div class="ts-mob-cd-eyebrow ts-mob-only">Chọn ca đặt sân</div>
+        <h1 class="ts-court-det-title" id="cdCourtName">Sân cầu lông số 1</h1>
+        <p class="ts-court-det-sub" id="cdCourtSub">12 Nguyễn Trãi, Thanh Xuân, Hà Nội • Mặt sân trong nhà</p>
+      </header>
+
+    <!-- Lưới 2 cột: Ảnh & Thông tin sân (trái) | Ngày, Ca chơi & Xác nhận đặt sân (phải) -->
+    <section class="ts-court-det-grid">
+
+      <!-- CỘT TRÁI -->
+      <div class="ts-court-det-left">
+        <div class="ts-court-det-media">
+          <img id="cdCourtImage" src="" alt="Hình sân thể thao" />
+          <span class="ts-court-det-media-tag">HÌNH SÂN</span>
+        </div>
+
+        <div class="ts-court-det-info">
+          <h2 class="ts-court-det-info-title">Thông tin sân</h2>
+          <p class="ts-court-det-info-line" id="cdCourtAmenities">Sân tiêu chuẩn • Có khu thay đồ</p>
+          <p class="ts-court-det-info-line" id="cdCourtRule">Ca giờ cố định, giá tính theo từng ca.</p>
+          <p class="ts-court-det-info-line" id="cdCourtHours"></p>
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI -->
+      <div class="ts-court-det-right">
+        <div class="ts-court-det-date-field">
+          <label for="cdDateSelect" class="ts-court-det-label">Ngày đặt sân</label>
+          <select id="cdDateSelect" class="ts-court-det-date-select"></select>
+        </div>
+
+        <!-- Lưới ca chơi 2 cột -->
+        <div class="ts-court-det-slots-grid" id="cdSlotsGrid">
+          <!-- Render động từ court-detail.js -->
+        </div>
+
+        <!-- Khung Xác nhận thông tin đặt sân -->
+        <div class="ts-court-det-confirm-card">
+          <h2 class="ts-court-det-confirm-title">Xác nhận thông tin đặt sân</h2>
+
+          <div class="ts-court-det-confirm-row">
+            <div>
+              <div class="ts-court-det-confirm-court" id="cdSummaryCourtDate">Sân cầu lông số 1 • --/--/----</div>
+              <div class="ts-court-det-confirm-slot" id="cdSummarySlot">Vui lòng chọn ca giờ chơi</div>
+            </div>
+            <div class="ts-court-det-confirm-price" id="cdSummaryPrice">0đ</div>
+          </div>
+
+          <button type="button" class="ts-court-det-submit-btn" id="btnConfirmCourtBooking" disabled>
+            Gửi yêu cầu đặt sân
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+      <!-- THANH LƯU Ý GIỮ CHỖ FULL CHIỀU NGANG -->
+      <div class="ts-court-det-notice">
+        Ca đang chờ duyệt hoặc đã xác nhận được giữ chỗ. Nếu ca vừa được đặt, hãy chọn ca khác.
+      </div>
+    </div>
+
+    <!-- VIEW 2: ĐÃ GỬI YÊU CẦU ĐẶT SÂN THÀNH CÔNG (CHUẨN FIGMA) -->
+    <section class="ts-bkg-success-wrap" id="courtBookingSuccessView" style="display:none;" aria-live="polite">
+      <div class="ts-bkg-success-card">
+        <div class="ts-bkg-success-top">
+          <span class="ts-bkg-success-pill">Chờ xác nhận</span>
+          <h1 class="ts-bkg-success-title">Đã gửi yêu cầu đặt sân</h1>
+        </div>
+
+        <div class="ts-bkg-success-info">
+          <h2 class="ts-bkg-success-court" id="bkgSuccessCourt">Sân cầu lông số 1</h2>
+          <div class="ts-bkg-success-line">Ngày: <span id="bkgSuccessDate">08/11/2026</span></div>
+          <div class="ts-bkg-success-line">Ca: <span id="bkgSuccessSlot">16:00 - 18:00</span></div>
+          <div class="ts-bkg-success-line">Giá tại thời điểm đặt: <span id="bkgSuccessPrice">180.000đ</span></div>
+        </div>
+
+        <div class="ts-bkg-success-notice">
+          Lịch của bạn đang chờ quản trị viên duyệt. Bạn có thể theo dõi hoặc hủy yêu cầu trong tài khoản.
+        </div>
+
+        <a href="my-bookings.html" class="ts-bkg-success-btn">Xem lịch đặt sân của tôi</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/court-detail.js"></script>
+</body>
+</html>

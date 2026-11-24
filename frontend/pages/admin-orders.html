@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản lý đơn hàng | Tsport Admin</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="ts-adm-body" data-root="../" hidden>
+
+  <div class="ts-adm-shell">
+
+    <!-- SIDEBAR TRÁI NỀN TỐI -->
+    <aside class="ts-adm-sidebar" id="adminSidebar">
+      <div class="ts-adm-brand">
+        <a href="admin-dashboard.html" class="ts-adm-logo">Tsport</a>
+        <div class="ts-adm-logo-sub">QUẢN TRỊ HỆ THỐNG</div>
+      </div>
+
+      <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
+        <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
+        <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
+        <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
+        <a href="categories.html" class="ts-adm-nav-link">Danh mục cha / con</a>
+        <a href="products.html" class="ts-adm-nav-link">Sản phẩm &amp; SKU</a>
+        <a href="admin-courts.html" class="ts-adm-nav-link">Sân &amp; Ca giờ</a>
+        <a href="admin-bookings.html" class="ts-adm-nav-link">Lịch đặt sân</a>
+        <a href="admin-orders.html" class="ts-adm-nav-link is-active">Đơn hàng</a>
+        <a href="admin-buyback.html" class="ts-adm-nav-link">Thu mua đồ cũ</a>
+      </nav>
+
+      <div class="ts-adm-sidebar-foot">
+        <a href="../index.html" class="ts-adm-back-shop">Quay về cửa hàng ↗</a>
+      </div>
+    </aside>
+
+    <!-- CỘT PHẢI -->
+    <div class="ts-adm-main-wrap">
+
+      <!-- TOP BAR -->
+      <header class="ts-adm-topbar">
+        <div class="ts-adm-topbar-left">
+          <button type="button" class="ts-adm-mobile-menu-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div class="ts-adm-breadcrumb">
+            <span>Quản trị</span>
+            <span>/</span>
+            <span class="is-current" id="admOrdersBreadcrumb">Quản lý đơn hàng</span>
+          </div>
+        </div>
+
+        <div class="ts-adm-user-wrap">
+          <button type="button" class="ts-adm-user-btn" id="btnAdminUserMenu">
+            <span>Admin</span>
+            <span style="font-size:10px;">▾</span>
+          </button>
+          <div class="ts-adm-user-dropdown" id="adminUserDropdown">
+            <a href="../index.html">Về cửa hàng</a>
+            <button type="button" id="btnAdminLogout">Đăng xuất</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- NỘI DUNG QUẢN LÝ ĐƠN HÀNG -->
+      <main class="ts-adm-content">
+
+        <!-- VIEW 1: DANH SÁCH ĐƠN HÀNG -->
+        <div id="admOrdersListView">
+          <header class="ts-adm-page-head">
+            <h1 class="ts-adm-page-title">Quản lý đơn hàng</h1>
+            <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+          </header>
+
+          <!-- THANH TÌM ĐƠN & LỌC TRẠNG THÁI -->
+          <section class="ts-adm-filter-block">
+            <label for="admOrderSearch" class="ts-adm-filter-label">Tìm đơn hàng</label>
+            <div class="ts-adm-edit-grid-2" style="grid-template-columns: minmax(0, 1.7fr) minmax(220px, 1fr); margin-bottom:0;">
+              <input
+                type="text"
+                id="admOrderSearch"
+                class="ts-adm-input"
+                placeholder="Mã đơn / Khách hàng"
+              />
+              <select id="admOrderStatusFilter" class="ts-adm-select" aria-label="Lọc theo trạng thái đơn">
+                <option value="ALL">Trạng thái: Tất cả</option>
+                <option value="PENDING">Trạng thái: Chờ xử lý</option>
+                <option value="CONFIRMED">Trạng thái: Đã xác nhận</option>
+                <option value="SHIPPING">Trạng thái: Đang giao</option>
+                <option value="COMPLETED">Trạng thái: Hoàn tất</option>
+                <option value="CANCELLED">Trạng thái: Đã hủy</option>
+              </select>
+            </div>
+          </section>
+
+          <!-- BẢNG 6 CỘT ĐƠN HÀNG -->
+          <section class="ts-adm-table-section">
+            <div class="ts-orders-v2-table-wrap">
+              <table class="ts-orders-v2-table ts-adm-table">
+                <thead>
+                  <tr>
+                    <th>Mã đơn / Ngày</th>
+                    <th>Người nhận</th>
+                    <th>Tổng tiền</th>
+                    <th>Thanh toán</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="admOrdersTbody">
+                  <!-- Render động từ admin-orders.js -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- NÚT MỞ ĐƠN ĐANG CHỜ XỬ LÝ -->
+          <div class="ts-orders-v2-bottom-bar" style="margin-top:22px;">
+            <button type="button" class="ts-adm-btn-primary" id="btnOpenPendingOrder" style="min-width:220px;">
+              Mở đơn đang chờ xử lý
+            </button>
+          </div>
+
+          <!-- THANH LƯU Ý VÒNG ĐỜI ĐƠN HÀNG -->
+          <div class="ts-court-det-notice" style="margin-top:20px;">
+            Trạng thái đơn: PENDING → CONFIRMED → SHIPPING → COMPLETED; hủy đơn hoàn lại tồn kho.
+          </div>
+        </div>
+
+        <!-- VIEW 2: CHI TIẾT & XỬ LÝ ĐƠN HÀNG (CHUẨN FIGMA) -->
+        <div id="admOrderDetailView" style="display:none;">
+          <header class="ts-adm-page-head" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px;">
+            <div>
+              <h1 class="ts-adm-page-title" id="admDetOrderCode">Chi tiết đơn ORD-20261107-001</h1>
+              <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+            </div>
+            <button type="button" class="ts-adm-btn-secondary" id="btnBackToAdmOrders" style="min-width:140px;">
+              ← Quay lại
+            </button>
+          </header>
+
+          <!-- THẺ THÔNG TIN NGƯỜI NHẬN & TRẠNG THÁI ĐƠN -->
+          <section class="ts-adm-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+              <div>
+                <div style="font-size:17px; font-weight:800; color:#111827; margin-bottom:8px;" id="admDetReceiverLine">
+                  Nguyễn Minh Anh • 0901234567
+                </div>
+                <div style="font-size:13px; color:#6B7280; margin-bottom:10px;" id="admDetReceiverAddr">
+                  Số 12, Nguyễn Trãi, Thanh Xuân, Hà Nội
+                </div>
+                <div style="font-size:13px; color:#6B7280;" id="admDetOrderMeta">
+                  COD • Phí vận chuyển 0đ • Tổng cộng 0đ
+                </div>
+              </div>
+              <span class="ts-orders-v2-status is-pending" id="admDetStatusPill">Chờ xác nhận</span>
+            </div>
+          </section>
+
+          <!-- BẢNG 5 CỘT SẢN PHẨM TRONG ĐƠN -->
+          <section class="ts-adm-table-section">
+            <div class="ts-orders-v2-table-wrap">
+              <table class="ts-orders-v2-table">
+                <thead>
+                  <tr>
+                    <th>SKU / Sản phẩm</th>
+                    <th>Tình trạng lúc đặt</th>
+                    <th>Số lượng</th>
+                    <th>Giá lúc đặt</th>
+                    <th>Thành tiền</th>
+                  </tr>
+                </thead>
+                <tbody id="admDetItemsBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- KHUNG CẬP NHẬT XỬ LÝ ĐƠN HÀNG -->
+          <section class="ts-adm-card">
+            <h2 class="ts-adm-card-title" style="margin-bottom:12px;">Cập nhật xử lý đơn hàng</h2>
+            <div id="admDetFlowLine" style="font-size:13.5px; color:#6B7280; margin-bottom:22px;">
+              Chờ xử lý → Đã xác nhận → Đang giao → Hoàn tất
+            </div>
+
+            <div class="ts-adm-quick-actions">
+              <button type="button" class="ts-adm-btn-primary" id="btnAdmConfirmOrder">Xác nhận đơn</button>
+              <button type="button" class="ts-adm-btn-secondary" id="btnAdmNextOrderStatus">Chuyển trạng thái tiếp</button>
+              <button type="button" class="ts-adm-btn-secondary" id="btnAdmCancelOrder">Hủy đơn / Hoàn kho</button>
+            </div>
+
+            <div class="ts-adm-edit-hint" style="margin-top:16px;">
+              Chỉ chọn bước kế tiếp hợp lệ của trạng thái hiện tại.
+            </div>
+          </section>
+
+          <!-- THANH LƯU Ý GIỮ GIÁ & TÌNH TRẠNG LÚC ĐẶT -->
+          <div class="ts-court-det-notice" style="margin-top:20px;">
+            Giá bán và tình trạng sản phẩm trong đơn giữ nguyên theo thời điểm đặt, kể cả khi sản phẩm được sửa.
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/admin-orders.js"></script>
+</body>
+</html>

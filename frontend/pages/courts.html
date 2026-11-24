@@ -1,0 +1,336 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đặt sân thể thao | Tsport</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="tsport-courts-body" data-root="../">
+
+  <!-- ==========================================
+       1. TOP HEADER BAR TỐI GIẢN (GIỮ NGUYÊN NHƯ TRANG CHỦ)
+       ========================================== -->
+  <header class="ts-min-header">
+    <div class="container ts-min-header-inner">
+      <a href="../index.html" class="ts-min-logo">Tsport</a>
+
+      <div class="ts-min-search-wrap">
+        <form id="courtsHeaderSearchForm">
+          <input
+            type="text"
+            id="courtsHeaderSearchInput"
+            class="ts-min-search-input"
+            placeholder="Tìm vợt, giày, quần áo, thương hiệu..."
+            autocomplete="off"
+          />
+        </form>
+      </div>
+
+      <div class="ts-min-header-links">
+        <a href="orders.html" class="ts-min-header-link">Tra cứu đơn hàng</a>
+        <div id="headerUserWrap">
+          <a href="auth.html" class="ts-min-header-link">Tài khoản</a>
+        </div>
+        <a href="cart.html" class="ts-min-header-cart">
+          Giỏ hàng (<span class="js-cart-count">0</span>)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- THANH ĐIỀU HƯỚNG FULL MÀN HÌNH MÀU CAM ĐẬM (GIỮ NGUYÊN NHƯ TRANG CHỦ) -->
+  <nav class="ts-inline-nav ts-nav-full-orange" aria-label="Điều hướng chính">
+    <div class="container ts-nav-full-inner">
+      <a href="../index.html" class="ts-inline-nav-link">Trang chủ</a>
+      <a href="shop.html" class="ts-inline-nav-link">Sản phẩm</a>
+      <a href="shop.html?condition=CU" class="ts-inline-nav-link">Đồ cũ</a>
+      <a href="courts.html" class="ts-inline-nav-link is-active">Đặt sân</a>
+      <a href="community.html" class="ts-inline-nav-link">Ghép kèo</a>
+      <a href="buyback.html" class="ts-inline-nav-link">Thu mua đồ cũ</a>
+      <a href="guide.html" class="ts-inline-nav-link">Hướng dẫn</a>
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       2. NỘI DUNG CHÍNH: ĐẶT SÂN THỂ THAO
+       ========================================== -->
+  <main class="container ts-courts-v2-main">
+
+    <!-- Breadcrumb -->
+    <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html">Trang chủ</a>
+      <span>/</span>
+      <span class="is-current">Đặt sân thể thao</span>
+    </nav>
+
+    <!-- Tiêu đề & Chuyển đổi chế độ Khách hàng / Quản trị -->
+    <div class="ts-courts-v2-head-row">
+      <div>
+        <h1 class="ts-courts-v2-title">Đặt sân thể thao</h1>
+      </div>
+
+      <div class="ts-courts-v2-mode-tabs" role="tablist">
+        <button type="button" class="ts-courts-v2-mode-btn is-active" id="tabBtnCustomer" onclick="switchCourtTab('customer')">
+          Đặt sân &amp; Lịch của tôi
+        </button>
+        <button type="button" class="ts-courts-v2-mode-btn" id="tabBtnAdmin" hidden>
+          Quản trị sân &amp; Ca chơi
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         TAB 1: KHÁCH HÀNG ĐẶT SÂN
+         ====================================================================== -->
+    <div id="courtPaneCustomer" class="tsport-tab-pane is-active">
+
+      <!-- Bộ lọc môn thể thao + Tìm kiếm cụm sân -->
+      <div class="ts-courts-v2-toolbar">
+        <div class="ts-courts-v2-sport-pills" id="courtSportsTabs">
+          <button type="button" class="tsport-sport-tab ts-courts-v2-pill is-active" data-sport-id="ALL">Tất cả</button>
+          <button type="button" class="tsport-sport-tab ts-courts-v2-pill" data-sport-id="1">Cầu lông</button>
+          <button type="button" class="tsport-sport-tab ts-courts-v2-pill" data-sport-id="2">Bóng đá</button>
+          <button type="button" class="tsport-sport-tab ts-courts-v2-pill" data-sport-id="3">Tennis</button>
+          <button type="button" class="tsport-sport-tab ts-courts-v2-pill" data-sport-id="4">Pickleball</button>
+          <button type="button" class="tsport-sport-tab ts-courts-v2-pill" data-sport-id="6">Bóng bàn</button>
+        </div>
+
+        <div class="ts-courts-v2-search-row">
+          <input
+            type="text"
+            id="courtSearchInput"
+            class="ts-courts-v2-search-input"
+            placeholder="Tìm theo tên cụm sân hoặc địa chỉ..."
+          />
+          <span class="ts-courts-v2-count" id="courtCountLabel">Đang hiển thị cụm sân</span>
+        </div>
+      </div>
+
+      <!-- Lưới cụm sân 3 cột -->
+      <div class="tsport-court-grid ts-courts-v2-grid" id="customerCourtCardsGrid">
+        <!-- Render động từ courts.js -->
+      </div>
+    </div>
+
+    <!-- ======================================================================
+         TAB 2: QUẢN TRỊ SÂN & CA CHƠI (ADMIN)
+         ====================================================================== -->
+    <div id="courtPaneAdmin" class="tsport-tab-pane">
+      <div class="ts-courts-v2-admin-bar">
+        <div>
+          <h2 class="ts-courts-v2-sec-title" style="margin-bottom:4px;">Quản trị sân &amp; Ca chơi hệ thống</h2>
+          <p class="ts-courts-v2-sec-sub" style="margin:0;">Tạo sân, thiết lập giá cố định theo ca và duyệt yêu cầu đặt sân.</p>
+        </div>
+        <div class="ts-courts-v2-admin-actions">
+          <button type="button" class="ts-acc-v2-btn-secondary" id="btnOpenAdminAddCourt">+ Tạo cụm / sân con</button>
+          <button type="button" class="ts-acc-v2-btn-primary" id="btnOpenAdminAddSlot">+ Cấu hình ca &amp; giá</button>
+        </div>
+      </div>
+
+      <div class="ts-courts-v2-card" style="margin-bottom:24px;">
+        <h3 class="ts-courts-v2-card-title">Yêu cầu đặt sân từ khách hàng</h3>
+        <div class="ts-orders-v2-table-wrap">
+          <table class="ts-orders-v2-table">
+            <thead>
+              <tr>
+                <th>Mã đặt</th>
+                <th>Khách hàng</th>
+                <th>Sân &amp; Môn</th>
+                <th>Ca chơi</th>
+                <th>Giá cố định</th>
+                <th>Trạng thái</th>
+                <th style="text-align:center;">Xử lý</th>
+              </tr>
+            </thead>
+            <tbody id="adminBookingRequestsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="ts-courts-v2-row-2">
+        <div class="ts-courts-v2-card">
+          <h3 class="ts-courts-v2-card-title">Danh sách sân thể thao</h3>
+          <div class="ts-orders-v2-table-wrap">
+            <table class="ts-orders-v2-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Tên sân</th>
+                  <th>Môn</th>
+                  <th>Mặt sân</th>
+                  <th>Địa chỉ</th>
+                </tr>
+              </thead>
+              <tbody id="adminCourtsListTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ts-courts-v2-card">
+          <h3 class="ts-courts-v2-card-title">Bảng ca giờ &amp; Giá cố định</h3>
+          <div class="ts-orders-v2-table-wrap">
+            <table class="ts-orders-v2-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Sân</th>
+                  <th>Khung giờ</th>
+                  <th>Giá cố định</th>
+                </tr>
+              </thead>
+              <tbody id="adminSlotsListTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER TỐI GIẢN -->
+  <footer class="ts-min-footer">
+    <div class="container ts-min-footer-grid">
+      <div>
+        <div class="ts-min-footer-brand">Tsport</div>
+        <p class="ts-min-footer-slogan">Mọi môn thể thao. Mọi cuộc chơi.</p>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">MUA SẮM</div>
+        <div class="ts-min-footer-links">
+          <a href="shop.html">Sản phẩm mới</a>
+          <a href="shop.html?condition=CU">Sản phẩm đã qua sử dụng</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">DỊCH VỤ</div>
+        <div class="ts-min-footer-links">
+          <a href="courts.html">Đặt sân thể thao</a>
+          <a href="community.html">Ghép kèo</a>
+          <a href="buyback.html">Thu mua đồ cũ</a>
+        </div>
+      </div>
+      <div>
+        <div class="ts-min-footer-heading">TÀI KHOẢN</div>
+        <div class="ts-min-footer-links">
+          <a href="account.html">Hồ sơ cá nhân</a>
+          <a href="orders.html">Đơn hàng &amp; Lịch đặt sân</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL ADMIN: TẠO SÂN MỚI -->
+  <div class="modal-backdrop" id="modalAdminCourtForm">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Tạo sân thể thao mới</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+
+      <form id="formAdminCreateCourt">
+        <div class="modal-body">
+          <div class="ts-courts-v2-field">
+            <label for="adminCourtName" class="ts-courts-v2-label">Tên sân *</label>
+            <input type="text" id="adminCourtName" class="ts-courts-v2-input" placeholder="Ví dụ: Sân Cầu Lông Kỳ Hòa - Sân 3" required />
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="adminCourtSport" class="ts-courts-v2-label">Môn thể thao *</label>
+            <select id="adminCourtSport" class="ts-courts-v2-input" required></select>
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="adminCourtSurface" class="ts-courts-v2-label">Mặt sân / Quy cách</label>
+            <input type="text" id="adminCourtSurface" class="ts-courts-v2-input" placeholder="Ví dụ: Thảm PVC, Cỏ nhân tạo 7 người..." />
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="adminCourtAddress" class="ts-courts-v2-label">Địa chỉ cụm sân</label>
+            <input type="text" id="adminCourtAddress" class="ts-courts-v2-input" placeholder="Ví dụ: Sư Vạn Hạnh, Quận 10, TP.HCM" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu sân mới</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN: CẤU HÌNH CA GIỜ & GIÁ CỐ ĐỊNH -->
+  <div class="modal-backdrop" id="modalAdminSlotForm">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Cấu hình ca giờ &amp; Giá cố định</h3>
+        <button type="button" class="modal-close" data-dismiss="modal">✕</button>
+      </div>
+
+      <form id="formAdminCreateSlot">
+        <div class="modal-body">
+          <div class="ts-courts-v2-field">
+            <label for="adminSlotCourt" class="ts-courts-v2-label">Chọn sân trực thuộc *</label>
+            <select id="adminSlotCourt" class="ts-courts-v2-input" required></select>
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="adminSlotTime" class="ts-courts-v2-label">Khung giờ ca chơi *</label>
+            <input type="text" id="adminSlotTime" class="ts-courts-v2-input" placeholder="Ví dụ: 17:30 - 19:30 (Khung vàng)" required />
+          </div>
+
+          <div class="ts-courts-v2-field">
+            <label for="adminSlotPrice" class="ts-courts-v2-label">Bảng giá cố định (VNĐ) *</label>
+            <input type="number" id="adminSlotPrice" class="ts-courts-v2-input" placeholder="Ví dụ: 200000" min="10000" step="5000" required />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu ca &amp; giá</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/header.js"></script>
+  <script src="../js/modules/courts.js"></script>
+
+  <script>
+    function switchCourtTab(tab) {
+      document.getElementById("tabBtnCustomer").classList.toggle("is-active", tab === "customer");
+      document.getElementById("tabBtnAdmin").classList.toggle("is-active", tab === "admin");
+      document.getElementById("courtPaneCustomer").classList.toggle("is-active", tab === "customer");
+      document.getElementById("courtPaneAdmin")?.classList.toggle("is-active", tab === "admin");
+    }
+
+    document.getElementById("courtsHeaderSearchForm")?.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var q = document.getElementById("courtsHeaderSearchInput")?.value.trim();
+      window.location.href = q ? "shop.html?q=" + encodeURIComponent(q) : "shop.html";
+    });
+
+    const dateInput = document.getElementById("bookingDate");
+    if (dateInput) {
+      const today = new Date().toISOString().split("T")[0];
+      dateInput.min = today;
+      dateInput.value = today;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danh mục cha / con | Tsport Admin</title>
+
+  <!-- Google Fonts: Roboto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="ts-adm-body" data-root="../" hidden>
+
+  <div class="ts-adm-shell">
+
+    <!-- SIDEBAR TRÁI NỀN TỐI -->
+    <aside class="ts-adm-sidebar" id="adminSidebar">
+      <div class="ts-adm-brand">
+        <a href="admin-dashboard.html" class="ts-adm-logo">Tsport</a>
+        <div class="ts-adm-logo-sub">QUẢN TRỊ HỆ THỐNG</div>
+      </div>
+
+      <nav class="ts-adm-nav" aria-label="Điều hướng quản trị">
+        <a href="admin-dashboard.html" class="ts-adm-nav-link">Tổng quan</a>
+        <a href="admin-users.html" class="ts-adm-nav-link">Người dùng</a>
+        <a href="admin-sports-brands.html" class="ts-adm-nav-link">Môn &amp; Thương hiệu</a>
+        <a href="categories.html" class="ts-adm-nav-link is-active">Danh mục cha / con</a>
+        <a href="products.html" class="ts-adm-nav-link">Sản phẩm &amp; SKU</a>
+        <a href="admin-courts.html" class="ts-adm-nav-link">Sân &amp; Ca giờ</a>
+        <a href="admin-bookings.html" class="ts-adm-nav-link">Lịch đặt sân</a>
+        <a href="admin-orders.html" class="ts-adm-nav-link">Đơn hàng</a>
+        <a href="admin-buyback.html" class="ts-adm-nav-link">Thu mua đồ cũ</a>
+      </nav>
+
+      <div class="ts-adm-sidebar-foot">
+        <a href="../index.html" class="ts-adm-back-shop">Quay về cửa hàng ↗</a>
+      </div>
+    </aside>
+
+    <!-- CỘT PHẢI -->
+    <div class="ts-adm-main-wrap">
+
+      <!-- TOP BAR -->
+      <header class="ts-adm-topbar">
+        <div class="ts-adm-topbar-left">
+          <button type="button" class="ts-adm-mobile-menu-btn" id="btnToggleAdminSidebar" aria-label="Mở menu">☰</button>
+          <div class="ts-adm-breadcrumb">
+            <span>Quản trị</span>
+            <span>/</span>
+            <span class="is-current">Danh mục cha / con</span>
+          </div>
+        </div>
+
+        <div class="ts-adm-user-wrap">
+          <button type="button" class="ts-adm-user-btn" id="btnAdminUserMenu">
+            <span>Admin</span>
+            <span style="font-size:10px;">▾</span>
+          </button>
+          <div class="ts-adm-user-dropdown" id="adminUserDropdown">
+            <a href="../index.html">Về cửa hàng</a>
+            <button type="button" id="btnAdminLogout">Đăng xuất</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- NỘI DUNG DANH MỤC CHA / CON -->
+      <main class="ts-adm-content">
+
+        <header class="ts-adm-page-head">
+          <h1 class="ts-adm-page-title">Danh mục cha / con</h1>
+          <p class="ts-adm-page-sub">Quản lý dữ liệu và trạng thái xử lý</p>
+        </header>
+
+        <div class="ts-adm-cat-split">
+
+          <!-- CỘT TRÁI: CÂY DANH MỤC -->
+          <section class="ts-adm-card">
+            <div class="ts-adm-card-head-inline">
+              <h2 class="ts-adm-card-title" style="margin:0;">Cây danh mục</h2>
+              <button type="button" class="ts-adm-text-btn" id="btnNewCategory">+ Thêm mới</button>
+            </div>
+
+            <div class="ts-adm-cat-tree" id="categoryTreeWrap">
+              <!-- Render động từ categories.js -->
+            </div>
+          </section>
+
+          <!-- CỘT PHẢI: THÔNG TIN DANH MỤC -->
+          <aside class="ts-adm-card">
+            <h2 class="ts-adm-card-title">Thông tin danh mục</h2>
+
+            <form id="formCategoryEditor">
+              <div class="ts-courts-v2-field">
+                <label for="catNameInput" class="ts-adm-filter-label">Tên danh mục *</label>
+                <input type="text" id="catNameInput" class="ts-adm-input" placeholder="Vợt cầu lông" required />
+              </div>
+
+              <div class="ts-courts-v2-field">
+                <label for="catSlugInput" class="ts-adm-filter-label">Slug *</label>
+                <input type="text" id="catSlugInput" class="ts-adm-input" placeholder="vot-cau-long" required />
+              </div>
+
+              <div class="ts-courts-v2-field">
+                <label for="catParentSelect" class="ts-adm-filter-label">Danh mục cha</label>
+                <select id="catParentSelect" class="ts-adm-select">
+                  <option value="">Không có</option>
+                </select>
+              </div>
+
+              <div class="ts-courts-v2-field">
+                <label for="catStatusSelect" class="ts-adm-filter-label">Trạng thái</label>
+                <select id="catStatusSelect" class="ts-adm-select">
+                  <option value="ACTIVE">ACTIVE</option>
+                  <option value="INACTIVE">INACTIVE</option>
+                </select>
+              </div>
+
+              <p class="ts-adm-edit-hint" style="margin: 6px 0 22px 0;">
+                Chọn "Không có" để tạo danh mục cấp cao nhất.
+              </p>
+
+              <div class="ts-adm-cat-actions">
+                <button type="submit" class="ts-adm-btn-primary">Lưu danh mục</button>
+                <button type="button" class="ts-adm-btn-secondary" id="btnDeleteCategory">Xóa</button>
+              </div>
+            </form>
+          </aside>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
+  <script src="../js/modules/categories.js"></script>
+</body>
+</html>

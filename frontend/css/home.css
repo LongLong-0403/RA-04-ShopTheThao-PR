@@ -1,0 +1,1314 @@
+/**
+ * TSPORT — TRANG CHỦ TỐI GIẢN CHUẨN LAYOUT FIGMA (KHÔNG ICON THỪA)
+ * Bảng màu: Cam Tsport (#111827), Than (#1E242B / #111827), Xám nhạt (#F3F4F6 / #ECEEF1), Trắng (#FFFFFF)
+ */
+
+body.tsport-home-body {
+  background: #FFFFFF;
+  color: #111827;
+}
+
+/* ==========================================
+   1. TOP HEADER BAR (GỌN, SẠCH, KHÔNG EMOJI)
+   ========================================== */
+.ts-min-header {
+  background: #FFFFFF;
+  border-bottom: 1px solid #F1F5F9;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.ts-min-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 68px;
+}
+
+.ts-min-logo {
+  font-size: 24px;
+  font-weight: 900;
+  color: #111827;
+  text-decoration: none;
+  letter-spacing: -0.6px;
+  flex-shrink: 0;
+}
+
+.ts-min-search-wrap {
+  flex: 1;
+  max-width: 460px;
+  position: relative;
+}
+
+.ts-min-search-input {
+  width: 100%;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.ts-min-search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.ts-min-search-input:focus {
+  background: #FFFFFF;
+  border-color: #111827;
+}
+
+.ts-min-header-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex-shrink: 0;
+}
+
+.ts-min-header-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.ts-min-header-link:hover {
+  color: #111827;
+}
+
+.ts-min-header-cart {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.ts-min-header-cart:hover {
+  color: #111827;
+}
+
+/* DROPDOWN TÌM KIẾM DEBOUNCE */
+.tsport-search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+  border: 1px solid #E5E7EB;
+  z-index: 999;
+  max-height: 360px;
+  overflow-y: auto;
+  display: none;
+}
+
+.tsport-search-dropdown.is-open {
+  display: block;
+}
+
+.tsport-search-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #F3F4F6;
+  text-decoration: none;
+  color: #111827;
+  transition: background 0.15s ease;
+}
+
+.tsport-search-dropdown-item:hover {
+  background: #F3F4F6;
+}
+
+.tsport-search-dropdown-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #F3F4F6;
+}
+
+.tsport-search-dropdown-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tsport-search-dropdown-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tsport-search-dropdown-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+  margin-top: 2px;
+}
+
+/* ==========================================
+   2. KHỐI ĐẦU TRANG 2 CỘT: SIDEBAR DANH MỤC + NAV & HERO BANNER
+   ========================================== */
+.ts-hero-grid {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 24px;
+  margin-top: 12px;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
+
+/* Cột trái: Danh mục sản phẩm */
+.ts-cat-sidebar {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ts-cat-sidebar-head {
+  background: #1E242B;
+  color: #FFFFFF;
+  padding: 14px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ts-cat-sidebar-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+  flex: 1;
+}
+
+.ts-cat-sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #1F2937;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ts-cat-sidebar-link:hover {
+  background: #F9FAFB;
+  color: #111827;
+}
+
+.ts-cat-sidebar-chevron {
+  color: #9CA3AF;
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* Cột phải: Nav ngang + Hero Banner */
+.ts-hero-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ts-inline-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 6px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ts-inline-nav.ts-nav-full-orange {
+  display: block;
+  position: relative;
+  overflow: visible;
+  z-index: 950;
+  width: 100%;
+  background: #111827;
+  border-top: 1px solid #1F2937;
+  border-bottom: 2px solid #000000;
+  padding: 0;
+  margin: 0;
+}
+
+.ts-nav-full-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ts-nav-full-inner::-webkit-scrollbar {
+  display: none;
+}
+
+.ts-inline-nav-link {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 13px 18px;
+  border-bottom: 3px solid transparent;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ts-inline-nav-link:hover,
+.ts-inline-nav-link.is-active {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.12);
+  border-bottom-color: #FFFFFF;
+}
+
+.ts-inline-nav-link.is-mega-open {
+  color: #FFFFFF;
+  background: #1F2937;
+  border-bottom-color: #1F2937;
+}
+
+/* ==========================================
+   MEGA MENU DANH MỤC SẢN PHẨM (HOVER "SẢN PHẨM")
+   ========================================== */
+.ts-mega-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 960;
+  background: #FFFFFF;
+  border-top: 1px solid #F3F4F6;
+  border-bottom: 1px solid #E5E7EB;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
+  padding: 24px 0 28px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+.ts-mega-dropdown.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.ts-mega-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 26px 28px;
+  align-items: start;
+}
+
+.ts-mega-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ts-mega-col-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #E5E7EB;
+  transition: color 0.15s ease;
+}
+
+.ts-mega-col-title:hover {
+  color: #1F2937;
+}
+
+.ts-mega-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ts-mega-link {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 400;
+  color: #4B5563;
+  text-decoration: none;
+  line-height: 1.5;
+  transition: color 0.14s ease, transform 0.14s ease;
+}
+
+.ts-mega-link:hover {
+  color: #111827;
+  transform: translateX(2px);
+}
+
+.ts-mega-more {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  text-decoration: none;
+  transition: color 0.14s ease;
+}
+
+.ts-mega-more:hover {
+  color: #1F2937;
+  text-decoration: underline;
+}
+
+/* Hero Banner Full Màn Hình Edge-to-Edge Khớp Đúng Tỷ Lệ Cắt 1920x680 (Chuyển Mượt 2s) */
+.ts-hero-full-wrap {
+  width: 100%;
+  background: #0F172A;
+  margin: 0 0 18px 0;
+}
+
+.ts-min-hero-banner.ts-hero-slider-only.ts-hero-fullscreen {
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 1920 / 680;
+  max-height: 560px;
+  height: auto;
+  min-height: 260px;
+  margin: 0;
+  background: #0F172A;
+  border-radius: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+
+.ts-hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.ts-hero-slide.is-active {
+  opacity: 1;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.ts-hero-slide img {
+  width: 100%;
+  height: 100%;
+  image-rendering: -webkit-optimize-contrast;
+  display: block;
+}
+
+.ts-hero-slider-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 5;
+}
+
+.ts-hero-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 0;
+  transition: width 0.25s ease, background 0.25s ease;
+}
+
+.ts-hero-dot.is-active {
+  width: 24px;
+  background: #FFFFFF;
+}
+
+/* ==========================================
+   3. 4 MỤC CAM KẾT NGANG (BỎ KHUNG, CHỮ NHỎ GỌN)
+   ========================================== */
+.ts-usp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 14px 0 28px 0;
+  padding: 6px 0;
+}
+
+.ts-usp-card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 2px 4px;
+  text-align: center;
+}
+
+.ts-usp-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.ts-usp-desc {
+  font-size: 11.5px;
+  color: #6B7280;
+}
+
+/* ==========================================
+   4. SECTION HEADERS (01 / MUA SẮM, 02 / TÁI SỬ DỤNG, 03 / RA SÂN)
+   ========================================== */
+.ts-min-section {
+  margin-bottom: 44px;
+}
+
+.ts-min-sec-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.ts-min-sec-eyebrow {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.ts-min-sec-title {
+  font-size: 21px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.ts-min-sec-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: #4B5563;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.ts-min-sec-link:hover {
+  color: #111827;
+}
+
+/* ==========================================
+   5. 01 / MUA SẮM — SẢN PHẨM MỚI (KÉO CHUỘT TRÁI / PHẢI MƯỢT)
+   ========================================== */
+.ts-featured-drag-viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  scrollbar-width: none;
+  padding: 4px 2px 10px 2px;
+  margin: -4px -2px -10px -2px;
+}
+
+.ts-featured-drag-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.ts-featured-drag-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.ts-min-products-grid {
+  display: flex;
+  gap: 16px;
+}
+
+.ts-min-product-card {
+  flex: 0 0 calc((100% - 64px) / 5);
+  min-width: 0;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  -webkit-user-drag: none;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ts-min-product-card img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.ts-min-product-card:hover {
+  border-color: #111827;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.ts-min-product-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #ECEEF1;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.ts-min-product-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.ts-min-product-card:hover .ts-min-product-media img {
+  transform: scale(1.04);
+}
+
+.ts-min-product-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #FFFFFF;
+  color: #111827;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.ts-min-product-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.4;
+  margin: 0 0 6px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
+}
+
+.ts-min-product-meta {
+  font-size: 11px;
+  color: #9CA3AF;
+  margin-bottom: 10px;
+}
+
+.ts-min-product-price {
+  margin-top: auto;
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.ts-min-product-oldprice {
+  font-size: 11.5px;
+  font-weight: 400;
+  color: #9CA3AF;
+  text-decoration: line-through;
+  margin-left: 6px;
+}
+
+/* ==========================================
+   6. KHỐI LỌC SẢN PHẨM THEO DANH MỤC (KHUNG CAM VÀNG CHUẨN ẢNH)
+   ========================================== */
+.ts-tabbox-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.ts-tabbox-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 10px 0;
+}
+
+.ts-tabbox-underline {
+  width: 120px;
+  height: 4px;
+  background: #E2E8F0;
+  margin: 0 auto;
+  border-radius: 999px;
+  position: relative;
+}
+
+.ts-tabbox-underline::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 4px;
+  background: #111827;
+  border-radius: 999px;
+}
+
+.ts-tabbox-shell {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.ts-tabbox-tabs {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  background: #FFFFFF;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.ts-tabbox-tab {
+  border: none;
+  border-right: 1px solid #F1F5F9;
+  background: #FFFFFF;
+  padding: 13px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.ts-tabbox-tab:last-child {
+  border-right: none;
+}
+
+.ts-tabbox-tab:hover {
+  color: #111827;
+  background: #F8F9FA;
+}
+
+.ts-tabbox-tab.is-active {
+  background: #111827;
+  color: #FFFFFF;
+}
+
+.ts-tabbox-golden-stage {
+  background: #FFFFFF;
+  padding: 16px;
+  position: relative;
+}
+
+.ts-tabbox-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.ts-tabbox-track {
+  display: flex;
+  gap: 12px;
+  will-change: transform;
+}
+
+.ts-tabbox-card {
+  flex: 0 0 calc((100% - 48px) / 5);
+  min-width: 0;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 0;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  min-height: 270px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ts-tabbox-card:hover {
+  transform: translateY(-2px);
+  border-color: #111827;
+  box-shadow: 0 8px 18px rgba(17, 24, 39, 0.08);
+}
+
+.ts-tabbox-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 175px;
+  background: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.ts-tabbox-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  transition: transform 0.3s ease;
+}
+
+.ts-tabbox-card:hover .ts-tabbox-img-wrap img {
+  transform: scale(1.04);
+}
+
+.ts-tabbox-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1F2937;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 36px;
+}
+
+.ts-tabbox-price-row {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ts-tabbox-price {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.ts-tabbox-oldprice {
+  font-size: 11.5px;
+  color: #9CA3AF;
+  text-decoration: line-through;
+}
+
+.ts-tabbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #E5E7EB;
+  color: #4B5563;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+  transition: all 0.15s ease;
+}
+
+.ts-tabbox-arrow:hover {
+  background: #FFFFFF;
+  color: #111827;
+}
+
+.ts-tabbox-arrow.prev {
+  left: 22px;
+}
+
+.ts-tabbox-arrow.next {
+  right: 22px;
+}
+
+.ts-tabbox-arrow.is-hidden {
+  display: none;
+}
+
+/* ==========================================
+   7. 03 / RA SÂN — LƯỚT CHUỘT CÁC CỤM SÂN CỤ THỂ THEO MÔN
+   ========================================== */
+.ts-home-court-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ts-home-court-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.ts-home-court-filter-btn {
+  border: 1px solid #E5E7EB;
+  background: #FFFFFF;
+  color: #374151;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.ts-home-court-filter-btn:hover {
+  border-color: #111827;
+  color: #111827;
+}
+
+.ts-home-court-filter-btn.is-active {
+  background: #111827;
+  border-color: #111827;
+  color: #FFFFFF;
+}
+
+.ts-home-courts-track {
+  display: flex;
+  gap: 20px;
+}
+
+.ts-home-courts-track .tsport-court-card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  min-width: 0;
+  -webkit-user-drag: none;
+}
+
+.ts-home-courts-track .tsport-court-card img {
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* THẺ GHÉP KÈO TRONG KHUNG CAM VÀNG */
+.ts-home-match-card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  min-width: 0;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 1px solid #E5E7EB;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  -webkit-user-drag: none;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ts-home-match-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.1);
+}
+
+.ts-home-match-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ts-home-match-sport {
+  background: #F3F4F6;
+  color: #111827;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.ts-home-match-slots {
+  background: #ECFDF5;
+  color: #059669;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.ts-home-match-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1.4;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 42px;
+}
+
+.ts-home-match-meta {
+  background: #F8FAFC;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+  color: #4B5563;
+}
+
+.ts-home-match-meta-row {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ts-home-match-meta-row strong {
+  color: #111827;
+}
+
+.ts-home-match-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #F1F5F9;
+}
+
+.ts-home-match-price {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.ts-home-match-author {
+  font-size: 11.5px;
+  color: #6B7280;
+}
+
+/* ==========================================
+   8. SẢN PHẨM SALE THEO THỜI HẠN (COUNTDOWN & DEADLINE)
+   ========================================== */
+.ts-sale-countdown-bar {
+  background: #1E242B;
+  color: #FFFFFF;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.ts-sale-countdown-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ts-sale-live-tag {
+  background: #E11D48;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.4px;
+}
+
+.ts-sale-countdown-note {
+  font-size: 12.5px;
+  color: #D1D5DB;
+}
+
+.ts-sale-timer-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ts-sale-timer-label {
+  font-size: 12px;
+  color: #9CA3AF;
+  margin-right: 4px;
+}
+
+.ts-sale-timer-box {
+  background: #111827;
+  color: #FFFFFF;
+  font-size: 11.5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.ts-sale-timer-box strong {
+  font-size: 13.5px;
+  font-weight: 800;
+}
+
+.ts-sale-timer-sep {
+  color: #9CA3AF;
+  font-weight: 700;
+}
+
+.ts-sale-discount-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #E11D48;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.ts-sale-deadline-meta {
+  font-size: 11px;
+  color: #B91C1C;
+  font-weight: 600;
+  margin: 6px 0 8px 0;
+}
+
+.ts-sale-progress-track {
+  width: 100%;
+  height: 6px;
+  background: #FEE2E2;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.ts-sale-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #111827, #E11D48);
+  border-radius: 999px;
+}
+
+.ts-sale-stock-label {
+  font-size: 10.5px;
+  color: #6B7280;
+  margin-top: 4px;
+}
+
+/* SẢN PHẨM ĐÃ XEM GẦN ĐÂY */
+.tsport-recent-scroll-wrap {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.tsport-recent-card {
+  min-width: 175px;
+  max-width: 175px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 10px;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+.tsport-recent-img {
+  width: 100%;
+  height: 115px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #F3F4F6;
+  margin-bottom: 8px;
+}
+
+/* ==========================================
+   8. FOOTER SÁNG TỐI GIẢN CHUẨN ẢNH
+   ========================================== */
+.ts-min-footer {
+  background: #F3F4F6;
+  border-top: 1px solid #E5E7EB;
+  padding: 40px 0 36px 0;
+  margin-top: 52px;
+}
+
+.ts-min-footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 32px;
+}
+
+.ts-min-footer-brand {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.ts-min-footer-tagline {
+  font-size: 12.5px;
+  color: #6B7280;
+  margin: 0;
+}
+
+.ts-min-footer-col h4 {
+  font-size: 11px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  margin: 0 0 12px 0;
+}
+
+.ts-min-footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ts-min-footer-links li {
+  margin-bottom: 8px;
+}
+
+.ts-min-footer-links a {
+  font-size: 12.5px;
+  color: #6B7280;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.ts-min-footer-links a:hover {
+  color: #111827;
+}
+
+/* ==========================================
+   RESPONSIVE (390px / 768px / 1366px)
+   ========================================== */
+@media (max-width: 1024px) {
+  .ts-hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .ts-cat-sidebar-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .ts-min-product-card {
+    flex: 0 0 calc((100% - 32px) / 3);
+  }
+  .ts-tabbox-card {
+    flex: 0 0 calc((100% - 24px) / 3);
+  }
+  .ts-home-courts-track .tsport-court-card,
+  .ts-home-match-card {
+    flex: 0 0 calc((100% - 20px) / 2);
+  }
+  .ts-tabbox-tabs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .ts-usp-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ts-min-footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ts-mega-dropdown {
+    max-height: 72vh;
+    overflow-y: auto;
+  }
+  .ts-mega-grid-5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ts-mega-grid-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .ts-min-header-inner {
+    height: auto;
+    padding: 12px 0;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .ts-min-search-wrap {
+    order: 3;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+  .ts-min-header-links {
+    gap: 16px;
+  }
+  .ts-cat-sidebar-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ts-min-hero-banner.ts-hero-slider-only.ts-hero-fullscreen {
+    padding: 0;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 0;
+  }
+  .ts-tabbox-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ts-usp-grid,
+  .ts-court-sport-grid,
+  .ts-min-footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .ts-min-product-card {
+    flex: 0 0 calc((100% - 16px) / 2);
+  }
+  .ts-tabbox-card {
+    flex: 0 0 calc((100% - 12px) / 2);
+  }
+  .ts-home-courts-track .tsport-court-card,
+  .ts-home-match-card {
+    flex: 0 0 88%;
+  }
+}
