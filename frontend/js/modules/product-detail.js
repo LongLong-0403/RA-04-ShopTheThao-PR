@@ -434,7 +434,11 @@
         window.location.href = "cart.html";
       } else {
         animateProductToCart(document.getElementById("pdpMainImage"), document.getElementById("btnAddToCart"));
-        showToast(`Đã thêm ${qty} × "${currentProduct.name}" vào giỏ hàng.`, "success");
+        const productLabel = `${qty} × "${currentProduct.name}"${matchingSku.size ? ` (${matchingSku.size})` : ""}`;
+        showToast(`Đã thêm ${productLabel} vào giỏ hàng.`, "success", {
+          emphasis: productLabel,
+          action: { label: "Xem giỏ hàng", href: "cart.html" }
+        });
       }
     } catch (err) {
       showToast(err.message || "Không thể thêm vào giỏ hàng.", "error");

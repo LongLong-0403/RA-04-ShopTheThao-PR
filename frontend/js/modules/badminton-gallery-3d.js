@@ -695,7 +695,11 @@
             this.overlay
           );
           if (typeof showToast === "function") {
-            showToast(`Đã thêm "${prod.title}" (${sku.size || ""}) vào giỏ hàng!`, "success");
+            const productLabel = `"${prod.title}"${sku.size ? ` (${sku.size})` : ""}`;
+            showToast(`Đã thêm ${productLabel} vào giỏ hàng!`, "success", {
+              emphasis: productLabel,
+              action: { label: "Xem giỏ hàng", href: "pages/cart.html" }
+            });
           }
         } catch (err) {
           if (typeof showToast === "function") showToast(err.message || "Không thể thêm vào giỏ", "error");
@@ -1096,20 +1100,6 @@
     );
 
     transitionCtrl = new TransitionController(sceneObj, artworks, controls, items);
-
-    // Nút điều hướng góc trên (dễ truy cập bằng chuột / bàn phím)
-    document.getElementById("btnBg3dPrev")?.addEventListener("click", () => {
-      if (controls.locked) return;
-      window.gsap.to(controls, { angle: controls.angle + stepAngle, duration: 0.5, ease: "power3.out", overwrite: "auto" });
-    });
-    document.getElementById("btnBg3dNext")?.addEventListener("click", () => {
-      if (controls.locked) return;
-      window.gsap.to(controls, { angle: controls.angle - stepAngle, duration: 0.5, ease: "power3.out", overwrite: "auto" });
-    });
-    document.getElementById("btnBg3dOpenCenter")?.addEventListener("click", () => {
-      if (controls.locked) return;
-      transitionCtrl.openArtwork(getCenteredArtwork());
-    });
 
     // Hover nhẹ khi rê chuột lên sản phẩm
     stageEl.addEventListener("pointermove", (e) => {

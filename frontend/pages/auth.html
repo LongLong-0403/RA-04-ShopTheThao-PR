@@ -79,7 +79,7 @@
 
         <!-- FORM ĐĂNG NHẬP -->
         <div id="authLoginPanel">
-          <h1 class="ts-auth-v2-title">Chào mừng trở lại</h1>
+          <h1 class="ts-auth-v2-title"></h1>
 
           <form id="formLogin" novalidate>
             <div class="ts-auth-v2-field">
@@ -88,8 +88,7 @@
                 type="email"
                 id="loginEmail"
                 class="ts-auth-v2-input"
-                placeholder="minhanh@example.com"
-                value="nguyenvanan@sportstore.vn"
+                placeholder="Email"
                 required
               />
               <div class="ts-auth-v2-error" id="errLoginEmail"></div>
@@ -102,8 +101,7 @@
                   type="password"
                   id="loginPassword"
                   class="ts-auth-v2-input ts-auth-v2-pass-input"
-                  placeholder="••••••••••••"
-                  value="123456"
+                  placeholder="Mật khẩu"
                   required
                 />
                 <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="loginPassword" aria-label="Hiện mật khẩu">Hiện</button>
@@ -135,19 +133,19 @@
           <form id="formRegister" novalidate>
             <div class="ts-auth-v2-field">
               <label for="regFullName" class="ts-auth-v2-label">Họ và tên *</label>
-              <input type="text" id="regFullName" class="ts-auth-v2-input" placeholder="Nguyễn Minh Anh" required />
+              <input type="text" id="regFullName" class="ts-auth-v2-input" placeholder="Họ và tên" aria-describedby="errRegFullName" required />
               <div class="ts-auth-v2-error" id="errRegFullName"></div>
             </div>
 
             <div class="ts-auth-v2-field">
               <label for="regEmail" class="ts-auth-v2-label">Email *</label>
-              <input type="email" id="regEmail" class="ts-auth-v2-input" placeholder="minhanh@example.com" required />
+              <input type="email" id="regEmail" class="ts-auth-v2-input" placeholder="Email" aria-describedby="errRegEmail" required />
               <div class="ts-auth-v2-error" id="errRegEmail"></div>
             </div>
 
             <div class="ts-auth-v2-field">
               <label for="regPhone" class="ts-auth-v2-label">Số điện thoại *</label>
-              <input type="tel" id="regPhone" class="ts-auth-v2-input" placeholder="0901234567" required />
+              <input type="tel" id="regPhone" class="ts-auth-v2-input" placeholder="0912345678" inputmode="numeric" aria-describedby="errRegPhone" required />
               <div class="ts-auth-v2-error" id="errRegPhone"></div>
             </div>
 
@@ -159,7 +157,7 @@
             <div class="ts-auth-v2-field">
               <label for="regPassword" class="ts-auth-v2-label">Mật khẩu *</label>
               <div class="ts-auth-v2-pass-wrap">
-                <input type="password" id="regPassword" class="ts-auth-v2-input ts-auth-v2-pass-input" placeholder="••••••••••••" required />
+                <input type="password" id="regPassword" class="ts-auth-v2-input ts-auth-v2-pass-input" placeholder="Mật khẩu" aria-describedby="errRegPassword" required />
                 <button type="button" class="ts-auth-v2-pass-toggle js-toggle-pass" data-target="regPassword" aria-label="Hiện mật khẩu">Hiện</button>
               </div>
               <div class="ts-auth-v2-error" id="errRegPassword"></div>
@@ -296,6 +294,6 @@
   <script src="../js/utils.js"></script>
   <script src="../js/data/store.js"></script>
   <script src="../js/modules/header.js"></script>
-  <script src="../js/modules/auth.js"></script>
+  <script src="../js/modules/auth.js?v=2"></script>
 </body>
 </html>

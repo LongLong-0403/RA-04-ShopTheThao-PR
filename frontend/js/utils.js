@@ -131,7 +131,7 @@ function animateProductToCart(image, originButton, scope = document) {
   }
 }
 
-function showToast(message, type = "success") {
+function showToast(message, type = "success", { emphasis, action } = {}) {
   clearTimeout(toastTimer);
   activeToast?.remove();
   const variant = type === "error" || type === "success" ? type : "info";
@@ -161,17 +161,35 @@ function showToast(message, type = "success") {
     activeToast = null;
     toast.removeAttribute("id");
     toast.classList.add("is-leaving");
-    setTimeout(() => toast.remove(), 220);
+    setTimeout(() => toast.remove(), 180);
   }
 
   close.addEventListener("click", dismiss);
-  toast.append(icon, text, close);
+  toast.append(icon, text);
+  if (action) {
+    const link = document.createElement("a");
+    link.className = "tsport-toast-action";
+    link.href = action.href;
+    link.textContent = action.label;
+    toast.append(link);
+  }
+  toast.append(close);
   document.body.appendChild(toast);
   activeToast = toast;
   requestAnimationFrame(() => {
-    if (toast === activeToast) text.textContent = message;
+    if (toast !== activeToast) return;
+    const content = String(message ?? "");
+    const start = emphasis ? content.indexOf(emphasis) : -1;
+    if (start === -1) {
+      text.textContent = content;
+      return;
+    }
+    const strong = document.createElement("strong");
+    strong.textContent = emphasis;
+    text.append(content.slice(0, start), strong, content.slice(start + emphasis.length));
   });
-  toastTimer = setTimeout(dismiss, 2000);
+  // Tính cả 180 ms hiệu ứng thoát trong 2 giây hiển thị.
+  toastTimer = setTimeout(dismiss, 1820);
 }
 
 let invalidFormNoticePending = false;
