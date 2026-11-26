@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      APP_NAME: Tsport Demo
+      DEMO_MODE: "true"
+      DB_CREATE_IF_MISSING: "false"
+      DB_HOST: mysql
+      DB_NAME: tsport_demo
+      DB_USER: tsport_demo
+      DB_PASSWORD: ${TSPORT_DEMO_DB_PASSWORD:?Set TSPORT_DEMO_DB_PASSWORD in the local .env file}
+      SECRET_KEY: ${TSPORT_DEMO_SECRET_KEY:?Set TSPORT_DEMO_SECRET_KEY in the local .env file}
+    ports:
+      - "${TSPORT_DEMO_BIND:-127.0.0.1}:${TSPORT_DEMO_PORT:-8080}:8000"
+    volumes:
+      - demo_runtime:/srv/backend/.runtime
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: tsport_demo
+      MYSQL_USER: tsport_demo
+      MYSQL_PASSWORD: ${TSPORT_DEMO_DB_PASSWORD:?Set TSPORT_DEMO_DB_PASSWORD in the local .env file}
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--host=127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+    volumes:
+      - demo_mysql:/var/lib/mysql
+
+volumes:
+  demo_mysql:
+  demo_runtime:

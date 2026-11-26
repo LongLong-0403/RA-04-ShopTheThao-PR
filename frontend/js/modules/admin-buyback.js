@@ -30,12 +30,7 @@
       dropdown?.classList.remove("is-open");
     });
 
-    document.getElementById("btnAdminLogout")?.addEventListener("click", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("tsport_token");
-      localStorage.removeItem("tsport_current_user");
-      window.location.href = "auth.html";
-    });
+    document.getElementById("btnAdminLogout")?.addEventListener("click", logoutAdmin);
   }
 
   function selectInitialRequest() {

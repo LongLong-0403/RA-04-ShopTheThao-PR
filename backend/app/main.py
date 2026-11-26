@@ -4,10 +4,12 @@ Chạy:  uvicorn app.main:app --reload
 Tài liệu API tự sinh: http://127.0.0.1:8000/docs
 """
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.exc import IntegrityError, OperationalError
 
@@ -20,9 +22,7 @@ from app.services import court_service, item_service
 from app.services.exceptions import ServiceError
 
 
-def init_database() -> None:
-    """Tự tạo database, bảng và dữ liệu mẫu nếu chưa tồn tại."""
-    # 1. Tự tạo database nếu chưa chạy sql/init.sql
+def create_database() -> None:
     server_engine = create_engine(settings.server_url, isolation_level="AUTOCOMMIT")
     try:
         with server_engine.connect() as conn:
@@ -34,6 +34,12 @@ def init_database() -> None:
             )
     finally:
         server_engine.dispose()
+
+
+def init_database() -> None:
+    """Tự tạo bảng và dữ liệu mẫu nếu chưa tồn tại."""
+    if settings.DB_CREATE_IF_MISSING:
+        create_database()
 
     # 2. Tự tạo các bảng còn thiếu theo model
     Base.metadata.create_all(bind=engine)
@@ -81,6 +87,8 @@ async def lifespan(app: FastAPI):
         init_database()
         print(f"[DB] Đã kết nối MySQL {settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}")
     except OperationalError as error:
+        if settings.DEMO_MODE:
+            raise
         print("[DB] KHÔNG kết nối được MySQL! Kiểm tra MySQL đã bật chưa và mật khẩu DB_PASSWORD trong file .env.")
         print(f"[DB] Chi tiết: {error.orig}")
     yield
@@ -91,7 +99,7 @@ app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
 # CORS: cho phép trang FE (khác cổng/khác domain) gọi được API này
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origin_list,
+    allow_origins=[] if settings.DEMO_MODE else settings.cors_origin_list,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -126,6 +134,19 @@ app.include_router(items.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 
 
-@app.get("/")
-def root():
-    return {"message": f"{settings.APP_NAME} đang chạy. Xem tài liệu API tại /docs"}
+if settings.DEMO_MODE:
+    frontend = Path(__file__).resolve().parents[2] / "frontend"
+
+    @app.get("/js/config.js", include_in_schema=False)
+    def demo_frontend_config():
+        return Response(
+            'const CONFIG = { API_BASE_URL: window.location.origin + "/api", APP_NAME: "Tsport", DEMO_MODE: true };',
+            media_type="text/javascript",
+        )
+
+    app.mount("/frontend/assets", StaticFiles(directory=frontend / "assets"), name="catalog-assets")
+    app.mount("/", StaticFiles(directory=frontend, html=True), name="frontend")
+else:
+    @app.get("/")
+    def root():
+        return {"message": f"{settings.APP_NAME} đang chạy. Xem tài liệu API tại /docs"}

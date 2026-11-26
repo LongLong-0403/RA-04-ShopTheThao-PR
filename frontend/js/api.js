@@ -86,6 +86,29 @@ const api = {
 };
 window.api = api;
 
+async function logoutAdmin() {
+  try {
+    await api.post("/auth/logout");
+  } catch (error) {
+    if (error.status !== 401) {
+      showToast(error.message, "error");
+      return;
+    }
+  }
+  clearLocalSession();
+  location.replace("auth.html");
+}
+
+if (typeof CONFIG !== "undefined" && CONFIG.DEMO_MODE) {
+  document.addEventListener("DOMContentLoaded", () => {
+    const notice = document.createElement("p");
+    notice.className = "tsport-demo-notice";
+    notice.textContent = "Bản demo Tsport · Dùng thông tin giả lập khi đăng ký, đặt hàng hoặc gửi yêu cầu.";
+    document.body.prepend(notice);
+    document.getElementById("authNoticeBox")?.remove();
+  });
+}
+
 async function verifyCartCustomer() {
   const token = getSessionToken();
   const signInRequired = () => new ApiError("Hãy đăng nhập để thêm sản phẩm vào giỏ hàng.", 401);

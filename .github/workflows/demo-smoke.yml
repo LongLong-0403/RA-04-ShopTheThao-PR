@@ -1,0 +1,33 @@
+name: Tsport demo smoke test
+
+on:
+  push:
+    branches: [demo]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start demo
+        shell: bash
+        run: |
+          export TSPORT_DEMO_DB_PASSWORD="$(openssl rand -hex 24)"
+          export TSPORT_DEMO_SECRET_KEY="$(openssl rand -hex 32)"
+          docker compose -f compose.demo.yaml up -d --build
+      - name: Check storefront and MySQL
+        shell: bash
+        run: |
+          curl -fsS --retry 30 --retry-delay 2 --retry-all-errors http://127.0.0.1:8080/api/health > health.json
+          python -c 'import json; data=json.load(open("health.json")); assert data["database"] == "connected", data'
+          curl -fsS http://127.0.0.1:8080/ > storefront.html
+          grep -q '<title>Tsport' storefront.html
+          curl -fsS http://127.0.0.1:8080/js/config.js > frontend-config.js
+          grep -q 'window.location.origin' frontend-config.js
+          curl -fsS http://127.0.0.1:8080/api/catalog/bootstrap > catalog.json
+          python -c 'import json; assert json.load(open("catalog.json"))["products"]'

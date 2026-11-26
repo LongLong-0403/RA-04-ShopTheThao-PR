@@ -514,3 +514,13 @@ h1, h2, h3, h4, h5, h6 {
   .tsport-toast, .tsport-toast.is-leaving { animation: none; }
   .tsport-toast.is-leaving { opacity: 0; }
 }
+.tsport-demo-notice {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: .625rem 1rem;
+  background: #fff3cd;
+  color: #332701;
+  font: 600 .875rem/1.5 system-ui, sans-serif;
+  text-align: center;
+}
