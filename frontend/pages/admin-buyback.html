@@ -83,14 +83,15 @@
         </header>
 
         <!-- THẺ CHI TIẾT THẨM ĐỊNH -->
-        <section class="ts-adm-card ts-adm-bb-card" id="admBbDetailCard">
+        <p class="ts-adm-card" id="admBbEmpty" hidden>Chưa có yêu cầu thu mua.</p>
+        <section class="ts-adm-card ts-adm-bb-card" id="admBbDetailCard" hidden>
 
           <div class="ts-adm-bb-head">
-            <h2 class="ts-adm-bb-title" id="admBbTitle">Yêu cầu #BB-001 • Nguyễn Minh Anh</h2>
-            <span class="ts-adm-bb-status-pill" id="admBbStatusPill">Chờ thẩm định</span>
+            <h2 class="ts-adm-bb-title" id="admBbTitle"></h2>
+            <span class="ts-adm-bb-status-pill" id="admBbStatusPill"></span>
           </div>
 
-          <div class="ts-adm-bb-meta" id="admBbMeta">Cầu lông • Yonex Astrox 88D • 07/11/2026</div>
+          <div class="ts-adm-bb-meta" id="admBbMeta"></div>
 
           <!-- 4 ẢNH THỰC TẾ -->
           <div class="ts-adm-bb-photos" id="admBbPhotosGrid">
@@ -99,12 +100,12 @@
 
           <!-- MÔ TẢ CỦA KHÁCH -->
           <h3 class="ts-adm-bb-desc-title">Mô tả của khách</h3>
-          <p class="ts-adm-bb-desc-text" id="admBbDesc">Trầy nhẹ ở viền khung; không nứt, đã sử dụng 6 tháng.</p>
+          <p class="ts-adm-bb-desc-text" id="admBbDesc"></p>
 
           <!-- GIÁ KHÁCH MONG MUỐN -->
           <div class="ts-adm-bb-expected-box">
             <div class="ts-adm-bb-expected-label">Giá khách mong muốn</div>
-            <div class="ts-adm-bb-expected-val" id="admBbExpectedPrice">1.200.000đ</div>
+            <div class="ts-adm-bb-expected-val" id="admBbExpectedPrice"></div>
           </div>
 
           <!-- GIÁ ĐỀ NGHỊ THU MUA -->
@@ -125,7 +126,7 @@
           <hr class="ts-adm-bb-divider" />
 
           <!-- PHẢN HỒI CỦA KHÁCH -->
-          <p class="ts-adm-bb-feedback" id="admBbFeedback">Phản hồi của khách: Chờ phản hồi giá</p>
+          <p class="ts-adm-bb-feedback" id="admBbFeedback"></p>
 
           <!-- 2 NÚT HÀNH ĐỘNG DƯỚI -->
           <div class="ts-adm-bb-actions">
@@ -153,9 +154,10 @@
   <div id="toastContainer" class="toast-container"></div>
 
   <!-- SCRIPTS -->
-  <script src="../js/data/store.js"></script>
+  <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
   <script src="../js/utils.js"></script>
+  <script src="../js/data/store.js"></script>
   <script src="../js/modules/admin-buyback.js"></script>
 </body>
 </html>

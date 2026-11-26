@@ -70,13 +70,13 @@
       <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
         <a href="../index.html">Trang chủ</a>
         <span>/</span>
-        <span class="is-current">Có sân rồi. Tìm đồng đội thôi.</span>
+        <span class="is-current">Ghép kèo</span>
       </nav>
 
       <!-- Hàng tiêu đề + Nút Đăng bài tìm kèo -->
       <div class="ts-comm-v2-head-row">
         <div>
-          <h1 class="ts-comm-v2-title">Có sân rồi. Tìm đồng đội thôi.</h1>
+          <h1 class="ts-comm-v2-title">Ghép kèo thể thao</h1>
           <p class="ts-comm-v2-sub">Tìm đối giao lưu theo môn thể thao, thời gian và trình độ.</p>
         </div>
 
@@ -86,7 +86,7 @@
       </div>
 
       <!-- Thanh lọc 4 cột: Môn thể thao | Thời gian | Trình độ | Tìm bài đăng -->
-      <section class="ts-comm-v2-filter-bar" aria-label="Lọc bài đăng tìm kèo">
+      <form class="ts-comm-v2-filter-bar" id="matchFilters" aria-label="Lọc bài đăng tìm kèo">
         <div class="ts-comm-v2-filter-item">
           <label for="filterMatchSport" class="ts-comm-v2-filter-label">Môn thể thao</label>
           <select id="filterMatchSport" class="ts-comm-v2-filter-control"></select>
@@ -109,18 +109,24 @@
         </div>
 
         <div class="ts-comm-v2-filter-item">
-          <button type="button" class="ts-comm-v2-search-btn" id="btnApplyMatchFilter">Tìm bài đăng</button>
+          <label for="filterMatchStatus" class="ts-comm-v2-filter-label">Trạng thái</label>
+          <select id="filterMatchStatus" class="ts-comm-v2-filter-control">
+            <option value="ALL">Tất cả</option>
+            <option value="OPEN">Còn chỗ</option>
+            <option value="FULL">Đã đủ người</option>
+            <option value="CLOSED">Đã đóng</option>
+          </select>
         </div>
-      </section>
+        <button type="reset" class="ts-comm-v2-search-btn">Xóa bộ lọc</button>
+      </form>
 
-      <!-- Lưới 2 cột các bài đăng tìm đối -->
-      <section class="ts-comm-v2-grid" id="matchesGrid">
-        <!-- Render động từ community.js -->
-      </section>
+      <p id="matchListStatus" class="ts-comm-list-status" role="status">Đang tải bài ghép kèo…</p>
+      <button id="matchListRetry" type="button" class="ts-comm-button ts-comm-button-secondary" hidden>Thử lại</button>
+      <section class="ts-comm-v2-grid" id="matchesGrid" aria-label="Danh sách ghép kèo"></section>
     </div>
 
     <!-- VIEW 2: ĐĂNG BÀI TÌM ĐỐI (FULL-PAGE CHUẨN FIGMA) -->
-    <div id="communityCreateView" style="display:none;">
+    <div id="communityCreateView" hidden>
       <nav class="ts-cart-v2-breadcrumb" aria-label="Breadcrumb">
         <a href="../index.html">Trang chủ</a>
         <span>/</span>
@@ -146,10 +152,9 @@
             <div class="ts-courts-v2-field">
               <label for="matchDateTime" class="ts-courts-v2-label">Ngày và giờ thi đấu *</label>
               <input
-                type="text"
+                type="datetime-local"
                 id="matchDateTime"
                 class="ts-courts-v2-input"
-                placeholder="08/11/2026 18:00"
                 required
               />
             </div>
@@ -161,8 +166,24 @@
                 id="matchLocation"
                 class="ts-courts-v2-input"
                 placeholder="Sân cầu lông số 1, Thanh Xuân, Hà Nội"
+                maxlength="255"
                 required
               />
+            </div>
+
+            <div class="ts-courts-v2-field">
+              <label for="matchFormat" class="ts-courts-v2-label">Hình thức / quy mô *</label>
+              <select id="matchFormat" class="ts-courts-v2-input" required>
+                <option value="Đơn">Đơn</option>
+                <option value="Đôi">Đôi</option>
+                <option value="Sân 7">Bóng đá sân 7</option>
+              </select>
+            </div>
+
+            <div class="ts-courts-v2-field">
+              <label for="matchPlayersNeeded" class="ts-courts-v2-label">Số người còn thiếu cần tuyển *</label>
+              <input type="number" id="matchPlayersNeeded" class="ts-courts-v2-input" min="1" max="7" value="1" required />
+              <small id="matchPlayersHint" style="display:block; margin-top:5px; color:#64748B;">Tối đa 7 người còn thiếu để đủ 8 người trên sân.</small>
             </div>
 
             <div class="ts-courts-v2-field">
@@ -182,11 +203,13 @@
                 id="matchContactPhone"
                 class="ts-courts-v2-input"
                 placeholder="0901234567 / Zalo"
+                maxlength="255"
                 required
               />
             </div>
 
-            <button type="submit" class="ts-courts-v2-submit" style="margin-top:12px;">
+            <p id="matchCreateError" class="ts-comm-feedback" role="alert" hidden></p>
+            <button type="submit" class="ts-comm-button ts-comm-button-primary">
               Đăng bài ghép kèo
             </button>
           </form>
@@ -201,6 +224,59 @@
       </div>
     </div>
 
+    <dialog id="matchDetailDialog" class="ts-comm-detail-dialog" aria-labelledby="matchDetailTitle">
+      <header class="ts-comm-detail-head">
+        <div>
+          <p class="ts-comm-detail-sport" id="matchDetailSport" hidden></p>
+          <h2 id="matchDetailTitle" tabindex="-1">Chi tiết kèo</h2>
+        </div>
+        <form method="dialog">
+          <button type="submit" class="ts-comm-detail-close" aria-label="Đóng chi tiết"><span aria-hidden="true">×</span></button>
+        </form>
+      </header>
+      <div class="ts-comm-detail-body">
+        <p id="matchDetailFeedback" class="ts-comm-feedback" role="status" hidden></p>
+        <button type="button" id="matchDetailRetry" class="ts-comm-button ts-comm-button-secondary" hidden>Thử lại</button>
+        <div id="matchDetailContent" hidden>
+          <p id="matchDetailBadge" class="ts-comm-v2-pill"></p>
+          <dl id="matchDetailSummary" class="ts-comm-detail-summary"></dl>
+          <p id="matchJoinStatus" class="ts-comm-feedback" role="status" hidden></p>
+          <p id="matchActionError" class="ts-comm-feedback" data-tone="error" role="alert" hidden></p>
+          <a id="matchJoinLogin" class="ts-comm-button ts-comm-button-primary" hidden>Đăng nhập để tham gia</a>
+          <form id="matchJoinForm" class="ts-comm-detail-form" hidden>
+            <h3>Thông tin tham gia</h3>
+            <p>Chỉ chủ kèo xem được thông tin bạn gửi.</p>
+            <div class="ts-comm-form-grid">
+              <label>Họ và tên <input name="full_name" class="ts-courts-v2-input" maxlength="150" autocomplete="name" required /></label>
+              <label>Số điện thoại hoặc Zalo <input name="contact_info" class="ts-courts-v2-input" maxlength="100" autocomplete="tel" required /></label>
+              <label>Trình độ (không bắt buộc)
+                <select name="skill_level" class="ts-courts-v2-input">
+                  <option value="">Chọn trình độ</option>
+                  <option>Mới chơi</option><option>Trung bình</option><option>Khá</option><option>Chuyên nghiệp</option>
+                </select>
+              </label>
+              <label>Ghi chú (không bắt buộc)
+                <textarea name="note" class="ts-courts-v2-input" maxlength="500" rows="2"></textarea>
+              </label>
+            </div>
+            <button type="submit" class="ts-comm-button ts-comm-button-primary">Xác nhận tham gia</button>
+          </form>
+          <form id="matchCapacityForm" class="ts-comm-detail-form" hidden>
+            <h3>Quản lý chỗ trống</h3>
+            <label for="matchRemainingSlots">Số người còn thiếu</label>
+            <div class="ts-comm-capacity-controls">
+              <input id="matchRemainingSlots" name="players_needed" type="number" class="ts-courts-v2-input" min="0" max="7" step="1" required />
+              <button type="submit" class="ts-comm-button ts-comm-button-secondary">Lưu số chỗ</button>
+            </div>
+            <p>Nhập 0 nếu đã đủ người.</p>
+          </form>
+          <section id="matchParticipants" class="ts-comm-detail-form" hidden>
+            <h3 id="matchParticipantsTitle">Người đã tham gia</h3>
+            <ul id="matchParticipantList" class="ts-comm-participants"></ul>
+          </section>
+        </div>
+      </div>
+    </dialog>
   </main>
 
   <!-- FOOTER TỐI GIẢN -->
@@ -241,9 +317,9 @@
   <!-- SCRIPTS -->
   <script src="../js/config.js"></script>
   <script src="../js/api.js"></script>
-  <script src="../js/utils.js"></script>
+  <script src="../js/utils.js?v=booking-date"></script>
   <script src="../js/data/store.js"></script>
   <script src="../js/modules/header.js"></script>
-  <script src="../js/modules/community.js"></script>
+  <script src="../js/modules/community.js?v=booking-date"></script>
 </body>
 </html>

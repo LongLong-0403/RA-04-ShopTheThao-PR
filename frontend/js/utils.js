@@ -11,6 +11,10 @@ function formatMoney(value) {
   return Number(value).toLocaleString("vi-VN") + " ₫";
 }
 
+function vietnamTodayISO(now = new Date()) {
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Ho_Chi_Minh", dateStyle: "short" }).format(now);
+}
+
 function formatDateTime(value) {
   if (!value) return "-";
   const d = new Date(value);
@@ -32,6 +36,11 @@ function slugify(text) {
 }
 
 function storefrontImageUrl(source, apiBase = window.TSPORT_API_BASE) {
+  if (!source) return source;
+  // Backend seed data historically used /frontend/assets/... URLs. The
+  // frontend static server is rooted at frontend/, so that prefix must be
+  // removed when an image is rendered in the browser.
+  if (source.startsWith("/frontend/assets/")) return source.slice("/frontend".length);
   return source.startsWith("/api/media/") && apiBase ? apiBase.replace(/\/$/, "") + source.slice(4) : source;
 }
 
@@ -131,7 +140,7 @@ function animateProductToCart(image, originButton, scope = document) {
   }
 }
 
-function showToast(message, type = "success") {
+function showToast(message, type = "success", { emphasis, action } = {}) {
   clearTimeout(toastTimer);
   activeToast?.remove();
   const variant = type === "error" || type === "success" ? type : "info";
@@ -161,17 +170,35 @@ function showToast(message, type = "success") {
     activeToast = null;
     toast.removeAttribute("id");
     toast.classList.add("is-leaving");
-    setTimeout(() => toast.remove(), 220);
+    setTimeout(() => toast.remove(), 180);
   }
 
   close.addEventListener("click", dismiss);
-  toast.append(icon, text, close);
+  toast.append(icon, text);
+  if (action) {
+    const link = document.createElement("a");
+    link.className = "tsport-toast-action";
+    link.href = action.href;
+    link.textContent = action.label;
+    toast.append(link);
+  }
+  toast.append(close);
   document.body.appendChild(toast);
   activeToast = toast;
   requestAnimationFrame(() => {
-    if (toast === activeToast) text.textContent = message;
+    if (toast !== activeToast) return;
+    const content = String(message ?? "");
+    const start = emphasis ? content.indexOf(emphasis) : -1;
+    if (start === -1) {
+      text.textContent = content;
+      return;
+    }
+    const strong = document.createElement("strong");
+    strong.textContent = emphasis;
+    text.append(content.slice(0, start), strong, content.slice(start + emphasis.length));
   });
-  toastTimer = setTimeout(dismiss, 2000);
+  // Tính cả 180 ms hiệu ứng thoát trong 2 giây hiển thị.
+  toastTimer = setTimeout(dismiss, 1820);
 }
 
 let invalidFormNoticePending = false;
@@ -255,4 +282,125 @@ function updateUrlParams(newParams, replace = false) {
   } else {
     window.history.pushState({}, '', newUrl);
   }
+}
+
+function initResponsiveDrawer({ toggle, drawer, close, backdrop, breakpoint }) {
+  if (!toggle || !drawer) return () => {};
+  const mobile = window.matchMedia(`(max-width: ${breakpoint}px)`);
+  let opened = false;
+  toggle.setAttribute("aria-controls", drawer.id);
+
+  function setOpen(value, restoreFocus = false) {
+    opened = value && mobile.matches;
+    toggle.setAttribute("aria-expanded", String(opened));
+    drawer.classList.toggle("is-open", opened);
+    backdrop?.classList.toggle("is-open", opened);
+    drawer.inert = mobile.matches && !opened;
+    document.documentElement.classList.toggle("ts-drawer-open", opened);
+    if (opened) requestAnimationFrame(() => {
+      if (opened) (close || drawer).focus({ preventScroll: true });
+    });
+    else if (restoreFocus && mobile.matches) toggle.focus();
+  }
+
+  toggle.addEventListener("click", () => setOpen(!opened, opened));
+  close?.addEventListener("click", () => setOpen(false, true));
+  backdrop?.addEventListener("click", () => setOpen(false, true));
+  drawer.addEventListener("click", (event) => {
+    if (opened && event.target.closest("a[href]")) setOpen(false, true);
+  });
+  drawer.addEventListener("keydown", (event) => {
+    if (!opened) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      setOpen(false, true);
+    } else if (event.key === "Tab") {
+      const items = Array.from(drawer.querySelectorAll("a[href], button, input, select, textarea, [tabindex='0']"))
+        .filter((item) => !item.disabled && item.getClientRects().length);
+      const first = items[0];
+      const last = items.at(-1);
+      if (event.shiftKey ? document.activeElement === first : document.activeElement === last) {
+        event.preventDefault();
+        (event.shiftKey ? last : first)?.focus();
+      }
+    }
+  });
+  mobile.addEventListener("change", () => {
+    const focusInDrawer = drawer.contains(document.activeElement);
+    setOpen(false, focusInDrawer);
+  });
+  toggle.setAttribute("aria-expanded", "false");
+  drawer.inert = mobile.matches;
+  return () => { if (opened) setOpen(false, true); };
+}
+
+function initAdminDrawer() {
+  const drawer = document.querySelector(".ts-adm-sidebar#adminSidebar");
+  const toggle = document.getElementById("btnToggleAdminSidebar");
+  if (!drawer || !toggle) return;
+  let backdrop = document.getElementById("adminSidebarBackdrop");
+  if (!backdrop) {
+    backdrop = document.createElement("div");
+    backdrop.id = "adminSidebarBackdrop";
+    backdrop.className = "ts-adm-sidebar-backdrop";
+    document.body.append(backdrop);
+  }
+  backdrop.setAttribute("aria-hidden", "true");
+  const close = document.createElement("button");
+  close.type = "button";
+  close.className = "ts-adm-sidebar-close";
+  close.setAttribute("aria-label", "Đóng menu quản trị");
+  close.textContent = "×";
+  drawer.prepend(close);
+  drawer.querySelector("a.is-active")?.setAttribute("aria-current", "page");
+  initResponsiveDrawer({ toggle, drawer, close, backdrop, breakpoint: 820 });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initAdminDrawer();
+  for (const region of document.querySelectorAll(".ts-orders-v2-table-wrap")) {
+    const table = region.querySelector("table");
+    if (!table) continue;
+    const observer = new ResizeObserver(() => {
+      if (region.scrollWidth > region.clientWidth + 1) {
+        region.tabIndex = 0;
+        region.setAttribute("role", "region");
+        region.setAttribute("aria-label", "Bảng có thể cuộn ngang");
+      } else {
+        region.removeAttribute("tabindex");
+        region.removeAttribute("role");
+        region.removeAttribute("aria-label");
+      }
+    });
+    observer.observe(region);
+    observer.observe(table);
+  }
+});
+
+function renderCompactPagination(container, totalPages, currentPage) {
+  if (!container) return;
+  if (totalPages <= 1) {
+    container.replaceChildren();
+    return;
+  }
+  const pages = new Set([1, totalPages - 1, totalPages]);
+  const start = Math.max(1, Math.min(currentPage - 1, totalPages - 2));
+  for (let page = start; page < start + 3; page++) pages.add(page);
+  const buttons = [];
+  function button(page, label, text, disabled = false) {
+    const active = page === currentPage;
+    return "<button type=\"button\" class=\"ts-shop-page-btn" + (active ? " is-active" : "") +
+      "\" data-page=\"" + page + "\" aria-label=\"" + label + "\"" +
+      (active ? " aria-current=\"page\"" : "") + (disabled ? " disabled" : "") + ">" + text + "</button>";
+  }
+  buttons.push(button(currentPage - 1, "Trang trước", "←", currentPage === 1));
+  let previous = 0;
+  for (const page of [...pages].sort((a, b) => a - b)) {
+    if (page - previous === 2) buttons.push(button(previous + 1, "Trang " + (previous + 1), previous + 1));
+    if (page - previous > 2) buttons.push("<span class=\"ts-page-gap\" aria-hidden=\"true\">…</span>");
+    buttons.push(button(page, "Trang " + page, page));
+    previous = page;
+  }
+  buttons.push(button(currentPage + 1, "Trang sau", "→", currentPage === totalPages));
+  container.innerHTML = buttons.join("");
 }

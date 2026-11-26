@@ -6,10 +6,13 @@
 
 (function () {
   let selectedBuybackId = null;
+  let buybackRows = [];
 
-  function initAdminBuyback() {
+  async function initAdminBuyback() {
+    buybackRows = (await api.get('/buyback-requests')).map(row => ({
+      ...row, product_name: row.brand_model, condition_desc: row.condition_detail
+    }));
     initShellControls();
-    ensureDemoBuybackRequest();
     selectInitialRequest();
     renderSwitcher();
     renderSelectedRequest();
@@ -17,21 +20,6 @@
   }
 
   function initShellControls() {
-    const sidebar = document.getElementById("adminSidebar");
-    const backdrop = document.getElementById("adminSidebarBackdrop");
-    const toggleBtn = document.getElementById("btnToggleAdminSidebar");
-
-    if (toggleBtn && sidebar) {
-      toggleBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("is-open");
-        backdrop?.classList.toggle("is-open");
-      });
-    }
-    backdrop?.addEventListener("click", () => {
-      sidebar?.classList.remove("is-open");
-      backdrop.classList.remove("is-open");
-    });
-
     const userBtn = document.getElementById("btnAdminUserMenu");
     const dropdown = document.getElementById("adminUserDropdown");
     userBtn?.addEventListener("click", (e) => {
@@ -50,50 +38,8 @@
     });
   }
 
-  function ensureDemoBuybackRequest() {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    const list = store.getBuybacks() || [];
-    const hasSeed = list.some(
-      (b) => b.request_code === "BB-001" || String(b.product_name || "").includes("Yonex Astrox 88D")
-    );
-    if (!hasSeed) {
-      store.saveBuyback({
-        request_code: "BB-001",
-        customer_name: "Nguyễn Minh Anh",
-        phone: "0901234567",
-        sport_id: 1,
-        sport_name: "Cầu lông",
-        product_name: "Yonex Astrox 88D",
-        condition_grade: "88%",
-        condition_desc: "Trầy nhẹ ở viền khung; không nứt, đã sử dụng 6 tháng.",
-        wear_description: "Trầy nhẹ ở viền khung; không nứt, đã sử dụng 6 tháng.",
-        expected_price: 1200000,
-        proposed_price: 1200000,
-        offered_price: 1000000,
-        images: [],
-        status: "PENDING",
-        created_at: "2026-11-07 09:00:00"
-      });
-    }
-  }
-
-  function getAllBuybacks() {
-    const store = window.tsportStore;
-    if (!store) return [];
-    const list = store.getBuybacks() || [];
-    // Đưa yêu cầu BB-001 / Yonex Astrox 88D lên đầu cho dễ thao tác thẩm định
-    return [...list].sort((a, b) => {
-      const aPin = a.request_code === "BB-001" || String(a.product_name || "").includes("Yonex Astrox 88D") ? 1 : 0;
-      const bPin = b.request_code === "BB-001" || String(b.product_name || "").includes("Yonex Astrox 88D") ? 1 : 0;
-      if (aPin !== bPin) return bPin - aPin;
-      return Number(b.id) - Number(a.id);
-    });
-  }
-
   function selectInitialRequest() {
-    const list = getAllBuybacks();
+    const list = buybackRows;
     if (!list.length) {
       selectedBuybackId = null;
       return;
@@ -114,7 +60,7 @@
   }
 
   function formatDMY(raw) {
-    if (!raw) return "07/11/2026";
+    if (!raw) return "";
     const datePart = String(raw).split(" ")[0];
     const parts = datePart.split("-");
     if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -181,7 +127,7 @@
     const select = document.getElementById("admBbRequestSelect");
     if (!wrap || !select) return;
 
-    const list = getAllBuybacks();
+    const list = buybackRows;
     if (list.length <= 1) {
       wrap.style.display = "none";
       return;
@@ -213,8 +159,10 @@
 
   function renderSelectedRequest() {
     const store = window.tsportStore;
-    const list = getAllBuybacks();
+    const list = buybackRows;
     const b = list.find((item) => Number(item.id) === Number(selectedBuybackId)) || list[0];
+    document.getElementById('admBbDetailCard').hidden = !b;
+    document.getElementById('admBbEmpty').hidden = Boolean(b);
     if (!b) return;
 
     selectedBuybackId = Number(b.id);
@@ -225,7 +173,7 @@
     const sportName =
       b.sport_name ||
       store?.getSports()?.find((s) => Number(s.id) === Number(b.sport_id))?.name ||
-      "Cầu lông";
+      "Chưa chọn môn";
 
     const titleEl = document.getElementById("admBbTitle");
     const statusPillEl = document.getElementById("admBbStatusPill");
@@ -260,7 +208,7 @@
           ? [b.image_url]
           : [];
 
-      const slots = [0, 1, 2, 3].map((idx) => {
+      const slots = Array.from({ length: Math.max(4, rawImages.length) }, (_, idx) => {
         const src = rawImages[idx] || "";
         const content = src
           ? `<img src="${escapeHtml(src)}" alt="Ảnh thực tế ${idx + 1}" onerror="this.remove();" />`
@@ -292,12 +240,12 @@
 
     if (offerInput) {
       offerInput.value = formatVND(defaultOffer);
-      const isClosed = stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED";
+      const isClosed = stNorm !== "PENDING";
       offerInput.disabled = isClosed;
     }
 
     if (sendOfferBtn) {
-      const isClosed = stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED";
+      const isClosed = stNorm !== "PENDING";
       sendOfferBtn.disabled = isClosed;
       sendOfferBtn.style.opacity = isClosed ? "0.55" : "1";
       sendOfferBtn.style.cursor = isClosed ? "not-allowed" : "pointer";
@@ -321,82 +269,48 @@
     }
 
     if (cancelBtn) {
-      const isClosed = stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED";
+      const isClosed = stNorm !== "PENDING" && stNorm !== "ACCEPTED";
       cancelBtn.disabled = isClosed;
       cancelBtn.style.opacity = isClosed ? "0.55" : "1";
       cancelBtn.style.cursor = isClosed ? "not-allowed" : "pointer";
     }
   }
 
+  async function updateRequest(status, offeredPrice) {
+    const id = selectedBuybackId;
+    const payload = offeredPrice === undefined ? { status } : { status, offered_price: offeredPrice };
+    try {
+      await api.patch("/buyback-requests/" + id + "/status", payload);
+      buybackRows = buybackRows.map(row => row.id === id ? {
+        ...row, status, offered_price: offeredPrice ?? row.offered_price
+      } : row);
+      renderSwitcher();
+      renderSelectedRequest();
+      showToast("Đã cập nhật yêu cầu thu mua.", "success");
+    } catch (error) {
+      showToast(error.message, "error");
+    }
+  }
+
   function handleSendOffer(e) {
     e.preventDefault();
-    const store = window.tsportStore;
-    if (!store || !selectedBuybackId) return;
-
-    const b = store.getBuybackById(selectedBuybackId);
-    if (!b) return;
-
     const input = document.getElementById("admBbOfferInput");
-    const offerAmount = parseVND(input?.value);
-    if (!offerAmount || offerAmount < 10000) {
-      if (typeof showToast === "function") {
-        showToast("Vui lòng nhập mức giá đề nghị thu mua hợp lệ (tối thiểu 10.000đ).", "error");
-      }
-      input?.focus();
+    const amount = parseVND(input.value);
+    if (amount < 10000 || !amount) {
+      showToast("Vui lòng nhập giá đề nghị tối thiểu 10.000đ.", "error");
+      input.focus();
       return;
     }
-
-    b.offered_price = offerAmount;
-    b.status = "OFFERED";
-    b.admin_note = `Đã gửi báo giá đề nghị ${formatVND(offerAmount)} tới khách hàng.`;
-    store.save();
-
-    renderSwitcher();
-    renderSelectedRequest();
-    if (typeof showToast === "function") {
-      showToast(`Đã gửi giá đề nghị ${formatVND(offerAmount)} cho yêu cầu #${getRequestCode(b)}.`, "success");
-    }
+    return updateRequest("OFFERED", amount);
   }
 
   function handleCompleteBuyback() {
-    const store = window.tsportStore;
-    if (!store || !selectedBuybackId) return;
-
-    const b = store.getBuybackById(selectedBuybackId);
-    if (!b) return;
-
-    if (normalizeStatus(b.status) !== "ACCEPTED") {
-      if (typeof showToast === "function") {
-        showToast("Chỉ có thể hoàn tất khi khách hàng đã đồng ý mức giá đề nghị.", "error");
-      }
-      return;
-    }
-
-    store.updateBuybackStatus(b.id, "COMPLETED", "Đã kiểm định hoàn tất và thanh toán thu mua cho khách.");
-    renderSwitcher();
-    renderSelectedRequest();
-    if (typeof showToast === "function") {
-      showToast(`Đã hoàn tất thu mua yêu cầu #${getRequestCode(b)}.`, "success");
-    }
+    return updateRequest("COMPLETED");
   }
 
   function handleCancelOrReject() {
-    const store = window.tsportStore;
-    if (!store || !selectedBuybackId) return;
-
-    const b = store.getBuybackById(selectedBuybackId);
-    if (!b) return;
-
-    const stNorm = normalizeStatus(b.status);
-    if (stNorm === "COMPLETED" || stNorm === "REJECTED" || stNorm === "CANCELLED") return;
-
-    const nextStatus = stNorm === "PENDING" ? "REJECTED" : "CANCELLED";
-    store.updateBuybackStatus(b.id, nextStatus, "Quản trị viên đã từ chối / hủy yêu cầu thu mua.");
-    renderSwitcher();
-    renderSelectedRequest();
-    if (typeof showToast === "function") {
-      showToast(`Đã cập nhật trạng thái ${nextStatus} cho yêu cầu #${getRequestCode(b)}.`, "success");
-    }
+    const request = buybackRows.find(row => row.id === selectedBuybackId);
+    if (request) return updateRequest(request.status === "PENDING" ? "REJECTED" : "CANCELLED");
   }
 
   function bindEvents() {

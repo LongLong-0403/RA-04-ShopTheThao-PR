@@ -100,13 +100,6 @@
     }
   }
 
-  function toISODate(d) {
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    return `${y}-${m}-${day}`;
-  }
-
   function formatDMY(iso) {
     const parts = String(iso || "").split("-");
     if (parts.length !== 3) return iso;
@@ -117,13 +110,13 @@
     const select = document.getElementById("cdDateSelect");
     if (!select) return;
 
-    const today = new Date();
+    const today = new Date(vietnamTodayISO() + "T00:00:00Z");
     const opts = [];
     for (let i = 0; i < 7; i++) {
       const d = new Date(today);
-      d.setDate(today.getDate() + i);
-      const iso = toISODate(d);
-      const label = `${DAYS_VI[d.getDay()]}, ${formatDMY(iso)}`;
+      d.setUTCDate(today.getUTCDate() + i);
+      const iso = d.toISOString().slice(0, 10);
+      const label = `${DAYS_VI[d.getUTCDay()]}, ${formatDMY(iso)}`;
       opts.push(`<option value="${iso}">${label}</option>`);
     }
     select.innerHTML = opts.join("");
@@ -215,7 +208,20 @@
   }
 
   function bindEvents() {
-    document.getElementById("cdDateSelect")?.addEventListener("change", (e) => {
+    const dateSelect = document.getElementById("cdDateSelect");
+    dateSelect?.addEventListener("focus", () => {
+      if (dateSelect.options[0]?.value >= vietnamTodayISO()) return;
+      const previousDate = selectedDateISO;
+      populateDateSelect();
+      if ([...dateSelect.options].some(option => option.value === previousDate)) {
+        dateSelect.value = previousDate;
+        selectedDateISO = previousDate;
+      } else {
+        selectedSlotId = null;
+        renderSlotsGrid();
+      }
+    });
+    dateSelect?.addEventListener("change", (e) => {
       selectedDateISO = e.target.value;
       selectedSlotId = null;
       renderSlotsGrid();
@@ -230,6 +236,13 @@
 
     document.getElementById("btnConfirmCourtBooking")?.addEventListener("click", async () => {
       if (!currentCourt || !selectedSlotId || !selectedDateISO) return;
+      if (selectedDateISO < vietnamTodayISO()) {
+        showToast("Không thể đặt sân vào ngày trong quá khứ.", "error");
+        selectedSlotId = null;
+        populateDateSelect();
+        renderSlotsGrid();
+        return;
+      }
       const store = window.tsportStore;
       if (!store) return;
 

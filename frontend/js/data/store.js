@@ -9,12 +9,19 @@
 
 (function () {
   const STORAGE_KEY = "tsport_shared_v6";
+  const PERSONAL_PREFIX = "tsport_personal_v1:";
+  const GUEST_KEY = PERSONAL_PREFIX + "guest";
   const personalFields = ["cart", "orders", "bookings", "buybacks", "matches", "recentViews"];
 
   function accountStorageKey() {
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
     const token = localStorage.getItem("token") || localStorage.getItem("tsport_token");
-    return "tsport_personal_v1:" + (token && user?.id ? "user:" + user.id : token && user?.email ? "email:" + user.email.trim().toLowerCase() : "guest");
+    if (!token) return GUEST_KEY;
+    try {
+      const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
+      if (user?.id) return PERSONAL_PREFIX + "user:" + user.id;
+      if (user?.email) return PERSONAL_PREFIX + "email:" + user.email.trim().toLowerCase();
+    } catch { /* Unreadable cached profile. */ }
+    return GUEST_KEY;
   }
 
   // Dữ liệu hạt giống (Seed Data) chuẩn SRS
@@ -85,7 +92,7 @@
         "images": [
           {
             "id": 1,
-            "image_url": "/frontend/assets/products/catalog/p001.webp",
+            "image_url": "/assets/products/catalog/p001.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -137,7 +144,7 @@
         "images": [
           {
             "id": 2,
-            "image_url": "/frontend/assets/products/catalog/p002.jpg",
+            "image_url": "/assets/products/catalog/p002.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -189,7 +196,7 @@
         "images": [
           {
             "id": 3,
-            "image_url": "/frontend/assets/products/catalog/p003.webp",
+            "image_url": "/assets/products/catalog/p003.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -239,7 +246,7 @@
         "images": [
           {
             "id": 4,
-            "image_url": "/frontend/assets/products/catalog/p004.webp",
+            "image_url": "/assets/products/catalog/p004.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -291,7 +298,7 @@
         "images": [
           {
             "id": 5,
-            "image_url": "/frontend/assets/products/catalog/p005.webp",
+            "image_url": "/assets/products/catalog/p005.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -343,7 +350,7 @@
         "images": [
           {
             "id": 6,
-            "image_url": "/frontend/assets/products/catalog/p006.jpg",
+            "image_url": "/assets/products/catalog/p006.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -393,7 +400,7 @@
         "images": [
           {
             "id": 7,
-            "image_url": "/frontend/assets/products/catalog/p007.webp",
+            "image_url": "/assets/products/catalog/p007.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -443,7 +450,7 @@
         "images": [
           {
             "id": 8,
-            "image_url": "/frontend/assets/products/catalog/p008.webp",
+            "image_url": "/assets/products/catalog/p008.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -495,7 +502,7 @@
         "images": [
           {
             "id": 9,
-            "image_url": "/frontend/assets/products/catalog/p009.webp",
+            "image_url": "/assets/products/catalog/p009.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -545,7 +552,7 @@
         "images": [
           {
             "id": 10,
-            "image_url": "/frontend/assets/products/victor-auraspeed-90k-ii.png",
+            "image_url": "/assets/products/victor-auraspeed-90k-ii.png",
             "is_primary": true,
             "sort_order": 1
           }
@@ -583,7 +590,7 @@
         "images": [
           {
             "id": 11,
-            "image_url": "/frontend/assets/products/catalog/p011.webp",
+            "image_url": "/assets/products/catalog/p011.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -622,7 +629,7 @@
         "images": [
           {
             "id": 12,
-            "image_url": "/frontend/assets/products/catalog/p012.webp",
+            "image_url": "/assets/products/catalog/p012.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -660,7 +667,7 @@
         "images": [
           {
             "id": 13,
-            "image_url": "/frontend/assets/products/catalog/p013.webp",
+            "image_url": "/assets/products/catalog/p013.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -699,7 +706,7 @@
         "images": [
           {
             "id": 14,
-            "image_url": "/frontend/assets/products/catalog/p014.webp",
+            "image_url": "/assets/products/catalog/p014.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -737,7 +744,7 @@
         "images": [
           {
             "id": 15,
-            "image_url": "/frontend/assets/products/catalog/p015.webp",
+            "image_url": "/assets/products/catalog/p015.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -776,7 +783,7 @@
         "images": [
           {
             "id": 16,
-            "image_url": "/frontend/assets/products/catalog/p016.jpg",
+            "image_url": "/assets/products/catalog/p016.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -814,7 +821,7 @@
         "images": [
           {
             "id": 17,
-            "image_url": "/frontend/assets/products/catalog/p017.webp",
+            "image_url": "/assets/products/catalog/p017.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -852,7 +859,7 @@
         "images": [
           {
             "id": 18,
-            "image_url": "/frontend/assets/products/catalog/p018.jpg",
+            "image_url": "/assets/products/catalog/p018.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -891,7 +898,7 @@
         "images": [
           {
             "id": 19,
-            "image_url": "/frontend/assets/products/catalog/p019.webp",
+            "image_url": "/assets/products/catalog/p019.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -929,7 +936,7 @@
         "images": [
           {
             "id": 20,
-            "image_url": "/frontend/assets/products/catalog/p020.webp",
+            "image_url": "/assets/products/catalog/p020.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -967,7 +974,7 @@
         "images": [
           {
             "id": 21,
-            "image_url": "/frontend/assets/products/catalog/p021.webp",
+            "image_url": "/assets/products/catalog/p021.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1005,7 +1012,7 @@
         "images": [
           {
             "id": 22,
-            "image_url": "/frontend/assets/products/catalog/p022.webp",
+            "image_url": "/assets/products/catalog/p022.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1042,7 +1049,7 @@
         "images": [
           {
             "id": 23,
-            "image_url": "/frontend/assets/products/catalog/p023.webp",
+            "image_url": "/assets/products/catalog/p023.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1079,7 +1086,7 @@
         "images": [
           {
             "id": 24,
-            "image_url": "/frontend/assets/products/catalog/p024.webp",
+            "image_url": "/assets/products/catalog/p024.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1117,7 +1124,7 @@
         "images": [
           {
             "id": 25,
-            "image_url": "/frontend/assets/products/catalog/p025.webp",
+            "image_url": "/assets/products/catalog/p025.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1155,7 +1162,7 @@
         "images": [
           {
             "id": 26,
-            "image_url": "/frontend/assets/products/catalog/p026.jpg",
+            "image_url": "/assets/products/catalog/p026.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1192,7 +1199,7 @@
         "images": [
           {
             "id": 27,
-            "image_url": "/frontend/assets/products/catalog/p027.webp",
+            "image_url": "/assets/products/catalog/p027.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1229,7 +1236,7 @@
         "images": [
           {
             "id": 28,
-            "image_url": "/frontend/assets/products/catalog/p028.jpg",
+            "image_url": "/assets/products/catalog/p028.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1266,7 +1273,7 @@
         "images": [
           {
             "id": 29,
-            "image_url": "/frontend/assets/products/catalog/p029.webp",
+            "image_url": "/assets/products/catalog/p029.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1305,7 +1312,7 @@
         "images": [
           {
             "id": 30,
-            "image_url": "/frontend/assets/products/catalog/p030.webp",
+            "image_url": "/assets/products/catalog/p030.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1343,7 +1350,7 @@
         "images": [
           {
             "id": 31,
-            "image_url": "/frontend/assets/products/catalog/p031.jpg",
+            "image_url": "/assets/products/catalog/p031.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1382,7 +1389,7 @@
         "images": [
           {
             "id": 32,
-            "image_url": "/frontend/assets/products/catalog/p032.webp",
+            "image_url": "/assets/products/catalog/p032.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1420,7 +1427,7 @@
         "images": [
           {
             "id": 33,
-            "image_url": "/frontend/assets/products/catalog/p033.jpg",
+            "image_url": "/assets/products/catalog/p033.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1458,7 +1465,7 @@
         "images": [
           {
             "id": 34,
-            "image_url": "/frontend/assets/products/catalog/p034.webp",
+            "image_url": "/assets/products/catalog/p034.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1496,7 +1503,7 @@
         "images": [
           {
             "id": 35,
-            "image_url": "/frontend/assets/products/catalog/p035.webp",
+            "image_url": "/assets/products/catalog/p035.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1534,7 +1541,7 @@
         "images": [
           {
             "id": 36,
-            "image_url": "/frontend/assets/products/catalog/p036.webp",
+            "image_url": "/assets/products/catalog/p036.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1572,7 +1579,7 @@
         "images": [
           {
             "id": 37,
-            "image_url": "/frontend/assets/products/catalog/p037.webp",
+            "image_url": "/assets/products/catalog/p037.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1609,7 +1616,7 @@
         "images": [
           {
             "id": 38,
-            "image_url": "/frontend/assets/products/catalog/p038.jpg",
+            "image_url": "/assets/products/catalog/p038.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1646,7 +1653,7 @@
         "images": [
           {
             "id": 39,
-            "image_url": "/frontend/assets/products/catalog/p039.webp",
+            "image_url": "/assets/products/catalog/p039.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1685,7 +1692,7 @@
         "images": [
           {
             "id": 40,
-            "image_url": "/frontend/assets/products/catalog/p040.webp",
+            "image_url": "/assets/products/catalog/p040.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1723,7 +1730,7 @@
         "images": [
           {
             "id": 41,
-            "image_url": "/frontend/assets/products/catalog/p041.webp",
+            "image_url": "/assets/products/catalog/p041.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1761,7 +1768,7 @@
         "images": [
           {
             "id": 42,
-            "image_url": "/frontend/assets/products/catalog/p042.webp",
+            "image_url": "/assets/products/catalog/p042.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1800,7 +1807,7 @@
         "images": [
           {
             "id": 43,
-            "image_url": "/frontend/assets/products/catalog/p043.webp",
+            "image_url": "/assets/products/catalog/p043.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1837,7 +1844,7 @@
         "images": [
           {
             "id": 44,
-            "image_url": "/frontend/assets/products/catalog/p044.webp",
+            "image_url": "/assets/products/catalog/p044.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1875,7 +1882,7 @@
         "images": [
           {
             "id": 45,
-            "image_url": "/frontend/assets/products/catalog/p045.jpg",
+            "image_url": "/assets/products/catalog/p045.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1911,7 +1918,7 @@
         "images": [
           {
             "id": 46,
-            "image_url": "/frontend/assets/products/catalog/p046.jpg",
+            "image_url": "/assets/products/catalog/p046.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1948,7 +1955,7 @@
         "images": [
           {
             "id": 47,
-            "image_url": "/frontend/assets/products/catalog/p047.jpg",
+            "image_url": "/assets/products/catalog/p047.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -1985,7 +1992,7 @@
         "images": [
           {
             "id": 48,
-            "image_url": "/frontend/assets/products/catalog/p048.webp",
+            "image_url": "/assets/products/catalog/p048.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2021,7 +2028,7 @@
         "images": [
           {
             "id": 49,
-            "image_url": "/frontend/assets/products/catalog/p049.webp",
+            "image_url": "/assets/products/catalog/p049.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2057,7 +2064,7 @@
         "images": [
           {
             "id": 50,
-            "image_url": "/frontend/assets/products/catalog/p050.webp",
+            "image_url": "/assets/products/catalog/p050.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2094,7 +2101,7 @@
         "images": [
           {
             "id": 51,
-            "image_url": "/frontend/assets/products/catalog/p051.webp",
+            "image_url": "/assets/products/catalog/p051.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2144,7 +2151,7 @@
         "images": [
           {
             "id": 52,
-            "image_url": "/frontend/assets/products/catalog/p052.webp",
+            "image_url": "/assets/products/catalog/p052.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2192,7 +2199,7 @@
         "images": [
           {
             "id": 53,
-            "image_url": "/frontend/assets/products/catalog/p053.webp",
+            "image_url": "/assets/products/catalog/p053.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2239,7 +2246,7 @@
         "images": [
           {
             "id": 54,
-            "image_url": "/frontend/assets/products/catalog/p054.webp",
+            "image_url": "/assets/products/catalog/p054.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2286,7 +2293,7 @@
         "images": [
           {
             "id": 55,
-            "image_url": "/frontend/assets/products/catalog/p055.webp",
+            "image_url": "/assets/products/catalog/p055.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2335,7 +2342,7 @@
         "images": [
           {
             "id": 56,
-            "image_url": "/frontend/assets/products/catalog/p056.jpg",
+            "image_url": "/assets/products/catalog/p056.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2382,7 +2389,7 @@
         "images": [
           {
             "id": 57,
-            "image_url": "/frontend/assets/products/catalog/p057.jpg",
+            "image_url": "/assets/products/catalog/p057.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2429,7 +2436,7 @@
         "images": [
           {
             "id": 58,
-            "image_url": "/frontend/assets/products/catalog/p058.jpg",
+            "image_url": "/assets/products/catalog/p058.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2476,7 +2483,7 @@
         "images": [
           {
             "id": 59,
-            "image_url": "/frontend/assets/products/catalog/p059.webp",
+            "image_url": "/assets/products/catalog/p059.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2526,7 +2533,7 @@
         "images": [
           {
             "id": 60,
-            "image_url": "/frontend/assets/products/catalog/p060.webp",
+            "image_url": "/assets/products/catalog/p060.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2563,7 +2570,7 @@
         "images": [
           {
             "id": 61,
-            "image_url": "/frontend/assets/products/catalog/p061.jpg",
+            "image_url": "/assets/products/catalog/p061.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2612,7 +2619,7 @@
         "images": [
           {
             "id": 62,
-            "image_url": "/frontend/assets/products/catalog/p062.jpg",
+            "image_url": "/assets/products/catalog/p062.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2659,7 +2666,7 @@
         "images": [
           {
             "id": 63,
-            "image_url": "/frontend/assets/products/catalog/p063.jpg",
+            "image_url": "/assets/products/catalog/p063.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2707,7 +2714,7 @@
         "images": [
           {
             "id": 64,
-            "image_url": "/frontend/assets/products/catalog/p064.jpg",
+            "image_url": "/assets/products/catalog/p064.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2757,7 +2764,7 @@
         "images": [
           {
             "id": 65,
-            "image_url": "/frontend/assets/products/catalog/p065.jpg",
+            "image_url": "/assets/products/catalog/p065.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2804,7 +2811,7 @@
         "images": [
           {
             "id": 66,
-            "image_url": "/frontend/assets/products/catalog/p066.webp",
+            "image_url": "/assets/products/catalog/p066.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2852,7 +2859,7 @@
         "images": [
           {
             "id": 67,
-            "image_url": "/frontend/assets/products/catalog/p067.webp",
+            "image_url": "/assets/products/catalog/p067.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2902,7 +2909,7 @@
         "images": [
           {
             "id": 68,
-            "image_url": "/frontend/assets/products/catalog/p068.webp",
+            "image_url": "/assets/products/catalog/p068.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2950,7 +2957,7 @@
         "images": [
           {
             "id": 69,
-            "image_url": "/frontend/assets/products/catalog/p069.jpg",
+            "image_url": "/assets/products/catalog/p069.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -2999,7 +3006,7 @@
         "images": [
           {
             "id": 70,
-            "image_url": "/frontend/assets/products/catalog/p070.jpg",
+            "image_url": "/assets/products/catalog/p070.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3036,7 +3043,7 @@
         "images": [
           {
             "id": 71,
-            "image_url": "/frontend/assets/products/catalog/p071.jpg",
+            "image_url": "/assets/products/catalog/p071.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3085,7 +3092,7 @@
         "images": [
           {
             "id": 72,
-            "image_url": "/frontend/assets/products/catalog/p072.jpg",
+            "image_url": "/assets/products/catalog/p072.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3133,7 +3140,7 @@
         "images": [
           {
             "id": 73,
-            "image_url": "/frontend/assets/products/catalog/p073.webp",
+            "image_url": "/assets/products/catalog/p073.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3181,7 +3188,7 @@
         "images": [
           {
             "id": 74,
-            "image_url": "/frontend/assets/products/catalog/p074.webp",
+            "image_url": "/assets/products/catalog/p074.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3231,7 +3238,7 @@
         "images": [
           {
             "id": 75,
-            "image_url": "/frontend/assets/products/catalog/p075.jpg",
+            "image_url": "/assets/products/catalog/p075.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3279,7 +3286,7 @@
         "images": [
           {
             "id": 76,
-            "image_url": "/frontend/assets/products/catalog/p076.webp",
+            "image_url": "/assets/products/catalog/p076.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3326,7 +3333,7 @@
         "images": [
           {
             "id": 77,
-            "image_url": "/frontend/assets/products/catalog/p077.jpg",
+            "image_url": "/assets/products/catalog/p077.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3373,7 +3380,7 @@
         "images": [
           {
             "id": 78,
-            "image_url": "/frontend/assets/products/catalog/p078.jpg",
+            "image_url": "/assets/products/catalog/p078.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3420,7 +3427,7 @@
         "images": [
           {
             "id": 79,
-            "image_url": "/frontend/assets/products/catalog/p079.jpg",
+            "image_url": "/assets/products/catalog/p079.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3470,7 +3477,7 @@
         "images": [
           {
             "id": 80,
-            "image_url": "/frontend/assets/products/catalog/p080.webp",
+            "image_url": "/assets/products/catalog/p080.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3507,7 +3514,7 @@
         "images": [
           {
             "id": 81,
-            "image_url": "/frontend/assets/products/catalog/p081.webp",
+            "image_url": "/assets/products/catalog/p081.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3556,7 +3563,7 @@
         "images": [
           {
             "id": 82,
-            "image_url": "/frontend/assets/products/catalog/p082.webp",
+            "image_url": "/assets/products/catalog/p082.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3603,7 +3610,7 @@
         "images": [
           {
             "id": 83,
-            "image_url": "/frontend/assets/products/catalog/p083.jpg",
+            "image_url": "/assets/products/catalog/p083.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3650,7 +3657,7 @@
         "images": [
           {
             "id": 84,
-            "image_url": "/frontend/assets/products/catalog/p084.webp",
+            "image_url": "/assets/products/catalog/p084.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3698,7 +3705,7 @@
         "images": [
           {
             "id": 85,
-            "image_url": "/frontend/assets/products/catalog/p085.webp",
+            "image_url": "/assets/products/catalog/p085.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3747,7 +3754,7 @@
         "images": [
           {
             "id": 86,
-            "image_url": "/frontend/assets/products/catalog/p086.jpg",
+            "image_url": "/assets/products/catalog/p086.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3794,7 +3801,7 @@
         "images": [
           {
             "id": 87,
-            "image_url": "/frontend/assets/products/catalog/p087.webp",
+            "image_url": "/assets/products/catalog/p087.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3841,7 +3848,7 @@
         "images": [
           {
             "id": 88,
-            "image_url": "/frontend/assets/products/catalog/p088.jpg",
+            "image_url": "/assets/products/catalog/p088.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3888,7 +3895,7 @@
         "images": [
           {
             "id": 89,
-            "image_url": "/frontend/assets/products/catalog/p089.webp",
+            "image_url": "/assets/products/catalog/p089.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3935,7 +3942,7 @@
         "images": [
           {
             "id": 90,
-            "image_url": "/frontend/assets/products/catalog/p090.webp",
+            "image_url": "/assets/products/catalog/p090.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -3983,7 +3990,7 @@
         "images": [
           {
             "id": 91,
-            "image_url": "/frontend/assets/products/catalog/p091.jpg",
+            "image_url": "/assets/products/catalog/p091.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4020,7 +4027,7 @@
         "images": [
           {
             "id": 92,
-            "image_url": "/frontend/assets/products/catalog/p092.webp",
+            "image_url": "/assets/products/catalog/p092.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4056,7 +4063,7 @@
         "images": [
           {
             "id": 93,
-            "image_url": "/frontend/assets/products/catalog/p093.webp",
+            "image_url": "/assets/products/catalog/p093.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4093,7 +4100,7 @@
         "images": [
           {
             "id": 94,
-            "image_url": "/frontend/assets/products/catalog/p094.webp",
+            "image_url": "/assets/products/catalog/p094.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4129,7 +4136,7 @@
         "images": [
           {
             "id": 95,
-            "image_url": "/frontend/assets/products/catalog/p095.webp",
+            "image_url": "/assets/products/catalog/p095.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4165,7 +4172,7 @@
         "images": [
           {
             "id": 96,
-            "image_url": "/frontend/assets/products/catalog/p096.jpg",
+            "image_url": "/assets/products/catalog/p096.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4201,7 +4208,7 @@
         "images": [
           {
             "id": 97,
-            "image_url": "/frontend/assets/products/catalog/p097.webp",
+            "image_url": "/assets/products/catalog/p097.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4238,7 +4245,7 @@
         "images": [
           {
             "id": 98,
-            "image_url": "/frontend/assets/products/catalog/p098.webp",
+            "image_url": "/assets/products/catalog/p098.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4274,7 +4281,7 @@
         "images": [
           {
             "id": 99,
-            "image_url": "/frontend/assets/products/catalog/p099.webp",
+            "image_url": "/assets/products/catalog/p099.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4310,7 +4317,7 @@
         "images": [
           {
             "id": 100,
-            "image_url": "/frontend/assets/products/catalog/p100.webp",
+            "image_url": "/assets/products/catalog/p100.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4347,7 +4354,7 @@
         "images": [
           {
             "id": 101,
-            "image_url": "/frontend/assets/products/catalog/p101.webp",
+            "image_url": "/assets/products/catalog/p101.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4385,7 +4392,7 @@
         "images": [
           {
             "id": 102,
-            "image_url": "/frontend/assets/products/catalog/p102.webp",
+            "image_url": "/assets/products/catalog/p102.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4421,7 +4428,7 @@
         "images": [
           {
             "id": 103,
-            "image_url": "/frontend/assets/products/catalog/p103.jpg",
+            "image_url": "/assets/products/catalog/p103.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4458,7 +4465,7 @@
         "images": [
           {
             "id": 104,
-            "image_url": "/frontend/assets/products/catalog/p104.webp",
+            "image_url": "/assets/products/catalog/p104.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4496,7 +4503,7 @@
         "images": [
           {
             "id": 105,
-            "image_url": "/frontend/assets/products/catalog/p105.webp",
+            "image_url": "/assets/products/catalog/p105.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4533,7 +4540,7 @@
         "images": [
           {
             "id": 106,
-            "image_url": "/frontend/assets/products/catalog/p106.webp",
+            "image_url": "/assets/products/catalog/p106.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4570,7 +4577,7 @@
         "images": [
           {
             "id": 107,
-            "image_url": "/frontend/assets/products/catalog/p107.webp",
+            "image_url": "/assets/products/catalog/p107.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4607,7 +4614,7 @@
         "images": [
           {
             "id": 108,
-            "image_url": "/frontend/assets/products/catalog/p108.jpg",
+            "image_url": "/assets/products/catalog/p108.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4644,7 +4651,7 @@
         "images": [
           {
             "id": 109,
-            "image_url": "/frontend/assets/products/catalog/p109.jpg",
+            "image_url": "/assets/products/catalog/p109.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4681,7 +4688,7 @@
         "images": [
           {
             "id": 110,
-            "image_url": "/frontend/assets/products/catalog/p110.webp",
+            "image_url": "/assets/products/catalog/p110.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4717,7 +4724,7 @@
         "images": [
           {
             "id": 111,
-            "image_url": "/frontend/assets/products/catalog/p111.jpg",
+            "image_url": "/assets/products/catalog/p111.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4754,7 +4761,7 @@
         "images": [
           {
             "id": 112,
-            "image_url": "/frontend/assets/products/catalog/p112.webp",
+            "image_url": "/assets/products/catalog/p112.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4790,7 +4797,7 @@
         "images": [
           {
             "id": 113,
-            "image_url": "/frontend/assets/products/catalog/p113.webp",
+            "image_url": "/assets/products/catalog/p113.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4826,7 +4833,7 @@
         "images": [
           {
             "id": 114,
-            "image_url": "/frontend/assets/products/catalog/p114.jpg",
+            "image_url": "/assets/products/catalog/p114.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4862,7 +4869,7 @@
         "images": [
           {
             "id": 115,
-            "image_url": "/frontend/assets/products/catalog/p115.webp",
+            "image_url": "/assets/products/catalog/p115.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4899,7 +4906,7 @@
         "images": [
           {
             "id": 116,
-            "image_url": "/frontend/assets/products/catalog/p116.webp",
+            "image_url": "/assets/products/catalog/p116.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4935,7 +4942,7 @@
         "images": [
           {
             "id": 117,
-            "image_url": "/frontend/assets/products/catalog/p117.webp",
+            "image_url": "/assets/products/catalog/p117.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -4971,7 +4978,7 @@
         "images": [
           {
             "id": 118,
-            "image_url": "/frontend/assets/products/catalog/p118.webp",
+            "image_url": "/assets/products/catalog/p118.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5007,7 +5014,7 @@
         "images": [
           {
             "id": 119,
-            "image_url": "/frontend/assets/products/catalog/p119.webp",
+            "image_url": "/assets/products/catalog/p119.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5043,7 +5050,7 @@
         "images": [
           {
             "id": 120,
-            "image_url": "/frontend/assets/products/catalog/p120.webp",
+            "image_url": "/assets/products/catalog/p120.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5080,7 +5087,7 @@
         "images": [
           {
             "id": 121,
-            "image_url": "/frontend/assets/products/catalog/p121.webp",
+            "image_url": "/assets/products/catalog/p121.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5117,7 +5124,7 @@
         "images": [
           {
             "id": 122,
-            "image_url": "/frontend/assets/products/catalog/p122.webp",
+            "image_url": "/assets/products/catalog/p122.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5153,7 +5160,7 @@
         "images": [
           {
             "id": 123,
-            "image_url": "/frontend/assets/products/catalog/p123.webp",
+            "image_url": "/assets/products/catalog/p123.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5189,7 +5196,7 @@
         "images": [
           {
             "id": 124,
-            "image_url": "/frontend/assets/products/catalog/p124.webp",
+            "image_url": "/assets/products/catalog/p124.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5225,7 +5232,7 @@
         "images": [
           {
             "id": 125,
-            "image_url": "/frontend/assets/products/catalog/p125.webp",
+            "image_url": "/assets/products/catalog/p125.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5262,7 +5269,7 @@
         "images": [
           {
             "id": 126,
-            "image_url": "/frontend/assets/products/catalog/p126.webp",
+            "image_url": "/assets/products/catalog/p126.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5298,7 +5305,7 @@
         "images": [
           {
             "id": 127,
-            "image_url": "/frontend/assets/products/catalog/p127.jpg",
+            "image_url": "/assets/products/catalog/p127.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5334,7 +5341,7 @@
         "images": [
           {
             "id": 128,
-            "image_url": "/frontend/assets/products/catalog/p128.webp",
+            "image_url": "/assets/products/catalog/p128.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5371,7 +5378,7 @@
         "images": [
           {
             "id": 129,
-            "image_url": "/frontend/assets/products/catalog/p129.webp",
+            "image_url": "/assets/products/catalog/p129.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5408,7 +5415,7 @@
         "images": [
           {
             "id": 130,
-            "image_url": "/frontend/assets/products/catalog/p130.webp",
+            "image_url": "/assets/products/catalog/p130.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5444,7 +5451,7 @@
         "images": [
           {
             "id": 131,
-            "image_url": "/frontend/assets/products/catalog/p131.jpg",
+            "image_url": "/assets/products/catalog/p131.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5481,7 +5488,7 @@
         "images": [
           {
             "id": 132,
-            "image_url": "/frontend/assets/products/catalog/p132.webp",
+            "image_url": "/assets/products/catalog/p132.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5517,7 +5524,7 @@
         "images": [
           {
             "id": 133,
-            "image_url": "/frontend/assets/products/catalog/p133.jpg",
+            "image_url": "/assets/products/catalog/p133.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5553,7 +5560,7 @@
         "images": [
           {
             "id": 134,
-            "image_url": "/frontend/assets/products/catalog/p134.webp",
+            "image_url": "/assets/products/catalog/p134.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5590,7 +5597,7 @@
         "images": [
           {
             "id": 135,
-            "image_url": "/frontend/assets/products/catalog/p135.jpg",
+            "image_url": "/assets/products/catalog/p135.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5627,7 +5634,7 @@
         "images": [
           {
             "id": 136,
-            "image_url": "/frontend/assets/products/catalog/p136.webp",
+            "image_url": "/assets/products/catalog/p136.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5663,7 +5670,7 @@
         "images": [
           {
             "id": 137,
-            "image_url": "/frontend/assets/products/catalog/p137.webp",
+            "image_url": "/assets/products/catalog/p137.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5699,7 +5706,7 @@
         "images": [
           {
             "id": 138,
-            "image_url": "/frontend/assets/products/catalog/p138.webp",
+            "image_url": "/assets/products/catalog/p138.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5735,7 +5742,7 @@
         "images": [
           {
             "id": 139,
-            "image_url": "/frontend/assets/products/catalog/p139.webp",
+            "image_url": "/assets/products/catalog/p139.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5771,7 +5778,7 @@
         "images": [
           {
             "id": 140,
-            "image_url": "/frontend/assets/products/catalog/p140.webp",
+            "image_url": "/assets/products/catalog/p140.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5807,7 +5814,7 @@
         "images": [
           {
             "id": 141,
-            "image_url": "/frontend/assets/products/catalog/p141.jpg",
+            "image_url": "/assets/products/catalog/p141.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5856,7 +5863,7 @@
         "images": [
           {
             "id": 142,
-            "image_url": "/frontend/assets/products/catalog/p142.webp",
+            "image_url": "/assets/products/catalog/p142.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5903,7 +5910,7 @@
         "images": [
           {
             "id": 143,
-            "image_url": "/frontend/assets/products/catalog/p143.jpg",
+            "image_url": "/assets/products/catalog/p143.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5952,7 +5959,7 @@
         "images": [
           {
             "id": 144,
-            "image_url": "/frontend/assets/products/catalog/p144.jpg",
+            "image_url": "/assets/products/catalog/p144.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -5999,7 +6006,7 @@
         "images": [
           {
             "id": 145,
-            "image_url": "/frontend/assets/products/catalog/p145.jpg",
+            "image_url": "/assets/products/catalog/p145.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6048,7 +6055,7 @@
         "images": [
           {
             "id": 146,
-            "image_url": "/frontend/assets/products/catalog/p146.webp",
+            "image_url": "/assets/products/catalog/p146.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6095,7 +6102,7 @@
         "images": [
           {
             "id": 147,
-            "image_url": "/frontend/assets/products/catalog/p147.webp",
+            "image_url": "/assets/products/catalog/p147.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6144,7 +6151,7 @@
         "images": [
           {
             "id": 148,
-            "image_url": "/frontend/assets/products/catalog/p148.jpg",
+            "image_url": "/assets/products/catalog/p148.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6191,7 +6198,7 @@
         "images": [
           {
             "id": 149,
-            "image_url": "/frontend/assets/products/catalog/p149.jpg",
+            "image_url": "/assets/products/catalog/p149.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6240,7 +6247,7 @@
         "images": [
           {
             "id": 150,
-            "image_url": "/frontend/assets/products/catalog/p150.webp",
+            "image_url": "/assets/products/catalog/p150.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6288,7 +6295,7 @@
         "images": [
           {
             "id": 151,
-            "image_url": "/frontend/assets/products/catalog/p151.webp",
+            "image_url": "/assets/products/catalog/p151.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6325,7 +6332,7 @@
         "images": [
           {
             "id": 152,
-            "image_url": "/frontend/assets/products/catalog/p152.webp",
+            "image_url": "/assets/products/catalog/p152.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6361,7 +6368,7 @@
         "images": [
           {
             "id": 153,
-            "image_url": "/frontend/assets/products/catalog/p153.jpg",
+            "image_url": "/assets/products/catalog/p153.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6397,7 +6404,7 @@
         "images": [
           {
             "id": 154,
-            "image_url": "/frontend/assets/products/catalog/p154.jpg",
+            "image_url": "/assets/products/catalog/p154.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6433,7 +6440,7 @@
         "images": [
           {
             "id": 155,
-            "image_url": "/frontend/assets/products/catalog/p155.webp",
+            "image_url": "/assets/products/catalog/p155.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6469,7 +6476,7 @@
         "images": [
           {
             "id": 156,
-            "image_url": "/frontend/assets/products/catalog/p156.jpg",
+            "image_url": "/assets/products/catalog/p156.jpg",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6506,7 +6513,7 @@
         "images": [
           {
             "id": 157,
-            "image_url": "/frontend/assets/products/catalog/p157.webp",
+            "image_url": "/assets/products/catalog/p157.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6542,7 +6549,7 @@
         "images": [
           {
             "id": 158,
-            "image_url": "/frontend/assets/products/catalog/p158.webp",
+            "image_url": "/assets/products/catalog/p158.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6578,7 +6585,7 @@
         "images": [
           {
             "id": 159,
-            "image_url": "/frontend/assets/products/catalog/p159.webp",
+            "image_url": "/assets/products/catalog/p159.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -6615,7 +6622,7 @@
         "images": [
           {
             "id": 160,
-            "image_url": "/frontend/assets/products/catalog/p160.webp",
+            "image_url": "/assets/products/catalog/p160.webp",
             "is_primary": true,
             "sort_order": 1
           }
@@ -7310,7 +7317,7 @@
           // Đồng bộ ảnh thực tế & texture 3D mới cho Victor Auraspeed 90K II (id = 10)
           const victor90k = mergedProducts.find(p => Number(p.id) === 10);
           if (victor90k) {
-            const localImg = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
+            const localImg = "/assets/products/victor-auraspeed-90k-ii.png";
             victor90k.model_3d_texture = localImg;
             if (!victor90k.images || !victor90k.images.length) {
               victor90k.images = [{ id: 16, image_url: localImg, is_primary: true, sort_order: 1 }];
@@ -7608,11 +7615,62 @@
     // GIỎ HÀNG (CART MODULE)
     // ==========================================
     getCart() {
+      if (this.ownerKey === GUEST_KEY || this.ownerKey !== accountStorageKey()) return [];
       if (!this.data.cart) this.data.cart = [];
       return this.data.cart;
     }
 
-    addToCart(productId, skuId, quantity = 1) {
+    getCartItemSnapshot(productId, skuId, quantity = 1) {
+      const prod = this.getProductById(productId);
+      if (!prod) throw new Error("Không tìm thấy sản phẩm!");
+      if (prod.status === "INACTIVE") {
+        throw new Error(`Sản phẩm "${prod.name}" hiện đang tạm ẩn, không thể mua!`);
+      }
+      const sku = prod.skus.find((s) => s.id === Number(skuId));
+      if (!sku) throw new Error("Không tìm thấy biến thể SKU này!");
+      if (sku.status === "INACTIVE") {
+        throw new Error(`Biến thể SKU "${sku.sku_code}" đang tạm ngưng kinh doanh!`);
+      }
+      const qty = Number(quantity);
+      if (!Number.isInteger(qty) || qty < 1) throw new Error("Số lượng mua không hợp lệ!");
+      if (sku.stock < qty) {
+        throw new Error(`Kho chỉ còn ${sku.stock} sản phẩm. Vui lòng giảm số lượng.`);
+      }
+      const primaryImg = (prod.images && prod.images.find((i) => i.is_primary)) ||
+        (prod.images && prod.images[0]) ||
+        { image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300" };
+      const effectivePrice = (sku.sale_price && Number(sku.sale_price) > 0 && Number(sku.sale_price) < Number(sku.price))
+        ? Number(sku.sale_price) : Number(sku.price);
+      return {
+        product_id: prod.id,
+        sku_id: sku.id,
+        product_name: prod.name,
+        sku_code: sku.sku_code,
+        size: sku.size || "-",
+        color: sku.color || "-",
+        unit: sku.unit || "CHIEC",
+        quantity_per_lot: sku.quantity_per_lot || 1,
+        condition_type: prod.condition_type || "MOI",
+        price: effectivePrice,
+        original_price: Number(sku.price),
+        sale_price: sku.sale_price ? Number(sku.sale_price) : null,
+        stock: sku.stock,
+        image_url: primaryImg.image_url,
+        quantity: qty
+      };
+    }
+
+    async addToCart(productId, skuId, quantity = 1) {
+      const customer = await verifyCartCustomer();
+      const customerKey = PERSONAL_PREFIX + "user:" + customer.id;
+      const legacyKey = PERSONAL_PREFIX + "email:" + customer.email.trim().toLowerCase();
+      const currentKey = accountStorageKey();
+      if (currentKey !== this.ownerKey || (currentKey !== customerKey && currentKey !== legacyKey)) {
+        localStorage.setItem("tsport_current_user", JSON.stringify(customer));
+        throw new Error("Thông tin phiên đã thay đổi. Hãy tải lại trang rồi thử thêm sản phẩm.");
+      }
+      quantity = Number(quantity);
+      if (!Number.isInteger(quantity) || quantity < 1) throw new Error("Số lượng mua không hợp lệ!");
       const prod = this.getProductById(productId);
       if (!prod) throw new Error("Không tìm thấy sản phẩm!");
       if (prod.status === "INACTIVE") {
@@ -7630,7 +7688,7 @@
 
       if (!this.data.cart) this.data.cart = [];
       const existing = this.data.cart.find((item) => item.sku_id === Number(skuId));
-      const currentQty = existing ? existing.quantity : 0;
+      const currentQty = Number(existing?.quantity) || 0;
       const targetQty = currentQty + Number(quantity);
 
       if (targetQty > sku.stock) {
@@ -7738,7 +7796,7 @@
       return this.data.orders.find((o) => o.id === Number(id) || o.order_code === String(id));
     }
 
-    createOrder({ customer_name, phone, address, payment_method = "COD", note = "", coupon_code = "", items = null }) {
+    createOrder({ customer_name, phone, address, payment_method = "COD", note = "", coupon_code = "", items = null, preserveCart = false }) {
       if (!customer_name || !customer_name.trim()) throw new Error("Vui lòng nhập họ và tên người nhận!");
       if (!phone || !phone.trim() || phone.length < 9) throw new Error("Vui lòng nhập số điện thoại hợp lệ!");
       if (!address || !address.trim()) throw new Error("Vui lòng nhập địa chỉ nhận hàng chi tiết!");
@@ -7835,7 +7893,7 @@
       };
 
       this.data.orders.unshift(newOrder);
-      this.clearCart();
+      if (!preserveCart) this.clearCart();
       this.save();
       return newOrder;
     }
@@ -8859,6 +8917,8 @@
           for (const image of p.images || []) {
             if (image.image_url.startsWith("/api/media/")) {
               image.image_url = apiBase.replace(/\/$/, "") + image.image_url.slice(4);
+            } else if (image.image_url.startsWith("/frontend/assets/")) {
+              image.image_url = image.image_url.slice("/frontend".length);
             }
           }
           (p.skus || []).forEach((s) => {

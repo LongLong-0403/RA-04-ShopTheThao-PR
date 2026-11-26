@@ -5,8 +5,8 @@
  */
 
 (function () {
-  function initMyBookingsPage() {
-    initSidebarUser();
+  function initMyBookingsPage(user) {
+    initSidebarUser(user);
     initHeaderSearch();
     renderBookingsTable();
     bindEvents();
@@ -18,11 +18,7 @@
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  function initSidebarUser() {
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-      full_name: "Nguyễn Minh Anh",
-      role: "CUSTOMER"
-    };
+  function initSidebarUser(user) {
     const nameEl = document.getElementById("sbBookingsName");
     const roleEl = document.getElementById("sbBookingsRole");
     const avatarEl = document.getElementById("sbBookingsAvatar");

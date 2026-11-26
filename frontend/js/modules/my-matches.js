@@ -5,8 +5,8 @@
  */
 
 (function () {
-  function initMyMatchesPage() {
-    initSidebarUser();
+  function initMyMatchesPage(user) {
+    initSidebarUser(user);
     initHeaderSearch();
     renderMatchesTable();
     bindEvents();
@@ -18,11 +18,7 @@
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  function initSidebarUser() {
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-      full_name: "Nguyễn Minh Anh",
-      role: "CUSTOMER"
-    };
+  function initSidebarUser(user) {
     const nameEl = document.getElementById("sbMatchesName");
     const roleEl = document.getElementById("sbMatchesRole");
     const avatarEl = document.getElementById("sbMatchesAvatar");
@@ -77,7 +73,7 @@
 
     tbody.innerHTML = matches
       .map((m) => {
-        const isClosed = m.status !== "OPEN";
+        const isClosed = m.registration_status !== "OPEN";
         const dateTime = `${formatDMY(m.match_date)} ${m.match_time || "18:00"}`;
 
         return `
@@ -88,18 +84,22 @@
             </td>
             <td>
               <div class="ts-orders-v2-code">${escapeHtml(m.location || "Hà Nội")}</div>
-              <div class="ts-orders-v2-date">${escapeHtml(m.level || "Trung bình")}</div>
+              <div class="ts-orders-v2-date">${escapeHtml(m.level || "Trung bình")} • ${escapeHtml(m.match_format || (Number(m.sport_id) === 2 ? "Sân 7" : "Đơn"))}</div>
+              ${!isClosed ? `<div class="ts-orders-v2-date">${matchAvailability(m)}</div>` : ""}
             </td>
             <td>
               <span class="ts-orders-v2-status ${isClosed ? "" : "is-pending"}">
-                ${isClosed ? "Đã đóng" : "Đang mở"}
+                ${isClosed ? matchAvailability(m) : "Đang mở"}
               </span>
             </td>
             <td>
               ${
-                isClosed
-                  ? `<a href="community.html" class="ts-orders-v2-detail-btn" style="text-decoration:none;">Xem bài</a>`
+                m.status === "CANCELLED"
+                  ? ""
+                  : isClosed
+                  ? `<a href="community.html?match=${encodeURIComponent(m.id)}" class="ts-orders-v2-detail-btn" style="text-decoration:none;">Xem bài</a>`
                   : `<span style="display:inline-flex; align-items:center; gap:6px;">
+                      <a href="community.html?match=${encodeURIComponent(m.id)}" class="ts-orders-v2-detail-btn">Xem bài</a>
                       <button type="button" class="ts-orders-v2-detail-btn js-close-my-match" data-id="${m.id}">Đóng bài</button>
                       <span style="color:#9CA3AF;">/</span>
                       <button type="button" class="ts-orders-v2-detail-btn js-delete-my-match" data-id="${m.id}">Hủy</button>
@@ -122,7 +122,7 @@
         try { await api.patch(`/match-posts/${closeBtn.dataset.id}/status`, {status: "CLOSED"}); }
         catch (err) { showToast(err.message, "error"); return; }
         renderMatchesTable();
-        showToast("Đã đóng bài ghép kèo (Đã đủ người).", "success");
+        showToast("Đã đóng bài ghép kèo.", "success");
         return;
       }
 

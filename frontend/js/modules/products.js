@@ -40,9 +40,6 @@
       localStorage.removeItem("tsport_current_user");
       window.location.href = "auth.html";
     });
-    document.getElementById("btnToggleAdminSidebar")?.addEventListener("click", () => {
-      document.getElementById("adminSidebar")?.classList.toggle("is-open");
-    });
   }
 
   function populateSelectOptions() {
@@ -156,7 +153,7 @@
         return `
           <tr class="${isSelected ? "is-selected-row" : ""}" data-prod-id="${p.id}">
             <td><div class="ts-adm-product-cell">
-              ${cover ? `<img src="${escapeHtml(cover.image_url)}" alt="" loading="lazy">` : ""}
+              ${cover ? `<img src="${escapeHtml(storefrontImageUrl(cover.image_url))}" alt="" loading="lazy">` : ""}
               <strong>${escapeHtml(p.name)}</strong>
             </div></td>
             <td style="color:#4B5563;">${escapeHtml(sportName)} / ${escapeHtml(catName)}</td>
@@ -534,7 +531,7 @@
         return;
       }
 
-      const imgs = (draftImages.length ? draftImages : ["/frontend/assets/products/victor-auraspeed-90k-ii.png"]).map(
+      const imgs = (draftImages.length ? draftImages : ["/assets/products/victor-auraspeed-90k-ii.png"]).map(
         (url, idx) => ({
           id: idx + 1,
           image_url: url,

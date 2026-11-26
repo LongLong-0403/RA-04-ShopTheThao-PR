@@ -1,6 +1,6 @@
 """Authenticated cart and atomic COD checkout."""
 from decimal import Decimal
-from uuid import uuid4
+from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field, ConfigDict
 from sqlalchemy import select, delete
@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.core.deps import get_current_user, require_customer
 from app.db.session import get_db
 from app.models.user import User, UserRole
-from app.models.catalog import ProductSku, Product
+from app.models.catalog import ProductSku
 from app.models.order import Cart, CartItem, Order, OrderItem, OrderStatusEnum
 
 router = APIRouter()
@@ -16,11 +16,16 @@ router = APIRouter()
 class Quantity(BaseModel):
     quantity: int = Field(gt=0, strict=True)
 
+class CheckoutItem(Quantity):
+    product_sku_id: int = Field(gt=0, strict=True)
+
 class Checkout(BaseModel):
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra='forbid', str_strip_whitespace=True)
     receiver_name: str = Field(min_length=1, max_length=150)
     receiver_phone: str = Field(min_length=9, max_length=20)
     shipping_address: str = Field(min_length=1)
+    items: list[CheckoutItem] | None = Field(default=None, min_length=1, max_length=200)
+    request_id: UUID | None = None
 
 def cart(db, user):
     db.scalar(select(User).where(User.id == user.id).with_for_update())
@@ -77,25 +82,43 @@ def remove_item(sku_id: int, db: Session = Depends(get_db), user: User = Depends
 @router.post('/orders', tags=['Orders'], status_code=201)
 def checkout(data: Checkout, db: Session = Depends(get_db), user: User = Depends(require_customer)):
     row = cart(db, user)
-    items = list(db.scalars(select(CartItem).where(CartItem.cart_id == row.id).order_by(CartItem.product_sku_id).with_for_update()))
+    order_code = 'ORD-' + (data.request_id or uuid4()).hex
+    if data.request_id:
+        previous = db.scalar(select(Order).where(Order.order_code == order_code).with_for_update())
+        if previous:
+            if previous.user_id != user.id:
+                raise HTTPException(409, 'Mã yêu cầu đã được sử dụng')
+            return checkout_result(previous)
+    cart_items = [] if data.items else list(db.scalars(
+        select(CartItem).where(CartItem.cart_id == row.id).with_for_update()
+    ))
+    items = {item.product_sku_id: item.quantity for item in (data.items or cart_items)}
     if not items:
         raise HTTPException(409, 'Giỏ hàng rỗng')
-    order = Order(order_code='ORD-' + uuid4().hex, user_id=user.id, **data.model_dump(), shipping_fee=0, total_amount=0)
+    if data.items and len(items) != len(data.items):
+        raise HTTPException(422, 'SKU bị trùng trong đơn hàng')
+    order = Order(order_code=order_code, user_id=user.id,
+                  **data.model_dump(exclude={'items', 'request_id'}), shipping_fee=0, total_amount=0)
     db.add(order)
     db.flush()
     total = Decimal(0)
-    for item in items:
-        sku = sellable(db, item.product_sku_id)
-        if sku.stock < item.quantity:
+    for sku_id, quantity in sorted(items.items()):
+        sku = sellable(db, sku_id)
+        if sku.stock < quantity:
             raise HTTPException(409, 'Không đủ tồn kho')
-        total += sku.price * item.quantity
-        sku.stock -= item.quantity
-        db.add(OrderItem(order_id=order.id, product_sku_id=sku.id, quantity=item.quantity,
+        total += sku.price * quantity
+        sku.stock -= quantity
+        db.add(OrderItem(order_id=order.id, product_sku_id=sku.id, quantity=quantity,
                          price_at_order=sku.price, condition_at_order=sku.product.condition_type.value))
+    for item in cart_items:
         db.delete(item)
     order.total_amount = total
     db.commit()
-    return {'id': order.id, 'order_code': order.order_code, 'total_amount': total, 'shipping_fee': 0, 'payment_method': 'COD'}
+    return checkout_result(order)
+
+def checkout_result(order: Order):
+    return {'id': order.id, 'order_code': order.order_code, 'total_amount': order.total_amount,
+            'shipping_fee': order.shipping_fee, 'payment_method': order.payment_method}
 
 @router.get('/orders', tags=['Orders'])
 def orders(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
@@ -109,7 +132,14 @@ def order_detail(order_id: int, db: Session = Depends(get_db), user: User = Depe
     order = db.get(Order, order_id)
     if order is None or (user.role != UserRole.ADMIN and order.user_id != user.id):
         raise HTTPException(404, 'Không tìm thấy đơn')
-    return {'order': order, 'items': order.items}
+    return {'order': order, 'items': [
+        {'id': item.id, 'product_sku_id': item.product_sku_id, 'quantity': item.quantity,
+         'price_at_order': item.price_at_order, 'condition_at_order': item.condition_at_order,
+         'sku_code': item.product_sku.sku_code, 'product_name': item.product_sku.product.name,
+         'size': item.product_sku.size, 'color': item.product_sku.color, 'unit': item.product_sku.unit,
+         'image_url': next((image.image_url for image in item.product_sku.product.images if image.is_primary), None)}
+        for item in order.items
+    ]}
 
 class OrderState(BaseModel):
     status: OrderStatusEnum
@@ -120,7 +150,8 @@ def order_status(order_id: int, data: OrderState, db: Session = Depends(get_db),
     if order is None or (user.role != UserRole.ADMIN and order.user_id != user.id):
         raise HTTPException(404, 'Không tìm thấy đơn')
     old, new = order.status.value, data.status.value
-    allowed = {'PENDING': {'CONFIRMED', 'CANCELLED'}, 'CONFIRMED': {'SHIPPING', 'CANCELLED'}, 'SHIPPING': {'COMPLETED'}}
+    allowed = {'PENDING': {'CONFIRMED', 'CANCELLED'}, 'CONFIRMED': {'SHIPPING', 'CANCELLED'},
+               'SHIPPING': {'COMPLETED', 'CANCELLED'}}
     if user.role != UserRole.ADMIN:
         allowed = {'PENDING': {'CANCELLED'}}
     if new not in allowed.get(old, set()):

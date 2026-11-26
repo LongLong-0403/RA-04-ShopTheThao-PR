@@ -38,9 +38,6 @@
       localStorage.removeItem("tsport_current_user");
       window.location.href = "auth.html";
     });
-    document.getElementById("btnToggleAdminSidebar")?.addEventListener("click", () => {
-      document.getElementById("adminSidebar")?.classList.toggle("is-open");
-    });
   }
 
   function renderAll() {

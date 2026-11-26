@@ -9,7 +9,12 @@
   let selectedSlotId = null;
   let editingCourtMode = "edit";
 
-  function initAdminCourts() {
+  let courts = [];
+  let slots = [];
+  let sports = [];
+
+  async function initAdminCourts() {
+    [courts, slots, sports] = await Promise.all([api.get('/courts/'), api.get('/slots/'), api.get('/sports')]);
     initTopbarControls();
     populateSportOptions();
     renderAll();
@@ -30,16 +35,12 @@
       localStorage.removeItem("tsport_current_user");
       window.location.href = "auth.html";
     });
-    document.getElementById("btnToggleAdminSidebar")?.addEventListener("click", () => {
-      document.getElementById("adminSidebar")?.classList.toggle("is-open");
-    });
   }
 
   function populateSportOptions() {
     const select = document.getElementById("admCourtSport");
-    const store = window.tsportStore;
-    if (!select || !store) return;
-    select.innerHTML = (store.getSports() || [])
+    if (!select) return;
+    select.innerHTML = sports
       .map((s) => `<option value="${s.id}">${escapeHtml(s.name)}</option>`)
       .join("");
   }
@@ -57,16 +58,13 @@
 
   function renderCourtsList() {
     const wrap = document.getElementById("admCourtsList");
-    const store = window.tsportStore;
-    if (!wrap || !store) return;
+    if (!wrap) return;
 
-    const courts = store.getCourts() || [];
     if (selectedCourtId == null && courts.length) {
       selectedCourtId = courts[0].id;
     }
 
     wrap.innerHTML = courts
-      .slice(0, 6)
       .map((c) => {
         const isSelected = Number(c.id) === Number(selectedCourtId);
         const status = c.status || "ACTIVE";
@@ -85,9 +83,7 @@
   }
 
   function renderSelectedCourtInfo() {
-    const store = window.tsportStore;
-    if (!store) return;
-    const court = (store.getCourts() || []).find((c) => Number(c.id) === Number(selectedCourtId));
+    const court = courts.find((c) => Number(c.id) === Number(selectedCourtId));
     if (!court) return;
 
     const line1 = document.getElementById("admCourtMetaLine1");
@@ -95,10 +91,10 @@
     const slotsHead = document.getElementById("admSlotsHeading");
 
     if (line1) {
-      line1.textContent = `${court.name} • ${court.sport_name || "Cầu lông"} • ${court.address || "Hà Nội"}`;
+      line1.textContent = `${court.name} • ${sports.find(sport => sport.id === court.sport_id)?.name || "—"} • ${court.address || "Hà Nội"}`;
     }
     if (line2) {
-      line2.textContent = `${court.surface || "Sân tiêu chuẩn"} • ${court.status || "ACTIVE"}`;
+      line2.textContent = `${court.description || "Sân tiêu chuẩn"} • ${court.status || "ACTIVE"}`;
     }
     if (slotsHead) {
       slotsHead.textContent = `Ca giờ - ${court.name}`;
@@ -106,9 +102,12 @@
   }
 
   function getSlotsForSelectedCourt() {
-    const store = window.tsportStore;
-    if (!store || !selectedCourtId) return [];
-    return (store.getSlots() || []).filter((s) => Number(s.court_id) === Number(selectedCourtId));
+    if (!selectedCourtId) return [];
+    return slots.filter((s) => Number(s.court_id) === Number(selectedCourtId));
+  }
+
+  function slotTime(slot) {
+    return slot.start_time.slice(0, 5) + ' - ' + slot.end_time.slice(0, 5);
   }
 
   function renderSlotsTable() {
@@ -137,8 +136,8 @@
         const isActive = (s.status || "ACTIVE") === "ACTIVE";
         return `
           <tr class="${isSelected ? "is-selected-row" : ""}" data-slot-id="${s.id}">
-            <td>${escapeHtml(s.time_slot)}</td>
-            <td>${formatMoneyVN(s.fixed_price)}</td>
+            <td>${escapeHtml(slotTime(s))}</td>
+            <td>${formatMoneyVN(s.price)}</td>
             <td>
               <span class="ts-orders-v2-status ${isActive ? "" : "is-cancelled"}">
                 ${isActive ? "Hoạt động" : "Tạm ngưng"}
@@ -160,13 +159,13 @@
     const psEl = document.getElementById("slotPriceStatusInput");
 
     if (slot) {
-      const timeMatch = String(slot.time_slot || "").match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
+      const timeMatch = String(slotTime(slot) || "").match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
       const start = timeMatch ? timeMatch[1] : "16:00";
       const end = timeMatch ? timeMatch[2] : "18:00";
       if (nameEl) nameEl.value = slot.slot_name || `Ca: ${start} - ${end}`;
       if (startEl) startEl.value = start;
       if (endEl) endEl.value = end;
-      if (psEl) psEl.value = `${formatMoneyVN(slot.fixed_price)} / ${slot.status || "ACTIVE"}`;
+      if (psEl) psEl.value = `${formatMoneyVN(slot.price)} / ${slot.status || "ACTIVE"}`;
     } else {
       if (nameEl) nameEl.value = "";
       if (startEl) startEl.value = "16:00";
@@ -177,7 +176,6 @@
 
   function openCourtModal(mode) {
     editingCourtMode = mode;
-    const store = window.tsportStore;
     const titleEl = document.getElementById("modalAdmCourtTitle");
     const nameEl = document.getElementById("admCourtName");
     const sportEl = document.getElementById("admCourtSport");
@@ -186,14 +184,14 @@
     const surfEl = document.getElementById("admCourtSurface");
 
     if (mode === "edit" && selectedCourtId) {
-      const court = (store.getCourts() || []).find((c) => Number(c.id) === Number(selectedCourtId));
+      const court = courts.find((c) => Number(c.id) === Number(selectedCourtId));
       if (court) {
         if (titleEl) titleEl.textContent = "Sửa thông tin sân";
         if (nameEl) nameEl.value = court.name || "";
         if (sportEl) sportEl.value = String(court.sport_id || 1);
         if (statusEl) statusEl.value = court.status || "ACTIVE";
         if (addrEl) addrEl.value = court.address || "";
-        if (surfEl) surfEl.value = court.surface || "";
+        if (surfEl) surfEl.value = court.description || "";
       }
     } else {
       if (titleEl) titleEl.textContent = "Thêm sân mới";
@@ -232,10 +230,9 @@
     document.getElementById("btnAdmEditCourt")?.addEventListener("click", () => openCourtModal("edit"));
 
     // Lưu ca giờ cố định
-    document.getElementById("formAdmSlot")?.addEventListener("submit", (e) => {
+    document.getElementById("formAdmSlot")?.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const store = window.tsportStore;
-      if (!store || !selectedCourtId) return;
+      if (!selectedCourtId) return;
 
       const slotName = document.getElementById("slotNameInput")?.value.trim() || "";
       const start = document.getElementById("slotStartInput")?.value.trim() || "16:00";
@@ -243,88 +240,49 @@
       const psRaw = document.getElementById("slotPriceStatusInput")?.value.trim() || "";
 
       const priceDigits = psRaw.split("/")[0].replace(/[^\d]/g, "");
-      const fixed_price = Number(priceDigits) || 150000;
+      const fixed_price = priceDigits ? Number(priceDigits) : 150000;
       const statusPart = (psRaw.split("/")[1] || "ACTIVE").trim().toUpperCase();
       const status = statusPart === "INACTIVE" ? "INACTIVE" : "ACTIVE";
-      const time_slot = `${start} - ${end}`;
-
-      const arr = store.data.slots || [];
-      const existing = arr.find((s) => Number(s.id) === Number(selectedSlotId));
-
-      if (existing) {
-        existing.slot_name = slotName;
-        existing.time_slot = time_slot;
-        existing.fixed_price = fixed_price;
-        existing.status = status;
-        store.save();
-        showToast(`Đã cập nhật ca ${time_slot}!`, "success");
-      } else {
-        const newId = arr.length ? Math.max(...arr.map((s) => Number(s.id) || 0)) + 1 : 1;
-        arr.push({
-          id: newId,
-          court_id: Number(selectedCourtId),
-          slot_name: slotName,
-          time_slot,
-          fixed_price,
-          status
-        });
-        selectedSlotId = newId;
-        store.save();
-        showToast(`Đã thêm ca mới ${time_slot}!`, "success");
+      const payload = { court_id: selectedCourtId, slot_name: slotName, start_time: start,
+        end_time: end, price: fixed_price, status };
+      const existing = slots.find(slot => slot.id === selectedSlotId);
+      try {
+        const saved = existing ? await api.put("/slots/" + existing.id, payload) : await api.post("/slots", payload);
+        slots = existing ? slots.map(slot => slot.id === saved.id ? saved : slot) : [...slots, saved];
+        selectedSlotId = saved.id;
+        showToast("Đã lưu ca giờ.", "success");
+      } catch (error) {
+        showToast(error.message, "error");
+        return;
       }
-
       renderSlotsTable();
       fillSlotForm();
     });
 
     // Lưu thêm / sửa thông tin sân
-    document.getElementById("formAdmCourt")?.addEventListener("submit", (e) => {
+    document.getElementById("formAdmCourt")?.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const store = window.tsportStore;
-      if (!store) return;
 
       const name = document.getElementById("admCourtName")?.value.trim();
       const sport_id = Number(document.getElementById("admCourtSport")?.value) || 1;
-      const sportObj = store.getSports().find((s) => Number(s.id) === sport_id);
       const status = document.getElementById("admCourtStatus")?.value || "ACTIVE";
       const address = document.getElementById("admCourtAddress")?.value.trim() || "";
       const surface = document.getElementById("admCourtSurface")?.value.trim() || "Sân tiêu chuẩn";
 
       if (!name) return;
 
-      const arr = store.data.courts || [];
-      if (editingCourtMode === "edit" && selectedCourtId) {
-        const court = arr.find((c) => Number(c.id) === Number(selectedCourtId));
-        if (court) {
-          court.name = name;
-          court.sport_id = sport_id;
-          court.sport_name = sportObj ? sportObj.name : "Cầu lông";
-          court.status = status;
-          court.address = address;
-          court.surface = surface;
-          store.save();
-          showToast(`Đã cập nhật thông tin sân "${name}"!`, "success");
-        }
-      } else {
-        const newId = arr.length ? Math.max(...arr.map((c) => Number(c.id) || 0)) + 1 : 1;
-        arr.unshift({
-          id: newId,
-          name,
-          sport_id,
-          sport_name: sportObj ? sportObj.name : "Cầu lông",
-          surface,
-          address,
-          status,
-          opening_hours: "06:00 - 23:00",
-          rating: 5.0,
-          image_url: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800"
-        });
-        selectedCourtId = newId;
-        selectedSlotId = null;
-        store.save();
-        showToast(`Đã thêm mới sân "${name}"!`, "success");
+      const payload = { name, sport_id, address, description: surface, status };
+      const existing = editingCourtMode === "edit" && selectedCourtId;
+      try {
+        const saved = existing ? await api.put("/courts/" + existing, payload) : await api.post("/courts", payload);
+        courts = existing ? courts.map(court => court.id === saved.id ? saved : court) : [saved, ...courts];
+        selectedCourtId = saved.id;
+        if (!existing) selectedSlotId = null;
+        showToast("Đã lưu sân.", "success");
+      } catch (error) {
+        showToast(error.message, "error");
+        return;
       }
-
       closeModal("modalAdmCourt");
       renderAll();
     });

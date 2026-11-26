@@ -3,6 +3,23 @@
  */
 
 (function () {
+  function redirectAfterAuth(role) {
+    if (role === "ADMIN") {
+      window.location.href = "admin-dashboard.html";
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("product");
+    if (/^\d+$/.test(productId || "")) {
+      window.location.href = `product-detail.html?id=${encodeURIComponent(productId)}`;
+      return;
+    }
+    const matchId = params.get("match");
+    window.location.href = /^\d+$/.test(matchId || "")
+      ? `community.html?match=${encodeURIComponent(matchId)}`
+      : params.get("create") === "1" ? "community.html?create=1" : "account.html";
+  }
+
   function logAxiosInterceptor(method, url, authHeader) {
     const monitor = document.getElementById("axiosInterceptorLog");
     if (!monitor) return;
@@ -26,7 +43,7 @@
     let hasError = false;
     if (!email || !email.includes("@")) {
       document.getElementById("loginEmail").classList.add("is-invalid");
-      document.getElementById("errLoginEmail").textContent = "Email không hợp lệ (cần định dạng @domain.com)";
+      document.getElementById("errLoginEmail").textContent = "Email không hợp lệ (cần định dạng @gmail.com)";
       hasError = true;
     } else {
       document.getElementById("loginEmail").classList.remove("is-invalid");
@@ -81,13 +98,7 @@
     const userLabel = document.querySelector(".js-header-user-label");
     if (userLabel) userLabel.textContent = userObj.full_name || userObj.email;
 
-    setTimeout(() => {
-      if (role === "ADMIN") {
-        window.location.href = "admin-dashboard.html";
-      } else {
-        window.location.href = "account.html";
-      }
-    }, 650);
+    setTimeout(() => redirectAfterAuth(role), 650);
   }
 
   async function handleRegisterSubmit(e) {
@@ -99,35 +110,32 @@
     const pass = document.getElementById("regPassword").value;
     const confirmPass = document.getElementById("regConfirmPassword").value;
 
-    let hasError = false;
-    if (!fullName) {
-      document.getElementById("regFullName").classList.add("is-invalid");
-      hasError = true;
-    } else document.getElementById("regFullName").classList.remove("is-invalid");
+    const emailInput = document.getElementById("regEmail");
+    const fields = [
+      ["regFullName", "errRegFullName", !fullName ? "Vui lòng nhập họ và tên."
+        : [...fullName].length > 150 ? "Họ và tên tối đa 150 ký tự." : ""],
+      ["regPhone", "errRegPhone", !/^0[35789][0-9]{8}$/.test(phone)
+        ? "Nhập số di động Việt Nam gồm 10 chữ số (ví dụ: 0912345678)." : ""],
+      ["regEmail", "errRegEmail", emailInput.validity.typeMismatch ||
+        !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 255
+        ? "Vui lòng nhập email hợp lệ (ví dụ: abc123@gmail.com)." : ""],
+      ["regPassword", "errRegPassword", [...pass].length < 8 ? "Mật khẩu phải có ít nhất 8 ký tự."
+        : new TextEncoder().encode(pass).length > 72 ? "Mật khẩu vượt quá 72 byte UTF-8." : ""],
+      ["regConfirmPassword", "errRegConfirm", !confirmPass ? "Vui lòng xác nhận mật khẩu."
+        : pass !== confirmPass ? "Mật khẩu xác nhận không khớp." : ""]
+    ];
 
-    if (!phone || phone.length < 9) {
-      document.getElementById("regPhone").classList.add("is-invalid");
-      hasError = true;
-    } else document.getElementById("regPhone").classList.remove("is-invalid");
-
-    if (!email || !email.includes("@")) {
-      document.getElementById("regEmail").classList.add("is-invalid");
-      hasError = true;
-    } else document.getElementById("regEmail").classList.remove("is-invalid");
-
-    if (!pass || pass.length < 8) {
-      document.getElementById("regPassword").classList.add("is-invalid");
-      hasError = true;
-    } else document.getElementById("regPassword").classList.remove("is-invalid");
-
-    if (pass !== confirmPass) {
-      document.getElementById("regConfirmPassword").classList.add("is-invalid");
-      showToast("Mật khẩu xác nhận không khớp!", "error");
-      return;
-    } else document.getElementById("regConfirmPassword").classList.remove("is-invalid");
-
-    if (hasError) {
-      showToast("Vui lòng kiểm tra lại các trường báo đỏ!", "error");
+    let firstInvalidInput;
+    for (const [inputId, errorId, message] of fields) {
+      const input = document.getElementById(inputId);
+      input.classList.toggle("is-invalid", Boolean(message));
+      input.setAttribute("aria-invalid", String(Boolean(message)));
+      input.setAttribute("aria-describedby", errorId);
+      document.getElementById(errorId).textContent = message;
+      if (message) firstInvalidInput ??= input;
+    }
+    if (firstInvalidInput) {
+      firstInvalidInput.focus();
       return;
     }
 
@@ -149,6 +157,20 @@
         logAxiosInterceptor("POST", "/api/auth/register", token);
       } catch (err) {
         if (err && err.status && err.status !== 0) {
+          if (err.status === 409) {
+            const duplicateField = [
+              ["Email", "regEmail", "errRegEmail"],
+              ["Số điện thoại", "regPhone", "errRegPhone"],
+              ["Họ và tên", "regFullName", "errRegFullName"],
+            ].find(([label]) => err.message.startsWith(label));
+            if (duplicateField) {
+              const [, inputId, errorId] = duplicateField;
+              const input = document.getElementById(inputId);
+              input.classList.add("is-invalid");
+              document.getElementById(errorId).textContent = err.message;
+              input.focus();
+            }
+          }
           showToast(err.message || "Đăng ký tài khoản thất bại", "error");
           return;
         }
@@ -167,13 +189,7 @@
     const role = userObj.role || "CUSTOMER";
     showToast(`Đăng ký tài khoản ${email} (${role}) thành công! Đang chuyển hướng...`, "success");
 
-    setTimeout(() => {
-      if (role === "ADMIN") {
-        window.location.href = "admin-dashboard.html";
-      } else {
-        window.location.href = "account.html";
-      }
-    }, 650);
+    setTimeout(() => redirectAfterAuth(role), 650);
   }
 
   document.addEventListener("DOMContentLoaded", () => {

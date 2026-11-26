@@ -19,6 +19,12 @@ from app.models.catalog import (
 )
 
 SEED_JSON_PATH = Path(__file__).resolve().parent / "catalog_seed.json"
+BADMINTON_RACKETS_PATH = SEED_JSON_PATH.with_name("badminton_rackets.json")
+BADMINTON_OLD_IMAGE = "/frontend/assets/banner/banner-3.jpg"
+BADMINTON_OLD_DESCRIPTION = "Mẫu thử danh mục Tsport. Giá và tồn kho là dữ liệu mẫu, ảnh dùng để minh họa."
+BADMINTON_DEMO_IMAGE = "/frontend/assets/products/badminton/chua-co-anh.png"
+BADMINTON_DEMO_DESCRIPTION = "Mục thử danh mục Tsport, chưa có tên mẫu và ảnh đã đối chiếu. Giá và tồn kho là dữ liệu mẫu."
+BADMINTON_REFERENCE_DESCRIPTION = "Tên mẫu và ảnh được đối chiếu với danh mục ShopVNB. Giá và tồn kho trên Tsport là dữ liệu mẫu."
 
 SPORTS_SEED = [
     (1, "Cầu lông", "cau-long", "Môn thể thao dùng vợt đánh cầu lông phong trào và chuyên nghiệp"),
@@ -68,9 +74,101 @@ BRANDS_SEED = [
     (13, "DHS", "dhs", "/frontend/assets/products/catalog/p036.webp"),
 ]
 
+BADMINTON_BRANDS = (
+    ("Yonex", "yonex"),
+    ("Victor", "victor"),
+    ("Lining", "lining"),
+    ("VS", "vs"),
+    ("Mizuno", "mizuno"),
+    ("Apacs", "apacs"),
+    ("VNB", "vnb"),
+    ("Proace", "proace"),
+    ("Forza", "forza"),
+    ("FlyPower", "flypower"),
+)
+
+
+def seed_badminton_rackets(db: Session) -> None:
+    """Top up the badminton menu brands to ten catalog products."""
+    with BADMINTON_RACKETS_PATH.open(encoding="utf-8") as file:
+        rackets = json.load(file)
+
+    sport_id = db.scalar(select(Sport.id).where(Sport.slug == "cau-long"))
+    category_id = db.scalar(select(Category.id).where(Category.slug == "vot-cau-long"))
+    for brand_name, slug in BADMINTON_BRANDS:
+        brand = db.scalar(select(Brand).where(Brand.slug == slug))
+        if brand is None:
+            brand = Brand(name=brand_name, slug=slug, status=CommonStatusEnum.ACTIVE)
+            db.add(brand)
+            db.flush()
+        count = db.scalar(
+            select(func.count(Product.id)).where(
+                Product.category_id == category_id,
+                Product.sport_id == sport_id,
+                Product.brand_id == brand.id,
+            )
+        )
+        prefix = f"TS-DEMO-BADMINTON-{slug.upper()}-"
+        seeded_skus = {
+            sku.sku_code: sku
+            for sku in db.scalars(
+                select(ProductSku).join(Product).where(
+                    Product.brand_id == brand.id,
+                    Product.category_id == category_id,
+                    ProductSku.sku_code.startswith(prefix),
+                )
+            )
+        }
+        reference_models = rackets[slug]
+        for code, sku in seeded_skus.items():
+            suffix = code.removeprefix(prefix)
+            product = sku.product
+            if not suffix.isdecimal() or product.name != f"Vợt cầu lông {brand_name} · Mẫu demo {suffix}":
+                continue
+            number = int(suffix)
+            racket = reference_models[number - 1] if 1 <= number <= len(reference_models) else None
+            if racket:
+                product.name = racket["name"]
+            if product.description in (BADMINTON_OLD_DESCRIPTION, BADMINTON_DEMO_DESCRIPTION):
+                product.description = BADMINTON_REFERENCE_DESCRIPTION if racket else BADMINTON_DEMO_DESCRIPTION
+            for image in product.images:
+                if image.is_primary and image.image_url in (BADMINTON_OLD_IMAGE, BADMINTON_DEMO_IMAGE):
+                    image.image_url = racket["image_url"] if racket else BADMINTON_DEMO_IMAGE
+
+        missing = max(0, 10 - count)
+        sample_number = 0
+        for _ in range(missing):
+            while True:
+                sample_number += 1
+                sku_code = f"{prefix}{sample_number:02d}"
+                if sku_code not in seeded_skus:
+                    break
+            racket = reference_models[sample_number - 1] if sample_number <= len(reference_models) else None
+            db.add(Product(
+                sport_id=sport_id,
+                category_id=category_id,
+                brand_id=brand.id,
+                name=racket["name"] if racket else f"Vợt cầu lông {brand_name} · Mẫu demo {sample_number:02d}",
+                description=BADMINTON_REFERENCE_DESCRIPTION if racket else BADMINTON_DEMO_DESCRIPTION,
+                condition_type=ConditionEnum.MOI,
+                status=ProductStatusEnum.ACTIVE,
+                skus=[ProductSku(
+                    sku_code=sku_code,
+                    price=Decimal(650000 + 125000 * (sample_number - 1)),
+                    stock=10,
+                    unit=UnitEnum.CHIEC,
+                    quantity_per_lot=1,
+                )],
+                images=[ProductImage(
+                    image_url=racket["image_url"] if racket else BADMINTON_DEMO_IMAGE,
+                    is_primary=True,
+                    sort_order=1,
+                )],
+            ))
+
 
 def seed_catalog(db: Session) -> dict:
-    """Idempotently seed sports, categories, brands, and 160 products if products table is empty."""
+    """Seed the base catalog and fill the badminton menu on existing databases."""
     # 1. Sports
     for sid, name, slug, desc in SPORTS_SEED:
         existing = db.get(Sport, sid) or db.scalar(select(Sport).where(Sport.slug == slug))
@@ -100,6 +198,7 @@ def seed_catalog(db: Session) -> dict:
     # 4. Products (skip if already seeded)
     existing_prod_count = db.scalar(select(func.count()).select_from(Product)) or 0
     if existing_prod_count >= 160 or not SEED_JSON_PATH.exists():
+        seed_badminton_rackets(db)
         db.commit()
         return {"seeded": False, "products": existing_prod_count}
 
@@ -152,5 +251,6 @@ def seed_catalog(db: Session) -> dict:
             )
         inserted_prods += 1
 
+    seed_badminton_rackets(db)
     db.commit()
     return {"seeded": True, "products": inserted_prods}

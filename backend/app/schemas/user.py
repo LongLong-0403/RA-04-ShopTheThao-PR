@@ -69,6 +69,7 @@ class UserOut(UserBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+    phone: str = Field(max_length=20)
     id: int
     created_at: datetime
     updated_at: datetime

@@ -106,7 +106,7 @@
               type="text"
               id="checkoutName"
               class="ts-checkout-v2-input"
-              placeholder="Nguyễn Minh Anh"
+              placeholder="Họ và tên"
               required
             />
           </div>
@@ -117,7 +117,7 @@
               type="tel"
               id="checkoutPhone"
               class="ts-checkout-v2-input"
-              placeholder="0901234567"
+              placeholder="Số điện thoại"
               required
             />
           </div>
@@ -133,7 +133,6 @@
             ></textarea>
           </div>
 
-          <input type="hidden" id="checkoutNote" value="" />
 
           <div class="ts-checkout-v2-pay-wrap">
             <h3 class="ts-checkout-v2-pay-title">Phương thức thanh toán</h3>
@@ -148,56 +147,6 @@
                 </div>
               </label>
 
-              <!-- 2. Chuyển khoản ngân hàng -->
-              <label class="ts-checkout-v2-cod-box" data-pay="BANK">
-                <input type="radio" name="paymentMethod" value="BANK" />
-                <span class="ts-checkout-v2-radio-ui" aria-hidden="true"></span>
-                <div>
-                  <div class="ts-checkout-v2-cod-name">Chuyển khoản ngân hàng (VietQR / Internet Banking)</div>
-                  <div class="ts-checkout-v2-cod-sub">Xác nhận đơn nhanh, miễn phí giao dịch</div>
-                </div>
-              </label>
-
-              <!-- Chi tiết chuyển khoản (hiện khi chọn BANK) -->
-              <div class="ts-checkout-v2-pay-detail" id="payDetailBank" style="display:none;">
-                <div class="ts-checkout-v2-bank-row">
-                  <span>Ngân hàng</span>
-                  <strong>Vietcombank (VCB)</strong>
-                </div>
-                <div class="ts-checkout-v2-bank-row">
-                  <span>Số tài khoản</span>
-                  <strong>1029 3847 56</strong>
-                </div>
-                <div class="ts-checkout-v2-bank-row">
-                  <span>Chủ tài khoản</span>
-                  <strong>CONG TY TNHH TSPORT</strong>
-                </div>
-                <div class="ts-checkout-v2-bank-row">
-                  <span>Nội dung chuyển khoản</span>
-                  <strong>TSPORT + Số điện thoại đặt hàng</strong>
-                </div>
-              </div>
-
-              <!-- 3. Thanh toán bằng ví điện tử -->
-              <label class="ts-checkout-v2-cod-box" data-pay="EWALLET">
-                <input type="radio" name="paymentMethod" value="EWALLET" />
-                <span class="ts-checkout-v2-radio-ui" aria-hidden="true"></span>
-                <div>
-                  <div class="ts-checkout-v2-cod-name">Thanh toán bằng ví điện tử</div>
-                  <div class="ts-checkout-v2-cod-sub">Hỗ trợ ví MoMo, ZaloPay và VNPay</div>
-                </div>
-              </label>
-
-              <!-- Chọn ví điện tử (hiện khi chọn EWALLET) -->
-              <div class="ts-checkout-v2-pay-detail" id="payDetailWallet" style="display:none;">
-                <div class="ts-checkout-v2-wallet-label">Chọn ví điện tử thanh toán</div>
-                <div class="ts-checkout-v2-wallet-pills" id="checkoutWalletPills">
-                  <button type="button" class="ts-checkout-v2-wallet-btn is-active" data-wallet="MoMo">Ví MoMo</button>
-                  <button type="button" class="ts-checkout-v2-wallet-btn" data-wallet="ZaloPay">ZaloPay</button>
-                  <button type="button" class="ts-checkout-v2-wallet-btn" data-wallet="VNPay">VNPay</button>
-                </div>
-                <input type="hidden" id="selectedWalletProvider" value="MoMo" />
-              </div>
             </div>
           </div>
         </section>
@@ -214,11 +163,6 @@
             <div class="ts-checkout-v2-total-row">
               <span>Tạm tính</span>
               <strong class="ts-checkout-v2-val" id="checkoutSubtotal">0đ</strong>
-            </div>
-
-            <div class="ts-checkout-v2-total-row" id="rowDiscount" style="display:none;">
-              <span>Giảm giá (<span id="appliedCouponTag"></span>)</span>
-              <strong class="ts-checkout-v2-val" id="checkoutDiscountAmount">-0đ</strong>
             </div>
 
             <div class="ts-checkout-v2-total-row">
@@ -253,7 +197,7 @@
       <div class="ts-order-success-card">
         <div class="ts-order-success-check" aria-hidden="true">✓</div>
         <h1 class="ts-order-success-title">Đặt hàng thành công</h1>
-        <div class="ts-order-success-code">Mã đơn: <span id="successOrderCode">ORD-20261107-001</span></div>
+        <div class="ts-order-success-code">Mã đơn: <span id="successOrderCode"></span></div>
         <div class="ts-order-success-status">Chờ xác nhận</div>
         <p class="ts-order-success-meta" id="successOrderMeta">
           Tổng thanh toán: <span id="successOrderTotal">0đ</span> • <span id="successOrderPayment">COD</span> • Vận chuyển 0đ

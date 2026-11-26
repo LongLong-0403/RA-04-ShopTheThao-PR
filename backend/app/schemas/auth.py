@@ -12,7 +12,7 @@ class RegisterRequest(BaseModel):
     email: str = Field(min_length=5, max_length=255, pattern=EMAIL_PATTERN, examples=["khachmoi@sportstore.vn"])
     password: str = Field(min_length=8, max_length=72, examples=["Customer@123"])
     full_name: str = Field(min_length=1, max_length=150, examples=["Nguyễn Văn B"])
-    phone: str = Field(min_length=9, max_length=20, examples=["0901234567"])
+    phone: str = Field(pattern=r"^0[35789][0-9]{8}$", examples=["0912345678"])
     address: str | None = None
 
     @field_validator('email', mode='before')

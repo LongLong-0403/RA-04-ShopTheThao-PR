@@ -10,12 +10,25 @@
   const ITEMS_PER_PAGE = 9;
   const DEFAULT_MAX_PRICE = 7000000;
   let currentPage = 1;
+  let closeMobileFilters = () => {};
 
   function initShopModule() {
     initShopBrandSlider();
+    positionShopSearch();
     renderFiltersSidebar();
     bindEvents();
     loadProductsFromUrl();
+  }
+
+  function positionShopSearch() {
+    const search = document.getElementById("shopSearchForm");
+    const mobileHeading = document.querySelector(".ts-mob-shop-head");
+    if (!search || !mobileHeading) return;
+    const desktopContainer = search.parentElement;
+    const mobile = window.matchMedia("(max-width: 768px)");
+    const updatePosition = () => (mobile.matches ? mobileHeading : desktopContainer).append(search);
+    mobile.addEventListener("change", updatePosition);
+    updatePosition();
   }
 
   // BANNER THƯƠNG HIỆU VỢT: CHỈ ẢNH, TRƯỢT TỪ TRÁI SANG PHẢI TRONG 1S
@@ -106,11 +119,14 @@
 
   function getFiltersFromUrl() {
     const params = getUrlParams();
+    const brand = params.brand_slug
+      ? window.tsportStore?.getBrands().find((item) => item.slug === params.brand_slug)
+      : null;
     return {
       search: params.q || params.search || "",
       sport_id: params.sport || "ALL",
       category_id: params.cat || "ALL",
-      brand_id: params.brand || "ALL",
+      brand_id: params.brand || (params.brand_slug ? (brand?.id ?? params.brand_slug) : "ALL"),
       condition_type: params.condition || "ALL",
       max_price: params.max_price ? Number(params.max_price) : DEFAULT_MAX_PRICE,
       sort: params.sort || "newest",
@@ -335,7 +351,7 @@
             <span class="ts-shop-card-badge ${isUsed ? 'is-used' : ''}">
               ${isUsed ? 'Đã qua sử dụng' : 'Mới'}
             </span>
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+            <img src="${escapeHtml(storefrontImageUrl(primaryImg.image_url))}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
           </div>
           <h3 class="ts-shop-card-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
           <div class="ts-shop-card-meta">${escapeHtml(metaText)}</div>
@@ -360,29 +376,7 @@
   }
 
   function renderPagination(totalPages, activePage) {
-    const container = document.getElementById("shopPagination");
-    if (!container) return;
-    if (totalPages <= 1) {
-      container.innerHTML = "";
-      return;
-    }
-
-    let html = "";
-    for (let p = 1; p <= totalPages; p++) {
-      html += `
-        <button type="button" class="ts-shop-page-btn ${p === activePage ? 'is-active' : ''}" data-page="${p}">
-          ${p}
-        </button>
-      `;
-    }
-
-    html += `
-      <button type="button" class="ts-shop-page-btn" ${activePage >= totalPages ? 'disabled' : ''} data-page="${activePage + 1}" aria-label="Trang sau">
-        →
-      </button>
-    `;
-
-    container.innerHTML = html;
+    renderCompactPagination(document.getElementById("shopPagination"), totalPages, activePage);
   }
 
   function applySelectedFiltersFromSidebar() {
@@ -396,12 +390,13 @@
       sport: sportVal === "ALL" ? null : sportVal,
       cat: catVal === "ALL" ? null : catVal,
       brand: brandVal === "ALL" ? null : brandVal,
+      brand_slug: null,
       condition: condVal === "ALL" ? null : condVal,
       max_price: maxPriceVal < DEFAULT_MAX_PRICE ? maxPriceVal : null,
       page: null
     });
 
-    document.getElementById("shopFilterSidebar")?.classList.remove("is-open");
+    closeMobileFilters();
     loadProductsFromUrl();
   }
 
@@ -411,6 +406,7 @@
       sport: null,
       cat: null,
       brand: null,
+      brand_slug: null,
       condition: null,
       max_price: null,
       sort: "newest",
@@ -425,8 +421,13 @@
     const btnCloseMobile = document.getElementById("btnCloseMobileFilter");
     const sidebar = document.getElementById("shopFilterSidebar");
 
-    btnToggleMobile?.addEventListener("click", () => sidebar?.classList.add("is-open"));
-    btnCloseMobile?.addEventListener("click", () => sidebar?.classList.remove("is-open"));
+    const backdrop = document.createElement("div");
+    backdrop.className = "ts-shop-filter-backdrop";
+    backdrop.setAttribute("aria-hidden", "true");
+    document.body.append(backdrop);
+    closeMobileFilters = initResponsiveDrawer({
+      toggle: btnToggleMobile, drawer: sidebar, close: btnCloseMobile, backdrop, breakpoint: 768
+    });
 
     // Cập nhật text khoảng giá khi kéo thanh trượt
     const priceSlider = document.getElementById("filterMaxPriceSlider");
@@ -442,6 +443,7 @@
 
     // Lọc tức thì khi thay đổi radio trên desktop
     document.addEventListener("change", (e) => {
+      if (window.matchMedia("(max-width: 768px)").matches) return;
       if (
         e.target.name === "filterSportRadio" ||
         e.target.name === "filterCatRadio" ||

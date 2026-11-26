@@ -77,13 +77,13 @@
 
         <!-- THANH TÌM KIẾM & LỌC VAI TRÒ -->
         <section class="ts-adm-filter-block">
-          <label for="userSearchInput" class="ts-adm-filter-label">Tìm theo email / SĐT</label>
+          <label for="userSearchInput" class="ts-adm-filter-label">Tìm theo tên, email hoặc số điện thoại</label>
           <div class="ts-adm-filter-row">
             <input
               type="text"
               id="userSearchInput"
               class="ts-adm-input"
-              placeholder="minhanh@example.com"
+              placeholder="Nhập thông tin người dùng"
             />
             <button type="button" class="ts-adm-btn-secondary ts-adm-filter-btn" id="btnSearchUsers">
               Tìm kiếm
@@ -117,8 +117,8 @@
         </section>
 
         <!-- KHUNG CẬP NHẬT TÀI KHOẢN -->
-        <section class="ts-adm-card ts-adm-edit-panel" id="userEditPanel">
-          <h2 class="ts-adm-card-title" id="editUserHeading">Cập nhật tài khoản: Nguyễn Minh Anh</h2>
+        <section class="ts-adm-card ts-adm-edit-panel" id="userEditPanel" hidden>
+          <h2 class="ts-adm-card-title" id="editUserHeading">Cập nhật tài khoản</h2>
 
           <div class="ts-adm-edit-grid-2">
             <div>
@@ -136,6 +136,10 @@
                 <option value="INACTIVE">INACTIVE</option>
                 <option value="LOCKED">LOCKED</option>
               </select>
+            </div>
+            <div>
+              <label for="editUserPhone" class="ts-adm-filter-label">Số điện thoại</label>
+              <input id="editUserPhone" type="tel" inputmode="tel" maxlength="20" class="ts-adm-input" />
             </div>
           </div>
 

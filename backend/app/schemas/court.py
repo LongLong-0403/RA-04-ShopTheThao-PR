@@ -56,6 +56,8 @@ class MatchPostBase(BaseModel):
     location: str
     skill_level: str
     contact_info: str
+    match_format: str = "Đơn"
+    players_needed: int = 1
 
 class MatchPostCreate(MatchPostBase):
     pass

@@ -2,27 +2,29 @@
  * TSPORT — MODULE ĐƠN HÀNG CỦA TÔI & CHI TIẾT ĐƠN HÀNG (ORDERS V2 FIGMA)
  * - View 1: Lịch sử mua hàng với 4 tab lọc (Tất cả / Chờ xác nhận / Đang giao / Hoàn tất)
  * - View 2: Chi tiết đơn hàng với thanh tiến trình 4 bước, bảng sản phẩm, thông tin người nhận & nút Hủy đơn
- * - Giữ nguyên quy tắc hoàn tồn kho 1 lần (idempotent) của store.cancelOrder()
+ * - Hủy đơn và hoàn tồn kho qua API
  */
 
 (function () {
   let activeStatusFilter = "ALL";
   let currentOrderId = null;
+  let orderRows = [];
+  let detailRevision = 0;
 
-  function initOrdersModule() {
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
-    if (!user || !(localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
-      window.location.replace("auth.html");
-      return;
-    }
-    initSidebarUser(user);
+  async function initOrdersModule(account) {
+    orderRows = (await api.get("/orders")).map(orderView);
+    initSidebarUser(account);
+    const store = window.tsportStore;
+    const legacy = store?.ownerKey === "tsport_personal_v1:user:" + account.id ? store.getOrders() : [];
+    const serverCodes = new Set(orderRows.map(row => row.order_code));
+    orderRows.push(...legacy.filter(row => !serverCodes.has(row.order_code)).map((row, index) =>
+      ({ ...row, id: -index - 1, localOnly: true })));
     initHeaderSearch();
     bindEvents();
 
     const params = typeof getUrlParams === "function" ? getUrlParams() : {};
     if (params.code) {
-      const store = window.tsportStore;
-      const found = store && store.getOrders().find((o) => o.order_code === params.code);
+      const found = orderRows.find((o) => o.order_code === params.code);
       if (found) {
         openOrderDetail(found.id);
         return;
@@ -68,7 +70,7 @@
 
   function formatDateShort(dateStr) {
     if (!dateStr) return "";
-    const datePart = String(dateStr).split(" ")[0];
+    const datePart = String(dateStr).slice(0, 10);
     const parts = datePart.split("-");
     if (parts.length === 3) {
       return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -104,6 +106,7 @@
 
   // 1. HIỂN THỊ DANH SÁCH ĐƠN HÀNG
   function showOrdersListView() {
+    detailRevision++;
     currentOrderId = null;
     const listView = document.getElementById("ordersListView");
     const detailView = document.getElementById("orderDetailView");
@@ -115,10 +118,9 @@
 
   function renderOrdersTable() {
     const tbody = document.getElementById("ordersTableBody");
-    const store = window.tsportStore;
-    if (!tbody || !store) return;
+    if (!tbody) return;
 
-    let orders = store.getOrders() || [];
+    let orders = orderRows;
     if (activeStatusFilter !== "ALL") {
       orders = orders.filter((o) => o.status === activeStatusFilter);
     }
@@ -141,7 +143,7 @@
           <tr>
             <td>
               <div class="ts-orders-v2-code">${escapeHtml(o.order_code)}</div>
-              <div class="ts-orders-v2-date">${escapeHtml(formatDateShort(o.created_at))}</div>
+              <div class="ts-orders-v2-date">${escapeHtml(formatDateShort(o.created_at))}${o.localOnly ? " · Lưu trên trình duyệt" : ""}</div>
             </td>
             <td class="ts-orders-v2-total">${formatOrderMoney(o.total_amount)}</td>
             <td>
@@ -159,16 +161,17 @@
   }
 
   // 2. HIỂN THỊ CHI TIẾT ĐƠN HÀNG
-  function openOrderDetail(orderId) {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    const order = store.getOrders().find((o) => Number(o.id) === Number(orderId));
-    if (!order) {
-      showOrdersListView();
+  async function openOrderDetail(orderId) {
+    const revision = ++detailRevision;
+    let order;
+    try {
+      order = orderId < 0 ? orderRows.find(row => row.id === orderId) : await loadOrderDetail(orderId);
+    } catch (error) {
+      if (revision === detailRevision) showToast(error.message, "error");
       return;
     }
-
+    if (revision !== detailRevision || !order) return;
+    orderRows = orderRows.map(row => row.id === order.id ? order : row);
     currentOrderId = order.id;
 
     const listView = document.getElementById("ordersListView");
@@ -256,10 +259,11 @@
     if (recvAddr) recvAddr.textContent = order.address || "Chưa cập nhật địa chỉ";
     if (grandTotal) grandTotal.textContent = formatOrderMoney(order.total_amount);
 
-    const canCancel = order.status === "PENDING";
+    const canCancel = !order.localOnly && order.status === "PENDING";
     if (cancelBtn) {
       cancelBtn.disabled = !canCancel;
-      cancelBtn.textContent = order.status === "CANCELLED" ? "Đơn hàng đã hủy" : "Hủy đơn hàng";
+      cancelBtn.textContent = order.localOnly ? "Đơn lưu trên trình duyệt"
+        : order.status === "CANCELLED" ? "Đơn hàng đã hủy" : "Hủy đơn hàng";
     }
     if (cancelNote) {
       cancelNote.textContent = canCancel
@@ -312,14 +316,17 @@
 
     // Hủy đơn hàng (chỉ khi PENDING, hoàn tồn kho 1 lần)
     document.getElementById("btnCancelCurrentOrder")?.addEventListener("click", async () => {
-      if (!currentOrderId) return;
+      if (!currentOrderId || currentOrderId < 0) return;
+      const id = currentOrderId;
       const confirmed = await confirmAction("Bạn có chắc chắn muốn hủy đơn hàng này không?", "Hủy đơn hàng");
       if (!confirmed) return;
 
       try {
-        window.tsportStore.cancelOrder(currentOrderId);
+        const { status } = await api.patch("/orders/" + id + "/status", { status: "CANCELLED" });
+        orderRows = orderRows.map(row => row.id === id ? { ...row, status } : row);
         showToast("Đã hủy đơn hàng và hoàn lại tồn kho thành công!", "success");
-        openOrderDetail(currentOrderId);
+        if (currentOrderId === id) await openOrderDetail(id);
+        else if (!currentOrderId) renderOrdersTable();
       } catch (err) {
         showToast(err.message || "Không thể hủy đơn hàng này.", "error");
       }

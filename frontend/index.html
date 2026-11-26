@@ -19,7 +19,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/lenis@1.3.28/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
-<body class="tsport-home-body" data-root="">
+<body class="tsport-home-body tsport-home-page" data-root="">
 
   <!-- ==========================================
        1. TOP HEADER BAR TỐI GIẢN (KHÔNG ICON THỪA)
@@ -73,20 +73,20 @@
         <div class="ts-mega-grid-5">
           <!-- HÀNG 1 -->
           <div class="ts-mega-col">
-            <a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-col-title">VỢT CẦU LÔNG</a>
+            <a href="pages/shop.html?cat=2" class="ts-mega-col-title">VỢT CẦU LÔNG</a>
             <ul class="ts-mega-list">
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Yonex" class="ts-mega-link">Vợt cầu lông Yonex</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Victor" class="ts-mega-link">Vợt cầu lông Victor</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Lining" class="ts-mega-link">Vợt cầu lông Lining</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20C%E1%BA%A7u%20L%C3%B4ng%20VS" class="ts-mega-link">Vợt Cầu Lông VS</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Mizuno" class="ts-mega-link">Vợt cầu lông Mizuno</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Apacs" class="ts-mega-link">Vợt cầu lông Apacs</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20C%E1%BA%A7u%20L%C3%B4ng%20VNB" class="ts-mega-link">Vợt Cầu Lông VNB</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Proace" class="ts-mega-link">Vợt cầu lông Proace</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng%20Forza" class="ts-mega-link">Vợt cầu lông Forza</a></li>
-              <li><a href="pages/shop.html?q=V%E1%BB%A3t%20C%E1%BA%A7u%20L%C3%B4ng%20FlyPower" class="ts-mega-link">Vợt Cầu Lông FlyPower</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=yonex" class="ts-mega-link">Vợt cầu lông Yonex</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=victor" class="ts-mega-link">Vợt cầu lông Victor</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=lining" class="ts-mega-link">Vợt cầu lông Lining</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=vs" class="ts-mega-link">Vợt Cầu Lông VS</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=mizuno" class="ts-mega-link">Vợt cầu lông Mizuno</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=apacs" class="ts-mega-link">Vợt cầu lông Apacs</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=vnb" class="ts-mega-link">Vợt Cầu Lông VNB</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=proace" class="ts-mega-link">Vợt cầu lông Proace</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=forza" class="ts-mega-link">Vợt cầu lông Forza</a></li>
+              <li><a href="pages/shop.html?cat=2&amp;brand_slug=flypower" class="ts-mega-link">Vợt Cầu Lông FlyPower</a></li>
             </ul>
-            <a href="pages/shop.html?q=V%E1%BB%A3t%20c%E1%BA%A7u%20l%C3%B4ng" class="ts-mega-more">Xem thêm</a>
+            <a href="pages/shop.html?cat=2" class="ts-mega-more">Xem thêm</a>
           </div>
 
           <div class="ts-mega-col">
@@ -215,17 +215,16 @@
     </div>
   </nav>
 
-  <!-- BANNER CHÍNH FULL MÀN HÌNH CHỈ CÓ ẢNH (CHUYỂN MƯỢT 2S) -->
   <section class="ts-hero-full-wrap">
     <div class="ts-min-hero-banner ts-hero-slider-only ts-hero-fullscreen js-gsap-hero" id="heroBannerSlider">
       <a href="pages/shop.html" class="ts-hero-slide is-active">
-        <img class="tsport-banner-image" src="assets/banner/banner-1.jpg?v=2" alt="Tsport Banner 1" />
+        <img class="tsport-banner-image" src="assets/banner/banner-1.jpg?v=2" width="1920" height="680" fetchpriority="high" alt="Tsport Banner 1" />
       </a>
       <a href="pages/shop.html" class="ts-hero-slide">
-        <img class="tsport-banner-image" src="assets/banner/banner-2.jpg" alt="Tsport Banner 2" />
+        <img class="tsport-banner-image" src="assets/banner/banner-2.jpg" width="1920" height="680" decoding="async" alt="Tsport Banner 2" />
       </a>
       <a href="pages/shop.html" class="ts-hero-slide">
-        <img class="tsport-banner-image" src="assets/banner/banner-3.jpg" alt="Tsport Banner 3" />
+        <img class="tsport-banner-image" src="assets/banner/banner-3.jpg" width="1920" height="680" decoding="async" alt="Tsport Banner 3" />
       </a>
 
       <div class="ts-hero-slider-dots" id="heroSliderDots">
@@ -239,31 +238,22 @@
   <!-- ==========================================
        TRIỂN LÃM SẢN PHẨM CẦU LÔNG 3D (TƯỜNG CONG WEBGL + CHUYỂN CẢNH GSAP)
        ========================================== -->
-  <section class="ts-bg3d-section" id="sectionBadmintonGallery3D" aria-label="Triển lãm sản phẩm cầu lông 3D">
-    <div class="ts-bg3d-stage" id="bg3dStage">
+  <section class="ts-bg3d-section" id="sectionBadmintonGallery3D" aria-label="Triển lãm sản phẩm cầu lông">
+    <div class="ts-bg3d-stage" id="bg3dStage" hidden>
       <canvas class="ts-bg3d-canvas" id="bg3dCanvas" aria-label="Phòng triển lãm 3D sản phẩm cầu lông"></canvas>
 
       <div class="ts-bg3d-top-hud">
         <div class="ts-bg3d-hud-label">TRIỂN LÃM TSPORT</div>
-        <div class="ts-bg3d-hud-nav">
-          <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dPrev" aria-label="Sản phẩm trước">←</button>
-          <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dOpenCenter" aria-label="Xem chi tiết sản phẩm ở giữa">Xem chi tiết</button>
-          <button type="button" class="ts-bg3d-hud-btn" id="btnBg3dNext" aria-label="Sản phẩm kế tiếp">→</button>
-        </div>
       </div>
 
       <div class="ts-bg3d-bottom-hud">
         <div class="ts-bg3d-coll-eyebrow">YONEX • LINING • VICTOR • MIZUNO</div>
-        <h2 class="ts-bg3d-coll-title">BỘ SƯU TẬP CẦU LÔNG</h2>
+        <h2 class="ts-bg3d-coll-title">Triển lãm</h2>
         <div class="ts-bg3d-coll-sub" id="bg3dCollSub">Cuộn xuống để tiến vào phòng • Chọn sản phẩm để xem chi tiết</div>
       </div>
     </div>
+    <p class="ts-bg3d-fallback" id="bg3dFallback">Đang tải triển lãm 3D…</p>
 
-    <!-- Fallback HTML nếu trình duyệt không hỗ trợ WebGL -->
-    <div class="ts-bg3d-fallback" id="bg3dFallback">
-      <h2 class="ts-bg3d-coll-title" style="margin-bottom:20px;">BỘ SƯU TẬP CẦU LÔNG</h2>
-      <div class="ts-bg3d-fallback-grid" id="bg3dFallbackGrid"></div>
-    </div>
   </section>
 
   <!-- ==========================================
@@ -275,7 +265,6 @@
     <section class="ts-min-section js-gsap-section">
       <div class="ts-tabbox-header">
         <h2 class="ts-tabbox-title">Sản phẩm mới</h2>
-        <div class="ts-tabbox-underline"></div>
       </div>
 
       <div class="ts-featured-drag-viewport" id="homeFeaturedViewport">
@@ -289,7 +278,6 @@
     <section class="ts-min-section js-gsap-section" id="sectionTabbedShowcase">
       <div class="ts-tabbox-header">
         <h2 class="ts-tabbox-title">Sản phẩm nổi bật</h2>
-        <div class="ts-tabbox-underline"></div>
       </div>
 
       <div class="ts-tabbox-shell">
@@ -318,7 +306,6 @@
     <section class="ts-min-section js-gsap-section" id="sectionHomeCourts">
       <div class="ts-tabbox-header">
         <h2 class="ts-tabbox-title">Chọn sân, hẹn giờ, bắt đầu chơi</h2>
-        <div class="ts-tabbox-underline"></div>
       </div>
 
       <div class="ts-tabbox-shell">
@@ -345,7 +332,6 @@
     <section class="ts-min-section js-gsap-section" id="sectionHomeMatches">
       <div class="ts-tabbox-header">
         <h2 class="ts-tabbox-title">Ghép kèo, tìm bạn cùng chơi</h2>
-        <div class="ts-tabbox-underline"></div>
       </div>
 
       <div class="ts-tabbox-shell">
@@ -372,7 +358,6 @@
     <section class="ts-min-section js-gsap-section" id="sectionHomeUsed">
       <div class="ts-tabbox-header">
         <h2 class="ts-tabbox-title">Đồ cũ minh bạch, thêm một cuộc chơi</h2>
-        <div class="ts-tabbox-underline"></div>
       </div>
 
       <div class="ts-tabbox-shell">
@@ -399,7 +384,6 @@
     <section class="ts-min-section js-gsap-section" id="sectionHomeFlashSale">
       <div class="ts-tabbox-header">
         <h2 class="ts-tabbox-title">Sản phẩm Sale theo thời hạn</h2>
-        <div class="ts-tabbox-underline"></div>
       </div>
 
       <div class="ts-tabbox-shell">
@@ -681,6 +665,6 @@
   <script src="js/api.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/modules/home.js"></script>
-  <script src="js/modules/badminton-gallery-3d.js"></script>
+  <script src="js/modules/badminton-gallery-3d.js?v=3"></script>
 </body>
 </html>

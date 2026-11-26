@@ -211,6 +211,8 @@ class MatchPost(Base):
     location: Mapped[str] = mapped_column(String(255), nullable=False, comment="Địa điểm sân giao lưu")
     skill_level: Mapped[str] = mapped_column(String(100), nullable=False, comment="Trình độ")
     contact_info: Mapped[str] = mapped_column(String(255), nullable=False, comment="SĐT / Zalo liên hệ")
+    match_format: Mapped[str] = mapped_column(String(30), nullable=False, default="Đơn", comment="Hình thức đơn/đôi hoặc sân 7")
+    players_needed: Mapped[int] = mapped_column(nullable=False, default=1, comment="Số người còn thiếu cần tuyển")
     status: Mapped[MatchStatusEnum] = mapped_column(
         Enum(MatchStatusEnum), nullable=False, default=MatchStatusEnum.OPEN, index=True, comment="Trạng thái tìm đối"
     )
@@ -225,6 +227,24 @@ class MatchPost(Base):
     __table_args__ = (
         Index("idx_match_posts_sport_time", "sport_id", "match_time"),
         {"comment": "Cộng đồng đăng tin tìm đối thủ và ghép kèo thể thao"},
+    )
+
+
+class MatchParticipant(Base):
+    __tablename__ = "match_participants"
+
+    match_post_id: Mapped[int] = mapped_column(
+        ForeignKey("match_posts.id", ondelete="CASCADE"), primary_key=True
+    )
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"), primary_key=True
+    )
+    full_name: Mapped[str] = mapped_column(String(150), nullable=False)
+    contact_info: Mapped[str] = mapped_column(String(100), nullable=False)
+    skill_level: Mapped[Optional[str]] = mapped_column(String(100))
+    note: Mapped[Optional[str]] = mapped_column(String(500))
+    created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP, nullable=False, server_default=func.current_timestamp()
     )
 
 
