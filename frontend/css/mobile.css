@@ -22,7 +22,7 @@
 
   /* Chừa khoảng trống cho thanh điều hướng dưới cố định */
   body:not(.ts-adm-body) {
-    padding-bottom: 68px;
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
     background: #FFFFFF;
   }
 
@@ -49,8 +49,8 @@
   }
 
   .ts-mob-menu-btn {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: none;
     background: transparent;
@@ -143,8 +143,8 @@
   }
 
   .ts-mob-drawer-close {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border: none;
     background: #F3F4F6;
     color: #374151;
@@ -157,6 +157,7 @@
   .ts-mob-drawer-nav {
     flex: 1;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 12px 10px;
     display: flex;
     flex-direction: column;
@@ -198,7 +199,7 @@
     right: 0;
     bottom: 0;
     z-index: 950;
-    height: 60px;
+    height: calc(60px + env(safe-area-inset-bottom, 0px));
     background: #FFFFFF;
     border-top: 1px solid #E5E7EB;
     padding: 6px 4px env(safe-area-inset-bottom, 0px);
@@ -237,9 +238,9 @@
   /* ==========================================
      4. MOBILE HOMEPAGE (KHỚP WIREFRAME)
      ========================================== */
-  body.tsport-home-body > main,
-  body.tsport-home-body > .ts-min-footer,
-  body.tsport-home-body > .ts-hero-full-wrap {
+  body.tsport-home-page > main,
+  body.tsport-home-page > .ts-min-footer,
+  body.tsport-home-page > .ts-hero-full-wrap {
     display: none !important;
   }
 

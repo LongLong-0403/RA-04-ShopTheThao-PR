@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.exc import IntegrityError, OperationalError
 
 from app import models  # noqa: F401 - import để SQLAlchemy biết các bảng
@@ -16,7 +16,7 @@ from app.core.config import settings
 from app.db.session import Base, SessionLocal, engine
 from app.db.seed_catalog import seed_catalog
 from app.routers import auth, courts, health, items, users, commerce, catalog, activities, media
-from app.services import court_service, item_service, user_service
+from app.services import court_service, item_service
 from app.services.exceptions import ServiceError
 
 
@@ -37,11 +37,38 @@ def init_database() -> None:
 
     # 2. Tự tạo các bảng còn thiếu theo model
     Base.metadata.create_all(bind=engine)
+    with engine.begin() as conn:
+        conn.execute(text("INSERT IGNORE INTO user_identity_guard (id) VALUES (1)"))
+
+    # 2b. Bổ sung các thay đổi schema cho database cũ (create_all không ALTER cột).
+    inspector = inspect(engine)
+    booking_columns = {column["name"] for column in inspector.get_columns("court_bookings")}
+    if "held_marker" not in booking_columns:
+        with engine.begin() as conn:
+            conn.execute(text(
+                "ALTER TABLE court_bookings ADD COLUMN held_marker TINYINT "
+                "GENERATED ALWAYS AS (CASE WHEN status IN ('CHO_XAC_NHAN', 'XAC_NHAN') "
+                "THEN 1 ELSE NULL END) STORED"
+            ))
+    unique_constraints = {item["name"] for item in inspect(engine).get_unique_constraints("court_bookings")}
+    if "uk_held_booking" not in unique_constraints:
+        with engine.begin() as conn:
+            conn.execute(text(
+                "ALTER TABLE court_bookings ADD UNIQUE KEY uk_held_booking "
+                "(court_slot_id, booking_date, held_marker)"
+            ))
+
+    # 2c. Bổ sung trường thông tin bài ghép kèo cho database cũ.
+    match_columns = {column["name"] for column in inspect(engine).get_columns("match_posts")}
+    with engine.begin() as conn:
+        if "match_format" not in match_columns:
+            conn.execute(text("ALTER TABLE match_posts ADD COLUMN match_format VARCHAR(30) NOT NULL DEFAULT 'Đơn'"))
+        if "players_needed" not in match_columns:
+            conn.execute(text("ALTER TABLE match_posts ADD COLUMN players_needed INT NOT NULL DEFAULT 1"))
 
     # 3. Seed dữ liệu mẫu (mỗi hàm tự bỏ qua nếu đã có dữ liệu)
     with SessionLocal() as db:
         item_service.seed_items(db)
-        user_service.seed_users(db)  # 1 Admin + 5 Khách hàng
         court_service.seed_courts(db)
         seed_catalog(db)  # 6 môn, 20 danh mục, 13 hãng, 160 sản phẩm chuẩn hãng
 

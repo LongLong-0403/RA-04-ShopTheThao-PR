@@ -823,21 +823,30 @@ body.tsport-account-body {
 
 @media (max-width: 900px) {
   .ts-acc-v2-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .ts-acc-v2-sidebar {
     min-height: auto;
   }
   .ts-acc-v2-row-3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (max-width: 640px) {
+  .ts-acc-v2-menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ts-acc-v2-menu-link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
   .ts-acc-v2-card {
     padding: 20px 18px;
   }
   .ts-acc-v2-row-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }

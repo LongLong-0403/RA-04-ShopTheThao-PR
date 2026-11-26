@@ -63,11 +63,13 @@
     });
 
     // Cập nhật thông tin tài khoản đăng nhập trên Header
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
     const userLabel = document.querySelector(".js-header-user-label, #headerUserWrap a");
-    if (userLabel && user && (localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
-      userLabel.textContent = user.full_name || user.email || "Tài khoản";
-      userLabel.href = (document.body.dataset.root ?? "../") + "pages/account.html";
+    if (userLabel && typeof watchHeaderSession === "function") {
+      const guestHref = userLabel.getAttribute("href");
+      watchHeaderSession((user) => {
+        userLabel.textContent = user?.full_name || user?.email || "Tài khoản";
+        userLabel.href = user ? (document.body.dataset.root ?? "../") + "pages/account.html" : guestHref;
+      });
     }
 
     // Cập nhật số lượng giỏ hàng trên Header
@@ -169,18 +171,13 @@
     document.body.appendChild(drawerEl);
     document.body.appendChild(bottomNavEl);
 
-    const openBtn = document.getElementById("btnMobSubMenuOpen");
-    const closeBtn = document.getElementById("btnMobSubMenuClose");
-    function closeDrawer() {
-      drawerEl.classList.remove("is-open");
-      backdropEl.classList.remove("is-open");
-    }
-    openBtn?.addEventListener("click", () => {
-      drawerEl.classList.add("is-open");
-      backdropEl.classList.add("is-open");
+    initResponsiveDrawer({
+      toggle: document.getElementById("btnMobSubMenuOpen"),
+      drawer: drawerEl,
+      close: document.getElementById("btnMobSubMenuClose"),
+      backdrop: backdropEl,
+      breakpoint: 768
     });
-    closeBtn?.addEventListener("click", closeDrawer);
-    backdropEl.addEventListener("click", closeDrawer);
   }
 
   document.addEventListener("DOMContentLoaded", initHeader);

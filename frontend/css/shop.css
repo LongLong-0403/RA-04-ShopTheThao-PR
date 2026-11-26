@@ -534,7 +534,7 @@
 
 .ts-shop-layout-v2 {
   display: grid;
-  grid-template-columns: 230px 1fr;
+  grid-template-columns: 230px minmax(0, 1fr);
   gap: 24px;
   align-items: start;
 }
@@ -704,7 +704,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center 22%;
-  image-rendering: -webkit-optimize-contrast;
   display: block;
 }
 
@@ -786,7 +785,7 @@
 
 .ts-shop-grid-v2 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -821,7 +820,7 @@
 .ts-shop-card-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   transition: transform 0.35s ease;
 }
@@ -890,10 +889,19 @@
 /* PHÂN TRANG VUÔNG CĂN GIỮA CHUẨN ẢNH */
 .ts-shop-pagination-v2 {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 8px;
   margin-top: 32px;
+}
+
+.ts-shop-pagination-v2:empty { display: none; }
+
+.ts-page-gap {
+  color: #4b5563;
+  min-width: 1ch;
+  text-align: center;
 }
 
 .ts-shop-page-btn {
@@ -931,8 +939,12 @@
 
 @media (max-width: 960px) {
   .ts-shop-grid-v2 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+.ts-shop-filter-backdrop {
+  display: none;
 }
 
 @media (max-width: 768px) {
@@ -946,31 +958,45 @@
     font-size: 18px;
   }
   .ts-shop-layout-v2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .ts-shop-mobile-filter-btn {
     display: inline-flex;
+    min-height: 44px;
   }
   .ts-shop-mobile-close {
     display: inline-block;
+    min-width: 44px;
+    min-height: 44px;
   }
   .ts-shop-sidebar-v2 {
     position: fixed;
     top: 0;
     left: -100%;
-    width: 280px;
-    height: 100vh;
+    width: min(320px, 88vw);
+    height: 100dvh;
     z-index: 1200;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    visibility: hidden;
     border-radius: 0;
     box-shadow: 0 12px 32px rgba(15, 23, 42, 0.22);
-    transition: left 0.3s ease;
+    transition: left 0.3s ease, visibility 0.3s;
   }
   .ts-shop-sidebar-v2.is-open {
     left: 0;
+    visibility: visible;
+    transition: left 0.3s ease;
+  }
+  .ts-shop-filter-backdrop.is-open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1199;
+    background: rgba(17, 24, 39, 0.45);
   }
   .ts-shop-grid-v2 {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 }

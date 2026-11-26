@@ -6,11 +6,17 @@
 
 (function () {
   let currentOrderId = null;
+  let orderRows = [];
+  let detailRevision = 0;
 
-  function initAdminOrders() {
+  async function initAdminOrders() {
+    orderRows = (await api.get("/orders")).map(orderView);
     initTopbarControls();
     renderOrdersTable();
     bindEvents();
+    const code = new URLSearchParams(location.search).get("code");
+    const order = orderRows.find(row => row.order_code === code);
+    if (order) await openOrderDetail(order.id);
   }
 
   function initTopbarControls() {
@@ -27,14 +33,14 @@
       localStorage.removeItem("tsport_current_user");
       window.location.href = "auth.html";
     });
-    document.getElementById("btnToggleAdminSidebar")?.addEventListener("click", () => {
-      document.getElementById("adminSidebar")?.classList.toggle("is-open");
-    });
   }
+
+  const pageSize = 10;
+  let currentPage = 1;
 
   function formatDMY(str) {
     if (!str) return "";
-    const parts = String(str).split(" ")[0].split("-");
+    const parts = String(str).slice(0, 10).split("-");
     if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
     return str;
   }
@@ -66,6 +72,7 @@
   }
 
   function showListView() {
+    detailRevision++;
     currentOrderId = null;
     document.getElementById("admOrdersListView").style.display = "block";
     document.getElementById("admOrderDetailView").style.display = "none";
@@ -77,13 +84,12 @@
 
   function renderOrdersTable() {
     const tbody = document.getElementById("admOrdersTbody");
-    const store = window.tsportStore;
-    if (!tbody || !store) return;
+    if (!tbody) return;
 
     const q = (document.getElementById("admOrderSearch")?.value || "").trim().toLowerCase();
     const statusFilter = document.getElementById("admOrderStatusFilter")?.value || "ALL";
 
-    let orders = store.getOrders() || [];
+    let orders = orderRows;
     if (statusFilter !== "ALL") {
       orders = orders.filter((o) => o.status === statusFilter);
     }
@@ -93,6 +99,10 @@
         return hay.includes(q);
       });
     }
+
+    const totalPages = Math.ceil(orders.length / pageSize);
+    currentPage = Math.max(1, Math.min(currentPage, totalPages));
+    renderCompactPagination(document.getElementById("admOrdersPagination"), totalPages, currentPage);
 
     if (orders.length === 0) {
       tbody.innerHTML = `
@@ -106,6 +116,7 @@
     }
 
     tbody.innerHTML = orders
+      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
       .map((o) => {
         const st = getStatusMeta(o.status);
         return `
@@ -129,16 +140,17 @@
       .join("");
   }
 
-  function openOrderDetail(orderId) {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    const order = (store.getOrders() || []).find((o) => Number(o.id) === Number(orderId));
-    if (!order) {
-      showListView();
+  async function openOrderDetail(orderId) {
+    const revision = ++detailRevision;
+    let order;
+    try {
+      order = await loadOrderDetail(orderId);
+    } catch (error) {
+      if (revision === detailRevision) showToast(error.message, "error");
       return;
     }
-
+    if (revision !== detailRevision) return;
+    orderRows = orderRows.map(row => row.id === order.id ? order : row);
     currentOrderId = order.id;
     document.getElementById("admOrdersListView").style.display = "none";
     document.getElementById("admOrderDetailView").style.display = "block";
@@ -228,9 +240,20 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  async function updateStatus(id, status) {
+    const updated = await api.patch("/orders/" + id + "/status", { status });
+    orderRows = orderRows.map(row => row.id === id ? { ...row, status: updated.status } : row);
+  }
+
   function bindEvents() {
-    document.getElementById("admOrderSearch")?.addEventListener("input", renderOrdersTable);
-    document.getElementById("admOrderStatusFilter")?.addEventListener("change", renderOrdersTable);
+    document.getElementById("admOrdersPagination")?.addEventListener("click", event => {
+      const button = event.target.closest("button[data-page]");
+      if (!button || button.disabled) return;
+      currentPage = Number(button.dataset.page);
+      renderOrdersTable();
+    });
+    document.getElementById("admOrderSearch")?.addEventListener("input", () => { currentPage = 1; renderOrdersTable(); });
+    document.getElementById("admOrderStatusFilter")?.addEventListener("change", () => { currentPage = 1; renderOrdersTable(); });
 
     document.getElementById("admOrdersTbody")?.addEventListener("click", (e) => {
       const btn = e.target.closest(".js-open-adm-order");
@@ -243,9 +266,7 @@
     });
 
     document.getElementById("btnOpenPendingOrder")?.addEventListener("click", () => {
-      const store = window.tsportStore;
-      if (!store) return;
-      const pending = (store.getOrders() || []).find((o) => o.status === "PENDING");
+      const pending = orderRows.find((o) => o.status === "PENDING");
       if (pending) {
         openOrderDetail(pending.id);
       } else {
@@ -255,10 +276,9 @@
 
     document.getElementById("btnBackToAdmOrders")?.addEventListener("click", showListView);
 
-    function advanceCurrentOrder(expectedNext) {
-      const store = window.tsportStore;
-      if (!store || !currentOrderId) return;
-      const order = (store.getOrders() || []).find((o) => Number(o.id) === Number(currentOrderId));
+    async function advanceCurrentOrder(expectedNext) {
+      if (!currentOrderId) return;
+      const order = orderRows.find((o) => Number(o.id) === Number(currentOrderId));
       if (!order) return;
 
       const st = getStatusMeta(order.status);
@@ -266,12 +286,7 @@
       if (!nextStatus) return;
 
       try {
-        if (typeof store.updateOrderStatus === "function") {
-          store.updateOrderStatus(order.id, nextStatus);
-        } else {
-          order.status = nextStatus;
-          store.save();
-        }
+        await updateStatus(order.id, nextStatus);
         showToast(`Đã chuyển đơn ${order.order_code} sang ${nextStatus}!`, "success");
         openOrderDetail(order.id);
       } catch (err) {
@@ -283,14 +298,15 @@
     document.getElementById("btnAdmNextOrderStatus")?.addEventListener("click", () => advanceCurrentOrder(null));
 
     document.getElementById("btnAdmCancelOrder")?.addEventListener("click", async () => {
-      const store = window.tsportStore;
-      if (!store || !currentOrderId) return;
+      if (!currentOrderId) return;
+      const id = currentOrderId;
       if (!(await confirmAction("Xác nhận hủy đơn hàng này và hoàn lại tồn kho?", "Hủy đơn hàng"))) return;
 
       try {
-        store.cancelOrder(currentOrderId);
+        await updateStatus(id, "CANCELLED");
         showToast("Đã hủy đơn hàng và hoàn tồn kho thành công!", "success");
-        openOrderDetail(currentOrderId);
+        if (currentOrderId === id) await openOrderDetail(id);
+        else if (!currentOrderId) renderOrdersTable();
       } catch (err) {
         showToast(err.message || "Không thể hủy đơn hàng này.", "error");
       }

@@ -87,7 +87,7 @@
       const cat = cats.find((c) => Number(c.id) === Number(p.category_id))?.name || "Cầu lông";
       const skus = Array.isArray(p.skus) && p.skus.length ? p.skus : [{ id: p.id, size: "Tiêu chuẩn", color: "Nguyên bản", price: 1500000, stock: 10 }];
       const minPrice = Math.min(...skus.map((s) => Number(s.sale_price || s.price) || 0));
-      const img = p.images?.[0]?.image_url || "/frontend/assets/products/catalog/p001.webp";
+      const img = storefrontImageUrl(p.images?.[0]?.image_url || "/assets/products/catalog/p001.webp");
 
       // Phối hợp khung đứng và khung ngang kích thước lớn rõ nét
       const isLandscape = Number(p.category_id) === 6 || (idx % 4 === 2);
@@ -143,8 +143,7 @@
         alpha: false,
         powerPreference: "high-performance"
       });
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-      this.renderer.setSize(rect.width, rect.height, false);
+      this._setRenderSize(rect);
       if (THREE.SRGBColorSpace) {
         this.renderer.outputColorSpace = THREE.SRGBColorSpace;
       }
@@ -241,6 +240,13 @@
       this.scene.add(new THREE.AmbientLight(0xffffff, 1.0));
     }
 
+    _setRenderSize({ width, height }) {
+      // Keep high-density displays sharp within a bounded GPU pixel count.
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2, Math.sqrt(3000000 / (width * height)));
+      this.renderer.setPixelRatio(pixelRatio);
+      this.renderer.setSize(width, height, false);
+    }
+
     resize() {
       const rect = this.container.getBoundingClientRect();
       if (!rect.width || !rect.height) return;
@@ -248,7 +254,7 @@
       this.camera.fov = isMobile ? BADMINTON_GALLERY_CONFIG.cameraMobileFov : BADMINTON_GALLERY_CONFIG.cameraFov;
       this.camera.aspect = rect.width / rect.height;
       this.camera.updateProjectionMatrix();
-      this.renderer.setSize(rect.width, rect.height, false);
+      this._setRenderSize(rect);
     }
 
     render() {
@@ -373,7 +379,7 @@
       img.onload = () => {
         this.loadedImage = img;
         const c = document.createElement("canvas");
-        const cw = 768;
+        const cw = Math.max(768, Math.min(1200, img.naturalWidth));
         const ch = Math.round(cw * (item.height / item.width));
         c.width = cw;
         c.height = ch;
@@ -389,6 +395,7 @@
         const scale = Math.min(availW / img.naturalWidth, availH / img.naturalHeight);
         const dw = img.naturalWidth * scale;
         const dh = img.naturalHeight * scale;
+        ctx.imageSmoothingQuality = "high";
         ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
 
         // Đường viền mảnh cực nhẹ phân tách ảnh trắng trên tường trắng xám
@@ -679,12 +686,15 @@
       });
 
       // Add to bag
-      document.getElementById("btnBg3dAddToBag")?.addEventListener("click", () => {
+      document.getElementById("btnBg3dAddToBag")?.addEventListener("click", async (event) => {
         if (!this.activeArtwork || !window.tsportStore) return;
+        const button = event.currentTarget;
         const prod = this.activeArtwork.item;
         const sku = this.selectedSku || prod.skus[0];
+        if (!sku) return;
+        button.disabled = true;
         try {
-          window.tsportStore.addToCart(prod.id, sku.id, this.qty);
+          await window.tsportStore.addToCart(prod.id, sku.id, this.qty);
           const total = window.tsportStore.getCartTotals().totalItems;
           document.querySelectorAll(".js-cart-count").forEach((el) => {
             el.textContent = String(total);
@@ -702,7 +712,9 @@
             });
           }
         } catch (err) {
-          if (typeof showToast === "function") showToast(err.message || "Không thể thêm vào giỏ", "error");
+          handleAddToCartError(err, prod.id);
+        } finally {
+          button.disabled = false;
         }
       });
     }
@@ -1020,11 +1032,13 @@
     const stageEl = document.getElementById("bg3dStage");
     const canvasEl = document.getElementById("bg3dCanvas");
     const fallbackEl = document.getElementById("bg3dFallback");
-    const fallbackGrid = document.getElementById("bg3dFallbackGrid");
     if (!sectionEl || !stageEl || !canvasEl) return;
 
     const items = getBadmintonCatalog();
-    if (!items.length) return;
+    if (!items.length) {
+      showFallback();
+      return;
+    }
 
     // Kiểm tra WebGL + Three.js
     let webglOk = false;
@@ -1035,27 +1049,26 @@
       webglOk = false;
     }
 
-    if (!webglOk) {
-      stageEl.style.display = "none";
-      if (fallbackEl && fallbackGrid) {
-        fallbackEl.classList.add("is-visible");
-        fallbackGrid.innerHTML = items
-          .map(
-            (it) => `
-            <a href="pages/product-detail.html?id=${it.id}" class="ts-bg3d-fallback-item" style="text-decoration:none; color:inherit;">
-              <img src="${escapeHtml(it.image)}" alt="${escapeHtml(it.title)}" loading="lazy" />
-              <div class="ts-bg3d-rel-name">${escapeHtml(it.title)}</div>
-              <div class="ts-bg3d-rel-price">${formatVND(it.price)}</div>
-            </a>
-          `
-          )
-          .join("");
-      }
-      return;
+    function showFallback() {
+      stageEl.hidden = true;
+      if (fallbackEl) fallbackEl.textContent = "Hiện không thể mở triển lãm 3D.";
     }
 
+    if (!webglOk) {
+      showFallback();
+      return;
+    }
     const THREE = window.THREE;
-    const sceneObj = new GalleryScene(canvasEl, stageEl);
+    let sceneObj;
+    stageEl.hidden = false;
+    try {
+      sceneObj = new GalleryScene(canvasEl, stageEl);
+    } catch (error) {
+      console.warn("Không khởi tạo được bộ sưu tập 3D:", error);
+      showFallback();
+      return;
+    }
+    if (fallbackEl) fallbackEl.hidden = true;
     const artworks = items.map((item, idx) => {
       const aw = new ArtworkMesh(item, idx, items.length);
       sceneObj.galleryGroup.add(aw.group);
@@ -1129,7 +1142,7 @@
         progress: 1,
         ease: "none",
         scrollTrigger: {
-          trigger: sectionEl,
+          trigger: stageEl,
           start: () => {
             const header = document.querySelector(".ts-min-header");
             const mobileHeader = document.querySelector(".ts-mob-header");

@@ -1,6 +1,6 @@
 /**
  * TSPORT — MODULE TỔNG QUAN QUẢN TRỊ (ADMIN DASHBOARD V2 FIGMA)
- * - Nạp 4 chỉ số KPI live từ tsportStore (Đơn cần xử lý, Lịch sân chờ duyệt, Yêu cầu thu mua, SKU hết hàng)
+ * - Hiển thị số liệu vận hành từ backend
  * - Tổng hợp bảng "Công việc cần xử lý" từ Đặt sân, Đơn hàng và Thu mua đồ cũ
  */
 
@@ -11,14 +11,14 @@
 
   function formatShortDate(str) {
     if (!str) return "";
-    const parts = String(str).split(" ")[0].split("-");
+    const parts = String(str).slice(0, 10).split("-");
     if (parts.length === 3) return `${parts[2]}/${parts[1]}`;
     return str;
   }
 
   function initAdminDashboard() {
     initTopbarControls();
-    renderKpisAndTasks();
+    loadDashboard();
     initBannerEditors();
   }
 
@@ -38,7 +38,7 @@
     const layoutInputs = ["fit", "zoom", "x", "y"].map((name) => form.elements.namedItem(name));
     const deviceLabel = document.getElementById("adminBannerDeviceLabel");
     const drafts = new Map();
-    const original = (index) => `/frontend/assets/banner/banner-${index}.jpg${index === "1" ? "?v=2" : ""}`;
+    const original = (index) => `/assets/banner/banner-${index}.jpg${index === "1" ? "?v=2" : ""}`;
     let published;
     let previewVersion = 0;
     let reading = false;
@@ -242,24 +242,29 @@
       window.location.href = "auth.html";
     });
 
-    const sidebar = document.getElementById("adminSidebar");
-    document.getElementById("btnToggleAdminSidebar")?.addEventListener("click", () => {
-      sidebar?.classList.toggle("is-open");
-    });
   }
 
-  function renderKpisAndTasks() {
-    const store = window.tsportStore;
-    if (!store) return;
+  async function loadDashboard() {
+    const message = document.getElementById("adminDashboardStatus");
+    try {
+      const [orders, bookings, buybacks, matches, catalog] = await Promise.all([
+        api.get("/orders"), api.get("/bookings"), api.get("/buyback-requests"),
+        api.get("/admin/match-posts"), api.get("/catalog/bootstrap")
+      ]);
+      renderKpisAndTasks(orders.map(orderView), bookings, buybacks, catalog.products);
+      renderChart([orders, bookings, buybacks, matches]);
+      renderMatches(matches);
+      message.hidden = true;
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  }
 
-    const orders = store.getOrders() || [];
-    const bookings = store.getBookings() || [];
-    const buybacks = store.getBuybacks() || [];
-    const products = store.getProducts({ status: "ACTIVE" }) || [];
-
-    const pendingOrders = orders.filter((o) => o.status === "PENDING");
-    const pendingBookings = bookings.filter((b) => b.status === "PENDING");
-    const pendingBuybacks = buybacks.filter((b) => b.status === "PENDING" || b.status === "CHO_DUYET");
+  function renderKpisAndTasks(orders, bookings, buybacks, products) {
+    const pendingOrders = orders.filter(row => row.status === "PENDING");
+    const pendingBookings = bookings.filter(row => row.status === "CHO_XAC_NHAN");
+    const pendingBuybacks = buybacks.filter(row => row.status === "PENDING");
+    products = products.filter(row => row.status === "ACTIVE");
 
     let outOfStockSkus = 0;
     products.forEach((p) => {
@@ -288,7 +293,7 @@
         content: `${b.court_name} • ${formatShortDate(b.booking_date)}`,
         statusLabel: "Chờ xác nhận",
         statusCls: "is-pending",
-        href: "admin-courts.html"
+        href: "admin-bookings.html"
       });
     });
 
@@ -299,7 +304,7 @@
         content: o.order_code,
         statusLabel: "Chờ xác nhận",
         statusCls: "is-pending",
-        href: "admin-orders.html"
+        href: "admin-orders.html?code=" + encodeURIComponent(o.order_code)
       });
     });
 
@@ -307,62 +312,82 @@
       tasks.push({
         type: "Thu mua",
         customer: bb.customer_name || "Khách hàng",
-        content: bb.product_name,
+        content: bb.brand_model,
         statusLabel: "Chờ thẩm định",
         statusCls: "",
-        href: "admin-buyback.html"
+        href: "admin-buyback.html?id=" + bb.id
       });
     });
-
-    // Nếu chưa có công việc chờ nào, hiển thị các mục gần nhất
-    if (tasks.length === 0) {
-      if (bookings[0]) {
-        tasks.push({
-          type: "Đặt sân",
-          customer: bookings[0].customer_name || "Nguyễn Minh Anh",
-          content: `${bookings[0].court_name} • ${formatShortDate(bookings[0].booking_date)}`,
-          statusLabel: "Chờ xác nhận",
-          statusCls: "is-pending",
-          href: "admin-courts.html"
-        });
-      }
-      if (orders[0]) {
-        tasks.push({
-          type: "Đơn hàng",
-          customer: orders[0].customer_name || "Trần Hoàng",
-          content: orders[0].order_code,
-          statusLabel: "Chờ xác nhận",
-          statusCls: "is-pending",
-          href: "admin-orders.html"
-        });
-      }
-      if (buybacks[0]) {
-        tasks.push({
-          type: "Thu mua",
-          customer: buybacks[0].customer_name || "Lê Linh",
-          content: buybacks[0].product_name,
-          statusLabel: "Chờ thẩm định",
-          statusCls: "",
-          href: "admin-buyback.html"
-        });
-      }
-    }
 
     const tbody = document.getElementById("adminPendingTasksTbody");
     if (!tbody) return;
 
+    if (!tasks.length) {
+      tbody.innerHTML = '<tr><td colspan="4">Không có công việc đang chờ xử lý.</td></tr>';
+      return;
+    }
     tbody.innerHTML = tasks
       .map(
         (t) => `
-        <tr onclick="window.location.href='${t.href}'">
+        <tr>
           <td>${escapeHtml(t.type)}</td>
           <td>${escapeHtml(t.customer)}</td>
-          <td>${escapeHtml(t.content)}</td>
+          <td><a href="${escapeHtml(t.href)}">${escapeHtml(t.content)}</a></td>
           <td><span class="ts-orders-v2-status ${t.statusCls}">${escapeHtml(t.statusLabel)}</span></td>
         </tr>
       `
       )
       .join("");
+  }
+
+  function renderChart(series) {
+    const labels = ["Đơn hàng", "Đặt sân", "Thu mua", "Bài ghép kèo"];
+    const isoDate = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Ho_Chi_Minh",
+      year: "numeric", month: "2-digit", day: "2-digit" });
+    const latest = Date.parse(isoDate.format(new Date()) + "T00:00:00Z");
+    const days = Array.from({ length: 7 }, (_, index) =>
+      new Date(latest - (6 - index) * 86400000).toISOString().slice(0, 10));
+    const totals = series.map(rows => {
+      const counts = new Map();
+      for (const row of rows) {
+        const day = row.created_at?.slice(0, 10);
+        if (day) counts.set(day, (counts.get(day) || 0) + 1);
+      }
+      return days.map(day => counts.get(day) || 0);
+    });
+    const max = Math.max(1, ...totals.flat());
+    document.getElementById("adminChartLegend").innerHTML = labels.map((label, index) =>
+      `<li class="ts-chart-series-${index}"><i aria-hidden="true"></i>${label}</li>`).join("");
+    document.getElementById("adminActivityChart").innerHTML = days.map((day, index) => {
+      const shortDate = formatShortDate(day).slice(0, 5);
+      const summary = labels.map((label, type) => `${label} ${totals[type][index]}`).join(", ");
+      return `<li aria-label="${shortDate}, ${summary}" title="${summary}">
+        <div class="ts-chart-bars" aria-hidden="true">${totals.map((values, type) =>
+          `<span class="ts-chart-series-${type}" style="--bar-height:${values[index] / max * 100}%">${values[index] ? "<b>" + values[index] + "</b>" : ""}</span>`).join("")}</div>
+        <time datetime="${day}">${shortDate}</time></li>`;
+    }).join("");
+  }
+
+  function renderMatches(matches) {
+    const statuses = { OPEN: "Đang tuyển", FULL: "Đã đủ người", CLOSED: "Đã đóng",
+      CANCELLED: "Đã hủy", EXPIRED: "Đã qua giờ" };
+    const tbody = document.getElementById("adminMatchesTbody");
+    const pagination = document.getElementById("adminMatchesPagination");
+    const pageSize = 10;
+    function renderPage(page) {
+      tbody.innerHTML = matches.slice((page - 1) * pageSize, page * pageSize).map(row =>
+        `<tr><td>${escapeHtml(row.customer_name)}</td><td>${escapeHtml(row.location)}</td>
+         <td>${escapeHtml(formatShortDate(row.match_time))} ${escapeHtml(row.match_time.slice(11, 16))}</td>
+         <td>${escapeHtml(statuses[row.registration_status])}</td>
+         <td>${row.participants.length ? escapeHtml(row.participants.join(", ")) : "—"}</td></tr>`
+      ).join("") || '<tr><td colspan="5">Chưa có bài ghép kèo.</td></tr>';
+      renderCompactPagination(pagination, Math.ceil(matches.length / pageSize), page);
+    }
+    pagination.addEventListener("click", event => {
+      const button = event.target.closest("button[data-page]");
+      if (button && !button.disabled) renderPage(Number(button.dataset.page));
+    });
+    renderPage(1);
   }
 
   function escapeHtml(str) {

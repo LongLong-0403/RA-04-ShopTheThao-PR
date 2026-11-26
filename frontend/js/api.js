@@ -26,6 +26,16 @@ const TSPORT_API_BASE =
     : "http://127.0.0.1:8000/api";
 window.TSPORT_API_BASE = TSPORT_API_BASE;
 
+function getSessionToken() {
+  return localStorage.getItem("token") || localStorage.getItem("tsport_token");
+}
+
+function clearLocalSession() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("tsport_token");
+  localStorage.removeItem("tsport_current_user");
+}
+
 const http = axios.create({
   baseURL: TSPORT_API_BASE,
   timeout: 10000, // quá 10 giây không phản hồi thì báo lỗi
@@ -34,7 +44,7 @@ const http = axios.create({
 
 // Tự động gắn Token đăng nhập cho mọi request khi đã đăng nhập (JWT Bearer Token):
 http.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token") || localStorage.getItem("tsport_token");
+  const token = getSessionToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -76,12 +86,69 @@ const api = {
 };
 window.api = api;
 
+async function verifyCartCustomer() {
+  const token = getSessionToken();
+  const signInRequired = () => new ApiError("Hãy đăng nhập để thêm sản phẩm vào giỏ hàng.", 401);
+  if (!token) throw signInRequired();
+  let user;
+  try {
+    user = await api.get("/auth/me");
+  } catch (error) {
+    if (error.status !== 401) throw error;
+    if (token === getSessionToken()) clearLocalSession();
+    throw signInRequired();
+  }
+  if (token !== getSessionToken()) throw signInRequired();
+  if (user.role !== "CUSTOMER") throw new ApiError("Hãy dùng tài khoản khách hàng để thêm sản phẩm vào giỏ hàng.", 403);
+  return user;
+}
+
+function handleAddToCartError(error, productId) {
+  if (error.status === 401) {
+    const root = document.body.dataset.root ?? "../";
+    location.href = `${root}pages/auth.html?product=${encodeURIComponent(productId)}`;
+    return;
+  }
+  showToast(error.message || "Không thể thêm vào giỏ hàng.", "error");
+}
+
+function watchHeaderSession(render) {
+  let revision = 0;
+
+  async function refresh() {
+    const currentRevision = ++revision;
+    const token = getSessionToken();
+    render(null);
+    if (!token) {
+      clearLocalSession();
+      return;
+    }
+
+    try {
+      const user = await api.get("/auth/me");
+      if (currentRevision === revision && token === getSessionToken()) render(user);
+    } catch (error) {
+      if (error.status === 401 && currentRevision === revision && token === getSessionToken()) {
+        clearLocalSession();
+      }
+    }
+  }
+
+  window.addEventListener("storage", (event) => {
+    if (event.key === null || event.key === "token" || event.key === "tsport_token") refresh();
+  });
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) refresh();
+  });
+  refresh();
+}
+
 async function initRolePage(init, role) {
   try {
     const user = await api.get("/auth/me");
     if (user.role !== role) { location.replace(user.role === "ADMIN" ? "admin-dashboard.html" : "account.html"); return; }
     document.body.hidden = false;
-    await init();
+    await init(user);
   } catch (error) {
     if (error.status === 401) location.replace("auth.html");
     else { document.body.textContent = error.message; document.body.hidden = false; }
@@ -97,6 +164,11 @@ function matchView(row) {
     level: row.skill_level, contact_phone: row.contact_info};
 }
 
+function matchAvailability(match) {
+  const labels = { CANCELLED: "Đã hủy", FULL: "Đã đủ người", CLOSED: "Đã đóng", EXPIRED: "Đã qua giờ" };
+  return labels[match.registration_status] || `Thiếu ${match.players_needed} người`;
+}
+
 window.addEventListener("load", async () => {
   const links = document.querySelectorAll("[data-admin-link]");
   if (!links.length || !(localStorage.getItem("token") || localStorage.getItem("tsport_token"))) return;
@@ -105,3 +177,14 @@ window.addEventListener("load", async () => {
     for (const link of links) link.hidden = user.role !== "ADMIN";
   } catch { /* Giữ ẩn liên kết khi chưa xác minh được phiên. */ }
 });
+
+function orderView(row) {
+  return { ...row, customer_name: row.receiver_name, phone: row.receiver_phone, address: row.shipping_address };
+}
+
+async function loadOrderDetail(id) {
+  const { order, items } = await api.get(`/orders/${id}`);
+  return { ...orderView(order), items: items.map(item => ({
+    ...item, condition_type: item.condition_at_order, sku_id: item.product_sku_id
+  })) };
+}

@@ -10,103 +10,13 @@
 
 (function () {
   let isSubmitting = false;
-  let appliedCoupon = null;
+  let checkoutItems = null;
 
-  function updateCheckoutTotals() {
-    const store = window.tsportStore;
-    if (!store) return;
-    const totals = store.getCartTotals();
-    const subtotalEl = document.getElementById("checkoutSubtotal");
-    const grandTotalEl = document.getElementById("checkoutGrandTotal");
-    const rowDiscount = document.getElementById("rowDiscount");
-    const appliedTag = document.getElementById("appliedCouponTag");
-    const discountAmountEl = document.getElementById("checkoutDiscountAmount");
-    const msgEl = document.getElementById("couponStatusMsg");
-
-    if (subtotalEl) subtotalEl.textContent = formatMoney(totals.subtotal);
-
-    if (appliedCoupon) {
-      const valRes = store.validateAndCalculateCoupon(appliedCoupon.code, totals.subtotal);
-      if (valRes.valid) {
-        if (rowDiscount) rowDiscount.style.display = "flex";
-        if (appliedTag) appliedTag.textContent = appliedCoupon.code;
-        if (discountAmountEl) discountAmountEl.textContent = `-${formatMoney(valRes.discount_amount)}`;
-        if (grandTotalEl) grandTotalEl.textContent = formatMoney(valRes.final_total);
-        if (msgEl) {
-          msgEl.style.display = "block";
-          msgEl.style.color = "#16A34A";
-          msgEl.textContent = valRes.message;
-        }
-      } else {
-        appliedCoupon = null;
-        if (rowDiscount) rowDiscount.style.display = "none";
-        if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
-        if (msgEl) {
-          msgEl.style.display = "block";
-          msgEl.style.color = "#DC2626";
-          msgEl.textContent = valRes.message;
-        }
-      }
-    } else {
-      if (rowDiscount) rowDiscount.style.display = "none";
-      if (grandTotalEl) grandTotalEl.textContent = formatMoney(totals.grandTotal);
-    }
-  }
-
-  function handleApplyCoupon() {
-    const store = window.tsportStore;
-    const input = document.getElementById("inputCheckoutCoupon");
-    const msgEl = document.getElementById("couponStatusMsg");
-    if (!input || !store) return;
-
-    const code = input.value.trim().toUpperCase();
-    if (!code) {
-      if (msgEl) {
-        msgEl.style.display = "block";
-        msgEl.style.color = "#DC2626";
-        msgEl.textContent = "Vui lòng nhập mã giảm giá!";
-      }
-      return;
-    }
-
-    const totals = store.getCartTotals();
-    const res = store.validateAndCalculateCoupon(code, totals.subtotal);
-
-    if (res.valid) {
-      appliedCoupon = res.coupon;
-      input.value = res.coupon.code;
-      updateCheckoutTotals();
-      showToast(`Áp dụng thành công mã "${res.coupon.code}"!`, "success");
-    } else {
-      appliedCoupon = null;
-      updateCheckoutTotals();
-      if (msgEl) {
-        msgEl.style.display = "block";
-        msgEl.style.color = "#DC2626";
-        msgEl.textContent = res.message;
-      }
-      showToast(res.message, "error");
-    }
-  }
-
-  function handleRemoveCoupon() {
-    appliedCoupon = null;
-    const input = document.getElementById("inputCheckoutCoupon");
-    const msgEl = document.getElementById("couponStatusMsg");
-    if (input) input.value = "";
-    if (msgEl) {
-      msgEl.style.display = "none";
-      msgEl.textContent = "";
-    }
-    updateCheckoutTotals();
-    showToast("Đã hủy áp dụng mã giảm giá.", "success");
-  }
-
-  function initCartModule() {
+  async function initCartModule(user) {
     initCartHeaderSearch();
     renderCartPage();
     renderCartRecommendations();
-    initCheckoutPage();
+    await initCheckoutPage(user);
     bindCartEvents();
   }
 
@@ -134,7 +44,7 @@
     // Nhân đôi danh sách để trượt vô tận mượt từ trái sang phải và kéo chuột thoải mái
     const list = baseList.length ? [...baseList, ...baseList] : [];
 
-    const fallbackImg = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
+    const fallbackImg = "/assets/products/victor-auraspeed-90k-ii.png";
     const promoDiscounts = [18, 0, 15, 0, 22, 25];
 
     grid.innerHTML = list
@@ -167,7 +77,7 @@
             <div class="ts-cart-rec-media">
               ${discountPct > 0 ? `<span class="ts-cart-rec-discount">- ${discountPct}%</span>` : ""}
               <img
-                src="${escapeHtml(primaryImg.image_url)}"
+                src="${escapeHtml(storefrontImageUrl(primaryImg.image_url))}"
                 alt="${escapeHtml(p.name)}"
                 loading="lazy"
                 draggable="false"
@@ -377,7 +287,7 @@
       return `
         <article class="ts-cart-v2-item" data-sku-id="${item.sku_id}">
           <a href="${detailUrl}" class="ts-cart-v2-thumb">
-            <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.product_name)}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
+            <img src="${escapeHtml(storefrontImageUrl(item.image_url))}" alt="${escapeHtml(item.product_name)}" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
           </a>
 
           <div class="ts-cart-v2-info">
@@ -440,7 +350,7 @@
       EWALLET_VNPAY: "Ví VNPay"
     };
 
-    if (codeEl) codeEl.textContent = order.order_code || "ORD-20261107-001";
+    if (codeEl) codeEl.textContent = order.order_code;
     if (totalEl) totalEl.textContent = formatCartMoney(order.total_amount || 0);
     if (payEl) payEl.textContent = payMap[order.payment_method] || order.payment_method || "COD";
     if (detailBtn) detailBtn.href = `orders.html?code=${encodeURIComponent(order.order_code || "")}`;
@@ -450,15 +360,19 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function getCheckoutTotalsForItems(items) {
+    const subtotal = items.reduce((sum, item) => sum + Number(item.price) * Number(item.quantity), 0);
+    return { items, totalItems: items.reduce((sum, item) => sum + Number(item.quantity), 0), subtotal, shipping: 0, grandTotal: subtotal };
+  }
+
   // 2. KHỞI TẠO TRANG CHECKOUT
-  function initCheckoutPage() {
+  async function initCheckoutPage(user) {
     const checkoutForm = document.getElementById("formCheckout");
     if (!checkoutForm) return;
 
     const urlParams = typeof getUrlParams === "function" ? getUrlParams() : {};
     if (urlParams.success === "1" || urlParams.order) {
-      const store = window.tsportStore;
-      const orders = store?.getOrders() || [];
+      const orders = await api.get("/orders");
       const order = urlParams.order ? orders.find(row => row.order_code === urlParams.order) : orders[0];
       if (order) { showCheckoutSuccessView(order); return; }
     }
@@ -466,11 +380,19 @@
     const store = window.tsportStore;
     if (!store) return;
 
-    const totals = store.getCartTotals();
+    const directItems = typeof getUrlParams === "function" && getUrlParams().direct === "1"
+      ? (() => {
+          try { return JSON.parse(sessionStorage.getItem("tsport_direct_checkout") || "[]"); }
+          catch (_) { return []; }
+        })()
+      : [];
+    checkoutItems = urlParams.direct === "1" ? directItems : null;
+    const totals = checkoutItems
+      ? getCheckoutTotalsForItems(checkoutItems)
+      : store.getCartTotals();
     const orderItems = totals.items;
 
     // Tự động điền thông tin người dùng nếu đã đăng nhập
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null");
     if (user) {
       const nameInput = document.getElementById("checkoutName");
       const phoneInput = document.getElementById("checkoutPhone");
@@ -508,84 +430,11 @@
     const grandTotalEl = document.getElementById("checkoutGrandTotal");
     if (grandTotalEl) grandTotalEl.textContent = formatCartMoney(totals.grandTotal);
 
-    // BIND SỰ KIỆN MÃ GIẢM GIÁ (COUPON)
-    document.getElementById("btnApplyCoupon")?.addEventListener("click", handleApplyCoupon);
-    document.getElementById("inputCheckoutCoupon")?.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleApplyCoupon();
-      }
-    });
-    document.getElementById("btnRemoveCoupon")?.addEventListener("click", handleRemoveCoupon);
-    document.querySelectorAll(".js-quick-coupon").forEach((el) => {
-      el.addEventListener("click", (e) => {
-        e.preventDefault();
-        const code = el.getAttribute("data-code");
-        const input = document.getElementById("inputCheckoutCoupon");
-        if (input && code) {
-          input.value = code;
-          handleApplyCoupon();
-        }
-      });
-    });
-    updateCheckoutTotals();
-    initCheckoutPaymentSelector();
-
     // XỬ LÝ SUBMIT ĐẶT HÀNG (KÈM CHỐNG BẤM LẶP & CHECK TỒN KHO)
     checkoutForm.addEventListener("submit", handleCheckoutSubmit);
   }
 
-  function initCheckoutPaymentSelector() {
-    const payList = document.getElementById("checkoutPayList");
-    if (!payList) return;
-
-    const bankDetail = document.getElementById("payDetailBank");
-    const walletDetail = document.getElementById("payDetailWallet");
-    const submitBtn = document.getElementById("btnPlaceOrder");
-    const walletHidden = document.getElementById("selectedWalletProvider");
-
-    function updatePayUI(method) {
-      payList.querySelectorAll(".ts-checkout-v2-cod-box").forEach((box) => {
-        const isMatch = box.dataset.pay === method;
-        box.classList.toggle("is-selected", isMatch);
-        const radio = box.querySelector('input[name="paymentMethod"]');
-        if (radio) radio.checked = isMatch;
-      });
-
-      if (bankDetail) bankDetail.style.display = method === "BANK" ? "block" : "none";
-      if (walletDetail) walletDetail.style.display = method === "EWALLET" ? "block" : "none";
-
-      if (submitBtn && !submitBtn.disabled) {
-        if (method === "BANK") {
-          submitBtn.textContent = "Đặt hàng & Chuyển khoản";
-        } else if (method === "EWALLET") {
-          const w = walletHidden?.value || "MoMo";
-          submitBtn.textContent = `Thanh toán qua ${w}`;
-        } else {
-          submitBtn.textContent = "Đặt hàng COD";
-        }
-      }
-    }
-
-    payList.querySelectorAll('input[name="paymentMethod"]').forEach((radio) => {
-      radio.addEventListener("change", () => {
-        updatePayUI(radio.value);
-      });
-    });
-
-    document.getElementById("checkoutWalletPills")?.addEventListener("click", (e) => {
-      const btn = e.target.closest(".ts-checkout-v2-wallet-btn");
-      if (!btn) return;
-      document.querySelectorAll(".ts-checkout-v2-wallet-btn").forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      if (walletHidden) walletHidden.value = btn.dataset.wallet || "MoMo";
-      const checkedMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || "COD";
-      if (checkedMethod === "EWALLET") updatePayUI("EWALLET");
-    });
-  }
-
-  // 3. XỬ LÝ ĐẶT HÀNG VỚI CƠ CHẾ CHỐNG LẶP & LỖI TỒN KHO
-  function handleCheckoutSubmit(e) {
+  async function handleCheckoutSubmit(e) {
     e.preventDefault();
 
     // CHẶN BẤM LẶP (DEBOUNCE / PREVENT DUPLICATE SUBMIT)
@@ -600,11 +449,6 @@
     const name = document.getElementById("checkoutName")?.value.trim();
     const phone = document.getElementById("checkoutPhone")?.value.trim();
     const addr = document.getElementById("checkoutAddress")?.value.trim();
-    const note = document.getElementById("checkoutNote")?.value.trim() || "";
-    const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || "COD";
-    const walletProvider = document.getElementById("selectedWalletProvider")?.value || "MoMo";
-    const payment = selectedMethod === "EWALLET" ? `EWALLET_${walletProvider.toUpperCase()}` : selectedMethod;
-
     if (!name || !phone || !addr) {
       showToast("Vui lòng nhập đầy đủ Tên người nhận, SĐT và Địa chỉ giao hàng!", "error");
       return;
@@ -617,43 +461,50 @@
       btnSubmit.innerHTML = `<span>⏳</span><span>Đang xử lý đặt đơn hàng...</span>`;
     }
 
-    // Trì hoãn nhẹ 300ms để kiểm tra tính toàn vẹn tồn kho
-    setTimeout(() => {
-      try {
-        const store = window.tsportStore;
-        // Gọi hàm tạo đơn hàng trong store (tự động kiểm tra và trừ tồn kho, kiểm tra & tính lại mã giảm giá)
-        const order = store.createOrder({
-          customer_name: name,
-          phone,
-          address: addr,
-          payment_method: payment,
-          note,
-          coupon_code: appliedCoupon ? appliedCoupon.code : ""
-        });
-
-        // CHUYỂN SANG MÀN HÌNH ĐẶT HÀNG THÀNH CÔNG (FULL-PAGE CARD)
-        showCheckoutSuccessView(order);
-        showToast(`Đặt hàng thành công! Mã đơn: ${order.order_code}`, "success");
-
-        if (typeof window.updateHeaderCartBadge === "function") {
-          window.updateHeaderCartBadge();
-        }
-
-      } catch (err) {
-        // HIỂN THỊ LỖI TỒN KHO HOẶC LỖI NGHIỆP VỤ
-        if (errorBanner && errorText) {
-          errorBanner.style.display = "flex";
-          errorText.textContent = err.message;
-        }
-        showToast(err.message || "Không thể đặt hàng.", "error");
-      } finally {
-        isSubmitting = false;
-        if (btnSubmit) {
-          btnSubmit.disabled = false;
-          btnSubmit.textContent = "Đặt hàng COD";
-        }
+    try {
+      const store = window.tsportStore;
+      const directCheckout = checkoutItems !== null;
+      const items = (checkoutItems ?? store.getCart()).map(item => ({
+        product_sku_id: item.sku_id, quantity: item.quantity
+      }));
+      const payload = { receiver_name: name, receiver_phone: phone, shipping_address: addr, items };
+      const fingerprint = JSON.stringify(payload);
+      const pending = JSON.parse(sessionStorage.getItem("tsport_checkout_request") || "null");
+      const owner = store.ownerKey;
+      const requestId = pending?.fingerprint === fingerprint && pending.owner === owner
+        ? pending.id : crypto.randomUUID();
+      sessionStorage.setItem("tsport_checkout_request", JSON.stringify({ owner, fingerprint, id: requestId }));
+      const order = await api.post("/orders", { ...payload, request_id: requestId });
+      sessionStorage.removeItem("tsport_checkout_request");
+      if (!directCheckout) store.clearCart();
+      history.replaceState({}, "", "checkout.html?order=" + encodeURIComponent(order.order_code));
+      if (directCheckout) {
+        sessionStorage.removeItem("tsport_direct_checkout");
+        checkoutItems = null;
       }
-    }, 300);
+
+      // CHUYỂN SANG MÀN HÌNH ĐẶT HÀNG THÀNH CÔNG (FULL-PAGE CARD)
+      showCheckoutSuccessView(order);
+      showToast(`Đặt hàng thành công! Mã đơn: ${order.order_code}`, "success");
+
+      if (typeof window.updateHeaderCartBadge === "function") {
+        window.updateHeaderCartBadge();
+      }
+
+    } catch (err) {
+      // HIỂN THỊ LỖI TỒN KHO HOẶC LỖI NGHIỆP VỤ
+      if (errorBanner && errorText) {
+        errorBanner.style.display = "flex";
+        errorText.textContent = err.message;
+      }
+      showToast(err.message || "Không thể đặt hàng.", "error");
+    } finally {
+      isSubmitting = false;
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Đặt hàng COD";
+      }
+    }
   }
 
   // 4. BẮT CÁC SỰ KIỆN TRONG BẢNG GIỎ HÀNG

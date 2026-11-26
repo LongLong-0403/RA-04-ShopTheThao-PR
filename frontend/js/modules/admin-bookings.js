@@ -1,14 +1,21 @@
 /**
  * TSPORT — MODULE DUYỆT LỊCH ĐẶT SÂN (ADMIN BOOKINGS FIGMA)
  * - Lọc theo Ngày đặt, Sân và Trạng thái
- * - Duyệt (Xác nhận lịch), Từ chối hoặc Hủy lịch trực tiếp trong tsportStore
+ * - Duyệt, từ chối và hủy lịch qua API
  * - Chặn xác nhận trùng sân + ca + ngày với lịch đã xác nhận khác
  */
 
 (function () {
   let selectedBookingId = null;
+  let bookingRows = [];
+  let courtRows = [];
+  const bookingStatuses = { PENDING: 'CHO_XAC_NHAN', CONFIRMED: 'XAC_NHAN', REJECTED: 'TU_CHOI', CANCELLED: 'HUY' };
 
-  function initAdminBookings() {
+  async function initAdminBookings() {
+    const [bookings, courts] = await Promise.all([api.get('/bookings'), api.get('/courts/')]);
+    bookingRows = bookings.map(row => ({ ...row, fixed_price: row.price_at_booking,
+      status: Object.keys(bookingStatuses).find(key => bookingStatuses[key] === row.status) || row.status }));
+    courtRows = courts;
     initTopbarControls();
     populateCourtFilter();
     renderAll();
@@ -29,20 +36,19 @@
       localStorage.removeItem("tsport_current_user");
       window.location.href = "auth.html";
     });
-    document.getElementById("btnToggleAdminSidebar")?.addEventListener("click", () => {
-      document.getElementById("adminSidebar")?.classList.toggle("is-open");
-    });
   }
 
   function populateCourtFilter() {
     const select = document.getElementById("admBkgCourtFilter");
-    const store = window.tsportStore;
-    if (!select || !store) return;
-    const courts = store.getCourts() || [];
+    if (!select) return;
+    const courts = courtRows;
     select.innerHTML =
       `<option value="ALL">Tất cả</option>` +
       courts.map((c) => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join("");
   }
+
+  const pageSize = 10;
+  let currentPage = 1;
 
   function formatDMY(iso) {
     const parts = String(iso || "").split(" ")[0].split("-");
@@ -72,14 +78,13 @@
 
   function renderBookingsTable() {
     const tbody = document.getElementById("admBookingsTbody");
-    const store = window.tsportStore;
-    if (!tbody || !store) return;
+    if (!tbody) return;
 
     const dateFilter = document.getElementById("admBkgDateFilter")?.value || "";
     const courtFilter = document.getElementById("admBkgCourtFilter")?.value || "ALL";
     const statusFilter = document.getElementById("admBkgStatusFilter")?.value || "ALL";
 
-    let bookings = store.getBookings() || [];
+    let bookings = bookingRows;
     if (dateFilter) {
       bookings = bookings.filter((b) => String(b.booking_date) === dateFilter);
     }
@@ -94,6 +99,10 @@
       selectedBookingId = bookings[0].id;
     }
 
+    const totalPages = Math.ceil(bookings.length / pageSize);
+    currentPage = Math.max(1, Math.min(currentPage, totalPages));
+    renderCompactPagination(document.getElementById("admBookingsPagination"), totalPages, currentPage);
+
     if (bookings.length === 0) {
       tbody.innerHTML = `
         <tr>
@@ -106,6 +115,7 @@
     }
 
     tbody.innerHTML = bookings
+      .slice((currentPage - 1) * pageSize, currentPage * pageSize)
       .map((b) => {
         const st = getStatusMeta(b.status);
         const isSelected = Number(b.id) === Number(selectedBookingId);
@@ -148,10 +158,8 @@
   }
 
   function renderSelectedCard() {
-    const store = window.tsportStore;
-    if (!store) return;
 
-    const b = (store.getBookings() || []).find((x) => Number(x.id) === Number(selectedBookingId));
+    const b = bookingRows.find((x) => Number(x.id) === Number(selectedBookingId));
     const titleEl = document.getElementById("admBkgSelectedTitle");
     const metaEl = document.getElementById("admBkgSelectedMeta");
     const btnConfirm = document.getElementById("btnAdmConfirmBkg");
@@ -177,42 +185,11 @@
     if (btnCancel) btnCancel.disabled = b.status === "CANCELLED" || b.status === "REJECTED";
   }
 
-  function changeBookingStatus(id, nextStatus) {
-    const store = window.tsportStore;
-    if (!store) return;
-
-    const bookings = store.getBookings() || [];
-    const target = bookings.find((b) => Number(b.id) === Number(id));
-    if (!target) {
-      showToast("Không tìm thấy yêu cầu đặt sân.", "error");
-      return;
-    }
-
-    // Kiểm tra trùng lịch trước khi xác nhận
-    if (nextStatus === "CONFIRMED") {
-      const conflict = bookings.find(
-        (b) =>
-          Number(b.id) !== Number(target.id) &&
-          Number(b.court_id) === Number(target.court_id) &&
-          String(b.booking_date) === String(target.booking_date) &&
-          String(b.time_slot) === String(target.time_slot) &&
-          b.status === "CONFIRMED"
-      );
-      if (conflict) {
-        showToast("Sân và ca này đã có lịch được xác nhận trùng thời gian!", "error");
-        return;
-      }
-    }
-
-    const reason =
-      nextStatus === "REJECTED"
-        ? "Quản trị viên từ chối yêu cầu"
-        : nextStatus === "CANCELLED"
-        ? "Quản trị viên hủy lịch"
-        : "";
+  async function changeBookingStatus(id, nextStatus) {
 
     try {
-      store.updateBookingStatus(id, nextStatus, reason);
+      await api.patch('/bookings/' + id + '/status', { status: bookingStatuses[nextStatus] });
+      bookingRows = bookingRows.map(row => row.id === Number(id) ? { ...row, status: nextStatus } : row);
     } catch (error) {
       showToast(error.message || "Không thể cập nhật lịch đặt sân.", "error");
       return;
@@ -229,9 +206,15 @@
   }
 
   function bindEvents() {
-    document.getElementById("admBkgDateFilter")?.addEventListener("change", renderAll);
-    document.getElementById("admBkgCourtFilter")?.addEventListener("change", renderAll);
-    document.getElementById("admBkgStatusFilter")?.addEventListener("change", renderAll);
+    document.getElementById("admBookingsPagination")?.addEventListener("click", event => {
+      const button = event.target.closest("button[data-page]");
+      if (!button || button.disabled) return;
+      currentPage = Number(button.dataset.page);
+      renderAll();
+    });
+    document.getElementById("admBkgDateFilter")?.addEventListener("change", () => { currentPage = 1; renderAll(); });
+    document.getElementById("admBkgCourtFilter")?.addEventListener("change", () => { currentPage = 1; renderAll(); });
+    document.getElementById("admBkgStatusFilter")?.addEventListener("change", () => { currentPage = 1; renderAll(); });
 
     document.getElementById("admBookingsTbody")?.addEventListener("click", (e) => {
       const confirmBtn = e.target.closest(".js-bkg-confirm");

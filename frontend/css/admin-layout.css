@@ -432,6 +432,11 @@ body.ts-adm-body {
   cursor: pointer;
 }
 
+.ts-adm-sidebar-close,
+.ts-adm-sidebar-backdrop {
+  display: none;
+}
+
 .ts-adm-breadcrumb {
   display: flex;
   align-items: center;
@@ -594,6 +599,81 @@ body.ts-adm-body {
   margin: 0 0 18px 0;
 }
 
+.ts-chart-legend,
+.ts-activity-chart {
+  list-style: none;
+  padding: 0;
+}
+
+.ts-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  margin: 0 0 1.5rem;
+  font-size: .8125rem;
+}
+
+.ts-chart-legend li {
+  display: flex;
+  align-items: center;
+  gap: .375rem;
+}
+
+.ts-chart-legend i {
+  width: .625rem;
+  height: .625rem;
+  border-radius: .125rem;
+  background: var(--chart-series);
+}
+
+.ts-chart-series-0 { --chart-series: #1d4ed8; }
+.ts-chart-series-1 { --chart-series: #047857; }
+.ts-chart-series-2 { --chart-series: #b45309; }
+.ts-chart-series-3 { --chart-series: #7e22ce; }
+
+.ts-activity-chart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(.125rem, 1vw, 1rem);
+  margin: 0;
+}
+
+.ts-activity-chart li {
+  min-width: 0;
+  text-align: center;
+  font-size: .75rem;
+}
+
+.ts-chart-bars {
+  height: 9rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6%;
+  border-bottom: 1px solid #d1d5db;
+  margin-bottom: .5rem;
+}
+
+.ts-chart-bars span {
+  position: relative;
+  width: min(17%, 1.5rem);
+  height: var(--bar-height);
+  background: var(--chart-series);
+  border-radius: .2rem .2rem 0 0;
+}
+
+.ts-chart-bars b {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + .125rem);
+  transform: translateX(-50%);
+  font-size: .6875rem;
+}
+
+@media (max-width: 600px) {
+  .ts-chart-bars b { display: none; }
+}
+
 .ts-adm-table tbody tr {
   cursor: pointer;
   transition: background 0.12s ease;
@@ -660,16 +740,53 @@ body.ts-adm-body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
   }
   .ts-adm-sidebar {
     position: fixed;
-    left: -240px;
-    top: 0;
+    inset: 0 auto 0 0;
+    width: min(260px, 85vw);
+    height: 100dvh;
     z-index: 120;
-    transition: left 0.25s ease;
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease, visibility 0.25s;
   }
   .ts-adm-sidebar.is-open {
-    left: 0;
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 0.25s ease;
+  }
+  .ts-adm-sidebar-close {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    border: 1px solid currentColor;
+    border-radius: var(--tsport-radius);
+    background: transparent;
+    color: inherit;
+    font-size: 1.25rem;
+    cursor: pointer;
+  }
+  .ts-adm-sidebar-backdrop.is-open {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 119;
+    background: rgba(17, 24, 39, 0.45);
+  }
+  .ts-adm-topbar-left {
+    min-width: 0;
+  }
+  .ts-adm-breadcrumb {
+    flex-wrap: wrap;
+    gap: 2px 6px;
   }
   .ts-adm-topbar {
     padding: 0 18px;
@@ -772,7 +889,15 @@ body.ts-adm-body {
 @media (max-width: 820px) {
   .ts-adm-filter-row,
   .ts-adm-edit-grid-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ts-adm-tabs-row {
+    flex-wrap: wrap;
+  }
+  .ts-adm-tabs-row .ts-adm-tab-pill {
+    min-width: 0;
+    min-height: 44px;
+    flex: 1 1 8rem;
   }
 }
 
@@ -873,7 +998,7 @@ body.ts-adm-body {
 
 @media (max-width: 960px) {
   .ts-adm-split-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1203,7 +1328,7 @@ body.ts-adm-body {
 
 @media (max-width: 900px) {
   .ts-adm-prod-row-3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .ts-adm-prod-photo-slot {
     width: 100%;
@@ -1213,6 +1338,16 @@ body.ts-adm-body {
   .ts-adm-upload-btn {
     margin-left: 0;
     width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .ts-adm-prod-bottom-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .ts-adm-prod-bottom-actions button {
+    min-width: 0 !important;
   }
 }
 

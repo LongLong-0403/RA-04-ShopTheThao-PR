@@ -19,6 +19,12 @@ class UserStatus(str, Enum):
     LOCKED = "LOCKED"
 
 
+class UserIdentityGuard(Base):
+    __tablename__ = "user_identity_guard"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+
 class User(Base):
     __tablename__ = "users"
 

@@ -6,8 +6,8 @@
  */
 
 (function () {
-  function initMyBuybacksPage() {
-    initSidebarUser();
+  function initMyBuybacksPage(user) {
+    initSidebarUser(user);
     initHeaderSearch();
     renderBuybacksList();
     bindEvents();
@@ -19,11 +19,7 @@
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
-  function initSidebarUser() {
-    const user = JSON.parse(localStorage.getItem("tsport_current_user") || "null") || {
-      full_name: "Nguyễn Minh Anh",
-      role: "CUSTOMER"
-    };
+  function initSidebarUser(user) {
     const nameEl = document.getElementById("sbBuybacksName");
     const roleEl = document.getElementById("sbBuybacksRole");
     const avatarEl = document.getElementById("sbBuybacksAvatar");
@@ -50,7 +46,6 @@
     });
   }
 
-  // Đảm bảo có sẵn 1 yêu cầu ở trạng thái Đã báo giá (OFFERED) để khách trải nghiệm luồng phản hồi
   function formatDMY(iso) {
     const parts = String(iso || "").split(" ")[0].split("-");
     if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
@@ -96,7 +91,7 @@
       return;
     }
 
-    const fallbackImg = "/frontend/assets/products/victor-auraspeed-90k-ii.png";
+    const fallbackImg = "/assets/products/victor-auraspeed-90k-ii.png";
 
     wrap.innerHTML = buybacks
       .map((b) => {
@@ -131,7 +126,7 @@
                 .map(
                   (src, idx) => `
                   <div class="ts-mybb-photo-box">
-                    <img src="${escapeHtml(src)}" alt="Ảnh thực tế ${idx + 1}" onerror="this.src='${fallbackImg}'" />
+                    <img src="${escapeHtml(storefrontImageUrl(src))}" alt="Ảnh thực tế ${idx + 1}" onerror="this.src='${fallbackImg}'" />
                     <span class="ts-mybb-photo-tag">ẢNH THỰC TẾ ${idx + 1}</span>
                   </div>
                 `

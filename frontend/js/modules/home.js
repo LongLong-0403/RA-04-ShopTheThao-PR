@@ -11,11 +11,18 @@
   let searchDebounceTimer = null;
 
   async function initHome() {
-    updateHeaderUser();
+    initHeaderUser();
     updateCartBadge();
     initNavProductsMegaMenu();
     initHeroBannerSlider();
     initSmoothScroll();
+    initResponsiveDrawer({
+      toggle: document.getElementById("btnMobMenuOpen"),
+      drawer: document.getElementById("mobDrawer"),
+      close: document.getElementById("btnMobMenuClose"),
+      backdrop: document.getElementById("mobDrawerBackdrop"),
+      breakpoint: 768
+    });
     await window.tsportCatalogReady;
     renderFeaturedProducts();
     initTabbedShowcase();
@@ -216,36 +223,44 @@
   }
 
   // 1. CẬP NHẬT LIÊN KẾT TÀI KHOẢN (KHÔNG ICON THỪA)
-  async function updateHeaderUser() {
-    const userRaw = localStorage.getItem("tsport_current_user");
+  function initHeaderUser() {
     const userWrap = document.getElementById("headerUserWrap");
-    if (!userWrap) return;
+    if (!userWrap || typeof watchHeaderSession !== "function") return;
 
-    if (userRaw && (localStorage.getItem("token") || localStorage.getItem("tsport_token"))) {
-      try {
-        const user = await api.get("/auth/me");
-        const isAdmin = user.role === "ADMIN";
-        const displayName = user.full_name || user.email || "Tài khoản";
-        userWrap.innerHTML = `
-          <div style="display:flex; align-items:center; gap:10px;">
-            <a href="pages/${isAdmin ? 'admin-dashboard.html' : 'account.html'}" class="ts-min-header-link" style="font-weight:700; color:#111827;">
-              ${escapeHtml(displayName)}${isAdmin ? ' (Admin)' : ''}
-            </a>
-            <button type="button" id="btnHomeLogout" style="border:none; background:none; color:#9CA3AF; font-size:12px; cursor:pointer; padding:0;" title="Đăng xuất">Thoát</button>
-          </div>
-        `;
-        document.getElementById("btnHomeLogout")?.addEventListener("click", () => {
-          localStorage.removeItem("tsport_current_user");
-          localStorage.removeItem("token");
-          localStorage.removeItem("tsport_token");
-          if (typeof showToast === "function") showToast("Đã đăng xuất tài khoản.", "success");
-          location.reload();
-        });
+    watchHeaderSession((user) => {
+      if (!user) {
+        userWrap.innerHTML = `<a href="pages/auth.html" class="ts-min-header-link">Tài khoản</a>`;
         return;
-      } catch (_) {}
-    }
-
-    userWrap.innerHTML = `<a href="pages/auth.html" class="ts-min-header-link">Tài khoản</a>`;
+      }
+      const isAdmin = user.role === "ADMIN";
+      const displayName = user.full_name || user.email || "Tài khoản";
+      userWrap.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px;">
+          <a href="pages/${isAdmin ? 'admin-dashboard.html' : 'account.html'}" class="ts-min-header-link" style="font-weight:700; color:#111827;">
+            ${escapeHtml(displayName)}${isAdmin ? ' (Admin)' : ''}
+          </a>
+          <button type="button" id="btnHomeLogout" style="border:none; background:none; color:#9CA3AF; font-size:12px; cursor:pointer; padding:0;" title="Đăng xuất">Thoát</button>
+        </div>
+      `;
+      document.getElementById("btnHomeLogout")?.addEventListener("click", async (event) => {
+        const button = event.currentTarget;
+        const token = getSessionToken();
+        button.disabled = true;
+        try {
+          await api.post("/auth/logout");
+        } catch (error) {
+          if (error.status !== 401) {
+            button.disabled = false;
+            if (typeof showToast === "function") showToast(error.message, "error");
+            return;
+          }
+        }
+        if (token !== getSessionToken()) return;
+        clearLocalSession();
+        if (typeof showToast === "function") showToast("Đã đăng xuất tài khoản.", "success");
+        location.reload();
+      });
+    });
   }
 
   function updateCartBadge() {
@@ -281,7 +296,7 @@
         <a href="pages/product-detail.html?id=${p.id}" class="ts-min-product-card js-gsap-card" draggable="false">
           <div class="ts-min-product-media">
             <span class="ts-min-product-badge">Mới</span>
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+            <img src="${escapeHtml(storefrontImageUrl(primaryImg.image_url))}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
           </div>
           <h3 class="ts-min-product-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
           <div class="ts-min-product-meta">${escapeHtml(metaText)}</div>
@@ -454,6 +469,7 @@
   function initTabbedShowcase() {
     const tabsWrap = document.getElementById("homeCategoryTabs");
     const stage = document.getElementById("homeTabBoxStage");
+    const viewport = document.querySelector("#homeTabBoxStage .ts-tabbox-viewport");
     const track = document.getElementById("homeTabBoxGrid");
     const btnPrev = document.getElementById("btnTabBoxPrev");
     const btnNext = document.getElementById("btnTabBoxNext");
@@ -502,7 +518,7 @@
         <a href="pages/product-detail.html?id=${p.id}" class="ts-tabbox-card">
           <div class="ts-tabbox-img-wrap">
             ${p.condition_type === "CU" ? `<span class="ts-min-product-badge">Đồ cũ</span>` : ""}
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+            <img src="${escapeHtml(storefrontImageUrl(primaryImg.image_url))}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
           </div>
           <h3 class="ts-tabbox-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
           <div class="ts-tabbox-price-row">
@@ -586,6 +602,97 @@
       }
     }
 
+    function rotateTrackForDrag(delta) {
+      const stepPx = getStepPx();
+      if (stepPx <= 0 || track.children.length <= 1) return;
+
+      const steps = Math.floor(Math.abs(delta) / stepPx);
+      const remainderPx = Math.abs(delta) % stepPx;
+      const remainder = delta < 0 ? -remainderPx : (remainderPx ? -stepPx + remainderPx : 0);
+      for (let index = 0; index < steps; index += 1) {
+        if (delta < 0) track.appendChild(track.firstElementChild);
+        else track.insertBefore(track.lastElementChild, track.firstElementChild);
+      }
+
+      if (typeof window.gsap !== "undefined") {
+        window.gsap.set(track, { x: remainder });
+        window.gsap.to(track, {
+          x: 0,
+          duration: 0.22,
+          ease: "power2.out",
+          onComplete: scheduleNextSlide
+        });
+      } else {
+        track.style.transform = "translateX(0)";
+        scheduleNextSlide();
+      }
+    }
+
+    function bindFeaturedDrag() {
+      if (!viewport || viewport.dataset.dragBound === "true") return;
+      viewport.dataset.dragBound = "true";
+
+      let pointerId = null;
+      let startX = 0;
+      let lastX = 0;
+      let moved = false;
+      let suppressClick = false;
+
+      viewport.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        pointerId = event.pointerId;
+        startX = lastX = event.clientX;
+        moved = false;
+        suppressClick = false;
+        event.preventDefault();
+        isHovered = true;
+        stopAutoSlide();
+        isAnimating = false;
+        if (typeof window.gsap !== "undefined") {
+          window.gsap.killTweensOf(track);
+          window.gsap.set(track, { x: 0 });
+        }
+        viewport.classList.add("is-dragging");
+        viewport.setPointerCapture?.(pointerId);
+      });
+
+      viewport.addEventListener("pointermove", (event) => {
+        if (event.pointerId !== pointerId) return;
+        const delta = event.clientX - startX;
+        if (Math.abs(delta) > 6) moved = true;
+        lastX = event.clientX;
+        if (!moved) return;
+        event.preventDefault();
+        if (typeof window.gsap !== "undefined") window.gsap.set(track, { x: delta });
+        else track.style.transform = `translateX(${delta}px)`;
+      });
+
+      const finishDrag = (event) => {
+        if (event.pointerId !== pointerId) return;
+        const delta = lastX - startX;
+        pointerId = null;
+        viewport.classList.remove("is-dragging");
+        viewport.releasePointerCapture?.(event.pointerId);
+
+        if (moved) {
+          suppressClick = true;
+          rotateTrackForDrag(delta);
+        } else {
+          scheduleNextSlide();
+        }
+        isHovered = false;
+      };
+
+      viewport.addEventListener("pointerup", finishDrag);
+      viewport.addEventListener("pointercancel", finishDrag);
+      viewport.addEventListener("click", (event) => {
+        if (!suppressClick) return;
+        event.preventDefault();
+        event.stopPropagation();
+        suppressClick = false;
+      }, true);
+    }
+
     function renderTrack(animateEntrance = false) {
       stopAutoSlide();
       isAnimating = false;
@@ -665,6 +772,7 @@
     });
 
     renderTrack(false);
+    bindFeaturedDrag();
   }
 
   // 2C. MỤC 03 / RA SÂN — DANH SÁCH ẢNH CỤM SÂN CỤ THỂ LƯỚT BẰNG CHUỘT
@@ -676,11 +784,38 @@
     if (!viewport || !track || !store) return;
 
     let currentSport = "ALL";
+    let courtsFromApi = null;
+    let courtsLoading = null;
 
-    function renderCourts(animate = false) {
-      let courts = store.getCourts() || [];
+    async function getBookingCourts() {
+      if (Array.isArray(courtsFromApi)) return courtsFromApi;
+      if (!courtsLoading && window.api) {
+        courtsLoading = Promise.all([api.get("/courts/"), api.get("/slots/")]).then(([courts, slots]) => {
+          const slotsByCourt = new Map();
+          (Array.isArray(slots) ? slots : []).forEach((slot) => {
+            const list = slotsByCourt.get(Number(slot.court_id)) || [];
+            list.push(slot);
+            slotsByCourt.set(Number(slot.court_id), list);
+          });
+          courtsFromApi = (Array.isArray(courts) ? courts : []).map((court) => ({
+            ...court,
+            slots: (slotsByCourt.get(Number(court.id)) || []).sort((a, b) =>
+              String(a.start_time).localeCompare(String(b.start_time))
+            )
+          }));
+          return courtsFromApi;
+        }).catch(() => {
+          courtsFromApi = [];
+          return courtsFromApi;
+        });
+      }
+      return courtsLoading || [];
+    }
+
+    async function renderCourts(animate = false) {
+      let courts = await getBookingCourts();
       if (currentSport !== "ALL") {
-        courts = courts.filter(c => c.sport_id === Number(currentSport));
+        courts = courts.filter(c => Number(c.sport_id) === Number(currentSport));
       }
 
       if (courts.length === 0) {
@@ -691,9 +826,13 @@
       track.innerHTML = courts.map((c) => {
         const rating = c.rating ? Number(c.rating).toFixed(1) : "5.0";
         const distance = c.distance || "150m";
-        const hours = c.opening_hours || "06:00 - 23:00";
+        const slotSummary = (c.slots || []).slice(0, 3).map((slot) =>
+          `${String(slot.start_time).slice(0, 5)} - ${String(slot.end_time).slice(0, 5)}`
+        ).join(" • ");
+        const hours = slotSummary || "Chưa có ca hoạt động";
         const img = c.image_url || "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?w=800";
         const logo = c.logo_url || "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?w=120";
+        const detailUrl = `pages/court-detail.html?id=${c.id}`;
 
         return `
           <div class="tsport-court-card" draggable="false">
@@ -706,7 +845,7 @@
               </div>
               <div class="tsport-court-overlay-top-right">
                 <button type="button" class="tsport-court-btn-round js-home-court-fav" title="Yêu thích">♡</button>
-                <a href="pages/courts.html?sport=${c.sport_id}" class="tsport-court-btn-round" title="Xem sân" style="text-decoration:none;">↗</a>
+                <a href="${detailUrl}" class="tsport-court-btn-round" title="Xem sân" style="text-decoration:none;">↗</a>
               </div>
             </div>
             <div class="tsport-court-body">
@@ -723,7 +862,7 @@
               </div>
               <div class="tsport-court-action">
                 ${c.has_discount ? `<span class="tsport-court-promo-badge">${escapeHtml(c.discount_label || 'Ưu đãi')}</span>` : ''}
-                <a href="pages/courts.html?sport=${c.sport_id}" class="tsport-btn-book-court" style="text-decoration:none;">ĐẶT LỊCH</a>
+                <a href="${detailUrl}" class="tsport-btn-book-court" style="text-decoration:none;">ĐẶT LỊCH</a>
               </div>
             </div>
           </div>
@@ -783,22 +922,57 @@
     if (!viewport || !track || !store) return;
 
     let currentSport = "ALL";
+    let publicMatches = null;
+    let matchesLoading = null;
 
-    function renderMatches(animate = false) {
-      let list = store.getMatches({ sport_id: currentSport, include_hidden: false }) || [];
-      list = list.filter(m => m.status === "OPEN");
+    async function getPublicMatches() {
+      if (Array.isArray(publicMatches)) return publicMatches;
+      if (!matchesLoading && window.api) {
+        matchesLoading = api.get("/match-posts").then((rows) => {
+          const sports = store.getSports() || [];
+          publicMatches = (Array.isArray(rows) ? rows : []).map((row) => {
+            const view = typeof matchView === "function" ? matchView(row) : row;
+            const sport = sports.find((item) => Number(item.id) === Number(row.sport_id));
+            return {
+              ...view,
+              sport_name: sport?.name || "Thể thao",
+              match_format: row.match_format || (Number(row.sport_id) === 2 ? "Sân 7" : "Đơn"),
+              title: view.title || row.location || "Tìm người chơi cùng",
+              contact_name: row.contact_info || "Thành viên",
+              slots_needed: 1,
+              price_share: "Chia đều sân"
+            };
+          });
+          return publicMatches;
+        }).catch(() => {
+          return publicMatches || [];
+        }).finally(() => {
+          matchesLoading = null;
+        });
+      }
+      return matchesLoading || [];
+    }
+
+    async function renderMatches(animate = false) {
+      let list = await getPublicMatches();
+      if (currentSport !== "ALL") {
+        list = list.filter((match) => Number(match.sport_id) === Number(currentSport));
+      }
 
       if (list.length === 0) {
-        track.innerHTML = `<div style="width:100%; background:#fff; border-radius:8px; padding:28px; text-align:center; color:#6B7280; font-size:13.5px;">Hiện chưa có kèo giao lưu đang mở cho môn này.</div>`;
+        delete track.dataset.markup;
+        track.innerHTML = `<div style="width:100%; background:#fff; border-radius:8px; padding:28px; text-align:center; color:#6B7280; font-size:13.5px;">Hiện chưa có bài ghép kèo cho môn này.</div>`;
         return;
       }
 
-      track.innerHTML = list.map((m) => `
+      const markup = list.map((m) => {
+        const isClosed = m.registration_status !== "OPEN";
+        return `
         <div class="ts-home-match-card" draggable="false">
           <div>
             <div class="ts-home-match-top">
               <span class="ts-home-match-sport">${escapeHtml(m.sport_name || 'Thể thao')}</span>
-              <span class="ts-home-match-slots">Thiếu ${Number(m.slots_needed) || 1} người</span>
+              <span class="ts-home-match-slots">${matchAvailability(m)}</span>
             </div>
             <h3 class="ts-home-match-title" style="margin-top:10px;" title="${escapeHtml(m.title)}">${escapeHtml(m.title)}</h3>
           </div>
@@ -806,7 +980,7 @@
           <div class="ts-home-match-meta">
             <div class="ts-home-match-meta-row"><strong>Thời gian:</strong> ${escapeHtml(m.match_time || '')} • ${escapeHtml(m.match_date || '')}</div>
             <div class="ts-home-match-meta-row" title="${escapeHtml(m.location || '')}"><strong>Địa điểm:</strong> ${escapeHtml(m.location || '')}</div>
-            <div class="ts-home-match-meta-row"><strong>Trình độ:</strong> ${escapeHtml(m.level || 'Phong trào')}</div>
+            <div class="ts-home-match-meta-row"><strong>Hình thức:</strong> ${escapeHtml(m.match_format || 'Đơn')} • <strong>Trình độ:</strong> ${escapeHtml(m.level || 'Phong trào')}</div>
           </div>
 
           <div class="ts-home-match-footer">
@@ -814,12 +988,16 @@
               <div class="ts-home-match-price">${escapeHtml(m.price_share || 'Chia đều sân')}</div>
               <div class="ts-home-match-author">Chủ kèo: ${escapeHtml(m.contact_name || 'Thành viên')}</div>
             </div>
-            <a href="pages/community.html?sport=${m.sport_id}" class="tsport-btn-book-court" style="text-decoration:none;">THAM GIA</a>
+            <a href="pages/community.html?match=${encodeURIComponent(m.id)}" class="tsport-btn-book-court" style="text-decoration:none;">${isClosed ? "XEM CHI TIẾT" : "THAM GIA"}</a>
           </div>
         </div>
-      `).join("");
+      `;
+      }).join("");
+      if (track.dataset.markup === markup) return;
+      track.innerHTML = markup;
+      track.dataset.markup = markup;
 
-      viewport.scrollLeft = 0;
+      if (animate) viewport.scrollLeft = 0;
 
       if (animate && typeof window.gsap !== "undefined") {
         window.gsap.from(track.querySelectorAll(".ts-home-match-card"), {
@@ -848,6 +1026,11 @@
 
     bindMouseDragScroll(viewport);
     renderMatches(false);
+    window.setInterval(() => {
+      if (document.hidden || matchesLoading) return;
+      publicMatches = null;
+      renderMatches(false);
+    }, 15000);
   }
 
   // 2E. ĐỒ CŨ MINH BẠCH — KHUNG TAB CHUẨN + LƯỚT CHUỘT TRÁI / PHẢI
@@ -899,7 +1082,7 @@
           <a href="pages/product-detail.html?id=${p.id}" class="ts-tabbox-card" draggable="false">
             <div class="ts-tabbox-img-wrap">
               <span class="ts-min-product-badge">Đồ cũ ~${escapeHtml(wearGrade)}</span>
-              <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
+              <img src="${escapeHtml(storefrontImageUrl(primaryImg.image_url))}" alt="${escapeHtml(p.name)}" loading="lazy" draggable="false" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600'" />
             </div>
             <h3 class="ts-tabbox-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h3>
             ${p.wear_description ? `<div style="font-size:11px; color:#6B7280; margin-bottom:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(p.wear_description)}">${escapeHtml(p.wear_description)}</div>` : ''}
@@ -1118,7 +1301,7 @@
         const minPrice = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.sale_price && s.sale_price < s.price ? s.sale_price : s.price)) : 0;
         return `
           <a href="pages/product-detail.html?id=${p.id}" class="tsport-recent-card">
-            <img src="${escapeHtml(primaryImg.image_url)}" alt="${escapeHtml(p.name)}" class="tsport-recent-img" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
+            <img src="${escapeHtml(storefrontImageUrl(primaryImg.image_url))}" alt="${escapeHtml(p.name)}" class="tsport-recent-img" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=300'" />
             <div style="font-size:12.5px; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(p.name)}">
               ${escapeHtml(p.name)}
             </div>
@@ -1186,7 +1369,7 @@
           const minPrice = p.skus && p.skus.length ? Math.min(...p.skus.map(s => s.sale_price && s.sale_price < s.price ? s.sale_price : s.price)) : 0;
           return `
             <a href="pages/product-detail.html?id=${p.id}" class="tsport-search-dropdown-item">
-              <img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(p.name)}" class="tsport-search-dropdown-thumb" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=100'" />
+              <img src="${escapeHtml(storefrontImageUrl(img.image_url))}" alt="${escapeHtml(p.name)}" class="tsport-search-dropdown-thumb" onerror="this.src='https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=100'" />
               <div class="tsport-search-dropdown-info">
                 <div class="tsport-search-dropdown-name">${escapeHtml(p.name)}</div>
                 <div class="tsport-search-dropdown-price">${formatMoney(minPrice)}</div>
@@ -1307,23 +1490,6 @@
   // MOBILE HOMEPAGE (<= 768px)
   // ==========================================
   function initMobileHome() {
-    const openBtn = document.getElementById("btnMobMenuOpen");
-    const closeBtn = document.getElementById("btnMobMenuClose");
-    const drawer = document.getElementById("mobDrawer");
-    const backdrop = document.getElementById("mobDrawerBackdrop");
-
-    function closeDrawer() {
-      drawer?.classList.remove("is-open");
-      backdrop?.classList.remove("is-open");
-    }
-
-    openBtn?.addEventListener("click", () => {
-      drawer?.classList.add("is-open");
-      backdrop?.classList.add("is-open");
-    });
-    closeBtn?.addEventListener("click", closeDrawer);
-    backdrop?.addEventListener("click", closeDrawer);
-
     const searchForm = document.getElementById("mobHomeSearchForm");
     const searchInput = document.getElementById("mobHomeSearchInput");
     searchForm?.addEventListener("submit", (e) => {

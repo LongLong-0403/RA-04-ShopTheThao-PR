@@ -98,36 +98,15 @@
 
 /* Fallback khi WebGL không khả dụng */
 .ts-bg3d-fallback {
-  display: none;
   padding: 40px 24px;
   max-width: 1200px;
   margin: 0 auto;
+  color: var(--tsport-text-muted);
 }
 
-.ts-bg3d-fallback.is-visible {
-  display: block;
-}
-
-.ts-bg3d-fallback-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 24px;
-}
-
-.ts-bg3d-fallback-item {
-  background: transparent;
-  border: none;
-  padding: 0;
-  text-align: left;
-  cursor: pointer;
-}
-
-.ts-bg3d-fallback-item img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  background: #E8E8E5;
-  margin-bottom: 8px;
+.ts-bg3d-stage[hidden],
+.ts-bg3d-fallback[hidden] {
+  display: none;
 }
 
 /* ==========================================================================

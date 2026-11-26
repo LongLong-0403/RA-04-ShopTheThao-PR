@@ -83,27 +83,45 @@
         <section class="ts-adm-kpi-grid" aria-label="Chỉ số cần xử lý">
           <a href="admin-orders.html" class="ts-adm-kpi-card">
             <div class="ts-adm-kpi-label">Đơn cần xử lý</div>
-            <div class="ts-adm-kpi-num" id="kpiPendingOrders">00</div>
+            <div class="ts-adm-kpi-num" id="kpiPendingOrders">—</div>
             <div class="ts-adm-kpi-sub">Chờ xác nhận</div>
           </a>
 
-          <a href="admin-courts.html" class="ts-adm-kpi-card">
+          <a href="admin-bookings.html" class="ts-adm-kpi-card">
             <div class="ts-adm-kpi-label">Lịch sân chờ duyệt</div>
-            <div class="ts-adm-kpi-num" id="kpiPendingBookings">00</div>
+            <div class="ts-adm-kpi-num" id="kpiPendingBookings">—</div>
             <div class="ts-adm-kpi-sub">Cần phản hồi</div>
           </a>
 
           <a href="admin-buyback.html" class="ts-adm-kpi-card">
             <div class="ts-adm-kpi-label">Yêu cầu thu mua</div>
-            <div class="ts-adm-kpi-num" id="kpiPendingBuybacks">00</div>
+            <div class="ts-adm-kpi-num" id="kpiPendingBuybacks">—</div>
             <div class="ts-adm-kpi-sub">Chờ thẩm định</div>
           </a>
 
           <a href="products.html" class="ts-adm-kpi-card">
             <div class="ts-adm-kpi-label">SKU hết hàng</div>
-            <div class="ts-adm-kpi-num" id="kpiOutOfStockSkus">00</div>
+            <div class="ts-adm-kpi-num" id="kpiOutOfStockSkus">—</div>
             <div class="ts-adm-kpi-sub">Cần cập nhật tồn kho</div>
           </a>
+        </section>
+
+        <p id="adminDashboardStatus" role="status">Đang tải số liệu…</p>
+        <section class="ts-adm-card" aria-labelledby="adminChartTitle">
+          <h2 class="ts-adm-card-title" id="adminChartTitle">Hoạt động trong 7 ngày</h2>
+          <ul id="adminChartLegend" class="ts-chart-legend" aria-label="Chú giải"></ul>
+          <ul id="adminActivityChart" class="ts-activity-chart" aria-label="Số lượt theo ngày"></ul>
+        </section>
+
+        <section class="ts-adm-card" aria-labelledby="adminMatchesTitle">
+          <h2 class="ts-adm-card-title" id="adminMatchesTitle">Ghép kèo cộng đồng</h2>
+          <div class="ts-orders-v2-table-wrap">
+            <table class="ts-orders-v2-table ts-adm-table">
+              <thead><tr><th>Người đăng</th><th>Địa điểm</th><th>Lịch chơi</th><th>Trạng thái</th><th>Người tham gia</th></tr></thead>
+              <tbody id="adminMatchesTbody"></tbody>
+            </table>
+          </div>
+          <nav class="ts-shop-pagination-v2" id="adminMatchesPagination" aria-label="Phân trang bài ghép kèo"></nav>
         </section>
 
         <section class="ts-adm-card" id="quan-ly-banner" aria-labelledby="adminBannerTitle">

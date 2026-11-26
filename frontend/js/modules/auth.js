@@ -3,6 +3,23 @@
  */
 
 (function () {
+  function redirectAfterAuth(role) {
+    if (role === "ADMIN") {
+      window.location.href = "admin-dashboard.html";
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("product");
+    if (/^\d+$/.test(productId || "")) {
+      window.location.href = `product-detail.html?id=${encodeURIComponent(productId)}`;
+      return;
+    }
+    const matchId = params.get("match");
+    window.location.href = /^\d+$/.test(matchId || "")
+      ? `community.html?match=${encodeURIComponent(matchId)}`
+      : params.get("create") === "1" ? "community.html?create=1" : "account.html";
+  }
+
   function logAxiosInterceptor(method, url, authHeader) {
     const monitor = document.getElementById("axiosInterceptorLog");
     if (!monitor) return;
@@ -81,13 +98,7 @@
     const userLabel = document.querySelector(".js-header-user-label");
     if (userLabel) userLabel.textContent = userObj.full_name || userObj.email;
 
-    setTimeout(() => {
-      if (role === "ADMIN") {
-        window.location.href = "admin-dashboard.html";
-      } else {
-        window.location.href = "account.html";
-      }
-    }, 650);
+    setTimeout(() => redirectAfterAuth(role), 650);
   }
 
   async function handleRegisterSubmit(e) {
@@ -146,6 +157,20 @@
         logAxiosInterceptor("POST", "/api/auth/register", token);
       } catch (err) {
         if (err && err.status && err.status !== 0) {
+          if (err.status === 409) {
+            const duplicateField = [
+              ["Email", "regEmail", "errRegEmail"],
+              ["Số điện thoại", "regPhone", "errRegPhone"],
+              ["Họ và tên", "regFullName", "errRegFullName"],
+            ].find(([label]) => err.message.startsWith(label));
+            if (duplicateField) {
+              const [, inputId, errorId] = duplicateField;
+              const input = document.getElementById(inputId);
+              input.classList.add("is-invalid");
+              document.getElementById(errorId).textContent = err.message;
+              input.focus();
+            }
+          }
           showToast(err.message || "Đăng ký tài khoản thất bại", "error");
           return;
         }
@@ -164,13 +189,7 @@
     const role = userObj.role || "CUSTOMER";
     showToast(`Đăng ký tài khoản ${email} (${role}) thành công! Đang chuyển hướng...`, "success");
 
-    setTimeout(() => {
-      if (role === "ADMIN") {
-        window.location.href = "admin-dashboard.html";
-      } else {
-        window.location.href = "account.html";
-      }
-    }, 650);
+    setTimeout(() => redirectAfterAuth(role), 650);
   }
 
   document.addEventListener("DOMContentLoaded", () => {

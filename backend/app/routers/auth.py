@@ -16,8 +16,8 @@ from app.core.deps import get_current_user
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenOut
-from app.schemas.user import UserOut
-from app.services import auth_service
+from app.schemas.user import UserOut, UserUpdate
+from app.services import auth_service, user_service
 from app.core.deps import bearer_scheme
 from app.core.token_store import revoke
 from app.core.config import settings
@@ -52,11 +52,7 @@ class ProfileInput(BaseModel):
 
 @router.put("/me", response_model=UserOut)
 def update_profile(data: ProfileInput, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    for key, value in data.model_dump().items():
-        setattr(user, key, value)
-    db.commit()
-    db.refresh(user)
-    return user
+    return user_service.update_user(db, user.id, UserUpdate(**data.model_dump()))
 
 
 class PasswordInput(BaseModel):

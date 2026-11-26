@@ -432,7 +432,6 @@ body.tsport-home-body {
 .ts-hero-slide img {
   width: 100%;
   height: 100%;
-  image-rendering: -webkit-optimize-contrast;
   display: block;
 }
 
@@ -604,7 +603,7 @@ body.tsport-home-body {
 .ts-min-product-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
   transition: transform 0.35s ease;
 }
@@ -748,6 +747,14 @@ body.tsport-home-body {
 .ts-tabbox-viewport {
   overflow: hidden;
   width: 100%;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.ts-tabbox-viewport.is-dragging {
+  cursor: grabbing;
 }
 
 .ts-tabbox-track {

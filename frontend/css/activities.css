@@ -924,7 +924,7 @@ body.tsport-courts-body {
 
 @media (max-width: 900px) {
   .ts-court-det-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -1059,6 +1059,248 @@ body.tsport-courts-body {
   margin: 0;
 }
 
+.ts-comm-detail-dialog {
+  inset: 0;
+  margin: auto;
+  width: min(40rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 0;
+  border-radius: var(--tsport-radius-lg);
+  background: var(--tsport-card);
+  color: var(--tsport-text);
+  box-shadow: var(--tsport-shadow-lg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
+}
+
+.ts-comm-detail-dialog::backdrop {
+  background: rgba(17, 24, 39, 0.55);
+}
+
+.ts-comm-detail-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--tsport-card);
+  border-bottom: 1px solid var(--tsport-border);
+}
+
+.ts-comm-detail-head h2 {
+  font-size: clamp(1.25rem, 4vw, 1.65rem);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.ts-comm-detail-head h2:focus {
+  outline: none;
+}
+
+.ts-comm-detail-sport,
+.ts-comm-detail-summary dt,
+.ts-comm-form-grid label,
+.ts-comm-detail-form > label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.ts-comm-detail-sport {
+  color: var(--tsport-text-muted);
+  margin-bottom: 0.3rem;
+}
+
+.ts-comm-detail-close {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius-full);
+  background: var(--tsport-bg);
+  color: var(--tsport-text);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ts-comm-detail-close:hover {
+  border-color: var(--tsport-text);
+}
+
+.ts-comm-detail-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.ts-comm-detail-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+  padding: 1rem;
+  margin: 0.875rem 0 1.125rem;
+  background: var(--tsport-bg);
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius);
+}
+
+.ts-comm-detail-summary dt {
+  color: var(--tsport-text-muted);
+  margin-bottom: 0.125rem;
+}
+
+.ts-comm-detail-summary dd {
+  font-size: 0.925rem;
+  font-weight: 600;
+}
+
+.ts-comm-detail-form {
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--tsport-border);
+}
+
+.ts-comm-detail-form h3 {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.ts-comm-detail-form p,
+.ts-comm-list-status {
+  color: var(--tsport-text-muted);
+  font-size: 0.875rem;
+}
+
+.ts-comm-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.875rem;
+}
+
+.ts-comm-form-grid label {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+}
+
+.ts-comm-form-grid label:last-child {
+  grid-column: 1 / -1;
+}
+
+.ts-comm-capacity-controls {
+  display: grid;
+  grid-template-columns: minmax(5rem, 7rem) auto;
+  justify-content: start;
+  gap: 0.625rem;
+}
+
+.ts-comm-participants {
+  display: grid;
+  gap: 0.625rem;
+  list-style: none;
+}
+
+.ts-comm-participants li {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: 1px solid var(--tsport-border);
+  border-radius: var(--tsport-radius);
+  font-size: 0.875rem;
+  white-space: pre-wrap;
+}
+
+.ts-comm-feedback {
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--tsport-radius);
+  background: var(--tsport-bg);
+  font-size: 0.875rem;
+}
+
+.ts-comm-feedback[data-tone="error"] {
+  background: var(--tsport-danger-bg);
+  color: var(--tsport-text);
+}
+
+.ts-comm-feedback[data-tone="success"] {
+  background: var(--tsport-success-bg);
+}
+
+.ts-comm-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0.625rem 1rem;
+  border: 1px solid var(--tsport-border-dark);
+  border-radius: var(--tsport-radius);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ts-comm-button-primary {
+  background: var(--tsport-orange);
+  border-color: var(--tsport-orange);
+  color: var(--tsport-card);
+}
+
+.ts-comm-button-secondary {
+  background: var(--tsport-card);
+  color: var(--tsport-text);
+}
+
+.ts-comm-button:hover {
+  border-color: var(--tsport-text);
+}
+
+.ts-comm-button-primary:hover {
+  background: var(--tsport-orange-hover);
+  color: var(--tsport-card);
+}
+
+.ts-comm-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.ts-comm-v2-main [hidden] {
+  display: none !important;
+}
+
+.ts-comm-list-status {
+  margin-bottom: 0.75rem;
+}
+
+.ts-comm-list-status[data-tone="error"] {
+  color: var(--tsport-danger);
+}
+
+@media (max-width: 480px) {
+  .ts-comm-detail-dialog {
+    width: calc(100% - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
+
+  .ts-comm-detail-head,
+  .ts-comm-detail-body {
+    padding: 1rem;
+  }
+
+  .ts-comm-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .ts-comm-v2-create-btn {
   min-width: 196px;
   padding: 12px 22px;
@@ -1079,7 +1321,7 @@ body.tsport-courts-body {
 /* THANH LỌC 4 CỘT */
 .ts-comm-v2-filter-bar {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
   gap: 16px;
   align-items: end;
   margin-bottom: 28px;
@@ -1095,6 +1337,7 @@ body.tsport-courts-body {
 
 .ts-comm-v2-filter-control {
   width: 100%;
+  min-width: 0;
   height: 42px;
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
@@ -1164,9 +1407,19 @@ body.tsport-courts-body {
   font-size: 11.5px;
   font-weight: 700;
   padding: 5px 12px;
-  border-radius: 5px;
+  border-radius: var(--tsport-radius-full);
   background: #F3F4F6;
   color: #111827;
+}
+
+.ts-comm-v2-pill[data-state="OPEN"] {
+  background: var(--tsport-blue-bg);
+  color: var(--tsport-blue);
+}
+
+.ts-comm-v2-pill[data-state="FULL"] {
+  background: var(--tsport-success-bg);
+  color: var(--tsport-text);
 }
 
 .ts-comm-v2-pill.is-closed {
@@ -1180,6 +1433,13 @@ body.tsport-courts-body {
   color: #111827;
   line-height: 1.35;
   margin: 0 0 14px 0;
+  overflow-wrap: anywhere;
+}
+
+.ts-comm-card-sport {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--tsport-text-muted);
 }
 
 .ts-comm-v2-meta-line {
@@ -1235,7 +1495,7 @@ body.tsport-courts-body {
 
 @media (max-width: 900px) {
   .ts-comm-v2-filter-bar {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .ts-comm-v2-grid {
     grid-template-columns: 1fr;
@@ -1243,8 +1503,8 @@ body.tsport-courts-body {
 }
 
 @media (max-width: 600px) {
-  .ts-comm-v2-filter-bar {
-    grid-template-columns: 1fr;
+  .ts-comm-v2-filter-bar button[type="reset"] {
+    grid-column: 1 / -1;
   }
 }
 

@@ -11,6 +11,7 @@
   let selectedColor = null;
   let matchingSku = null;
   let currentQuantity = 1;
+  let addToCartPending = false;
 
   function initProductDetailModule() {
     const params = getUrlParams();
@@ -127,12 +128,12 @@
     const captionEl = document.getElementById("pdpImageCaption");
     const isUsed = prod.condition_type === "CU";
 
-    const fallbackImg = "/frontend/assets/products/catalog/p001.webp";
+    const fallbackImg = "/assets/products/catalog/p001.webp";
     const images = prod.images && prod.images.length ? prod.images : [{ image_url: fallbackImg, is_primary: true }];
     const primary = images.find((i) => i.is_primary) || images[0];
 
     if (mainImg) {
-      mainImg.src = primary.image_url;
+      mainImg.src = storefrontImageUrl(primary.image_url);
       mainImg.alt = prod.name;
       mainImg.classList.remove("is-hidden");
       mainImg.onerror = () => {
@@ -149,8 +150,8 @@
       const thumbItems = images.slice(0, 4).map((img, idx) => {
         const num = String(idx + 1).padStart(2, "0");
         return `
-          <button type="button" class="ts-pdp-thumb ${idx === 0 ? "is-active" : ""}" data-img-url="${escapeHtml(img.image_url)}" data-img-index="${num}" aria-label="Xem ảnh ${idx + 1}">
-            <img src="${escapeHtml(img.image_url)}" alt="${escapeHtml(prod.name)} - Ảnh ${idx + 1}" onerror="this.src='${fallbackImg}'" />
+          <button type="button" class="ts-pdp-thumb ${idx === 0 ? "is-active" : ""}" data-img-url="${escapeHtml(storefrontImageUrl(img.image_url))}" data-img-index="${num}" aria-label="Xem ảnh ${idx + 1}">
+            <img src="${escapeHtml(storefrontImageUrl(img.image_url))}" alt="${escapeHtml(prod.name)} - Ảnh ${idx + 1}" onerror="this.src='${fallbackImg}'" />
             <span class="ts-pdp-thumb-label">Ảnh ${idx + 1}</span>
           </button>
         `;
@@ -274,7 +275,7 @@
     }
 
     if (stock > 0) {
-      if (addBtn) addBtn.disabled = false;
+      if (addBtn) addBtn.disabled = addToCartPending;
       if (buyBtn) buyBtn.disabled = false;
       if (hintEl) hintEl.style.display = "none";
       if (qtyInput && Number(qtyInput.value) > stock) {
@@ -412,36 +413,50 @@
     });
 
     // Thêm vào giỏ
-    document.getElementById("btnAddToCart")?.addEventListener("click", () => {
-      addCurrentSelectionToCart(false);
-    });
+    document.getElementById("btnAddToCart")?.addEventListener("click", addCurrentSelectionToCart);
 
-    // Mua ngay
+    // Mua ngay: giữ riêng sản phẩm tạm thời, không thêm vào giỏ hàng hiện tại.
     document.getElementById("btnBuyNow")?.addEventListener("click", () => {
-      addCurrentSelectionToCart(true);
+      buyCurrentSelectionNow();
     });
   }
 
-  function addCurrentSelectionToCart(redirectToCheckout) {
+  function buyCurrentSelectionNow() {
     if (!matchingSku || !currentProduct) return;
     const qty = Number(document.getElementById("pdpQuantity")?.value) || 1;
     try {
-      window.tsportStore.addToCart(currentProduct.id, matchingSku.id, qty);
+      const item = window.tsportStore.getCartItemSnapshot(currentProduct.id, matchingSku.id, qty);
+      sessionStorage.setItem("tsport_direct_checkout", JSON.stringify([item]));
+      window.location.href = "checkout.html?direct=1";
+    } catch (err) {
+      showToast(err.message || "Không thể mua sản phẩm này.", "error");
+    }
+  }
+
+  async function addCurrentSelectionToCart(event) {
+    if (!matchingSku || !currentProduct || addToCartPending) return;
+    const button = event.currentTarget;
+    const product = currentProduct;
+    const sku = matchingSku;
+    const qty = Number(document.getElementById("pdpQuantity")?.value) || 1;
+    addToCartPending = true;
+    button.disabled = true;
+    try {
+      await window.tsportStore.addToCart(product.id, sku.id, qty);
       if (typeof window.updateHeaderCartBadge === "function") {
         window.updateHeaderCartBadge();
       }
-      if (redirectToCheckout) {
-        window.location.href = "cart.html";
-      } else {
-        animateProductToCart(document.getElementById("pdpMainImage"), document.getElementById("btnAddToCart"));
-        const productLabel = `${qty} × "${currentProduct.name}"${matchingSku.size ? ` (${matchingSku.size})` : ""}`;
-        showToast(`Đã thêm ${productLabel} vào giỏ hàng.`, "success", {
-          emphasis: productLabel,
-          action: { label: "Xem giỏ hàng", href: "cart.html" }
-        });
-      }
+      animateProductToCart(document.getElementById("pdpMainImage"), document.getElementById("btnAddToCart"));
+      const productLabel = `${qty} × "${product.name}"${sku.size ? ` (${sku.size})` : ""}`;
+      showToast(`Đã thêm ${productLabel} vào giỏ hàng.`, "success", {
+        emphasis: productLabel,
+        action: { label: "Xem giỏ hàng", href: "cart.html" }
+      });
     } catch (err) {
-      showToast(err.message || "Không thể thêm vào giỏ hàng.", "error");
+      handleAddToCartError(err, product.id);
+    } finally {
+      addToCartPending = false;
+      button.disabled = !matchingSku || Number(matchingSku.stock) <= 0;
     }
   }
 
