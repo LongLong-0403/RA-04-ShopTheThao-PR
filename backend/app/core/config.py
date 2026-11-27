@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", env_ignore_empty=True)
 
     APP_NAME: str = "KS25 Base API"
+    ENABLE_LOCAL_TEST_ACCOUNTS: bool = False
 
     DB_HOST: str = "127.0.0.1"
     DB_PORT: int = 3306

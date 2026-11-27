@@ -3,6 +3,7 @@
 Chạy:  uvicorn app.main:app --reload
 Tài liệu API tự sinh: http://127.0.0.1:8000/docs
 """
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -16,8 +17,10 @@ from app.core.config import settings
 from app.db.session import Base, SessionLocal, engine
 from app.db.seed_catalog import seed_catalog
 from app.routers import auth, courts, health, items, users, commerce, catalog, activities, media
-from app.services import court_service, item_service
+from app.services import court_service, item_service, user_service
 from app.services.exceptions import ServiceError
+
+logger = logging.getLogger("uvicorn.error")
 
 
 def init_database() -> None:
@@ -69,6 +72,8 @@ def init_database() -> None:
     # 3. Seed dữ liệu mẫu (mỗi hàm tự bỏ qua nếu đã có dữ liệu)
     with SessionLocal() as db:
         item_service.seed_items(db)
+        if settings.ENABLE_LOCAL_TEST_ACCOUNTS and settings.DB_HOST.strip().lower() in {"localhost", "127.0.0.1"}:
+            user_service.seed_local_test_accounts(db)
         court_service.seed_courts(db)
         seed_catalog(db)  # 6 môn, 20 danh mục, 13 hãng, 160 sản phẩm chuẩn hãng
 
@@ -79,10 +84,9 @@ async def lifespan(app: FastAPI):
     # Lưu ý: create_all KHÔNG sửa bảng đã tồn tại. Đổi cột -> sửa bằng SQL hoặc xoá bảng tạo lại.
     try:
         init_database()
-        print(f"[DB] Đã kết nối MySQL {settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}")
+        logger.info("Connected to MySQL %s:%s/%s", settings.DB_HOST, settings.DB_PORT, settings.DB_NAME)
     except OperationalError as error:
-        print("[DB] KHÔNG kết nối được MySQL! Kiểm tra MySQL đã bật chưa và mật khẩu DB_PASSWORD trong file .env.")
-        print(f"[DB] Chi tiết: {error.orig}")
+        logger.warning("Could not connect to MySQL. Check the database settings in .env. %s", error.orig)
     yield
 
 

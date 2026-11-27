@@ -10,6 +10,11 @@ from app.models.user import User, UserIdentityGuard, UserRole, UserStatus
 from app.schemas.user import UserCreate, UserUpdate
 from app.services.exceptions import BadRequestError, ConflictError, NotFoundError
 
+LOCAL_TEST_ACCOUNTS = (
+    ("admin123@gmail.com", "Quản trị viên admin123", "0900000123", UserRole.ADMIN),
+    ("user123@gmail.com", "Khách hàng user123", "0900000456", UserRole.CUSTOMER),
+)
+
 # Các bảng tham chiếu users với ON DELETE RESTRICT -> phải kiểm tra trước khi xoá
 _RESTRICTING_TABLES = (
     (Order, "đơn hàng"),
@@ -52,13 +57,17 @@ def get_user_by_email(db: Session, email: str) -> User | None:
     return db.scalar(select(User).where(User.email == email.strip().lower()))
 
 
+def lock_user_identity(db: Session) -> None:
+    # A shared row serializes identity changes, including when a value is new.
+    db.execute(select(UserIdentityGuard.id).where(UserIdentityGuard.id == 1).with_for_update()).scalar_one()
+
+
 def validate_user_identity(db: Session, changes: dict, user: User | None = None) -> None:
     fields = ("email", "phone", "full_name")
     if not changes.keys() & set(fields):
         return
 
-    # A shared row serializes identity changes, including when a value is new.
-    db.execute(select(UserIdentityGuard.id).where(UserIdentityGuard.id == 1).with_for_update()).scalar_one()
+    lock_user_identity(db)
     if user is not None:
         db.refresh(user, with_for_update=True)
     normalize = {
@@ -92,21 +101,45 @@ def validate_user_identity(db: Session, changes: dict, user: User | None = None)
         changes[field] = value
 
 
-def create_user(db: Session, data: UserCreate) -> User:
-    values = data.model_dump(exclude={"password"})
+def add_user(db: Session, values: dict, password: str) -> User:
     validate_user_identity(db, values)
-    user = User(
-        **values,
-        password_hash=hash_password(data.password),
-    )
+    user = User(**values, password_hash=hash_password(password))
     db.add(user)
     db.flush()
     if user.role == UserRole.CUSTOMER:
         from app.models.order import Cart
         db.add(Cart(user_id=user.id))
+    return user
+
+
+def create_user(db: Session, data: UserCreate) -> User:
+    user = add_user(db, data.model_dump(exclude={"password"}), data.password)
     db.commit()
     db.refresh(user)
     return user
+
+
+def seed_local_test_accounts(db: Session) -> None:
+    """Restore the two reserved accounts in an opted-in local database."""
+    lock_user_identity(db)
+    for email, name, phone, role in LOCAL_TEST_ACCOUNTS:
+        user = db.scalar(select(User).where(User.email == email).with_for_update())
+        if user is None:
+            add_user(db, {
+                "email": email, "full_name": name, "phone": phone,
+                "role": role, "status": UserStatus.ACTIVE,
+            }, password=email)
+            continue
+
+        user.role = role
+        user.status = UserStatus.ACTIVE
+        try:
+            password_matches = verify_password(email, user.password_hash)
+        except ValueError:
+            password_matches = False
+        if not password_matches:
+            user.password_hash = hash_password(email)
+    db.commit()
 
 
 def update_user(db: Session, user_id: int, data: UserUpdate, acting_user: User | None = None) -> User:
